@@ -1,0 +1,6 @@
+build
+deployer/
+libs/
+.cxx
+buildScript.sh
+build.gradle

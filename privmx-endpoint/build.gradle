@@ -1,0 +1,63 @@
+plugins {
+    id 'java-library'
+    id 'signing'
+    id 'maven-publish'
+}
+
+//Apply script for publishing native libraries
+if (file("build-publish-native.gradle").exists()) {
+    apply from: "build-publish-native.gradle"
+}
+
+//Apply script for generating official documentation
+if (file("build-documentation.gradle").exists()) {
+    apply from: "build-documentation.gradle"
+}
+
+//Apply script for publishing maven dependency
+if (file("build-publish-maven.gradle").exists()) {
+    apply from: "build-publish-maven.gradle"
+}
+
+version = '2.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
+    withJavadocJar()
+}
+
+//Removing tag @group
+sourcesJar {
+    filter(new Transformer<String, String>() {
+        @Override
+        String transform(String s) {
+            if (
+                    s.trim().matches("\\* *@group.*") ||
+                            s.trim().matches("\\* *@folder.*") ||
+                            s.trim().matches("\\* *@category.*")
+            ) {
+                return null
+            }
+            return s
+        }
+    })
+}
+
+javadoc {
+    options.tags += [
+            "category:xt:\"Category group\"",
+            "folder:xt:\"Class folder\"",
+            "event:xm:\"Method event\"",
+            "group:xt:\"Class group\""
+    ]
+}
+
+dependencies {
+    testImplementation libs.junit
+}
+
+compileJava {
+    options.compilerArgs += "-parameters"
+}

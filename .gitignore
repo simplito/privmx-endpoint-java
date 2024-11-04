@@ -1,0 +1,14 @@
+*.iml
+.gradle
+**/build-publish-maven.gradle
+**/build-documentation.gradle
+**/build-publish-native.gradle
+/local.properties
+.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+/doc-generator

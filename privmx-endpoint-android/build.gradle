@@ -1,0 +1,81 @@
+plugins {
+    alias(libs.plugins.androidLibrary)
+    id 'maven-publish'
+    id 'signing'
+}
+
+//Apply script for generating official documentation
+if (file("build-documentation.gradle").exists()) {
+    apply from: "build-documentation.gradle"
+}
+
+//Apply script for publishing maven dependency
+if (file("build-publish-maven.gradle").exists()) {
+    apply from: "build-publish-maven.gradle"
+}
+
+version="2.0"
+
+android {
+    namespace 'com.simplito.android.privmx_endpoint_wrapper'
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 24
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+}
+
+dependencies {
+    api libs.appcompat
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+    api project(":privmx-endpoint-extra")
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java"]
+        }
+    }
+}
+afterEvaluate {
+    sourceReleaseJar {
+        System.out.println("hello world")
+        filter(new Transformer<String, String>() {
+            @Override
+            String transform(String s) {
+                if (
+                        s.trim().matches("\\* *@group.*") ||
+                                s.trim().matches("\\* *@folder.*") ||
+                                s.trim().matches("\\* *@category.*")
+                ) {
+                    return null
+                }
+                return s
+            }
+        })
+    }
+}
