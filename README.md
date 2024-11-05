@@ -1,6 +1,6 @@
 # PrivMX Endpoint Java
 
-This repository provides a Java wrappers for the native C++ library used by PrivMX to handle
+This repository provides Java wrappers for the native C++ library used by PrivMX to handle
 end-to-end (e2e) encryption. PrivMX is a privacy-focused platform designed to offer secure
 collaboration solutions by integrating robust encryption across various data types and communication
 methods. This project enables seamless integration of PrivMX’s encryption functionalities in
@@ -105,5 +105,5 @@ Copyright © 2024 Simplito sp. z o.o.
 This project is part of the PrivMX Platform (https://privmx.dev). \
 This project is Licensed under the MIT License.
 
-PrivMX Endpoint and PrivMX Bridge are licensed under Licensed under the PrivMX Free License.\
+PrivMX Endpoint and PrivMX Bridge are licensed under the PrivMX Free License.\
 See the License for the specific language governing permissions and limitations under the License.
