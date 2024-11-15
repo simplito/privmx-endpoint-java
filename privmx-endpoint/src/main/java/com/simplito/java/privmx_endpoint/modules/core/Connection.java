@@ -60,7 +60,25 @@ public class Connection implements AutoCloseable {
      * channel: -
      * payload: {@link Void}
      */
-    public static native Connection platformConnect(String userPrivKey, String solutionId, String platformUrl) throws PrivmxException, NativeException;
+    @Deprecated
+    public static Connection platformConnect(String userPrivKey, String solutionId, String platformUrl) throws PrivmxException, NativeException{
+        return connect(userPrivKey,solutionId,platformUrl);
+    }
+
+    /**
+     * Connects to the PrivMX Bridge server.
+     *
+     * @param userPrivKey user's private key
+     * @param solutionId  ID of the Solution
+     * @param bridgeUrl Bridge's Endpoint URL
+     * @return Connection object
+     * @throws PrivmxException thrown when method encounters an exception.
+     * @throws NativeException thrown when method encounters an unknown exception.
+     * @event type: libConnected
+     * channel: -
+     * payload: {@link Void}
+     */
+    public static native Connection connect(String userPrivKey, String solutionId, String bridgeUrl) throws PrivmxException, NativeException;
 
     /**
      * Connects to the PrivMX Bridge server as a guest user.
@@ -74,7 +92,24 @@ public class Connection implements AutoCloseable {
      * channel: -
      * payload: {@link Void}
      */
-    public static native Connection platformConnectPublic(String solutionId, String platformUrl) throws PrivmxException, NativeException;
+    @Deprecated
+    public static Connection platformConnectPublic(String solutionId, String platformUrl) throws PrivmxException, NativeException{
+        return connectPublic(solutionId,platformUrl);
+    }
+
+    /**
+     * Connects to the PrivMX Bridge server as a guest user.
+     *
+     * @param solutionId  ID of the Solution
+     * @param bridgeUrl Bridge's Endpoint URL
+     * @return Connection object
+     * @throws PrivmxException thrown when method encounters an exception.
+     * @throws NativeException thrown when method encounters an unknown exception.
+     * @event type: libConnected
+     * channel: -
+     * payload: {@link Void}
+     */
+    public static native Connection connectPublic(String solutionId, String bridgeUrl) throws PrivmxException, NativeException;
 
     /**
      * Disconnects from the PrivMX Bridge server.

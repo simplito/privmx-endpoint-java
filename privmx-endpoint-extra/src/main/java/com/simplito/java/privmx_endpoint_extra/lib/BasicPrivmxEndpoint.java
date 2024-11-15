@@ -55,7 +55,7 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
      *
      * @param enableModule   set of modules to initialize; should contain {@link Modules#THREAD }
      *                       to enable Thread module or {@link Modules#STORE } to enable Store module
-     * @param platformUrl        Platform's Endpoint URL
+     * @param bridgeUrl      Bridge's Endpoint URL
      * @param solutionId     {@code SolutionId} of the current project
      * @param userPrivateKey user private key used to authorize; generated from:
      *                       {@link CryptoApi#generatePrivateKey} or
@@ -68,9 +68,9 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
             Set<Modules> enableModule,
             String userPrivateKey,
             String solutionId,
-            String platformUrl
+            String bridgeUrl
     ) throws IllegalStateException, PrivmxException, NativeException {
-        connection = Connection.platformConnect(userPrivateKey, solutionId, platformUrl);
+        connection = Connection.connect(userPrivateKey, solutionId, bridgeUrl);
         storeApi = enableModule.contains(Modules.STORE) ? new StoreApi(connection) : null;
         threadApi = enableModule.contains(Modules.THREAD) ? new ThreadApi(connection) : null;
         inboxApi = enableModule.contains(Modules.INBOX) ? new InboxApi(

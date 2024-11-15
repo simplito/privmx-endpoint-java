@@ -114,7 +114,7 @@ public class PrivmxEndpointContainer implements AutoCloseable {
      * Creates a new connection.
      *
      * @param enableModule   set of modules to initialize
-     * @param platformUrl        Platform's Endpoint URL
+     * @param bridgeUrl      Bridge's Endpoint URL
      * @param solutionId     {@code SolutionId} of the current project
      * @param userPrivateKey user private key used to authorize; generated from:
      *                       {@link CryptoApi#generatePrivateKey} or
@@ -128,14 +128,14 @@ public class PrivmxEndpointContainer implements AutoCloseable {
             Set<Modules> enableModule,
             String userPrivateKey,
             String solutionId,
-            String platformUrl
+            String bridgeUrl
     ) throws IllegalStateException, PrivmxException, NativeException {
         if (!isInitialized) throw new IllegalStateException("Certs path is not set");
         PrivmxEndpoint privmxEndpoint = new PrivmxEndpoint(
                 enableModule,
                 userPrivateKey,
                 solutionId,
-                platformUrl
+                bridgeUrl
         );
         synchronized (privmxEndpoints) {
             privmxEndpoints.put(privmxEndpoint.connection.getConnectionId(), privmxEndpoint);
