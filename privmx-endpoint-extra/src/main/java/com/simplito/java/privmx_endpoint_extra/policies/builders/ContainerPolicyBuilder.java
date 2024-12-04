@@ -14,11 +14,10 @@ package com.simplito.java.privmx_endpoint_extra.policies.builders;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicyWithoutItem;
 import com.simplito.java.privmx_endpoint.model.ItemPolicy;
-import com.simplito.java.privmx_endpoint_extra.policies.BasePolicyValue;
 import com.simplito.java.privmx_endpoint_extra.policies.ContainerPolicyValue;
+import com.simplito.java.privmx_endpoint_extra.policies.SpecialPolicyValue;
 
 public class ContainerPolicyBuilder {
-
     private String get;
     private String update;
     private String delete;
@@ -69,12 +68,12 @@ public class ContainerPolicyBuilder {
         return this;
     }
 
-    ContainerPolicyBuilder setUpdaterCanBeRemovedFromManagers(BasePolicyValue policyValue) {
+    ContainerPolicyBuilder setUpdaterCanBeRemovedFromManagers(SpecialPolicyValue policyValue) {
         this.updaterCanBeRemovedFromManagers = policyValue.value;
         return this;
     }
 
-    ContainerPolicyBuilder setOwnerCanBeRemovedFromManagers(BasePolicyValue policyValue) {
+    ContainerPolicyBuilder setOwnerCanBeRemovedFromManagers(SpecialPolicyValue policyValue) {
         this.ownerCanBeRemovedFromManagers = policyValue.value;
         return this;
     }
