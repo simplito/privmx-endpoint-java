@@ -32,6 +32,20 @@ public class ItemPolicyBuilder {
     }
 
     /**
+     * Creates instance of {@link ItemPolicyBuilder}
+     * from existing {@link ItemPolicy} instance.
+     *
+     * @param itemPolicy the existing {@link ItemPolicy} instance to copy values from.
+     */
+    public ItemPolicyBuilder(ItemPolicy itemPolicy) {
+        this.get = itemPolicy.get;
+        this.listMy = itemPolicy.listMy;
+        this.listAll = itemPolicy.listAll;
+        this.create = itemPolicy.create;
+        this.update = itemPolicy.update;
+    }
+
+    /**
      * Sets {@link ItemPolicy#get} policy value.
      *
      * @param policyValue policy value to set
