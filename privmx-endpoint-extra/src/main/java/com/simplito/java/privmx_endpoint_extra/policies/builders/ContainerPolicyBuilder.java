@@ -17,6 +17,9 @@ import com.simplito.java.privmx_endpoint.model.ItemPolicy;
 import com.simplito.java.privmx_endpoint_extra.policies.ContainerPolicyValue;
 import com.simplito.java.privmx_endpoint_extra.policies.SpecialPolicyValue;
 
+/**
+ * Builder for creating instances of {@link ContainerPolicyWithoutItem} and {@link ContainerPolicy}.
+ */
 public class ContainerPolicyBuilder {
     private String get;
     private String update;
@@ -26,9 +29,18 @@ public class ContainerPolicyBuilder {
     private String ownerCanBeRemovedFromManagers;
     private ItemPolicy item;
 
+    /**
+     * Creates instance of {@link ContainerPolicyBuilder} initialized with Bridge's default policy values.
+     */
     public ContainerPolicyBuilder() {
     }
 
+    /**
+     * Creates instance of {@link ContainerPolicyBuilder}
+     * initialized with policy values from existing {@link ContainerPolicy} instance.
+     *
+     * @param containerPolicy the existing {@link ContainerPolicy} instance to copy values from.
+     */
     public ContainerPolicyBuilder(ContainerPolicy containerPolicy) {
         this.get = containerPolicy.get;
         this.update = containerPolicy.update;
@@ -39,6 +51,12 @@ public class ContainerPolicyBuilder {
         this.item = containerPolicy.item;
     }
 
+    /**
+     * Creates instance of {@link ContainerPolicyBuilder}
+     * initialized with policy values from existing {@link ContainerPolicyWithoutItem} instance.
+     *
+     * @param containerPolicyWithoutItem the existing {@link ContainerPolicyWithoutItem} instance to copy values from.
+     */
     public ContainerPolicyBuilder(ContainerPolicyWithoutItem containerPolicyWithoutItem) {
         this.get = containerPolicyWithoutItem.get;
         this.update = containerPolicyWithoutItem.update;
@@ -48,41 +66,88 @@ public class ContainerPolicyBuilder {
         this.ownerCanBeRemovedFromManagers = containerPolicyWithoutItem.ownerCanBeRemovedFromManagers;
     }
 
+    /**
+     * Sets {@link ContainerPolicyWithoutItem#get} policy value.
+     *
+     * @param policyValue policy value to set
+     * @return {@link ContainerPolicyBuilder} instance to allow for method chaining.
+     */
     ContainerPolicyBuilder setGet(ContainerPolicyValue policyValue) {
         this.get = policyValue.value;
         return this;
     }
 
+    /**
+     * Sets {@link ContainerPolicyWithoutItem#update} policy value.
+     *
+     * @param policyValue policy value to set
+     * @return {@link ContainerPolicyBuilder} instance to allow for method chaining.
+     */
     ContainerPolicyBuilder setUpdate(ContainerPolicyValue policyValue) {
         this.update = policyValue.value;
         return this;
     }
 
+    /**
+     * Sets {@link ContainerPolicyWithoutItem#delete} policy value.
+     *
+     * @param policyValue policy value to set
+     * @return {@link ContainerPolicyBuilder} instance to allow for method chaining.
+     */
     ContainerPolicyBuilder setDelete(ContainerPolicyValue policyValue) {
         this.delete = policyValue.value;
         return this;
     }
 
+    /**
+     * Sets {@link ContainerPolicyWithoutItem#updatePolicy} policy value.
+     *
+     * @param policyValue policy value to set
+     * @return {@link ContainerPolicyBuilder} instance to allow for method chaining.
+     */
     ContainerPolicyBuilder setUpdatePolicy(ContainerPolicyValue policyValue) {
         this.updatePolicy = policyValue.value;
         return this;
     }
 
+    /**
+     * Sets {@link ContainerPolicyWithoutItem#updaterCanBeRemovedFromManagers} policy value.
+     *
+     * @param policyValue policy value to set
+     * @return {@link ContainerPolicyBuilder} instance to allow for method chaining.
+     */
     ContainerPolicyBuilder setUpdaterCanBeRemovedFromManagers(SpecialPolicyValue policyValue) {
         this.updaterCanBeRemovedFromManagers = policyValue.value;
         return this;
     }
 
+    /**
+     * Sets {@link ContainerPolicyWithoutItem#ownerCanBeRemovedFromManagers} policy value.
+     *
+     * @param policyValue policy value to set
+     * @return {@link ContainerPolicyBuilder} instance to allow for method chaining.
+     */
     ContainerPolicyBuilder setOwnerCanBeRemovedFromManagers(SpecialPolicyValue policyValue) {
         this.ownerCanBeRemovedFromManagers = policyValue.value;
         return this;
     }
 
+    /**
+     * Sets {@link ContainerPolicy#item} items policy value.
+     *
+     * @param item policy value to set
+     * @return {@link ContainerPolicyBuilder} instance to allow for method chaining.
+     */
     ContainerPolicyBuilder setItem(ItemPolicy item) {
         this.item = item;
         return this;
     }
 
+    /**
+     * Creates {@link ContainerPolicyWithoutItem} from current state.
+     *
+     * @return new {@link ContainerPolicyWithoutItem} instance created from this builder policies.
+     */
     ContainerPolicyWithoutItem buildWithoutItem() {
         return new ContainerPolicyWithoutItem(
                 get,
@@ -94,6 +159,11 @@ public class ContainerPolicyBuilder {
         );
     }
 
+    /**
+     * Creates {@link ContainerPolicy} from current state.
+     *
+     * @return new {@link ContainerPolicy} instance created from this builder policies.
+     */
     ContainerPolicy build() {
         return new ContainerPolicy(
                 get,

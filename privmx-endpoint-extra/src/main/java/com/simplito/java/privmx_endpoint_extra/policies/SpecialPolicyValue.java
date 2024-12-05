@@ -11,8 +11,16 @@
 
 package com.simplito.java.privmx_endpoint_extra.policies;
 
+/**
+ * Contains special policies values.
+ */
 public class SpecialPolicyValue extends PolicyValue {
 
+    /**
+     * Creates instance of {@link SpecialPolicyValue}.
+     *
+     * @param value raw policy value
+     */
     SpecialPolicyValue(String value) {
         super(value);
     }

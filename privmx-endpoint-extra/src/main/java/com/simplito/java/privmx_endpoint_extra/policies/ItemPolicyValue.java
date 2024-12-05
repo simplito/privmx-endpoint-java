@@ -11,7 +11,15 @@
 
 package com.simplito.java.privmx_endpoint_extra.policies;
 
+/**
+ * Contains value for Container's item policies.
+ */
 public class ItemPolicyValue extends PolicyValue {
+    /**
+     * Creates instance of {@link ItemPolicyValue}.
+     *
+     * @param value raw policy value
+     */
     ItemPolicyValue(String value) {
         super(value);
     }

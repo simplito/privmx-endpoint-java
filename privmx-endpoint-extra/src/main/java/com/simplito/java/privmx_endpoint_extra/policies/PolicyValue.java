@@ -11,9 +11,21 @@
 
 package com.simplito.java.privmx_endpoint_extra.policies;
 
+/**
+ * Base class for all policies values.
+ */
 public class PolicyValue {
+
+    /**
+     * Raw policy value.
+     */
     public final String value;
 
+    /**
+     * Creates instance of {@link PolicyValue}.
+     *
+     * @param value raw policy value
+     */
     PolicyValue(String value) {
         this.value = value;
     }
