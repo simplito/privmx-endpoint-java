@@ -71,9 +71,9 @@ body:
     attributes:
       label: Package name
       options:
-        - Privmx Endpoint
-        - Privmx Endpoint Extra
-        - Privmx Endpoint Android
+        - PrivMX Endpoint
+        - PrivMX Endpoint Extra
+        - PrivMX Endpoint Android
     validations:
       required: true
   - type: input
