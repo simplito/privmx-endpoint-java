@@ -15,8 +15,8 @@ public class ItemPolicyValues {
     public static final ItemPolicyValue DEFAULT = new ItemPolicyValue("default");
     public static final ItemPolicyValue NONE = new ItemPolicyValue("none");
     public static final ItemPolicyValue ALL = new ItemPolicyValue("all");
-    public static final ItemPolicyChainValue USER = new ItemPolicyChainValue("user");
-    public static final ItemPolicyChainValue MANAGER = new ItemPolicyChainValue("manager");
-    public static final ItemPolicyChainValue OWNER = new ItemPolicyChainValue("owner");
-    public static final ItemPolicyChainValue ITEM_OWNER = new ItemPolicyChainValue("itemOwner");
+    public static final ItemPolicyComplexValue USER = new ItemPolicyComplexValue("user");
+    public static final ItemPolicyComplexValue MANAGER = new ItemPolicyComplexValue("manager");
+    public static final ItemPolicyComplexValue OWNER = new ItemPolicyComplexValue("owner");
+    public static final ItemPolicyComplexValue ITEM_OWNER = new ItemPolicyComplexValue("itemOwner");
 }

@@ -11,17 +11,17 @@
 
 package com.simplito.java.privmx_endpoint_extra.policies;
 
-public class ItemPolicyChainValue extends ItemPolicyValue {
+public class ItemPolicyComplexValue extends ItemPolicyValue {
 
-    ItemPolicyChainValue(String value) {
+    ItemPolicyComplexValue(String value) {
         super(value);
     }
 
-    public ItemPolicyChainValue OR(ItemPolicyChainValue policy) {
-        return new ItemPolicyChainValue(value + "," + policy.value);
+    public ItemPolicyComplexValue OR(ItemPolicyComplexValue policy) {
+        return new ItemPolicyComplexValue(value + "," + policy.value);
     }
 
-    public ItemPolicyChainValue AND(ItemPolicyChainValue policy) {
-        return new ItemPolicyChainValue(value + "&" + policy.value);
+    public ItemPolicyComplexValue AND(ItemPolicyComplexValue policy) {
+        return new ItemPolicyComplexValue(value + "&" + policy.value);
     }
 }

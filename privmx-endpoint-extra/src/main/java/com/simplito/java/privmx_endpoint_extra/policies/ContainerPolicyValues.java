@@ -17,7 +17,7 @@ public class ContainerPolicyValues {
     public static final ContainerPolicyValue INHERIT = new ContainerPolicyValue("inherit");
     public static final ContainerPolicyValue NONE = new ContainerPolicyValue("none");
     public static final ContainerPolicyValue ALL = new ContainerPolicyValue("all");
-    public static final ContainerPolicyChainValue USER = new ContainerPolicyChainValue("user");
-    public static final ContainerPolicyChainValue MANAGER = new ContainerPolicyChainValue("manager");
-    public static final ContainerPolicyChainValue OWNER = new ContainerPolicyChainValue("owner");
+    public static final ContainerPolicyComplexValue USER = new ContainerPolicyComplexValue("user");
+    public static final ContainerPolicyComplexValue MANAGER = new ContainerPolicyComplexValue("manager");
+    public static final ContainerPolicyComplexValue OWNER = new ContainerPolicyComplexValue("owner");
 }
