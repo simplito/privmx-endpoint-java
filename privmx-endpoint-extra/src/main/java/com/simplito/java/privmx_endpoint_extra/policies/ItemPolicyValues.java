@@ -27,27 +27,27 @@ public class ItemPolicyValues {
     public static final ItemPolicyValue NONE = new ItemPolicyValue("none");
 
     /**
-     * Grants access to the all Context users, allowing them to perform actions on item.
+     * Allows all Context users to perform actions on item.
      */
     public static final ItemPolicyValue ALL = new ItemPolicyValue("all");
 
     /**
-     * Grants access to the users, allowing them to perform actions on item.
+     * Allows all the container's users to perform actions on item.
      */
     public static final ItemPolicyComplexValue USER = new ItemPolicyComplexValue("user");
 
     /**
-     * Grants access to the managers, allowing them to perform actions on item.
+     * Allows the container managers to perform actions on item.
      */
     public static final ItemPolicyComplexValue MANAGER = new ItemPolicyComplexValue("manager");
 
     /**
-     * Grants access to the container's owner, allowing them to perform actions on item.
+     * Allows the container's owner to perform actions on item.
      */
     public static final ItemPolicyComplexValue OWNER = new ItemPolicyComplexValue("owner");
 
     /**
-     * Grants access to the item's owner, allowing them to perform actions on item.
+     * Allows the item's owner to perform actions on item.
      */
     public static final ItemPolicyComplexValue ITEM_OWNER = new ItemPolicyComplexValue("itemOwner");
 }

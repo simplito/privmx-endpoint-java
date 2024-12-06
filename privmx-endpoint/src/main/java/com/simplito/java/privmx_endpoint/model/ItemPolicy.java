@@ -17,44 +17,44 @@ package com.simplito.java.privmx_endpoint.model;
 public class ItemPolicy {
 
     /**
-     * Determine who can get an item.
+     * Determines who can get an item.
      */
     public final String get;
 
     /**
-     * Determine who can list items created by me.
+     * Determines who can list items created by themselves.
      */
     public final String listMy;
 
     /**
-     * Determine who can list all items.
+     * Determines who can list all items.
      */
     public final String listAll;
 
     /**
-     * Determine who can create an item.
+     * Determines who can create an item.
      */
     public final String create;
 
     /**
-     * Determine who can update an item.
+     * Determines who can update an item.
      */
     public final String update;
 
     /**
-     * Determine who can delete an item.
+     * Determines who can delete an item.
      */
     public final String delete;
 
     /**
      * Creates instance of {@link ItemPolicy}.
      *
-     * @param get     determine who can get an item
-     * @param listMy  determine who can list items created by me
-     * @param listAll determine who can list all items
-     * @param create  determine who can create an item
-     * @param update  determine who can update an item
-     * @param delete  determine who can delete an item
+     * @param get     determines who can get an item
+     * @param listMy  determines who can list items created by themselves
+     * @param listAll determines who can list all items
+     * @param create  determines who can create an item
+     * @param update  determines who can update an item
+     * @param delete  determines who can delete an item
      */
     public ItemPolicy(
             String get,

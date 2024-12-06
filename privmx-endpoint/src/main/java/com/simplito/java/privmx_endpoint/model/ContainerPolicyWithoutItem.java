@@ -17,32 +17,32 @@ package com.simplito.java.privmx_endpoint.model;
 public class ContainerPolicyWithoutItem {
 
     /**
-     * Determine who can get a container.
+     * Determines who can get a container.
      */
     public final String get;
 
     /**
-     * Determine who can update a container.
+     * Determines who can update a container.
      */
     public final String update;
 
     /**
-     * Determine who can delete a container.
+     * Determines who can delete a container.
      */
     public final String delete;
 
     /**
-     * Determine who can update policy.
+     * Determines who can update policy.
      */
     public final String updatePolicy;
 
     /**
-     * Determine whether the updater can be removed from the list of managers.
+     * Determines whether the updater can be removed from the list of managers.
      */
     public final String updaterCanBeRemovedFromManagers;
 
     /**
-     * Determine whether the owner can be removed from the list of managers.
+     * Determines whether the owner can be removed from the list of managers.
      */
     public final String ownerCanBeRemovedFromManagers;
 
@@ -50,12 +50,12 @@ public class ContainerPolicyWithoutItem {
     /**
      * Creates instance of {@link ContainerPolicyWithoutItem}.
      *
-     * @param get                             determine who can get a container
-     * @param update                          determine who can update a container
-     * @param delete                          determine who can delete a container
-     * @param updatePolicy                    determine who can update policy
-     * @param updaterCanBeRemovedFromManagers determine whether the updater can be removed from the list of managers
-     * @param ownerCanBeRemovedFromManagers   determine whether the owner can be removed from the list of managers
+     * @param get                             determines who can get a container
+     * @param update                          determines who can update a container
+     * @param delete                          determines who can delete a container
+     * @param updatePolicy                    determines who can update policy
+     * @param updaterCanBeRemovedFromManagers determines whether the updater can be removed from the list of managers
+     * @param ownerCanBeRemovedFromManagers   determines whether the owner can be removed from the list of managers
      */
     public ContainerPolicyWithoutItem(
             String get,

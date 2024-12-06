@@ -32,22 +32,22 @@ public class ContainerPolicyValues {
     public static final ContainerPolicyValue NONE = new ContainerPolicyValue("none");
 
     /**
-     * Grants access to the all Context users, allowing them to perform actions on container.
+     * Allows all Context users to perform actions on container.
      */
     public static final ContainerPolicyValue ALL = new ContainerPolicyValue("all");
 
     /**
-     * Grants access to the users, allowing them to perform actions on container.
+     * Allows the container's users to perform actions on container.
      */
     public static final ContainerPolicyComplexValue USER = new ContainerPolicyComplexValue("user");
 
     /**
-     * Grants access to the managers, allowing them to perform actions on container.
+     * Allows the container managers to perform actions on container.
      */
     public static final ContainerPolicyComplexValue MANAGER = new ContainerPolicyComplexValue("manager");
 
     /**
-     * Grants access to the container's owner, allowing them to perform actions on container.
+     * Allows the container's owner to perform actions on container.
      */
     public static final ContainerPolicyComplexValue OWNER = new ContainerPolicyComplexValue("owner");
 }

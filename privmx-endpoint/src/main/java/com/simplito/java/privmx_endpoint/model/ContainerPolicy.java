@@ -24,12 +24,12 @@ public class ContainerPolicy extends ContainerPolicyWithoutItem {
     /**
      * Creates instance of {@link ContainerPolicy}.
      *
-     * @param get                             determine who can get a container
-     * @param update                          determine who can update a container
-     * @param delete                          determine who can delete a container
-     * @param updatePolicy                    determine who can update policy
-     * @param updaterCanBeRemovedFromManagers determine whether the updater can be removed from the list of managers
-     * @param ownerCanBeRemovedFromManagers   determine whether the owner can be removed from the list of managers
+     * @param get                             determines who can get a container
+     * @param update                          determines who can update a container
+     * @param delete                          determines who can delete a container
+     * @param updatePolicy                    determines who can update policy
+     * @param updaterCanBeRemovedFromManagers determines whether the updater can be removed from the list of managers
+     * @param ownerCanBeRemovedFromManagers   determines whether the owner can be removed from the list of managers
      * @param item                            policy for container's items
      */
     public ContainerPolicy(
