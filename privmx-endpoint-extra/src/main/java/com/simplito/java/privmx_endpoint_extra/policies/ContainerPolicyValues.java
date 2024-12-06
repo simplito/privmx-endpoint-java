@@ -42,7 +42,7 @@ public class ContainerPolicyValues {
     public static final ContainerPolicyComplexValue USER = new ContainerPolicyComplexValue("user");
 
     /**
-     * Allows the container managers to perform actions on container.
+     * Allows the container's managers to perform actions on container.
      */
     public static final ContainerPolicyComplexValue MANAGER = new ContainerPolicyComplexValue("manager");
 

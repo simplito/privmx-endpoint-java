@@ -37,7 +37,7 @@ public class ItemPolicyValues {
     public static final ItemPolicyComplexValue USER = new ItemPolicyComplexValue("user");
 
     /**
-     * Allows the container managers to perform actions on item.
+     * Allows the container's managers to perform actions on item.
      */
     public static final ItemPolicyComplexValue MANAGER = new ItemPolicyComplexValue("manager");
 
