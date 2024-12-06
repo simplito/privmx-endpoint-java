@@ -13,6 +13,176 @@
 
 namespace privmx {
     namespace wrapper {
+
+        //Core
+        jobject
+        itemPolicy2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ItemPolicy itemPolicy
+        ) {
+            jclass itemPolicyCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/ItemPolicy");
+            jmethodID initItemPolicyMID = ctx->GetMethodID(
+                    itemPolicyCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;" // get
+                    "Ljava/lang/String;" // listMy
+                    "Ljava/lang/String;" // listAll
+                    "Ljava/lang/String;" // create
+                    "Ljava/lang/String;" // update
+                    "Ljava/lang/String;" // delete
+                    ")V"
+            );
+            jstring get = nullptr;
+            jstring listMy = nullptr;
+            jstring listAll = nullptr;
+            jstring create = nullptr;
+            jstring update = nullptr;
+            jstring delete_ = nullptr;
+            if (itemPolicy.get.has_value()) get = ctx->NewStringUTF(itemPolicy.get->c_str());
+            if (itemPolicy.listMy.has_value())
+                listMy = ctx->NewStringUTF(itemPolicy.listMy->c_str());
+            if (itemPolicy.listAll.has_value())
+                listAll = ctx->NewStringUTF(itemPolicy.listAll->c_str());
+            if (itemPolicy.create.has_value())
+                create = ctx->NewStringUTF(itemPolicy.create->c_str());
+            if (itemPolicy.update.has_value())
+                update = ctx->NewStringUTF(itemPolicy.update->c_str());
+            if (itemPolicy.delete_.has_value())
+                delete_ = ctx->NewStringUTF(itemPolicy.delete_->c_str());
+            return ctx->NewObject(
+                    itemPolicyCls,
+                    initItemPolicyMID,
+                    get,
+                    listMy,
+                    listAll,
+                    create,
+                    update,
+                    delete_
+            );
+        }
+
+        jobject containerPolicyWithoutItem2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContainerPolicyWithoutItem containerPolicyWithoutItem
+        ) {
+            jclass containerPolicyWithoutItemCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/ContainerPolicyWithoutItem");
+            jmethodID initContainerPolicyWithoutItemMID = ctx->GetMethodID(
+                    containerPolicyWithoutItemCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;" // get
+                    "Ljava/lang/String;" // update
+                    "Ljava/lang/String;" // delete
+                    "Ljava/lang/String;" // updatePolicy
+                    "Ljava/lang/String;" // updaterCanBeRemovedFromManagers
+                    "Ljava/lang/String;" // ownerCanBeRemovedFromManagers
+                    ")V"
+            );
+            jstring get = nullptr;
+            jstring update = nullptr;
+            jstring delete_ = nullptr;
+            jstring updatePolicy = nullptr;
+            jstring updaterCanBeRemovedFromManagers = nullptr;
+            jstring ownerCanBeRemovedFromManagers = nullptr;
+            if (containerPolicyWithoutItem.get.has_value()) {
+                get = ctx->NewStringUTF(containerPolicyWithoutItem.get->c_str());
+            }
+            if (containerPolicyWithoutItem.update.has_value()) {
+                update = ctx->NewStringUTF(containerPolicyWithoutItem.update->c_str());
+            }
+            if (containerPolicyWithoutItem.delete_.has_value()) {
+                delete_ = ctx->NewStringUTF(containerPolicyWithoutItem.delete_->c_str());
+            }
+            if (containerPolicyWithoutItem.updatePolicy.has_value()) {
+                updatePolicy = ctx->NewStringUTF(containerPolicyWithoutItem.updatePolicy->c_str());
+            }
+            if (containerPolicyWithoutItem.updaterCanBeRemovedFromManagers.has_value()) {
+                updaterCanBeRemovedFromManagers = ctx->NewStringUTF(
+                        containerPolicyWithoutItem.updaterCanBeRemovedFromManagers->c_str());
+            }
+            if (containerPolicyWithoutItem.ownerCanBeRemovedFromManagers.has_value()) {
+                ownerCanBeRemovedFromManagers = ctx->NewStringUTF(
+                        containerPolicyWithoutItem.ownerCanBeRemovedFromManagers->c_str());
+            }
+
+            return ctx->NewObject(
+                    containerPolicyWithoutItemCls,
+                    initContainerPolicyWithoutItemMID,
+                    get,
+                    update,
+                    delete_,
+                    updatePolicy,
+                    updaterCanBeRemovedFromManagers,
+                    ownerCanBeRemovedFromManagers
+            );
+        }
+
+        jobject containerPolicy2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContainerPolicy containerPolicy
+        ) {
+            jclass containerPolicyCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/ContainerPolicy");
+            jmethodID initContainerPolicyMID = ctx->GetMethodID(
+                    containerPolicyCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;" // get
+                    "Ljava/lang/String;" // update
+                    "Ljava/lang/String;" // delete
+                    "Ljava/lang/String;" // updatePolicy
+                    "Ljava/lang/String;" // updaterCanBeRemovedFromManagers
+                    "Ljava/lang/String;" // ownerCanBeRemovedFromManagers
+                    "Lcom/simplito/java/privmx_endpoint/model/ItemPolicy;" // item
+                    ")V"
+            );
+            jstring get = nullptr;
+            jstring update = nullptr;
+            jstring delete_ = nullptr;
+            jstring updatePolicy = nullptr;
+            jstring updaterCanBeRemovedFromManagers = nullptr;
+            jstring ownerCanBeRemovedFromManagers = nullptr;
+            jobject itemPolicy = nullptr;
+            if (containerPolicy.get.has_value()) {
+                get = ctx->NewStringUTF(containerPolicy.get->c_str());
+            }
+            if (containerPolicy.update.has_value()) {
+                update = ctx->NewStringUTF(containerPolicy.update->c_str());
+            }
+            if (containerPolicy.delete_.has_value()) {
+                delete_ = ctx->NewStringUTF(containerPolicy.delete_->c_str());
+            }
+            if (containerPolicy.updatePolicy.has_value()) {
+                updatePolicy = ctx->NewStringUTF(containerPolicy.updatePolicy->c_str());
+            }
+            if (containerPolicy.updaterCanBeRemovedFromManagers.has_value()) {
+                updaterCanBeRemovedFromManagers = ctx->NewStringUTF(
+                        containerPolicy.updaterCanBeRemovedFromManagers->c_str());
+            }
+            if (containerPolicy.ownerCanBeRemovedFromManagers.has_value()) {
+                ownerCanBeRemovedFromManagers = ctx->NewStringUTF(
+                        containerPolicy.ownerCanBeRemovedFromManagers->c_str());
+            }
+            if (containerPolicy.item.has_value()) {
+                itemPolicy = itemPolicy2Java(ctx, containerPolicy.item.value());
+            }
+
+            return ctx->NewObject(
+                    containerPolicyCls,
+                    initContainerPolicyMID,
+                    get,
+                    update,
+                    delete_,
+                    updatePolicy,
+                    updaterCanBeRemovedFromManagers,
+                    ownerCanBeRemovedFromManagers,
+                    itemPolicy
+            );
+        }
+
         //Context
         jobject context2Java(
                 JniContextUtils &ctx,
