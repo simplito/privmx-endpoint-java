@@ -22,85 +22,92 @@ import java.util.List;
 public class Inbox {
 
     /**
-     *  ID of the Inbox.
+     * ID of the Inbox.
      */
     public String inboxId;
 
     /**
-     *  ID of the Context.
+     * ID of the Context.
      */
     public String contextId;
 
     /**
-     *  Inbox creation timestamp.
+     * Inbox creation timestamp.
      */
     public Long createDate;
 
     /**
-     *  ID of the user who created the Inbox.
+     * ID of the user who created the Inbox.
      */
     public String creator;
 
     /**
-     *  Inbox last modification timestamp.
+     * Inbox last modification timestamp.
      */
     public Long lastModificationDate;
 
     /**
-     *  ID of the user who last modified the Inbox.
+     * ID of the user who last modified the Inbox.
      */
     public String lastModifier;
 
     /**
-     *  List of users (their IDs) with access to the Inbox.
+     * List of users (their IDs) with access to the Inbox.
      */
     public List<String> users;
 
     /**
-     *  List of users (their IDs) with management rights.
+     * List of users (their IDs) with management rights.
      */
     public List<String> managers;
 
     /**
-     *  Version number (changes on updates).
+     * Version number (changes on updates).
      */
     public Long version;
 
     /**
-     *  Inbox public metadata.
+     * Inbox public metadata.
      */
     public byte[] publicMeta;
 
     /**
-     *  Inbox private metadata.
+     * Inbox private metadata.
      */
     public byte[] privateMeta;
 
     /**
-     *  Inbox files configuration.
+     * Inbox files configuration.
      */
     public FilesConfig filesConfig;
 
     /**
-     *  Status code of retrieval and decryption of the {@code Inbox}.
+     * Inbox policies.
+     */
+    public ContainerPolicyWithoutItem policy;
+
+    /**
+     * Status code of retrieval and decryption of the {@code Inbox}.
      */
     public Long statusCode;
 
     /**
      * Creates instance of {@code Inbox}.
-     * @param inboxId ID of the Inbox.
-     * @param contextId ID of the Context.
-     * @param createDate Inbox creation timestamp.
-     * @param creator ID of the user who created the Inbox.
+     *
+     * @param inboxId              ID of the Inbox.
+     * @param contextId            ID of the Context.
+     * @param createDate           Inbox creation timestamp.
+     * @param creator              ID of the user who created the Inbox.
      * @param lastModificationDate Inbox last modification timestamp.
-     * @param lastModifier ID of the user who last modified the Inbox.
-     * @param users List of users (their IDs) with access to the Inbox.
-     * @param managers List of users (their IDs) with management rights.
-     * @param version Version number (changes on updates).
-     * @param publicMeta Inbox public metadata.
-     * @param privateMeta Inbox private metadata.
-     * @param filesConfig Inbox files configuration.
-     * @param statusCode Status code of retrieval and decryption of the {@code Inbox}.
+     * @param lastModifier         ID of the user who last modified the Inbox.
+     * @param users                List of users (their IDs) with access to the Inbox.
+     * @param managers             List of users (their IDs) with management rights.
+     * @param version              Version number (changes on updates).
+     * @param publicMeta           Inbox public metadata.
+     * @param privateMeta          Inbox private metadata.
+     * @param filesConfig          Inbox files configuration.
+     * @param policy               Inbox policies.
+     * @param statusCode           Status code of retrieval and decryption of the {@code Inbox}.
      */
     public Inbox(
             String inboxId,
@@ -115,6 +122,7 @@ public class Inbox {
             byte[] publicMeta,
             byte[] privateMeta,
             FilesConfig filesConfig,
+            ContainerPolicyWithoutItem policy,
             Long statusCode
     ) {
         this.inboxId = inboxId;
@@ -129,6 +137,7 @@ public class Inbox {
         this.publicMeta = publicMeta;
         this.privateMeta = privateMeta;
         this.filesConfig = filesConfig;
+        this.policy = policy;
         this.statusCode = statusCode;
     }
 }

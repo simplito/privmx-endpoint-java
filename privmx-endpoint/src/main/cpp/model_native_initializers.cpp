@@ -53,6 +53,7 @@ namespace privmx {
                     "Ljava/lang/Long;"
                     "[B"
                     "[B"
+                    "Lcom/simplito/java/privmx_endpoint/model/ContainerPolicy;"
                     "Ljava/lang/Long;"
                     "Ljava/lang/Long;"
                     ")V"
@@ -104,6 +105,7 @@ namespace privmx {
                     ctx.long2jLong(thread_c.lastMsgDate),
                     publicMeta,
                     privateMeta,
+                    containerPolicy2Java(ctx, thread_c.policy),
                     ctx.long2jLong(thread_c.messagesCount),
                     ctx.long2jLong(thread_c.statusCode)
             );
@@ -193,6 +195,7 @@ namespace privmx {
                     "Ljava/lang/Long;"  //version
                     "[B" //publicMeta
                     "[B" //privateMeta
+                    "Lcom/simplito/java/privmx_endpoint/model/ContainerPolicy;" //policy
                     "Ljava/lang/Long;"  //filesCount
                     "Ljava/lang/Long;"
                     ")V"
@@ -232,6 +235,7 @@ namespace privmx {
                     ctx.long2jLong(store_c.version),
                     publicMeta,
                     privateMeta,
+                    containerPolicy2Java(ctx, store_c.policy),
                     ctx.long2jLong(store_c.filesCount),
                     ctx.long2jLong(store_c.statusCode)
             );
@@ -257,6 +261,7 @@ namespace privmx {
                     "[B" //publicMeta
                     "[B" //privateMeta
                     "Lcom/simplito/java/privmx_endpoint/model/FilesConfig;" //filesConfig
+                    "Lcom/simplito/java/privmx_endpoint/model/ContainerPolicyWithoutItem;" //policy
                     "Ljava/lang/Long;" //statusCode
                     ")V"
             );
@@ -309,6 +314,7 @@ namespace privmx {
                     publicMeta,
                     privateMeta,
                     filesConfig,
+                    containerPolicyWithoutItem2Java(ctx, inbox_c.policy),
                     ctx.long2jLong(inbox_c.statusCode)
             );
         }
