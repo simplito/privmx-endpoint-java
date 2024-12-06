@@ -49,55 +49,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_deinit(JNIEnv *e
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_platformConnect(
-        JNIEnv *env,
-        jclass clazz,
-        jstring user_priv_key,
-        jstring solution_id,
-        jstring platform_url
-) {
-    JniContextUtils ctx(env);
-    if (ctx.nullCheck(user_priv_key, "User Private Key") ||
-        ctx.nullCheck(solution_id, "Solution ID") ||
-        ctx.nullCheck(platform_url, "Platform URL")) {
-        return nullptr;
-    }
-    try {
-        jmethodID initMID = ctx->GetMethodID(clazz, "<init>", "(Ljava/lang/Long;Ljava/lang/Long;)V");
-        privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::platformConnect(
-                ctx.jString2string(user_priv_key),
-                ctx.jString2string(solution_id),
-                ctx.jString2string(platform_url)
-        );
-        privmx::endpoint::core::Connection *api = new privmx::endpoint::core::Connection();
-        *api = connection;
-        jobject result = ctx->NewObject(
-                clazz,
-                initMID,
-                ctx.long2jLong((jlong) api),
-                ctx.long2jLong(api->getConnectionId())
-        );
-        return result;
-    } catch (const privmx::endpoint::core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
-    }
-    return nullptr;
-}
-
-extern "C"
-JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContexts(
         JNIEnv *env,
         jobject thiz,
@@ -236,22 +187,72 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_setCertsPath(
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_platformConnectPublic(
+Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
         JNIEnv *env,
         jclass clazz,
+        jstring user_priv_key,
         jstring solution_id,
-        jstring platform_url
+        jstring bridge_url
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(solution_id, "Solution ID") ||
-        ctx.nullCheck(platform_url, "Platform URL")) {
+    if (ctx.nullCheck(user_priv_key, "User Private Key") ||
+        ctx.nullCheck(solution_id, "Solution ID") ||
+        ctx.nullCheck(bridge_url, "Bridge URL")) {
         return nullptr;
     }
     try {
-        jmethodID initMID = ctx->GetMethodID(clazz, "<init>", "(Ljava/lang/Long;Ljava/lang/Long;)V");
-        privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::platformConnectPublic(
+        jmethodID initMID = ctx->GetMethodID(clazz, "<init>",
+                                             "(Ljava/lang/Long;Ljava/lang/Long;)V");
+        privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connect(
+                ctx.jString2string(user_priv_key),
                 ctx.jString2string(solution_id),
-                ctx.jString2string(platform_url)
+                ctx.jString2string(bridge_url)
+        );
+        privmx::endpoint::core::Connection *api = new privmx::endpoint::core::Connection();
+        *api = connection;
+        jobject result = ctx->NewObject(
+                clazz,
+                initMID,
+                ctx.long2jLong((jlong) api),
+                ctx.long2jLong(api->getConnectionId())
+        );
+        return result;
+    } catch (const privmx::endpoint::core::Exception &e) {
+        env->Throw(ctx.coreException2jthrowable(e));
+    } catch (const std::exception &e) {
+        env->ThrowNew(
+                env->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+                e.what()
+        );
+    } catch (...) {
+        env->ThrowNew(
+                env->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+                "Unknown exception"
+        );
+    }
+    return nullptr;
+}
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
+        JNIEnv *env,
+        jclass clazz,
+        jstring solution_id,
+        jstring bridge_url
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(solution_id, "Solution ID") ||
+        ctx.nullCheck(bridge_url, "Bridge URL")) {
+        return nullptr;
+    }
+    try {
+        jmethodID initMID = ctx->GetMethodID(clazz, "<init>",
+                                             "(Ljava/lang/Long;Ljava/lang/Long;)V");
+        privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connectPublic(
+                ctx.jString2string(solution_id),
+                ctx.jString2string(bridge_url)
         );
         privmx::endpoint::core::Connection *api = new privmx::endpoint::core::Connection();
         *api = connection;

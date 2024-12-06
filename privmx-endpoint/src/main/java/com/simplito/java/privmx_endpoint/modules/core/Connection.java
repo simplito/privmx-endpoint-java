@@ -48,7 +48,7 @@ public class Connection implements AutoCloseable {
     public static native void setCertsPath(String certsPath) throws PrivmxException, NativeException;
 
     /**
-     * Connects to the PrivMX Bridge server.
+     * Connects to PrivMX Bridge server.
      *
      * @param userPrivKey user's private key
      * @param solutionId  ID of the Solution
@@ -60,10 +60,28 @@ public class Connection implements AutoCloseable {
      * channel: -
      * payload: {@link Void}
      */
-    public static native Connection platformConnect(String userPrivKey, String solutionId, String platformUrl) throws PrivmxException, NativeException;
+    @Deprecated
+    public static Connection platformConnect(String userPrivKey, String solutionId, String platformUrl) throws PrivmxException, NativeException{
+        return connect(userPrivKey,solutionId,platformUrl);
+    }
 
     /**
-     * Connects to the PrivMX Bridge server as a guest user.
+     * Connects to PrivMX Bridge server.
+     *
+     * @param userPrivKey user's private key
+     * @param solutionId  ID of the Solution
+     * @param bridgeUrl Bridge's Endpoint URL
+     * @return Connection object
+     * @throws PrivmxException thrown when method encounters an exception.
+     * @throws NativeException thrown when method encounters an unknown exception.
+     * @event type: libConnected
+     * channel: -
+     * payload: {@link Void}
+     */
+    public static native Connection connect(String userPrivKey, String solutionId, String bridgeUrl) throws PrivmxException, NativeException;
+
+    /**
+     * Connects to PrivMX Bridge server as a guest user.
      *
      * @param solutionId  ID of the Solution
      * @param platformUrl Platform's Endpoint URL
@@ -74,10 +92,27 @@ public class Connection implements AutoCloseable {
      * channel: -
      * payload: {@link Void}
      */
-    public static native Connection platformConnectPublic(String solutionId, String platformUrl) throws PrivmxException, NativeException;
+    @Deprecated
+    public static Connection platformConnectPublic(String solutionId, String platformUrl) throws PrivmxException, NativeException{
+        return connectPublic(solutionId,platformUrl);
+    }
 
     /**
-     * Disconnects from the PrivMX Bridge server.
+     * Connects to PrivMX Bridge server as a guest user.
+     *
+     * @param solutionId  ID of the Solution
+     * @param bridgeUrl Bridge's Endpoint URL
+     * @return Connection object
+     * @throws PrivmxException thrown when method encounters an exception.
+     * @throws NativeException thrown when method encounters an unknown exception.
+     * @event type: libConnected
+     * channel: -
+     * payload: {@link Void}
+     */
+    public static native Connection connectPublic(String solutionId, String bridgeUrl) throws PrivmxException, NativeException;
+
+    /**
+     * Disconnects from PrivMX Bridge server.
      *
      * @throws IllegalStateException thrown when instance is not connected or closed.
      * @throws PrivmxException       thrown when method encounters an exception.
@@ -132,7 +167,7 @@ public class Connection implements AutoCloseable {
 
 
     /**
-     * If there is an active connnection then it
+     * If there is an active connection then it
      * disconnects from PrivMX Bridge and frees memory making this instance not reusable.
      */
     @Override
