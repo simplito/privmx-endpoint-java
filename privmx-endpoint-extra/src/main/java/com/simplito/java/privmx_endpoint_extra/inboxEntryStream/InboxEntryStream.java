@@ -128,7 +128,6 @@ public class InboxEntryStream {
                 }
             }));
         });
-        System.out.println("Start waiting 2");
         for (Future<?> future : sendingFiles) {
             if (Thread.interrupted()) {
                 cancel();
@@ -140,8 +139,7 @@ public class InboxEntryStream {
                 // catch when in async mode someone call cancel on result Future.
                 cancel();
                 return;
-            } catch (Exception e) {
-                System.out.println("Break waiting on other exception");
+            } catch (Exception ignore) {
             }
         }
         if (sendingFiles.stream().allMatch(Future::isDone)) {
@@ -173,7 +171,11 @@ public class InboxEntryStream {
                 if (controller.isStopped()) {
                     break;
                 }
-                fileHandle.write(inboxHandle, entryStreamListener.onNextChunkRequest(fileInfo));
+                byte[] nextChunk = entryStreamListener.onNextChunkRequest(fileInfo);
+                if (nextChunk == null) {
+                    throw new NullPointerException("Data chunk cannot be null");
+                }
+                fileHandle.write(inboxHandle, nextChunk);
             }
         } else {
             fileHandle.writeStream(inboxHandle, fileInfo.fileStream, controller);
