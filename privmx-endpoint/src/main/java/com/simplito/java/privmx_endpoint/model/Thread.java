@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Holds all available information about a Thread.
+ *
  * @category thread
  * @group Thread
  */
@@ -86,6 +87,11 @@ public class Thread {
     public byte[] privateMeta;
 
     /**
+     * Thread's policies
+     */
+    public ContainerPolicy policy;
+
+    /**
      * Status code of retrieval and decryption of the {@code Thread}.
      */
     public Long statusCode;
@@ -93,20 +99,22 @@ public class Thread {
 
     /**
      * Creates instance of {@code Thread}.
-     * @param contextId ID of the Context.
-     * @param threadId ID of the Thread.
-     * @param createDate Thread creation timestamp.
-     * @param creator ID of the user who created the Thread.
+     *
+     * @param contextId            ID of the Context.
+     * @param threadId             ID of the Thread.
+     * @param createDate           Thread creation timestamp.
+     * @param creator              ID of the user who created the Thread.
      * @param lastModificationDate Thread last modification timestamp.
-     * @param lastModifier ID of the user who last modified the Thread.
-     * @param users List of users (their IDs) with access to the Thread.
-     * @param managers List of users (their IDs) with management rights.
-     * @param version Version number (changes on updates).
-     * @param lastMsgDate Timestamp of the last posted message.
-     * @param publicMeta Total number of messages in the Thread.
-     * @param privateMeta Thread's public metadata.
-     * @param messagesCount Thread's private metadata.
-     * @param statusCode Status code of retrieval and decryption of the {@code Thread}.
+     * @param lastModifier         ID of the user who last modified the Thread.
+     * @param users                List of users (their IDs) with access to the Thread.
+     * @param managers             List of users (their IDs) with management rights.
+     * @param version              Version number (changes on updates).
+     * @param lastMsgDate          Timestamp of the last posted message.
+     * @param publicMeta           Total number of messages in the Thread.
+     * @param privateMeta          Thread's public metadata.
+     * @param policy               Thread's policies.
+     * @param messagesCount        Thread's private metadata.
+     * @param statusCode           Status code of retrieval and decryption of the {@code Thread}.
      */
     public Thread(
             String contextId,
@@ -121,6 +129,7 @@ public class Thread {
             Long lastMsgDate,
             byte[] publicMeta,
             byte[] privateMeta,
+            ContainerPolicy policy,
             Long messagesCount,
             Long statusCode
     ) {
@@ -136,6 +145,7 @@ public class Thread {
         this.lastMsgDate = lastMsgDate;
         this.publicMeta = publicMeta;
         this.privateMeta = privateMeta;
+        this.policy = policy;
         this.messagesCount = messagesCount;
         this.statusCode = statusCode;
     }

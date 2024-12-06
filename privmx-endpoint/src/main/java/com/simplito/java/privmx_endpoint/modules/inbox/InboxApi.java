@@ -11,6 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.inbox;
 
+import com.simplito.java.privmx_endpoint.model.ContainerPolicyWithoutItem;
 import com.simplito.java.privmx_endpoint.model.FilesConfig;
 import com.simplito.java.privmx_endpoint.model.Inbox;
 import com.simplito.java.privmx_endpoint.model.InboxEntry;
@@ -33,7 +34,7 @@ import java.util.Optional;
  *
  * @category inbox
  */
-public class InboxApi implements AutoCloseable{
+public class InboxApi implements AutoCloseable {
     static {
         System.loadLibrary("crypto");
         System.loadLibrary("ssl");
@@ -44,21 +45,23 @@ public class InboxApi implements AutoCloseable{
 
     /**
      * Creates Inbox from existing {@link Connection}.
+     *
      * @param connection current connection
      * @throws IllegalStateException when one of the passed parameters is closed.
      */
     public InboxApi(
             Connection connection
     ) throws IllegalStateException {
-        this(connection,null,null);
+        this(connection, null, null);
     }
 
 
     /**
      * Creates Inbox from existing {@link Connection}, {@link ThreadApi}, {@link StoreApi}.
+     *
      * @param connection active connection to PrivMX Bridge
-     * @param threadApi instance of {@link ThreadApi} created on passed Connection
-     * @param storeApi instance of {@link StoreApi} created on passed Connection
+     * @param threadApi  instance of {@link ThreadApi} created on passed Connection
+     * @param storeApi   instance of {@link StoreApi} created on passed Connection
      * @throws IllegalStateException when one of the passed parameters is closed.
      */
     public InboxApi(
@@ -75,9 +78,10 @@ public class InboxApi implements AutoCloseable{
                 Optional.ofNullable(storeApi).orElse(tmpStoreApi)
         );
         try {
-            if(tmpThreadApi != null) tmpThreadApi.close();
-            if(tmpStoreApi != null) tmpStoreApi.close();
-        }catch (Exception ignore){}
+            if (tmpThreadApi != null) tmpThreadApi.close();
+            if (tmpStoreApi != null) tmpStoreApi.close();
+        } catch (Exception ignore) {
+        }
     }
 
     private native Long init(
@@ -95,7 +99,7 @@ public class InboxApi implements AutoCloseable{
      * @param contextId   ID of the Context of the new Inbox
      * @param users       vector of {@link UserWithPubKey} structs which indicates who will have access to the created Inbox
      * @param managers    vector of {@link UserWithPubKey} structs which indicates who will have access (and management rights) to
-     * the created Inbox
+     *                    the created Inbox
      * @param publicMeta  public (unencrypted) metadata
      * @param privateMeta private (encrypted) metadata
      * @return ID of the created Inbox
@@ -108,12 +112,12 @@ public class InboxApi implements AutoCloseable{
     }
 
     /**
-     Creates a new Inbox.
+     * Creates a new Inbox.
      *
      * @param contextId   ID of the Context of the new Inbox
      * @param users       list of {@link UserWithPubKey} structs which indicates who will have access to the created Inbox
      * @param managers    list of {@link UserWithPubKey} structs which indicates who will have access (and management rights) to
-     * the created Inbox
+     *                    the created Inbox
      * @param publicMeta  public (unencrypted) metadata
      * @param privateMeta private (encrypted) metadata
      * @param filesConfig overrides default file configuration
@@ -122,26 +126,46 @@ public class InboxApi implements AutoCloseable{
      * channel: inbox
      * payload: {@link Inbox}
      */
-    public native String createInbox(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, FilesConfig filesConfig);
+    public String createInbox(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, FilesConfig filesConfig) {
+        return createInbox(contextId, users, managers, publicMeta, privateMeta, filesConfig, null);
+    }
+
+    /**
+     * Creates a new Inbox.
+     *
+     * @param contextId   ID of the Context of the new Inbox
+     * @param users       list of {@link UserWithPubKey} structs which indicates who will have access to the created Inbox
+     * @param managers    list of {@link UserWithPubKey} structs which indicates who will have access (and management rights) to
+     *                    the created Inbox
+     * @param publicMeta  public (unencrypted) metadata
+     * @param privateMeta private (encrypted) metadata
+     * @param filesConfig overrides default file configuration
+     * @param policies    additional container access policies
+     * @return ID of the created Inbox
+     * @event type: inboxCreated
+     * channel: inbox
+     * payload: {@link Inbox}
+     */
+    public native String createInbox(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, FilesConfig filesConfig, ContainerPolicyWithoutItem policies);
 
     /**
      * Updates an existing Inbox.
      *
-     * @param inboxId             ID of the Inbox to update
-     * @param users               vector of UserWithPubKey structs which indicates who will have access to the created Inbox
-     * @param managers            vector of UserWithPubKey structs which indicates who will have access (and have manage rights) to
-     *                            the created Inbox
-     * @param publicMeta          public (unencrypted) metadata
-     * @param privateMeta         private (encrypted) metadata
-     * @param filesConfig         struct to override default files configuration
-     * @param version             current version of the updated Inbox
-     * @param force               force update (without checking version)
+     * @param inboxId     ID of the Inbox to update
+     * @param users       vector of UserWithPubKey structs which indicates who will have access to the created Inbox
+     * @param managers    vector of UserWithPubKey structs which indicates who will have access (and have manage rights) to
+     *                    the created Inbox
+     * @param publicMeta  public (unencrypted) metadata
+     * @param privateMeta private (encrypted) metadata
+     * @param filesConfig struct to override default files configuration
+     * @param version     current version of the updated Inbox
+     * @param force       force update (without checking version)
      * @event type: inboxUpdated
      * channel: inbox
      * payload: {@link Inbox}
      */
-    public void updateInbox(String inboxId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, FilesConfig filesConfig, long version, boolean force){
-        updateInbox(inboxId,users,managers,publicMeta,privateMeta,filesConfig,version,force,true);
+    public void updateInbox(String inboxId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, FilesConfig filesConfig, long version, boolean force) {
+        updateInbox(inboxId, users, managers, publicMeta, privateMeta, filesConfig, version, force, true);
     }
 
     /**
@@ -149,8 +173,8 @@ public class InboxApi implements AutoCloseable{
      *
      * @param inboxId             ID of the Inbox to update
      * @param users               list of {@link UserWithPubKey} structs which indicates who will have access to the created Inbox
-     * @param managers    list of {@link UserWithPubKey} structs which indicates who will have access (and management rights) to
-     * the created Inbox
+     * @param managers            list of {@link UserWithPubKey} structs which indicates who will have access (and management rights) to
+     *                            the created Inbox
      * @param publicMeta          public (unencrypted) metadata
      * @param privateMeta         private (encrypted) metadata
      * @param filesConfig         overrides default file configuration
@@ -161,7 +185,40 @@ public class InboxApi implements AutoCloseable{
      * channel: inbox
      * payload: {@link Inbox}
      */
-    public native void updateInbox(String inboxId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, FilesConfig filesConfig, long version, boolean force, boolean forceGenerateNewKey);
+    public void updateInbox(String inboxId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, FilesConfig filesConfig, long version, boolean force, boolean forceGenerateNewKey) {
+        this.updateInbox(inboxId, users, managers, publicMeta, privateMeta, filesConfig, version, force, forceGenerateNewKey, null);
+    }
+
+    /**
+     * Updates an existing Inbox.
+     *
+     * @param inboxId             ID of the Inbox to update
+     * @param users               list of {@link UserWithPubKey} structs which indicates who will have access to the created Inbox
+     * @param managers            list of {@link UserWithPubKey} structs which indicates who will have access (and management rights) to
+     *                            the created Inbox
+     * @param publicMeta          public (unencrypted) metadata
+     * @param privateMeta         private (encrypted) metadata
+     * @param filesConfig         overrides default file configuration
+     * @param version             current version of the updated Inbox
+     * @param force               force update (without checking version)
+     * @param forceGenerateNewKey force to regenerate a key for the Inbox
+     * @param policies            additional container access policies
+     * @event type: inboxUpdated
+     * channel: inbox
+     * payload: {@link Inbox}
+     */
+    public native void updateInbox(
+            String inboxId,
+            List<UserWithPubKey> users,
+            List<UserWithPubKey> managers,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            FilesConfig filesConfig,
+            long version,
+            boolean force,
+            boolean forceGenerateNewKey,
+            ContainerPolicyWithoutItem policies
+    );
 
     /**
      * Gets a single Inbox by given Inbox ID.
@@ -175,9 +232,9 @@ public class InboxApi implements AutoCloseable{
      * Gets a list of Inboxes in given Context.
      *
      * @param contextId ID of the Context to get Inboxes from
-     * @param skip        skip number of elements to skip from result
-     * @param limit       limit of elements to return for query
-     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of Inboxes
      */
     public PagingList<Inbox> listInboxes(String contextId, long skip, long limit, String sortOrder) {
@@ -188,10 +245,10 @@ public class InboxApi implements AutoCloseable{
      * Gets s list of Inboxes in given Context.
      *
      * @param contextId ID of the Context to get Inboxes from
-     * @param skip        skip number of elements to skip from result
-     * @param limit       limit of elements to return for query
-     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
-     * @param lastId      ID of the element from which query results should start
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId    ID of the element from which query results should start
      * @return list of Inboxes
      */
     public native PagingList<Inbox> listInboxes(String contextId, long skip, long limit, String sortOrder, String lastId);
@@ -220,9 +277,8 @@ public class InboxApi implements AutoCloseable{
      * Prepares a request to send data to an Inbox.
      * You do not have to be logged in to call this function.
      *
-     *
      * @param inboxId ID of the Inbox to which the request applies
-     * @param data entry data to send
+     * @param data    entry data to send
      * @return Inbox handle
      */
     public Long /*inboxHandle*/ prepareEntry(String inboxId, byte[] data) {
@@ -233,9 +289,8 @@ public class InboxApi implements AutoCloseable{
      * Prepares a request to send data to an Inbox.
      * You do not have to be logged in to call this function.
      *
-     *
-     * @param inboxId ID of the Inbox to which the request applies
-     * @param data entry data to send
+     * @param inboxId          ID of the Inbox to which the request applies
+     * @param data             entry data to send
      * @param inboxFileHandles optional list of file handles that will be sent with the request
      * @return Inbox handle
      */
@@ -247,9 +302,8 @@ public class InboxApi implements AutoCloseable{
      * Prepares a request to send data to an Inbox.
      * You do not have to be logged in to call this function.
      *
-     *
-     * @param inboxId ID of the Inbox to which the request applies
-     * @param data entry data to send
+     * @param inboxId          ID of the Inbox to which the request applies
+     * @param data             entry data to send
      * @param inboxFileHandles optional list of file handles that will be sent with the request
      * @param userPrivKey      optional sender's private key which can be used later to encrypt data for that sender
      * @return Inbox handle
@@ -279,12 +333,12 @@ public class InboxApi implements AutoCloseable{
      * Gets list of entries in given Inbox.
      *
      * @param inboxId   ID of the Inbox
-     * @param skip        skip number of elements to skip from result
-     * @param limit       limit of elements to return for query
-     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of entries
      */
-    public PagingList<InboxEntry> listEntries(String inboxId, long skip, long limit, String sortOrder){
+    public PagingList<InboxEntry> listEntries(String inboxId, long skip, long limit, String sortOrder) {
         return listEntries(inboxId, skip, limit, sortOrder, null);
     }
 
@@ -292,10 +346,10 @@ public class InboxApi implements AutoCloseable{
      * Gets list of entries of given Inbox.
      *
      * @param inboxId   ID of the Inbox
-     * @param skip        skip number of elements to skip from result
-     * @param limit       limit of elements to return for query
-     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
-     * @param lastId      ID of the element from which query results should start
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId    ID of the element from which query results should start
      * @return list of entries
      */
     public native PagingList<InboxEntry> listEntries(String inboxId, long skip, long limit, String sortOrder, String lastId);
@@ -314,9 +368,9 @@ public class InboxApi implements AutoCloseable{
      * Creates a file handle to send a file to an Inbox.
      * You do not have to be logged in to call this function.
      *
-     * @param publicMeta public file's metadata
+     * @param publicMeta  public file's metadata
      * @param privateMeta private file's metadata
-     * @param fileSize size of the file to send
+     * @param fileSize    size of the file to send
      * @return File handle
      */
     public native Long /*inboxFileHandle*/ createFileHandle(byte[] publicMeta, byte[] privateMeta, long fileSize);

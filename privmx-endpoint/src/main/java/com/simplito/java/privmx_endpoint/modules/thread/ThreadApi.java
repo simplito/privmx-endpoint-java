@@ -11,6 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.thread;
 
+import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.Message;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.Thread;
@@ -60,7 +61,7 @@ public class ThreadApi implements AutoCloseable {
      * @param contextId   ID of the Context to create the Thread in
      * @param users       list of {@link UserWithPubKey} which indicates who will have access to the created Thread
      * @param managers    list of {@link UserWithPubKey} which indicates who will have access (and management rights) to
-     * the created Thread
+     *                    the created Thread
      * @param publicMeta  public (unencrypted) metadata
      * @param privateMeta private (encrypted) metadata
      * @return ID of the created Thread
@@ -71,7 +72,29 @@ public class ThreadApi implements AutoCloseable {
      * channel: thread
      * payload: {@link Thread}
      */
-    public native String createThread(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta) throws PrivmxException, NativeException, IllegalStateException;
+    public String createThread(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta) throws PrivmxException, NativeException, IllegalStateException {
+        return createThread(contextId, users, managers, publicMeta, privateMeta, null);
+    }
+
+    /**
+     * Creates a new Thread in given Context.
+     *
+     * @param contextId   ID of the Context to create the Thread in
+     * @param users       list of {@link UserWithPubKey} which indicates who will have access to the created Thread
+     * @param managers    list of {@link UserWithPubKey} which indicates who will have access (and management rights) to
+     *                    the created Thread
+     * @param publicMeta  public (unencrypted) metadata
+     * @param privateMeta private (encrypted) metadata
+     * @param policies    additional container access policies
+     * @return ID of the created Thread
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @event type: threadCreated
+     * channel: thread
+     * payload: {@link Thread}
+     */
+    public native String createThread(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, ContainerPolicy policies) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Updates an existing Thread.
@@ -79,7 +102,7 @@ public class ThreadApi implements AutoCloseable {
      * @param threadId    ID of the Thread to update
      * @param users       list of {@link UserWithPubKey} which indicates who will have access to the updated Thread
      * @param managers    list of {@link UserWithPubKey} which indicates who will have access (and management rights) to
-     * the updated Thread
+     *                    the updated Thread
      * @param publicMeta  public (unencrypted) metadata
      * @param privateMeta private (encrypted) metadata
      * @param version     current version of the updated Thread
@@ -98,14 +121,14 @@ public class ThreadApi implements AutoCloseable {
     /**
      * Updates an existing Thread.
      *
-     * @param threadId    ID of the Thread to update
-     * @param users       list of {@link UserWithPubKey} which indicates who will have access to the updated Thread
-     * @param managers    list of {@link UserWithPubKey} which indicates who will have access (and management rights) to
-     * the updated Thread
-     * @param publicMeta  public (unencrypted) metadata
-     * @param privateMeta private (encrypted) metadata
-     * @param version     current version of the updated Thread
-     * @param force       force update (without checking version)
+     * @param threadId            ID of the Thread to update
+     * @param users               list of {@link UserWithPubKey} which indicates who will have access to the updated Thread
+     * @param managers            list of {@link UserWithPubKey} which indicates who will have access (and management rights) to
+     *                            the updated Thread
+     * @param publicMeta          public (unencrypted) metadata
+     * @param privateMeta         private (encrypted) metadata
+     * @param version             current version of the updated Thread
+     * @param force               force update (without checking version)
      * @param forceGenerateNewKey force to regenerate a key for the Thread
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
@@ -114,7 +137,50 @@ public class ThreadApi implements AutoCloseable {
      * channel: thread
      * payload: {@link Thread}
      */
-    public native void updateThread(String threadId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, long version, boolean force, boolean forceGenerateNewKey) throws PrivmxException, NativeException, IllegalStateException;
+    public void updateThread(
+            String threadId,
+            List<UserWithPubKey> users,
+            List<UserWithPubKey> managers,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            long version,
+            boolean force,
+            boolean forceGenerateNewKey
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        updateThread(threadId, users, managers, publicMeta, privateMeta, version, force, forceGenerateNewKey, null);
+    }
+
+    /**
+     * Updates an existing Thread.
+     *
+     * @param threadId            ID of the Thread to update
+     * @param users               list of {@link UserWithPubKey} which indicates who will have access to the updated Thread
+     * @param managers            list of {@link UserWithPubKey} which indicates who will have access (and management rights) to
+     *                            the updated Thread
+     * @param publicMeta          public (unencrypted) metadata
+     * @param privateMeta         private (encrypted) metadata
+     * @param version             current version of the updated Thread
+     * @param force               force update (without checking version)
+     * @param forceGenerateNewKey force to regenerate a key for the Thread
+     * @param policies            additional container access policies
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @event type: threadUpdated
+     * channel: thread
+     * payload: {@link Thread}
+     */
+    public native void updateThread(
+            String threadId,
+            List<UserWithPubKey> users,
+            List<UserWithPubKey> managers,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            long version,
+            boolean force,
+            boolean forceGenerateNewKey,
+            ContainerPolicy policies
+    ) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Gets a Thread by given Thread ID.
@@ -145,11 +211,12 @@ public class ThreadApi implements AutoCloseable {
 
     /**
      * Gets a list of Threads in given Context.
+     *
      * @param contextId ID of the Context to get the Threads from
      * @param skip      skip number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
-     * @param lastId      ID of the element from which query results should start
+     * @param lastId    ID of the element from which query results should start
      * @return list of Threads
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception
@@ -224,7 +291,7 @@ public class ThreadApi implements AutoCloseable {
      * @param skip      skip number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
-     * @param lastId      ID of the element from which query results should start
+     * @param lastId    ID of the element from which query results should start
      * @return list of messages
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
@@ -248,16 +315,17 @@ public class ThreadApi implements AutoCloseable {
 
     /**
      * Updates message in a Thread.
-     * @param messageId ID of the message to update
-     * @param publicMeta public message metadata
+     *
+     * @param messageId   ID of the message to update
+     * @param publicMeta  public message metadata
      * @param privateMeta private message metadata
-     * @param data new content of the message
-     * @event type: threadUpdatedMessage
-     * channel: thread/&lt;threadId&gt;/messages
-     * payload: {@link Message}
+     * @param data        new content of the message
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
+     * @event type: threadUpdatedMessage
+     * channel: thread/&lt;threadId&gt;/messages
+     * payload: {@link Message}
      */
     public native void updateMessage(String messageId, byte[] publicMeta, byte[] privateMeta, byte[] data) throws PrivmxException, NativeException, IllegalStateException;
 
@@ -281,8 +349,8 @@ public class ThreadApi implements AutoCloseable {
 
     /**
      * Subscribes for events in given Thread.
-     * @param threadId ID of the Thread to subscribe
      *
+     * @param threadId ID of the Thread to subscribe
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
@@ -291,8 +359,8 @@ public class ThreadApi implements AutoCloseable {
 
     /**
      * Unsubscribes from events in given Thread.
-     * @param threadId ID of the Thread to unsubscribe
      *
+     * @param threadId ID of the Thread to unsubscribe
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.

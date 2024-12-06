@@ -105,7 +105,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_createInbox(
         jobject managers,
         jbyteArray public_meta,
         jbyteArray private_meta,
-        jobject files_config
+        jobject files_config,
+        jobject container_policies
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
@@ -129,6 +130,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_createInbox(
                 ctx,
                 ctx.jObject2jArray(managers)
         );
+        auto container_policies_n = std::optional<core::ContainerPolicyWithoutItem>(parseContainerPolicy(ctx,container_policies));
         return ctx->NewStringUTF(
                 getInboxApi(ctx, thiz)->createInbox(
                         ctx.jString2string(context_id),
@@ -136,7 +138,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_createInbox(
                         managers_c,
                         core::Buffer::from(ctx.jByteArray2String(public_meta)),
                         core::Buffer::from(ctx.jByteArray2String(private_meta)),
-                        files_config_c
+                        files_config_c,
+                        container_policies_n
                 ).c_str()
         );
     } catch (const core::Exception &e) {
@@ -176,7 +179,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_updateInbox(
         jobject files_config,
         jlong version,
         jboolean force,
-        jboolean force_generate_new_key
+        jboolean force_generate_new_key,
+        jobject container_policies
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(inbox_id, "Inbox ID") ||
@@ -200,6 +204,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_updateInbox(
                 ctx,
                 ctx.jObject2jArray(managers)
         );
+        auto container_policies_n = std::optional<core::ContainerPolicyWithoutItem>(parseContainerPolicy(ctx,container_policies));
         getInboxApi(ctx, thiz)->updateInbox(
                 ctx.jString2string(inbox_id),
                 users_c,
@@ -209,7 +214,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_updateInbox(
                 files_config_c,
                 version,
                 force == JNI_TRUE,
-                force_generate_new_key == JNI_TRUE
+                force_generate_new_key == JNI_TRUE,
+                container_policies_n
         );
     } catch (const core::Exception &e) {
         env->Throw(ctx.coreException2jthrowable(e));
