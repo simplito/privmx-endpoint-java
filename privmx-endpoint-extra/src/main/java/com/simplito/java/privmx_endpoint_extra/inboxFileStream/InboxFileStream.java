@@ -18,31 +18,35 @@ import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStream;
 import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStream.ProgressListener;
 
 /**
- * Base class for Store file streams. Implements progress listeners.
+ * Base class for Inbox file streams.
  *
- * @category store
+ * @category inbox
  */
 public abstract class InboxFileStream {
+
     /**
      * Constant value with optimal size of reading/sending data.
      */
     public static final long OPTIMAL_SEND_SIZE = 128 * 1024L;
+
     /**
      * Reference to file handle.
      */
     protected final Long handle;
+
     /**
-     * Reference to {@link com.simplito.java.privmx_endpoint.modules.inbox.InboxApi}.
+     * Reference to {@link com.simplito.java.privmx_endpoint.modules.inbox.InboxApi} instance.
      */
     protected final InboxApi inboxApi;
+
     private Long processedBytes = 0L;
     private StoreFileStream.ProgressListener progressListener;
     private Boolean closed = false;
 
     /**
-     * Creates instance of {@code StoreFileStream}.
+     * Creates instance of {@link InboxFileStream}.
      *
-     * @param handle   handle to Store file
+     * @param handle   handle to Inbox file
      * @param inboxApi {@link InboxApi} instance that calls read/write methods on files
      */
     protected InboxFileStream(
@@ -53,6 +57,11 @@ public abstract class InboxFileStream {
         this.inboxApi = inboxApi;
     }
 
+    /**
+     * Gets current file handle.
+     *
+     * @return file handle.
+     */
     public Long getFileHandle() {
         return handle;
     }
@@ -78,6 +87,11 @@ public abstract class InboxFileStream {
         }
     }
 
+    /**
+     * Gets size of sent data.
+     *
+     * @return size of sent data.
+     */
     public Long getProcessedBytes() {
         return this.processedBytes;
     }
@@ -97,7 +111,7 @@ public abstract class InboxFileStream {
      * @return ID of the closed file
      * @throws PrivmxException       if there is an error while closing file
      * @throws NativeException       if there is an unknown error while closing file
-     * @throws IllegalStateException when {@code storeApi} is not initialized or there's no connection
+     * @throws IllegalStateException when {@link #inboxApi} is not initialized or there's no connection
      */
     public synchronized String close() throws PrivmxException, NativeException, IllegalStateException {
         String result = inboxApi.closeFile(handle);

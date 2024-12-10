@@ -21,12 +21,11 @@ import java.io.OutputStream;
 
 
 /**
- * Manages handle for file reading.
+ * Manages handle for file reading from Inbox.
  *
  * @category inbox
  */
 public class InboxFileStreamReader extends InboxFileStream {
-
 
     private InboxFileStreamReader(
             Long handle,
@@ -56,11 +55,11 @@ public class InboxFileStreamReader extends InboxFileStream {
     }
 
     /**
-     * Opens Inbox file and writes it into {@link OutputStream}.
+     * Opens Inbox file and writes it into {@link OutputStream} with optimized chunk size {@link  InboxFileStream#OPTIMAL_SEND_SIZE}.
      *
      * @param api          reference to Inbox API
      * @param fileId       ID of the file to open
-     * @param outputStream stream to write downloaded data with optimized chunk size {@link  InboxFileStream#OPTIMAL_SEND_SIZE}
+     * @param outputStream stream to write downloaded data
      * @return ID of the read file
      * @throws IOException           if there is an error while writing the stream
      * @throws IllegalStateException when inboxApi is not initialized or there's no connection
@@ -76,11 +75,11 @@ public class InboxFileStreamReader extends InboxFileStream {
     }
 
     /**
-     * Opens Inbox file and writes it into {@link OutputStream}.
+     * Opens Inbox file and writes it into {@link OutputStream} with optimized chunk size {@link  InboxFileStream#OPTIMAL_SEND_SIZE}.
      *
      * @param api              reference to Inbox API
      * @param fileId           ID of the file to open
-     * @param outputStream     stream to write downloaded data with optimized chunk size {@link  InboxFileStream#OPTIMAL_SEND_SIZE}
+     * @param outputStream     stream to write downloaded data
      * @param streamController controls the process of reading file
      * @return ID of the read file
      * @throws IOException           if there is an error while writing stream
