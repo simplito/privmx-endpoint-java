@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 /**
  * Provides a streamlined process for creating and sending inbox entries
  * with optional file attachments.
- * <p> This class simplifies the complexities of interacting with the Inbox API for sending entries,
+ * <p> This class simplifies interacting with the Inbox API for sending entries,
  * especially when dealing with multiple files. It manages the lifecycle of the entry creation
  * process, including file uploads and final entry submission.
  *
