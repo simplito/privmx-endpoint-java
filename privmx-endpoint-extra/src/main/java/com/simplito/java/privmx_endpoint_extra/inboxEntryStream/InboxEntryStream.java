@@ -427,9 +427,9 @@ public class InboxEntryStream {
     public abstract static class EntryStreamListener {
 
         /**
-         * Override this method to handle when file start sending.
+         * Override this method to handle when the process of sending file starts.
          *
-         * @param file information about the sent file
+         * @param file information about the file being sent
          */
         public void onStartFileSending(FileInfo file) {
 
