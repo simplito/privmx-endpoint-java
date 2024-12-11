@@ -105,15 +105,15 @@ public class InboxFileStreamWriter extends InboxFileStream {
             setProgressListener(streamController);
         }
         byte[] chunk = new byte[(int) InboxFileStream.OPTIMAL_SEND_SIZE];
-        int readed;
+        int read;
         while (true) {
             if (streamController != null && streamController.isStopped()) {
                 return;
             }
-            if ((readed = inputStream.read(chunk)) <= 0) {
+            if ((read = inputStream.read(chunk)) <= 0) {
                 return;
             }
-            write(inboxHandle, Arrays.copyOf(chunk, readed));
+            write(inboxHandle, Arrays.copyOf(chunk, read));
         }
     }
 }
