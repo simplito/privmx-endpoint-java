@@ -33,7 +33,7 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
- * Provides a streamlined process for creating and sending inbox entries
+ * Provides a streamlined process for creating and sending Inbox entries
  * with optional file attachments.
  * <p> This class simplifies interacting with the Inbox API for sending entries,
  * especially when dealing with multiple files. It manages the lifecycle of the entry creation
@@ -65,13 +65,13 @@ public class InboxEntryStream {
      * Creates {@link InboxEntryStream} instance ready for streaming.
      * <p> This method initializes an {@link InboxEntryStream} and prepares it for sending
      * an entry with the provided data. It creates an Inbox handle and sets the
-     * initial state of the stream to {@link State#FILES_SENT}
+     * initial state of the stream to {@link State#FILES_SENT}.
      *
      * @param inboxApi            reference to Inbox API
      * @param inboxId             ID of the Inbox
-     * @param entryStreamListener the listener for stream state changes.
+     * @param entryStreamListener the listener for stream state changes
      * @param data                entry data to send
-     * @return instance of {@link InboxEntryStream} prepared for streaming.
+     * @return instance of {@link InboxEntryStream} prepared for streaming
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
@@ -84,15 +84,15 @@ public class InboxEntryStream {
 
     /**
      * Creates {@link InboxEntryStream} instance ready for streaming.
-     * <p>This method initializes an {@link InboxEntryStream} and prepares it for sending an entry with
+     * <p>This method initializes an {@link InboxEntryStream} and prepares it for sending an entry with the
      * associated files and empty data. It creates Inbox and file handles, setting the initial state of the stream
      * to {@link State#PREPARED}, indicating readiness for file transfer.
      *
      * @param inboxApi            reference to Inbox API
      * @param inboxId             ID of the Inbox
-     * @param entryStreamListener the listener for stream state changes.
-     * @param filesConfig         information about each entry's file to send.
-     * @return instance of {@link InboxEntryStream} prepared for streaming.
+     * @param entryStreamListener the listener for stream state changes
+     * @param filesConfig         information about each entry's file to send
+     * @return instance of {@link InboxEntryStream} prepared for streaming
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
@@ -114,8 +114,8 @@ public class InboxEntryStream {
      * @param inboxId             ID of the Inbox
      * @param entryStreamListener the listener for stream state changes
      * @param data                entry data to send
-     * @param filesConfig         information about each entry's file to send.
-     * @return instance of {@link InboxEntryStream} prepared for streaming.
+     * @param filesConfig         information about each entry's file to send
+     * @return instance of {@link InboxEntryStream} prepared for streaming
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
@@ -132,7 +132,7 @@ public class InboxEntryStream {
      * <p>This method initializes an {@link InboxEntryStream} and prepares it for sending an entry with the provided data,
      * optional associated files, and optional encryption using the sender's private key. It creates an Inbox handle
      * and initializes file handles for any associated files. The initial state of the stream is determined based
-     * on the presence of files: if no files are provided, the state is set to {@link State#FILES_SENT}; otherwise,
+     * on the presence of files: if no files are provided, the state is set to {@link State#FILES_SENT}. Otherwise,
      * it's set to {@link State#PREPARED}, indicating readiness for file transfer.
      *
      * @param inboxApi            reference to Inbox API
@@ -141,7 +141,7 @@ public class InboxEntryStream {
      * @param data                entry data to send
      * @param filesConfig         information about each entry's file to send
      * @param userPrivKey         sender's private key which can be used later to encrypt data for that sender
-     * @return instance of {@link InboxEntryStream} prepared for streaming.
+     * @return instance of {@link InboxEntryStream} prepared for streaming
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
@@ -322,8 +322,8 @@ public class InboxEntryStream {
      * <p>This method should only be called after all files associated with the entry have been
      * successfully sent, indicated by the stream being in the {@link State#FILES_SENT} state.
      *
-     * @throws PrivmxException       when method encounters an exception during call {@link InboxApi#sendEntry} method
-     * @throws NativeException       when method encounters an unknown exception during call {@link InboxApi#sendEntry} method
+     * @throws PrivmxException       when method encounters an exception while calling {@link InboxApi#sendEntry} method
+     * @throws NativeException       when method encounters an unknown exception while calling {@link InboxApi#sendEntry} method
      * @throws IllegalStateException if the stream is not in the {@link State#FILES_SENT} state
      */
     public synchronized void sendEntry() throws PrivmxException, NativeException, IllegalStateException {
@@ -354,15 +354,15 @@ public class InboxEntryStream {
          */
         FILES_SENT,
         /**
-         * Indicates that an error occurred during the process of sending files or the Entry.
+         * Indicates that an error occurred while sending files or the Entry.
          */
         ERROR,
         /**
-         * Indicates that the entry has been sent successfully.
+         * Indicates that the entry was sent successfully.
          */
         SENT,
         /**
-         * Indicates that the {@link InboxEntryStream} has been canceled.
+         * Indicates that the {@link InboxEntryStream} was canceled.
          */
         ABORTED
     }
@@ -419,7 +419,7 @@ public class InboxEntryStream {
     /**
      * Interface for listening to state changes and exchanging data with an {@link InboxEntryStream} instance.
      * <p>
-     * This interface provides callbacks for various events that occur during the lifecycle of an inbox entry stream,
+     * This interface provides callbacks for various events that occur during the lifecycle of an Inbox entry stream,
      * such as starting and ending file sending, requesting file chunks, handling errors, and updating the stream state.
      * <p>
      * Implement this interface to monitor and interact with the entry stream.
@@ -429,14 +429,14 @@ public class InboxEntryStream {
         /**
          * Override this method to handle when file start sending.
          *
-         * @param file information about the file being sent
+         * @param file information about the sent file
          */
         public void onStartFileSending(FileInfo file) {
 
         }
 
         /**
-         * Override this method to handle when file has been send successfully.
+         * Override this method to handle when file was sent successfully.
          *
          * @param file information about the sent file
          */
@@ -449,20 +449,20 @@ public class InboxEntryStream {
          * and the stream requests a chunk of the file to send.
          * <p>This method should return the next chunk of the file.
          * <p>Returning {@code null} will cause a
-         * {@link NullPointerException} during file sending and stop the {@link InboxEntryStream} instance with
+         * {@link NullPointerException} while sending the file and stop the {@link InboxEntryStream} instance with
          * the state {@link State#ERROR}.
          *
-         * @param file info about file for which chunk is requested
-         * @return next chunk of file.
+         * @param file info about the file, which chunk is requested
+         * @return next chunk of the file
          */
         public byte[] onNextChunkRequest(FileInfo file) {
             return null;
         }
 
         /**
-         * Override this method to handle event when each chunk of a file has been sent successfully.
+         * Override this method to handle event when each chunk of a file was sent successfully.
          *
-         * @param file           information about the file for which the chunk was processed
+         * @param file           information about the file, which chunk was processed
          * @param processedBytes accumulated size of sent data
          */
         public void onFileChunkProcessed(FileInfo file, long processedBytes) {
@@ -470,19 +470,19 @@ public class InboxEntryStream {
         }
 
         /**
-         * Override this method to handle event when some error occurs during file sending.
+         * Override this method to handle event when an error occurs while sending files.
          *
          * @param file      information about the file that caused the error
-         * @param throwable exception that occurred during file sending
+         * @param throwable exception that occurred while sending files
          */
         public void onErrorDuringSending(FileInfo file, Throwable throwable) {
 
         }
 
         /**
-         * Override this method to handle event when some error occurs during creating entry.
+         * Override this method to handle event when an error occurs while creating entry.
          *
-         * @param throwable exception that occurred during entry creation
+         * @param throwable exception that occurred while creating an entry
          */
         public void onError(Throwable throwable) {
 
