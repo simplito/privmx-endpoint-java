@@ -39,12 +39,12 @@ public class StoreFileStreamReader extends StoreFileStream {
     /**
      * Opens Store file.
      *
-     * @param api reference to Store API
+     * @param api    reference to Store API
      * @param fileId ID of the file to open
      * @return Instance ready to read from the Store file
      * @throws IllegalStateException when {@code storeApi} is not initialized or there's no connection
-     * @throws PrivmxException if there is an error while opening Store file
-     * @throws NativeException if there is an unknown error while opening Store file
+     * @throws PrivmxException       if there is an error while opening Store file
+     * @throws NativeException       if there is an unknown error while opening Store file
      */
     public static StoreFileStreamReader openFile(
             StoreApi api,
@@ -59,14 +59,14 @@ public class StoreFileStreamReader extends StoreFileStream {
     /**
      * Opens Store file and writes it into {@link OutputStream}.
      *
-     * @param api reference to Store API
-     * @param fileId ID of the file to open
+     * @param api          reference to Store API
+     * @param fileId       ID of the file to open
      * @param outputStream stream to write downloaded data with optimized chunk size {@link  StoreFileStream#OPTIMAL_SEND_SIZE}
      * @return ID of the read file
-     * @throws IOException if there is an error while writing the stream
+     * @throws IOException           if there is an error while writing the stream
      * @throws IllegalStateException when storeApi is not initialized or there's no connection
-     * @throws PrivmxException if there is an error while opening Store file
-     * @throws NativeException if there is an unknown error while opening Store file
+     * @throws PrivmxException       if there is an error while opening Store file
+     * @throws NativeException       if there is an unknown error while opening Store file
      */
     public static String openFile(
             StoreApi api,
@@ -79,15 +79,15 @@ public class StoreFileStreamReader extends StoreFileStream {
     /**
      * Opens Store file and writes it into {@link OutputStream}.
      *
-     * @param api reference to Store API
-     * @param fileId ID of the file to open
-     * @param outputStream stream to write downloaded data with optimized chunk size {@link  StoreFileStream#OPTIMAL_SEND_SIZE}
+     * @param api              reference to Store API
+     * @param fileId           ID of the file to open
+     * @param outputStream     stream to write downloaded data with optimized chunk size {@link  StoreFileStream#OPTIMAL_SEND_SIZE}
      * @param streamController controls the process of reading file
      * @return ID of the read file
-     * @throws IOException if there is an error while writing stream
+     * @throws IOException           if there is an error while writing stream
      * @throws IllegalStateException when storeApi is not initialized or there's no connection
-     * @throws PrivmxException if there is an error while reading Store file
-     * @throws NativeException if there is an unknown error while reading Store file
+     * @throws PrivmxException       if there is an error while reading Store file
+     * @throws NativeException       if there is an unknown error while reading Store file
      */
     public static String openFile(
             StoreApi api,
@@ -95,7 +95,7 @@ public class StoreFileStreamReader extends StoreFileStream {
             OutputStream outputStream,
             Controller streamController
     ) throws IOException, IllegalStateException, PrivmxException, NativeException {
-        StoreFileStreamReader input = StoreFileStreamReader.openFile(api,fileId);
+        StoreFileStreamReader input = StoreFileStreamReader.openFile(api, fileId);
         if (streamController != null) {
             input.setProgressListener(streamController);
         }
@@ -116,10 +116,10 @@ public class StoreFileStreamReader extends StoreFileStream {
      *
      * @param size size of data to read (the recommended size is {@link  StoreFileStream#OPTIMAL_SEND_SIZE})
      * @return Read data
-     * @throws IOException when {@code this} is closed
-     * @throws PrivmxException when method encounters an exception
-     * @throws NativeException when method encounters an unknown exception
-     * @throws IllegalStateException when {@link #storeApi} is closed    
+     * @throws IOException           when {@code this} is closed
+     * @throws PrivmxException       when method encounters an exception
+     * @throws NativeException       when method encounters an unknown exception
+     * @throws IllegalStateException when {@link #storeApi} is closed
      */
     public byte[] read(Long size) throws IOException, PrivmxException, NativeException, IllegalStateException {
         if (isClosed()) throw new IOException("File handle is closed");
@@ -133,8 +133,8 @@ public class StoreFileStreamReader extends StoreFileStream {
      *
      * @param position new cursor position
      * @throws IllegalStateException if {@code storeApi} is not initialized or connected
-     * @throws PrivmxException if there is an error while seeking
-     * @throws NativeException if there is an unknown error while seeking
+     * @throws PrivmxException       if there is an error while seeking
+     * @throws NativeException       if there is an unknown error while seeking
      */
     public void seek(long position) throws IllegalStateException, PrivmxException, NativeException {
         storeApi.seekInFile(handle,position);

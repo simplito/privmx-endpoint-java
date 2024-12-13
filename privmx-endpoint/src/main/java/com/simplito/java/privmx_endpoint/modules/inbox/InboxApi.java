@@ -41,6 +41,7 @@ public class InboxApi implements AutoCloseable {
         System.loadLibrary("privmx-endpoint-java");
     }
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final Long api;
 
     /**

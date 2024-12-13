@@ -46,5 +46,6 @@ public class EventQueue {
      */
     public static native Event<?> getEvent() throws PrivmxException, NativeException;
 
-    private EventQueue(){};
+    private EventQueue() {
+    }
 }

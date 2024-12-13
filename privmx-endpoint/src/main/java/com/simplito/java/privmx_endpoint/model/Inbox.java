@@ -19,6 +19,7 @@ import java.util.List;
  * @category inbox
  * @group Inbox
  */
+@SuppressWarnings("CanBeFinal")
 public class Inbox {
 
     /**

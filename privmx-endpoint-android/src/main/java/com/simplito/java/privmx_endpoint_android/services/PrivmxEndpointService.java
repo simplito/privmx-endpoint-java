@@ -51,6 +51,7 @@ public class PrivmxEndpointService extends Service {
 
     /**
      * Sets callback executed when service has been successfully prepared to use.
+     *
      * @param onInit callback
      */
     public void setOnInit(Runnable onInit) {
@@ -64,6 +65,7 @@ public class PrivmxEndpointService extends Service {
     /**
      * Initializes {@link PrivmxEndpointContainer} with certsPath passed in intent extras.
      * If intent does not contain the path, the default value is used.
+     *
      * @see Service#onBind(Intent)
      */
     @Override
@@ -75,6 +77,7 @@ public class PrivmxEndpointService extends Service {
     /**
      * Initialize {@link PrivmxEndpointContainer} with certsPath passed in intent extras.
      * If intent does not contain the path, the default value is used.
+     *
      * @see Service#onStartCommand(Intent, int, int)
      */
     @Override
@@ -85,6 +88,7 @@ public class PrivmxEndpointService extends Service {
 
     /**
      * Disconnects active connections if any exist.
+     *
      * @see Service#onDestroy()
      */
     @Override
@@ -92,7 +96,7 @@ public class PrivmxEndpointService extends Service {
         try {
             privmxEndpoint.disconnectAll();
             privmxEndpoint.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Cannot disconnect from server, reason: " + e.getMessage());
         }
         super.onDestroy();
@@ -100,7 +104,7 @@ public class PrivmxEndpointService extends Service {
 
     private String getCertsPath(Intent intent) {
         String certsPath = getFilesDir() + "/cacert.pem";
-        if(intent != null) {
+        if (intent != null) {
             Bundle extras = intent.getExtras();
             if (extras != null) {
                 certsPath = extras.getString(CERTS_PATH_EXTRA);
@@ -111,6 +115,7 @@ public class PrivmxEndpointService extends Service {
 
     /**
      * Gets {@link PrivmxEndpointContainer}.
+     *
      * @return Initialized container. If the service does not initialize the container successfully, it returns {@code null}
      */
     public PrivmxEndpointContainer getContainer() {
@@ -127,7 +132,6 @@ public class PrivmxEndpointService extends Service {
             binder.onInit.forEach(Runnable::run);
         } catch (Exception e) {
             Log.e(TAG, "Cannot initialize lib");
-            e.printStackTrace();
         }
     }
 

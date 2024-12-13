@@ -15,11 +15,12 @@ import java.util.List;
 
 /**
  * Contains results of listing methods.
- * @param <T> type of items stored in list.
  *
+ * @param <T> type of items stored in list.
  * @category core
  * @group Core
  */
+@SuppressWarnings("CanBeFinal")
 public class PagingList<T> {
     /**
      * Total items available to get.
@@ -33,10 +34,11 @@ public class PagingList<T> {
 
     /**
      * Creates instance of {@code PagingList}.
+     *
      * @param totalAvailable Total items available to get.
-     * @param items  List of items read during single method call.
+     * @param items          List of items read during single method call.
      */
-    public PagingList(Long totalAvailable, List<T> items){
+    public PagingList(Long totalAvailable, List<T> items) {
         this.totalAvailable = totalAvailable;
         this.readItems = items;
     }

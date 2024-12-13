@@ -33,7 +33,7 @@ import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint;
  * @param <T> the type of data contained in the Event.
  * @category core
  */
-public class EventType<T>{
+public class EventType<T> {
     /**
      * Channel of this event type.
      */
@@ -48,7 +48,6 @@ public class EventType<T>{
      * Type of event data.
      */
     public final Class<T> eventResultClass;
-    
 
     private EventType(String channel, String eventType, Class<T> eventClass) {
         this.channel = channel;
@@ -154,6 +153,7 @@ public class EventType<T>{
 
     /**
      * Returns instance to register on new message Events.
+     *
      * @param threadId ID of the Thread to observe
      * @return Predefined event type to catch new messages in matching Thread events
      */
@@ -168,6 +168,7 @@ public class EventType<T>{
 
     /**
      * Returns instance to register on message update Events.
+     *
      * @param threadId ID of the Thread to observe
      * @return predefined event type to catch message updates in matching Thread events
      */
@@ -182,6 +183,7 @@ public class EventType<T>{
 
     /**
      * Returns instance to register on deleted message Events.
+     *
      * @param threadId ID of the Thread to observe
      * @return Predefined event type to catch deleted messages in matching Thread events
      */
@@ -196,6 +198,7 @@ public class EventType<T>{
 
     /**
      * Returns instance to register on created file Events.
+     *
      * @param storeId ID of the store to observe
      * @return Predefined event type to catch new files in matching Store events
      */
@@ -210,6 +213,7 @@ public class EventType<T>{
 
     /**
      * Returns instance to register on file update Events.
+     *
      * @param storeId ID of the Store to observe
      * @return Predefined event type to catch updated files in matching Store events
      */
@@ -224,6 +228,7 @@ public class EventType<T>{
 
     /**
      * Returns instance to register on deleted file Events.
+     *
      * @param storeId ID of the Store to observe
      * @return Predefined event type to catch deleted files in matching Store events
      */
@@ -265,6 +270,7 @@ public class EventType<T>{
 
     /**
      * Returns instance to register on created entry Events.
+     *
      * @param inboxId ID of the Inbox to observe
      * @return predefined event type to catch created entries in matching Inbox events
      */
@@ -279,6 +285,7 @@ public class EventType<T>{
 
     /**
      * Returns instance to register on deleting entries Events.
+     *
      * @param inboxId ID of the Inbox to observe
      * @return predefined event type to catch deleted entries in matching Inbox events
      */

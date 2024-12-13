@@ -15,55 +15,58 @@ import java.util.List;
 
 /**
  * Holds information about Inbox entry.
+ *
  * @category inbox
  * @group Inbox
  */
+@SuppressWarnings("CanBeFinal")
 public class InboxEntry {
 
     /**
-     *  ID of the entry.
+     * ID of the entry.
      */
     public String entryId;
 
     /**
-     *  ID of the Inbox.
+     * ID of the Inbox.
      */
     public String inboxId;
 
     /**
-     *  Entry data.
+     * Entry data.
      */
     public byte[] data;
 
     /**
-     *  List of files attached to the entry.
+     * List of files attached to the entry.
      */
     public List<File> files;
 
     /**
-     *  Public key of the author of an entry.
+     * Public key of the author of an entry.
      */
     public String authorPubKey;
 
     /**
-     *  Inbox entry creation timestamp.
+     * Inbox entry creation timestamp.
      */
     public Long createDate;
 
     /**
-     *  Status code of retrieval and decryption of the {@code Inbox} entry.
+     * Status code of retrieval and decryption of the {@code Inbox} entry.
      */
     public Long statusCode;
 
     /**
      * Creates instance of {@code InboxEntry}.
-     * @param entryId ID of the entry.
-     * @param inboxId ID of the Inbox.
-     * @param data Entry data.
-     * @param files List of files attached to the entry.
+     *
+     * @param entryId      ID of the entry.
+     * @param inboxId      ID of the Inbox.
+     * @param data         Entry data.
+     * @param files        List of files attached to the entry.
      * @param authorPubKey Public key of the author of an entry.
-     * @param createDate Inbox entry creation timestamp.
-     * @param statusCode Status code of retrieval and decryption of the {@code Inbox} entry.
+     * @param createDate   Inbox entry creation timestamp.
+     * @param statusCode   Status code of retrieval and decryption of the {@code Inbox} entry.
      */
     public InboxEntry(
             String entryId,

@@ -17,6 +17,7 @@ package com.simplito.java.privmx_endpoint.model;
  * @category store
  * @group Store
  */
+@SuppressWarnings("CanBeFinal")
 public class ServerFileInfo {
 
     /**
@@ -42,10 +43,11 @@ public class ServerFileInfo {
 
     /**
      * Creates instance of {@code ServerFileInfo}.
-     * @param storeId ID of the Store.
-     * @param fileId ID of the file.
+     *
+     * @param storeId    ID of the Store.
+     * @param fileId     ID of the file.
      * @param createDate File's creation timestamp.
-     * @param author ID of the user who created the file.
+     * @param author     ID of the user who created the file.
      */
     public ServerFileInfo(
             String storeId,

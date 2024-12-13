@@ -14,10 +14,10 @@ package com.simplito.java.privmx_endpoint_extra.events;
 
 import com.simplito.java.privmx_endpoint.model.Event;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -63,18 +63,18 @@ public class EventDispatcher {
 
     /**
      * Emits specified event. It should only be called by event loops.
-     * @param <T> type of event data
+     *
+     * @param <T>   type of event data
      * @param event event data to emit
      */
     public <T> void emit(Event<T> event) {
         List<Pair> callbacks = getCallbacks(getFormattedType(event.channel, event.type));
         for (Pair p : callbacks) {
             try {
-                EventCallback<T> e = (EventCallback<T>) p.callback;
+                @SuppressWarnings("unchecked") EventCallback<T> e = (EventCallback<T>) p.callback;
                 try {
                     e.call(event.data);
-                } catch (Exception error) {
-                    error.printStackTrace();
+                } catch (Exception ignored) {
                 }
             } catch (ClassCastException e) {
                 System.out.println("Cannot process event: issue with cast event data");
