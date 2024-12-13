@@ -111,7 +111,7 @@ public class EventDispatcher {
             map.entrySet()
                     .stream()
                     .map(entry ->
-                            Map.entry(entry.getKey().split("_")[0], entry.getValue())
+                            new AbstractMap.SimpleImmutableEntry<>(entry.getKey().split("_")[0], entry.getValue())
                     )
                     .filter(entry -> !entry.getValue().isEmpty())
                     .forEach(entry -> {
