@@ -377,17 +377,17 @@ public class InboxEntryStream {
         /**
          * Byte array of any arbitrary metadata that can be read by anyone.
          */
-        public byte[] publicMeta;
+        public final byte[] publicMeta;
 
         /**
          * Byte array of any arbitrary metadata that will be encrypted before sending.
          */
-        public byte[] privateMeta;
+        public final byte[] privateMeta;
 
         /**
          * The total size of the file data.
          */
-        public long fileSize;
+        public final long fileSize;
 
         /**
          * An optional {@link InputStream} providing the file data.
