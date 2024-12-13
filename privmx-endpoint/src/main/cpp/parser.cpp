@@ -37,7 +37,7 @@ usersToVector(JniContextUtils &ctx, jobjectArray users) {
 privmx::endpoint::core::ContainerPolicyWithoutItem
 parseContainerPolicyWithoutItem(JniContextUtils &ctx, jobject containerPolicyWithoutItem) {
     auto result = privmx::endpoint::core::ContainerPolicyWithoutItem();
-
+    if (containerPolicyWithoutItem == nullptr) return result;
     jclass policyClass = ctx->GetObjectClass(containerPolicyWithoutItem);
     jfieldID get = ctx->GetFieldID(policyClass, "get", "Ljava/lang/String;");
     jfieldID update = ctx->GetFieldID(policyClass, "update", "Ljava/lang/String;");
@@ -69,6 +69,7 @@ parseContainerPolicyWithoutItem(JniContextUtils &ctx, jobject containerPolicyWit
 privmx::endpoint::core::ContainerPolicy
 parseContainerPolicy(JniContextUtils &ctx, jobject containerPolicy) {
     auto result = privmx::endpoint::core::ContainerPolicy();
+    if (containerPolicy == nullptr) return result;
 
     jclass policyClass = ctx->GetObjectClass(containerPolicy);
     jfieldID get = ctx->GetFieldID(policyClass, "get", "Ljava/lang/String;");
@@ -106,7 +107,7 @@ parseContainerPolicy(JniContextUtils &ctx, jobject containerPolicy) {
 privmx::endpoint::core::ItemPolicy
 parseItemPolicy(JniContextUtils &ctx, jobject itemPolicy) {
     auto result = privmx::endpoint::core::ItemPolicy();
-
+    if (itemPolicy == nullptr) return result;
     jclass policyClass = ctx->GetObjectClass(itemPolicy);
     jfieldID get = ctx->GetFieldID(policyClass, "get", "Ljava/lang/String;");
     jfieldID listMy = ctx->GetFieldID(policyClass, "listMy", "Ljava/lang/String;");
