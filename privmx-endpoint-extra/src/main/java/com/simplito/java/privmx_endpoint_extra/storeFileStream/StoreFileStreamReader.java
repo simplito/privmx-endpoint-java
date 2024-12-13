@@ -17,8 +17,6 @@ import com.simplito.java.privmx_endpoint.modules.store.StoreApi;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 
 /**
@@ -137,7 +135,6 @@ public class StoreFileStreamReader extends StoreFileStream {
      * @throws NativeException       if there is an unknown error while seeking
      */
     public void seek(long position) throws IllegalStateException, PrivmxException, NativeException {
-        storeApi.seekInFile(handle,position);
-        ((ThreadPoolExecutor) Executors.newSingleThreadExecutor()).getQueue().clear();
+        storeApi.seekInFile(handle, position);
     }
 }
