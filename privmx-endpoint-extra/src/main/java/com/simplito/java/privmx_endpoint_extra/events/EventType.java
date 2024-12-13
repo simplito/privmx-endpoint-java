@@ -58,7 +58,7 @@ public class EventType<T> {
     /**
      * Predefined event type that captures successful platform connection events.
      */
-    public static EventType<Void> ConnectedEvent = new EventType<>(
+    public static final EventType<Void> ConnectedEvent = new EventType<>(
             "",
             "libConnected",
             Void.class
@@ -68,7 +68,7 @@ public class EventType<T> {
      * Predefined event type to catch special events.
      * This type could be used to emit/handle events with custom implementations (e.g. to break event loops).
      */
-    public static EventType<Void> LibBreakEvent = new EventType<>(
+    public static final EventType<Void> LibBreakEvent = new EventType<>(
             "",
             "libBreak",
             Void.class
@@ -77,7 +77,7 @@ public class EventType<T> {
     /**
      * Predefined event type to catch disconnection events.
      */
-    public static EventType<Void> DisconnectedEvent = new EventType<>(
+    public static final EventType<Void> DisconnectedEvent = new EventType<>(
             "",
             "libDisconnected",
             Void.class
@@ -86,7 +86,7 @@ public class EventType<T> {
     /**
      * Predefined event type to catch created Thread events.
      */
-    public static EventType<Thread> ThreadCreatedEvent = new EventType<>(
+    public static final EventType<Thread> ThreadCreatedEvent = new EventType<>(
             "thread",
             "threadCreated",
             Thread.class
@@ -95,7 +95,7 @@ public class EventType<T> {
     /**
      * Predefined event type to catch updated Thread events.
      */
-    public static EventType<Thread> ThreadUpdatedEvent = new EventType<>(
+    public static final EventType<Thread> ThreadUpdatedEvent = new EventType<>(
             "thread",
             "threadUpdated",
             Thread.class
@@ -104,7 +104,7 @@ public class EventType<T> {
     /**
      * Predefined event type to catch updated Thread stats events.
      */
-    public static EventType<ThreadStatsEventData> ThreadStatsChangedEvent = new EventType<>(
+    public static final EventType<ThreadStatsEventData> ThreadStatsChangedEvent = new EventType<>(
             "thread",
             "threadStats",
             ThreadStatsEventData.class
@@ -113,7 +113,7 @@ public class EventType<T> {
     /**
      * Predefined event type to catch deleted Thread events.
      */
-    public static EventType<ThreadDeletedEventData> ThreadDeletedEvent = new EventType<>(
+    public static final EventType<ThreadDeletedEventData> ThreadDeletedEvent = new EventType<>(
             "thread",
             "threadDeleted",
             ThreadDeletedEventData.class
@@ -121,7 +121,7 @@ public class EventType<T> {
     /**
      * Predefined event type to catch created Store events.
      */
-    public static EventType<Store> StoreCreatedEvent = new EventType<>(
+    public static final EventType<Store> StoreCreatedEvent = new EventType<>(
             "store",
             "storeCreated",
             Store.class
@@ -129,7 +129,7 @@ public class EventType<T> {
     /**
      * Predefined event type to catch updated Store events.
      */
-    public static EventType<Store> StoreUpdatedEvent = new EventType<>(
+    public static final EventType<Store> StoreUpdatedEvent = new EventType<>(
             "store",
             "storeUpdated",
             Store.class
@@ -137,7 +137,7 @@ public class EventType<T> {
     /**
      * Predefined event type to catch updated Store stats events.
      */
-    public static EventType<StoreStatsChangedEventData> StoreStatsChangedEvent = new EventType<>(
+    public static final EventType<StoreStatsChangedEventData> StoreStatsChangedEvent = new EventType<>(
             "store",
             "storeStatsChanged",
             StoreStatsChangedEventData.class
@@ -145,7 +145,7 @@ public class EventType<T> {
     /**
      * Predefined event type to catch deleted Store stats events.
      */
-    public static EventType<StoreDeletedEventData> StoreDeletedEvent = new EventType<>(
+    public static final EventType<StoreDeletedEventData> StoreDeletedEvent = new EventType<>(
             "store",
             "storeDeleted",
             StoreDeletedEventData.class
