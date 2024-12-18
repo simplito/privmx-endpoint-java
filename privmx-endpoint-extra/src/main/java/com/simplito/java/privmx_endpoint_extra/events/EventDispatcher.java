@@ -71,7 +71,7 @@ public class EventDispatcher {
         List<Pair> callbacks = getCallbacks(getFormattedType(event.channel, event.type));
         for (Pair p : callbacks) {
             try {
-                @SuppressWarnings("unchecked") EventCallback<T> e = (EventCallback<T>) p.callback;
+                EventCallback<T> e = (EventCallback<T>) p.callback;
                 try {
                     e.call(event.data);
                 } catch (Exception ignored) {
