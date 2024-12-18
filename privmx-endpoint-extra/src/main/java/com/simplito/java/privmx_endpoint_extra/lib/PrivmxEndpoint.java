@@ -228,14 +228,4 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
             );
         }
     }
-
-//    /**
-//     * Disconnects from PrivMX Bridge and frees memory.
-//     *
-//     * @throws Exception when instance is currently closed
-//     */
-//    @Override
-//    public void close() throws Exception {
-//        super.close();
-//    }
 }
