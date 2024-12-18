@@ -72,9 +72,9 @@ public class InboxEntryStream {
      * @param entryStreamListener the listener for stream state changes
      * @param data                entry data to send
      * @return instance of {@link InboxEntryStream} prepared for streaming
-     * @throws PrivmxException       when method encounters an exception during creating handles for Inbox or file
-     * @throws NativeException       when method encounters an unknown exception during creating handles for Inbox or file
-     * @throws IllegalStateException when {@link IllegalStateException} was thrown during creating handles for Inbox or file
+     * @throws PrivmxException       when method encounters an exception while creating handles for Inbox or file
+     * @throws NativeException       when method encounters an unknown exception while creating handles for Inbox or file
+     * @throws IllegalStateException when {@link IllegalStateException} was thrown while creating handles for Inbox or file
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
@@ -96,9 +96,9 @@ public class InboxEntryStream {
      * @param entryStreamListener the listener for stream state changes
      * @param filesConfig         information about each entry's file to send
      * @return instance of {@link InboxEntryStream} prepared for streaming
-     * @throws PrivmxException       when method encounters an exception during creating handles for Inbox or file
-     * @throws NativeException       when method encounters an unknown exception during creating handles for Inbox or file
-     * @throws IllegalStateException when {@link IllegalStateException} was thrown during creating handles for Inbox or file
+     * @throws PrivmxException       when method encounters an exception while creating handles for Inbox or file
+     * @throws NativeException       when method encounters an unknown exception while creating handles for Inbox or file
+     * @throws IllegalStateException when {@link IllegalStateException} was thrown while creating handles for Inbox or file
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
@@ -122,9 +122,9 @@ public class InboxEntryStream {
      * @param data                entry data to send
      * @param filesConfig         information about each entry's file to send
      * @return instance of {@link InboxEntryStream} prepared for streaming
-     * @throws PrivmxException       when method encounters an exception during creating handles for Inbox or file
-     * @throws NativeException       when method encounters an unknown exception during creating handles for Inbox or file
-     * @throws IllegalStateException when {@link IllegalStateException} was thrown during creating handles for Inbox or file
+     * @throws PrivmxException       when method encounters an exception while creating handles for Inbox or file
+     * @throws NativeException       when method encounters an unknown exception while creating handles for Inbox or file
+     * @throws IllegalStateException when {@link IllegalStateException} was thrown while creating handles for Inbox or file
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
@@ -151,9 +151,9 @@ public class InboxEntryStream {
      * @param filesConfig         information about each entry's file to send
      * @param userPrivKey         sender's private key which can be used later to encrypt data for that sender
      * @return instance of {@link InboxEntryStream} prepared for streaming
-     * @throws PrivmxException       when method encounters an exception during creating handles for Inbox or file
-     * @throws NativeException       when method encounters an unknown exception during creating handles for Inbox or file
-     * @throws IllegalStateException when {@link IllegalStateException} was thrown during creating handles for Inbox or file
+     * @throws PrivmxException       when method encounters an exception while creating handles for Inbox or file
+     * @throws NativeException       when method encounters an unknown exception while creating handles for Inbox or file
+     * @throws IllegalStateException when {@link IllegalStateException} was thrown while creating handles for Inbox or file
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
