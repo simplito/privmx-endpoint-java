@@ -13,9 +13,11 @@ package com.simplito.java.privmx_endpoint.model;
 
 /**
  * Holds information about the file.
+ *
  * @category store
  * @group Store
  */
+@SuppressWarnings("CanBeFinal")
 public class File {
 
     /**
@@ -50,12 +52,13 @@ public class File {
 
     /**
      * Creates instance of {@code File}.
-     * @param info File's information created by server.
-     * @param publicMeta File's public metadata.
-     * @param privateMeta File's private metadata.
-     * @param size File's size.
+     *
+     * @param info         File's information created by server.
+     * @param publicMeta   File's public metadata.
+     * @param privateMeta  File's private metadata.
+     * @param size         File's size.
      * @param authorPubKey Public key of the author of the file.
-     * @param statusCode Status code of retrieval and decryption of the file.
+     * @param statusCode   Status code of retrieval and decryption of the file.
      */
     public File(
             ServerFileInfo info,

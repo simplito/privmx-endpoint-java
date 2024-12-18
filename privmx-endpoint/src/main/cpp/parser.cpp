@@ -123,42 +123,7 @@ parseItemPolicy(JniContextUtils &ctx, jobject itemPolicy) {
     result.update = ctx.jString2string((jstring) ctx->GetObjectField(itemPolicy, update));
     result.delete_ = ctx.jString2string((jstring) ctx->GetObjectField(itemPolicy, delete_));
     return result;
-};
-
-//privmx::endpoint::inbox::InboxCreateMeta
-//parseInboxCreateMeta(JniContextUtils &ctx, jobject inboxCreateMeta) {
-//    auto result = privmx::endpoint::inbox::InboxCreateMeta();
-//    jclass inboxCreateMetaCls = ctx->FindClass(
-//            "com/simplito/java/privmx_endpoint/model/InboxCreateMeta");
-//    jfieldID nameFID = ctx->GetFieldID(inboxCreateMetaCls, "name", "Ljava/lang/String;");
-//    jfieldID customDataFID = ctx->GetFieldID(inboxCreateMetaCls, "customData", "[B");
-//    result.name = ctx.jString2string(
-//            (jstring) ctx->GetObjectField(inboxCreateMeta, nameFID)
-//    );
-//    result.customData = core::Buffer::from(
-//            ctx.jByteArray2String(
-//                    (jbyteArray) ctx->GetObjectField(inboxCreateMeta, customDataFID)
-//            )
-//    );
-//    return result;
-//}
-//
-//privmx::endpoint::inbox::InboxOptions
-//parseInboxOptions(JniContextUtils &ctx, jobject inboxOptions) {
-//    auto result = privmx::endpoint::inbox::InboxOptions();
-//    jclass inboxCreateMetaCls = ctx->FindClass(
-//            "com/simplito/java/privmx_endpoint/model/InboxOptions");
-//    jfieldID fileConfigFID = ctx->GetFieldID(inboxCreateMetaCls, "fileConfig",
-//                                             "Lcom/simplito/java/privmx_endpoint/model/FileConfig;");
-//    jfieldID publicCustomDataFID = ctx->GetFieldID(inboxCreateMetaCls, "publicCustomData", "[B");
-//    result.fileConfig = parseFileConfig(ctx, ctx->GetObjectField(
-//            inboxOptions, fileConfigFID)
-//    );
-//    result.publicCustomData = ctx.jByteArray2String(
-//            (jbyteArray) ctx->GetObjectField(inboxOptions, publicCustomDataFID)
-//    );
-//    return result;
-//}
+}
 
 privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobject filesConfig) {
     auto result = privmx::endpoint::inbox::FilesConfig();
@@ -424,33 +389,8 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     nullptr
             );
         }
-
-//        else if (core::Events::isLibPlatformDisconnectedEvent(event)) {
-//            return initEvent(
-//                    ctx,
-//                    event->type,
-//                    event->channel,
-//                    nullptr
-//            );
-//        }
-//        else if (core::Events::libs(event)) {
-//            return initEvent(
-//                    ctx,
-//                    event->type,
-//                    event->channel,
-//                    nullptr
-//            );
-//        } else if (event->type == "libDisconnected") {
-//            return initEvent(
-//                    ctx,
-//                    event->type,
-//                    event->channel,
-//                    nullptr
-//            );
-//        }
     } catch (const std::exception &e) {
         throw e;
-//        return nullptr;
     }
     return nullptr;
 }

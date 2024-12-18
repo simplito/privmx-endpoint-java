@@ -17,6 +17,7 @@ package com.simplito.java.privmx_endpoint.model;
  * @category thread
  * @group Thread
  */
+@SuppressWarnings("CanBeFinal")
 public class ServerMessageInfo {
 
     /**
@@ -41,10 +42,11 @@ public class ServerMessageInfo {
 
     /**
      * Creates instance of {@code ServerMessageInfo}.
-     * @param threadId ID of the message's Thread.
-     * @param messageId ID of the message.
+     *
+     * @param threadId   ID of the message's Thread.
+     * @param messageId  ID of the message.
      * @param createDate Message's creation timestamp.
-     * @param author ID of the user who created the message.
+     * @param author     ID of the user who created the message.
      */
     public ServerMessageInfo(
             String threadId,

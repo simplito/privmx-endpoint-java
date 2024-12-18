@@ -17,13 +17,19 @@
 #include <jni.h>
 #include "model_native_initializers.h"
 
-std::vector<privmx::endpoint::core::UserWithPubKey> usersToVector(JniContextUtils &ctx, jobjectArray users);
-privmx::endpoint::core::ContainerPolicyWithoutItem parseContainerPolicyWithoutItem(JniContextUtils &ctx, jobject containerPolicyWithoutItem);
-privmx::endpoint::core::ContainerPolicy parseContainerPolicy(JniContextUtils &ctx, jobject containerPolicy);
+std::vector<privmx::endpoint::core::UserWithPubKey>
+usersToVector(JniContextUtils &ctx, jobjectArray users);
+
+privmx::endpoint::core::ContainerPolicyWithoutItem
+parseContainerPolicyWithoutItem(JniContextUtils &ctx, jobject containerPolicyWithoutItem);
+
+privmx::endpoint::core::ContainerPolicy
+parseContainerPolicy(JniContextUtils &ctx, jobject containerPolicy);
+
 privmx::endpoint::core::ItemPolicy parseItemPolicy(JniContextUtils &ctx, jobject itemPolicy);
-//privmx::endpoint::inbox::InboxCreateMeta parseInboxCreateMeta(JniContextUtils &ctx, jobject inboxCreateMeta);
-//privmx::endpoint::inbox::InboxOptions parseInboxOptions(JniContextUtils &ctx, jobject inboxOptions);
+
 privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobject filesConfig);
+
 jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event);
 
 

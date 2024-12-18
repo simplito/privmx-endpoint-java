@@ -19,6 +19,7 @@ import java.util.List;
  * @category thread
  * @group Thread
  */
+@SuppressWarnings("CanBeFinal")
 public class Thread {
 
     /**

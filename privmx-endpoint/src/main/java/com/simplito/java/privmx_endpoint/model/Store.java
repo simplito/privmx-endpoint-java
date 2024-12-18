@@ -19,6 +19,7 @@ import java.util.List;
  * @category store
  * @group Store
  */
+@SuppressWarnings("CanBeFinal")
 public class Store {
     /**
      * ID of the Store.

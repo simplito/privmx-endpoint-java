@@ -13,7 +13,7 @@ package com.simplito.java.privmx_endpoint_extra.model;
 
 
 /**
- * Constant values for sort order to use in PrivmxEnpoint lists methods.
+ * Constant values for sort order to use in PrivmxEndpoint lists methods.
  *
  * @category core
  */
@@ -29,5 +29,6 @@ public class SortOrder {
      */
     public static final String DESC = "desc";
 
-    private SortOrder(){}
+    private SortOrder() {
+    }
 }

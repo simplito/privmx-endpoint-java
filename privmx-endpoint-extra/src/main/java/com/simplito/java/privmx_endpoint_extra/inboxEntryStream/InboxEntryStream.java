@@ -196,18 +196,22 @@ public class InboxEntryStream {
         if (streamState != State.PREPARED) {
             throw new IllegalStateException("Stream should be in state PREPARED. Current state is: " + streamState.name());
         }
-        inboxFiles.forEach((fileInfo, fileHandle) -> {
-            sendingFiles.add(fileStreamExecutor.submit(() -> {
-                try {
-                    sendFile(fileInfo, fileHandle);
-                    entryStreamListener.onEndFileSending(fileInfo);
-                } catch (Exception e) {
-                    stopFileStreams();
-                    onError(e);
-                    entryStreamListener.onErrorDuringSending(fileInfo, e);
-                }
-            }));
-        });
+        inboxFiles.forEach(
+                (fileInfo, fileHandle) -> sendingFiles.add(
+                        fileStreamExecutor.submit(
+                                () -> {
+                                    try {
+                                        sendFile(fileInfo, fileHandle);
+                                        entryStreamListener.onEndFileSending(fileInfo);
+                                    } catch (Exception e) {
+                                        stopFileStreams();
+                                        onError(e);
+                                        entryStreamListener.onErrorDuringSending(fileInfo, e);
+                                    }
+                                }
+                        )
+                )
+        );
         for (Future<?> future : sendingFiles) {
             if (Thread.interrupted()) {
                 cancel();
@@ -309,9 +313,7 @@ public class InboxEntryStream {
     private void stopFileStreams() {
         if (streamState == State.PREPARED && !sendingFiles.isEmpty()) {
             synchronized (sendingFiles) {
-                sendingFiles.forEach((task) -> {
-                    task.cancel(true);
-                });
+                sendingFiles.forEach(task -> task.cancel(true));
             }
         }
     }
@@ -387,17 +389,17 @@ public class InboxEntryStream {
         /**
          * Byte array of any arbitrary metadata that can be read by anyone.
          */
-        public byte[] publicMeta;
+        public final byte[] publicMeta;
 
         /**
          * Byte array of any arbitrary metadata that will be encrypted before sending.
          */
-        public byte[] privateMeta;
+        public final byte[] privateMeta;
 
         /**
          * The total size of the file data.
          */
-        public long fileSize;
+        public final long fileSize;
 
         /**
          * An optional {@link InputStream} providing the file data.
@@ -405,7 +407,7 @@ public class InboxEntryStream {
          * {@link EntryStreamListener#onNextChunkRequest} to request chunks of data
          * for sending.
          */
-        public InputStream fileStream;
+        public final InputStream fileStream;
 
         /**
          * Creates instance of {@link FileInfo}.
@@ -436,6 +438,7 @@ public class InboxEntryStream {
      * <p>
      * Implement this interface to monitor and interact with the entry stream.
      */
+    @SuppressWarnings("EmptyMethod")
     public abstract static class EntryStreamListener {
 
         /**
@@ -467,6 +470,7 @@ public class InboxEntryStream {
          * @param file info about the file, which chunk is requested
          * @return next chunk of the file
          */
+        @SuppressWarnings("SameReturnValue")
         public byte[] onNextChunkRequest(FileInfo file) {
             return null;
         }
