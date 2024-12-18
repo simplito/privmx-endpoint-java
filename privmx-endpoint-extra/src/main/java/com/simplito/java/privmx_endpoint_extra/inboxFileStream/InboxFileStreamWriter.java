@@ -61,13 +61,10 @@ public class InboxFileStreamWriter extends InboxFileStream {
      *
      * @param inboxHandle the handle of the Inbox to write to
      * @param data        data to write (the recommended size of data chunk is {@link InboxFileStream#OPTIMAL_SEND_SIZE})
-     * @throws PrivmxException       if there is an error while writing chunk
-     * @throws NativeException       if there is an unknown error while writing chunk
-     * @throws IllegalStateException when inboxApi is not initialized or there's no connection
-     * @throws IOException           when {@code this} is closed
      * @throws PrivmxException       when method encounters an exception while executing {@link InboxApi#writeToFile}
      * @throws NativeException       when method encounters an unknown exception while executing {@link InboxApi#writeToFile}
      * @throws IllegalStateException when {@link #inboxApi} is closed
+     * @throws IOException           when {@code this} is closed
      */
     public void write(long inboxHandle, byte[] data) throws PrivmxException, NativeException, IllegalStateException, IOException {
         if (isClosed()) throw new IOException("File handle is closed");
@@ -83,7 +80,7 @@ public class InboxFileStreamWriter extends InboxFileStream {
      * @throws PrivmxException       when method encounters an exception while executing {@link InboxApi#writeToFile}
      * @throws NativeException       when method encounters an unknown exception while executing {@link InboxApi#writeToFile}
      * @throws IllegalStateException when {@link #inboxApi} is closed
-     * @throws IOException           when {@link InputStream#read} thrown exception
+     * @throws IOException           when {@link InputStream#read} thrown exception or {@code this} is closed
      */
     public void writeStream(long inboxHandle, InputStream inputStream) throws PrivmxException, NativeException, IllegalStateException, IOException {
         writeStream(inboxHandle, inputStream, null);
@@ -98,7 +95,7 @@ public class InboxFileStreamWriter extends InboxFileStream {
      * @throws PrivmxException       when method encounters an exception while executing {@link InboxApi#writeToFile}
      * @throws NativeException       when method encounters an unknown exception while executing {@link InboxApi#writeToFile}
      * @throws IllegalStateException when {@link #inboxApi} is closed
-     * @throws IOException           when {@link InputStream#read} thrown exception
+     * @throws IOException           when {@link InputStream#read} thrown exception or {@code this} is closed
      */
     public void writeStream(long inboxHandle, InputStream inputStream, StoreFileStream.Controller streamController) throws PrivmxException, NativeException, IllegalStateException, IOException {
         if (streamController != null) {

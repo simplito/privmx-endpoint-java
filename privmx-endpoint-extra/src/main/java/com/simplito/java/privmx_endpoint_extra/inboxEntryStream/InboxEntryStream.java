@@ -72,6 +72,9 @@ public class InboxEntryStream {
      * @param entryStreamListener the listener for stream state changes
      * @param data                entry data to send
      * @return instance of {@link InboxEntryStream} prepared for streaming
+     * @throws PrivmxException       when method encounters an exception while creating handles for Inbox or file
+     * @throws NativeException       when method encounters an unknown exception while creating handles for Inbox or file
+     * @throws IllegalStateException when {@link IllegalStateException} was thrown while creating handles for Inbox or file
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
@@ -93,6 +96,9 @@ public class InboxEntryStream {
      * @param entryStreamListener the listener for stream state changes
      * @param filesConfig         information about each entry's file to send
      * @return instance of {@link InboxEntryStream} prepared for streaming
+     * @throws PrivmxException       when method encounters an exception while creating handles for Inbox or file
+     * @throws NativeException       when method encounters an unknown exception while creating handles for Inbox or file
+     * @throws IllegalStateException when {@link IllegalStateException} was thrown while creating handles for Inbox or file
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
@@ -116,6 +122,9 @@ public class InboxEntryStream {
      * @param data                entry data to send
      * @param filesConfig         information about each entry's file to send
      * @return instance of {@link InboxEntryStream} prepared for streaming
+     * @throws PrivmxException       when method encounters an exception while creating handles for Inbox or file
+     * @throws NativeException       when method encounters an unknown exception while creating handles for Inbox or file
+     * @throws IllegalStateException when {@link IllegalStateException} was thrown while creating handles for Inbox or file
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
@@ -142,6 +151,9 @@ public class InboxEntryStream {
      * @param filesConfig         information about each entry's file to send
      * @param userPrivKey         sender's private key which can be used later to encrypt data for that sender
      * @return instance of {@link InboxEntryStream} prepared for streaming
+     * @throws PrivmxException       when method encounters an exception while creating handles for Inbox or file
+     * @throws NativeException       when method encounters an unknown exception while creating handles for Inbox or file
+     * @throws IllegalStateException when {@link IllegalStateException} was thrown while creating handles for Inbox or file
      */
     public static InboxEntryStream prepareEntry(
             InboxApi inboxApi,
@@ -324,7 +336,7 @@ public class InboxEntryStream {
      *
      * @throws PrivmxException       when method encounters an exception while calling {@link InboxApi#sendEntry} method
      * @throws NativeException       when method encounters an unknown exception while calling {@link InboxApi#sendEntry} method
-     * @throws IllegalStateException if the stream is not in the {@link State#FILES_SENT} state
+     * @throws IllegalStateException if the stream is not in the {@link State#FILES_SENT} state or {@link InboxApi#sendEntry} thrown {@link IllegalStateException}
      */
     public synchronized void sendEntry() throws PrivmxException, NativeException, IllegalStateException {
         if (streamState != State.FILES_SENT) {
