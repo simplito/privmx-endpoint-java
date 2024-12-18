@@ -614,6 +614,11 @@ public class InboxApi implements AutoCloseable {
      */
     public native void unsubscribeFromEntryEvents(String inboxId) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Frees memory.
+     *
+     * @throws Exception when instance is currently closed.
+     */
     @Override
     public void close() throws Exception {
         deinit();
