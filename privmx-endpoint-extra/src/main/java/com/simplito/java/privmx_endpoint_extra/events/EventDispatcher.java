@@ -84,20 +84,12 @@ public class EventDispatcher {
 
     private boolean channelHasNoCallbacks(String channel) {
         synchronized (map) {
-            return Optional.ofNullable(
-                            map
-                                    .entrySet()
-                                    .stream()
-                                    .collect(
-                                            Collectors.groupingBy(
-                                                    entry -> entry.getKey().split("_")[0],
-                                                    Collectors.mapping(Map.Entry::getValue, Collectors.toList())
-                                            )
-                                    ).get(channel)
-                    ).orElse(List.of())
+            return map
+                    .entrySet()
                     .stream()
-                    .flatMap(List::stream)
-                    .count() == 0;
+                    .filter(it -> it.getKey().split("_")[0].equals(channel))
+                    .mapToLong(it -> it.getValue().size())
+                    .sum() == 0;
         }
     }
 
