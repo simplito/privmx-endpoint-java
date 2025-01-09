@@ -51,7 +51,7 @@ public class ItemPolicyBuilder {
      * @param policyValue policy value to set
      * @return {@link ItemPolicyBuilder} instance to allow for method chaining.
      */
-    ItemPolicyBuilder setGet(ItemPolicyValue policyValue) {
+    public ItemPolicyBuilder setGet(ItemPolicyValue policyValue) {
         this.get = policyValue.value;
         return this;
     }
@@ -62,7 +62,7 @@ public class ItemPolicyBuilder {
      * @param policyValue policy value to set
      * @return {@link ItemPolicyBuilder} instance to allow for method chaining.
      */
-    ItemPolicyBuilder setListMy(ItemPolicyValue policyValue) {
+    public ItemPolicyBuilder setListMy(ItemPolicyValue policyValue) {
         this.listMy = policyValue.value;
         return this;
     }
@@ -73,7 +73,7 @@ public class ItemPolicyBuilder {
      * @param policyValue policy value to set
      * @return {@link ItemPolicyBuilder} instance to allow for method chaining.
      */
-    ItemPolicyBuilder setListAll(ItemPolicyValue policyValue) {
+    public ItemPolicyBuilder setListAll(ItemPolicyValue policyValue) {
 
         this.listAll = policyValue.value;
         return this;
@@ -85,7 +85,7 @@ public class ItemPolicyBuilder {
      * @param policyValue policy value to set
      * @return {@link ItemPolicyBuilder} instance to allow for method chaining.
      */
-    ItemPolicyBuilder setCreate(ItemPolicyValue policyValue) {
+    public ItemPolicyBuilder setCreate(ItemPolicyValue policyValue) {
         this.create = policyValue.value;
         return this;
     }
@@ -96,7 +96,7 @@ public class ItemPolicyBuilder {
      * @param policyValue policy value to set
      * @return {@link ItemPolicyBuilder} instance to allow for method chaining.
      */
-    ItemPolicyBuilder setUpdate(ItemPolicyValue policyValue) {
+    public ItemPolicyBuilder setUpdate(ItemPolicyValue policyValue) {
         this.update = policyValue.value;
         return this;
     }
@@ -107,7 +107,7 @@ public class ItemPolicyBuilder {
      * @param policyValue policy value to set
      * @return {@link ItemPolicyBuilder} instance to allow for method chaining.
      */
-    ItemPolicyBuilder setDelete(ItemPolicyValue policyValue) {
+    public ItemPolicyBuilder setDelete(ItemPolicyValue policyValue) {
         this.delete = policyValue.value;
         return this;
     }
@@ -117,7 +117,7 @@ public class ItemPolicyBuilder {
      *
      * @return new {@link ItemPolicy} instance created from this builder policies.
      */
-    ItemPolicy build() {
+    public ItemPolicy build() {
         return new ItemPolicy(
                 get,
                 listMy,
