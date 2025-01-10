@@ -41,7 +41,7 @@ parseContainerPolicyWithoutItem(JniContextUtils &ctx, jobject containerPolicyWit
     jclass policyClass = ctx->GetObjectClass(containerPolicyWithoutItem);
     jfieldID get = ctx->GetFieldID(policyClass, "get", "Ljava/lang/String;");
     jfieldID update = ctx->GetFieldID(policyClass, "update", "Ljava/lang/String;");
-    jfieldID delete_ = ctx->GetFieldID(policyClass, "delete_", "Ljava/lang/String;");
+    jfieldID delete_ = ctx->GetFieldID(policyClass, "delete", "Ljava/lang/String;");
     jfieldID updatePolicy = ctx->GetFieldID(policyClass, "updatePolicy", "Ljava/lang/String;");
     jfieldID updaterCanBeRemovedFromManagers = ctx->GetFieldID(policyClass,
                                                                "updaterCanBeRemovedFromManagers",
@@ -74,7 +74,7 @@ parseContainerPolicy(JniContextUtils &ctx, jobject containerPolicy) {
     jclass policyClass = ctx->GetObjectClass(containerPolicy);
     jfieldID get = ctx->GetFieldID(policyClass, "get", "Ljava/lang/String;");
     jfieldID update = ctx->GetFieldID(policyClass, "update", "Ljava/lang/String;");
-    jfieldID delete_ = ctx->GetFieldID(policyClass, "delete_", "Ljava/lang/String;");
+    jfieldID delete_ = ctx->GetFieldID(policyClass, "delete", "Ljava/lang/String;");
     jfieldID updatePolicy = ctx->GetFieldID(policyClass, "updatePolicy", "Ljava/lang/String;");
     jfieldID updaterCanBeRemovedFromManagers = ctx->GetFieldID(policyClass,
                                                                "updaterCanBeRemovedFromManagers",
@@ -114,7 +114,7 @@ parseItemPolicy(JniContextUtils &ctx, jobject itemPolicy) {
     jfieldID listAll = ctx->GetFieldID(policyClass, "listAll", "Ljava/lang/String;");
     jfieldID create = ctx->GetFieldID(policyClass, "create", "Ljava/lang/String;");
     jfieldID update = ctx->GetFieldID(policyClass, "update", "Ljava/lang/String;");
-    jfieldID delete_ = ctx->GetFieldID(policyClass, "delete_", "Ljava/lang/String;");
+    jfieldID delete_ = ctx->GetFieldID(policyClass, "delete", "Ljava/lang/String;");
 
     result.get = ctx.jString2string((jstring) ctx->GetObjectField(itemPolicy, get));
     result.listMy = ctx.jString2string((jstring) ctx->GetObjectField(itemPolicy, listMy));
