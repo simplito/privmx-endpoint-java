@@ -13,6 +13,9 @@ package com.simplito.java.privmx_endpoint.model;
 
 /**
  * Contains container's policies.
+ *
+ * @category core
+ * @group Core
  */
 public class ContainerPolicyWithoutItem {
 
