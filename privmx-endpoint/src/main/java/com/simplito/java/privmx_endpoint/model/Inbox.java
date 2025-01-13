@@ -141,4 +141,42 @@ public class Inbox {
         this.policy = policy;
         this.statusCode = statusCode;
     }
+
+
+    /**
+     * Creates instance of {@code Inbox}.
+     * Constructor without policy parameter (default null)
+     *
+     * @param inboxId              ID of the Inbox.
+     * @param contextId            ID of the Context.
+     * @param createDate           Inbox creation timestamp.
+     * @param creator              ID of the user who created the Inbox.
+     * @param lastModificationDate Inbox last modification timestamp.
+     * @param lastModifier         ID of the user who last modified the Inbox.
+     * @param users                List of users (their IDs) with access to the Inbox.
+     * @param managers             List of users (their IDs) with management rights.
+     * @param version              Version number (changes on updates).
+     * @param publicMeta           Inbox public metadata.
+     * @param privateMeta          Inbox private metadata.
+     * @param filesConfig          Inbox files configuration.
+     * @param statusCode           Status code of retrieval and decryption of the {@code Inbox}.
+     */
+    @Deprecated
+    public Inbox(
+            String inboxId,
+            String contextId,
+            Long createDate,
+            String creator,
+            Long lastModificationDate,
+            String lastModifier,
+            List<String> users,
+            List<String> managers,
+            Long version,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            FilesConfig filesConfig,
+            Long statusCode
+    ) {
+        this(inboxId, contextId, createDate, creator, lastModificationDate, lastModifier, users, managers, version, publicMeta, privateMeta, filesConfig, null, statusCode);
+    }
 }

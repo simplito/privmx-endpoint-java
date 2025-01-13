@@ -148,4 +148,43 @@ public class Store {
         this.filesCount = filesCount;
         this.statusCode = statusCode;
     }
+
+    /**
+     * Creates instance of {@code Store}.
+     * Constructor without policy parameter (default null)
+     *
+     * @param storeId              ID of the Store.
+     * @param contextId            ID of the Context.
+     * @param createDate           Store creation timestamp.
+     * @param creator              ID of the user who created the Store.
+     * @param lastModificationDate Store last modification timestamp.
+     * @param lastFileDate         Timestamp of the last created file.
+     * @param lastModifier         ID of the user who last modified the Store.
+     * @param users                List of users (their IDs) with access to the Store.
+     * @param managers             List of users (their IDs) with management rights.
+     * @param version              Version number (changes on updates).
+     * @param publicMeta           Store's public metadata.
+     * @param privateMeta          Store's private metadata.
+     * @param filesCount           Total number of files in the Store.
+     * @param statusCode           Status code of retrieval and decryption of the {@code Store}.
+     */
+    @Deprecated
+    public Store(
+            String storeId,
+            String contextId,
+            Long createDate,
+            String creator,
+            Long lastModificationDate,
+            Long lastFileDate,
+            String lastModifier,
+            List<String> users,
+            List<String> managers,
+            Long version,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            Long filesCount,
+            Long statusCode
+    ) {
+        this(storeId, contextId, createDate, creator, lastModificationDate, lastFileDate, lastModifier, users, managers, version, publicMeta, privateMeta, null, filesCount, statusCode);
+    }
 }

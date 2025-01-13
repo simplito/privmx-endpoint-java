@@ -150,4 +150,43 @@ public class Thread {
         this.messagesCount = messagesCount;
         this.statusCode = statusCode;
     }
+
+    /**
+     * Creates instance of {@code Thread}.
+     * Constructor without policy parameter (default null)
+     *
+     * @param contextId            ID of the Context.
+     * @param threadId             ID of the Thread.
+     * @param createDate           Thread creation timestamp.
+     * @param creator              ID of the user who created the Thread.
+     * @param lastModificationDate Thread last modification timestamp.
+     * @param lastModifier         ID of the user who last modified the Thread.
+     * @param users                List of users (their IDs) with access to the Thread.
+     * @param managers             List of users (their IDs) with management rights.
+     * @param version              Version number (changes on updates).
+     * @param lastMsgDate          Timestamp of the last posted message.
+     * @param publicMeta           Total number of messages in the Thread.
+     * @param privateMeta          Thread's public metadata.
+     * @param messagesCount        Thread's private metadata.
+     * @param statusCode           Status code of retrieval and decryption of the {@code Thread}.
+     */
+    @Deprecated
+    public Thread(
+            String contextId,
+            String threadId,
+            Long createDate,
+            String creator,
+            Long lastModificationDate,
+            String lastModifier,
+            List<String> users,
+            List<String> managers,
+            Long version,
+            Long lastMsgDate,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            Long messagesCount,
+            Long statusCode
+    ) {
+        this(contextId, threadId, createDate, creator, lastModificationDate, lastModifier, users, managers, version, lastMsgDate, publicMeta, privateMeta, null, messagesCount, statusCode);
+    }
 }
