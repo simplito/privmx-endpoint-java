@@ -144,8 +144,7 @@ public class Inbox {
 
 
     /**
-     * Creates instance of {@code Inbox}.
-     * Constructor without policy parameter (default null)
+     * Creates instance of {@code Inbox} with null policy value.
      *
      * @param inboxId              ID of the Inbox.
      * @param contextId            ID of the Context.

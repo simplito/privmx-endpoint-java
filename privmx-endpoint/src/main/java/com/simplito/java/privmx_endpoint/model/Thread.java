@@ -152,8 +152,7 @@ public class Thread {
     }
 
     /**
-     * Creates instance of {@code Thread}.
-     * Constructor without policy parameter (default null)
+     * Creates instance of {@code Thread} with null policy value.
      *
      * @param contextId            ID of the Context.
      * @param threadId             ID of the Thread.

@@ -150,8 +150,7 @@ public class Store {
     }
 
     /**
-     * Creates instance of {@code Store}.
-     * Constructor without policy parameter (default null)
+     * Creates instance of {@code Store} with null policy value.
      *
      * @param storeId              ID of the Store.
      * @param contextId            ID of the Context.
