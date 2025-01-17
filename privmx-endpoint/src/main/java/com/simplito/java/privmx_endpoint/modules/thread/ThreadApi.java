@@ -116,7 +116,7 @@ public class ThreadApi implements AutoCloseable {
      * payload: {@link Thread}
      */
     public void updateThread(String threadId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, long version, boolean force) throws PrivmxException, NativeException, IllegalStateException {
-        updateThread(threadId, users, managers, publicMeta, privateMeta, version, force, true);
+        updateThread(threadId, users, managers, publicMeta, privateMeta, version, force, false);
     }
 
     /**

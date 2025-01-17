@@ -210,7 +210,7 @@ public class InboxApi implements AutoCloseable {
             long version,
             boolean force
     ) throws PrivmxException, NativeException, IllegalStateException {
-        updateInbox(inboxId, users, managers, publicMeta, privateMeta, filesConfig, version, force, true);
+        updateInbox(inboxId, users, managers, publicMeta, privateMeta, filesConfig, version, force, false);
     }
 
     /**
