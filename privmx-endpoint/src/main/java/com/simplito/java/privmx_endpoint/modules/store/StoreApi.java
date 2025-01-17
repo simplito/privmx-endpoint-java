@@ -116,7 +116,7 @@ public class StoreApi implements AutoCloseable {
      * payload: {@link Store}
      */
     public void updateStore(String storeId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, long version, boolean force) throws PrivmxException, NativeException, IllegalStateException {
-        updateStore(storeId, users, managers, publicMeta, privateMeta, version, force, true);
+        updateStore(storeId, users, managers, publicMeta, privateMeta, version, force, false);
     }
 
     /**
