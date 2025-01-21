@@ -22,6 +22,11 @@ public class ItemPolicyValues {
     public static final ItemPolicyValue DEFAULT = new ItemPolicyValue("default");
 
     /**
+     * Uses the value inherited from the Context.
+     */
+    public static final ItemPolicyValue INHERIT = new ItemPolicyValue("inherit");
+
+    /**
      * Prevents actions from being performed on item.
      */
     public static final ItemPolicyValue NONE = new ItemPolicyValue("none");
