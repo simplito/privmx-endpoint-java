@@ -12,6 +12,7 @@
 package com.simplito.java.privmx_endpoint_extra.policies.builders;
 
 import com.simplito.java.privmx_endpoint.model.ItemPolicy;
+import com.simplito.java.privmx_endpoint_extra.policies.ContainerPolicyValue;
 import com.simplito.java.privmx_endpoint_extra.policies.ItemPolicyValue;
 
 /**
@@ -62,7 +63,7 @@ public class ItemPolicyBuilder {
      * @param policyValue policy value to set
      * @return {@link ItemPolicyBuilder} instance to allow for method chaining.
      */
-    public ItemPolicyBuilder setListMy(ItemPolicyValue policyValue) {
+    public ItemPolicyBuilder setListMy(ContainerPolicyValue policyValue) {
         this.listMy = policyValue.value;
         return this;
     }
@@ -73,7 +74,7 @@ public class ItemPolicyBuilder {
      * @param policyValue policy value to set
      * @return {@link ItemPolicyBuilder} instance to allow for method chaining.
      */
-    public ItemPolicyBuilder setListAll(ItemPolicyValue policyValue) {
+    public ItemPolicyBuilder setListAll(ContainerPolicyValue policyValue) {
 
         this.listAll = policyValue.value;
         return this;
@@ -85,7 +86,7 @@ public class ItemPolicyBuilder {
      * @param policyValue policy value to set
      * @return {@link ItemPolicyBuilder} instance to allow for method chaining.
      */
-    public ItemPolicyBuilder setCreate(ItemPolicyValue policyValue) {
+    public ItemPolicyBuilder setCreate(ContainerPolicyValue policyValue) {
         this.create = policyValue.value;
         return this;
     }
