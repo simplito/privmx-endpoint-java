@@ -277,8 +277,7 @@ public class InboxEntryStream {
         }
     }
 
-    private void onError(Throwable t) {
-        cancel();
+    private synchronized void onError(Throwable t) {
         stopFileStreams();
         closeFileHandles();
         updateState(State.ERROR);
