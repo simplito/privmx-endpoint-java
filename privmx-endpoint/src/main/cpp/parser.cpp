@@ -161,10 +161,12 @@ privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobj
     jfieldID maxFileSizeFID = ctx->GetFieldID(filesConfigCls, "maxFileSize", "Ljava/lang/Long;");
     jfieldID maxWholeUploadSizeFID = ctx->GetFieldID(filesConfigCls, "maxWholeUploadSize",
                                                      "Ljava/lang/Long;");
-    result.minCount = (jlong) ctx->GetObjectField(filesConfig, minCountFID);
-    result.maxCount = (jlong) ctx->GetObjectField(filesConfig, maxCountFID);
-    result.maxFileSize = (jlong) ctx->GetObjectField(filesConfig, maxFileSizeFID);
-    result.maxWholeUploadSize = (jlong) ctx->GetObjectField(filesConfig, maxWholeUploadSizeFID);
+    result.minCount = ctx.getObject(ctx->GetObjectField(filesConfig, minCountFID)).getLongValue();
+    result.maxCount = ctx.getObject(ctx->GetObjectField(filesConfig, maxCountFID)).getLongValue();
+    result.maxFileSize = ctx.getObject(
+            ctx->GetObjectField(filesConfig, maxFileSizeFID)).getLongValue();
+    result.maxWholeUploadSize = ctx.getObject(
+            ctx->GetObjectField(filesConfig, maxWholeUploadSizeFID)).getLongValue();
     return result;
 }
 
