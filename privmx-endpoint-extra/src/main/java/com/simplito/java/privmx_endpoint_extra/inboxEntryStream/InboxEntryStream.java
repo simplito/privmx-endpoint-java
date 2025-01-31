@@ -461,7 +461,7 @@ public class InboxEntryStream {
         /**
          * Override this method to handle event when {@link FileInfo#fileStream} is {@code null}
          * and the stream requests a chunk of the file to send.
-         * <p>This method should return the next chunk of the file.
+         * <p>If you override this method, you should return the next chunk of the file.
          * <p>Returning {@code null} will cause a
          * {@link NullPointerException} while sending the file and stop the {@link InboxEntryStream} instance with
          * the state {@link State#ERROR}.
