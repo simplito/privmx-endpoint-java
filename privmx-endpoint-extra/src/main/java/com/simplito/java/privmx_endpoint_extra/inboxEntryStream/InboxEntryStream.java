@@ -94,7 +94,7 @@ public class InboxEntryStream {
      * @param inboxApi            reference to Inbox API
      * @param inboxId             ID of the Inbox
      * @param entryStreamListener the listener for stream state changes
-     * @param filesConfig         information about each entry's file to send
+     * @param fileInfos           information about each entry's file to send
      * @return instance of {@link InboxEntryStream} prepared for streaming
      * @throws PrivmxException       when method encounters an exception while creating handles for Inbox or file
      * @throws NativeException       when method encounters an unknown exception while creating handles for Inbox or file
@@ -104,23 +104,23 @@ public class InboxEntryStream {
             InboxApi inboxApi,
             String inboxId,
             EntryStreamListener entryStreamListener,
-            List<FileInfo> filesConfig
+            List<FileInfo> fileInfos
     ) throws PrivmxException, NativeException, IllegalStateException {
-        return prepareEntry(inboxApi, inboxId, entryStreamListener, "".getBytes(StandardCharsets.UTF_8), filesConfig);
+        return prepareEntry(inboxApi, inboxId, entryStreamListener, "".getBytes(StandardCharsets.UTF_8), fileInfos);
     }
 
     /**
      * Creates an {@link InboxEntryStream} instance ready for streaming, with optional files and encryption.
      * <p>This method initializes an {@link InboxEntryStream} and prepares it for sending an entry with
      * the provided data and optional associated files. It creates Inbox and file handles (if
-     * {@code filesConfig} is provided), setting the initial state of the stream to
+     * {@code fileInfos} is provided), setting the initial state of the stream to
      * {@link State#PREPARED}, indicating readiness for data and file transfer.
      *
      * @param inboxApi            reference to Inbox API
      * @param inboxId             ID of the Inbox
      * @param entryStreamListener the listener for stream state changes
      * @param data                entry data to send
-     * @param filesConfig         information about each entry's file to send
+     * @param fileInfos           information about each entry's file to send
      * @return instance of {@link InboxEntryStream} prepared for streaming
      * @throws PrivmxException       when method encounters an exception while creating handles for Inbox or file
      * @throws NativeException       when method encounters an unknown exception while creating handles for Inbox or file
@@ -131,9 +131,9 @@ public class InboxEntryStream {
             String inboxId,
             EntryStreamListener entryStreamListener,
             byte[] data,
-            List<FileInfo> filesConfig
+            List<FileInfo> fileInfos
     ) throws PrivmxException, NativeException, IllegalStateException {
-        return prepareEntry(inboxApi, inboxId, entryStreamListener, data, filesConfig, null);
+        return prepareEntry(inboxApi, inboxId, entryStreamListener, data, fileInfos, null);
     }
 
     /**
@@ -148,7 +148,7 @@ public class InboxEntryStream {
      * @param inboxId             ID of the Inbox
      * @param entryStreamListener the listener for stream state changes
      * @param data                entry data to send
-     * @param filesConfig         information about each entry's file to send
+     * @param fileInfos           information about each entry's file to send
      * @param userPrivKey         sender's private key which can be used later to encrypt data for that sender
      * @return instance of {@link InboxEntryStream} prepared for streaming
      * @throws PrivmxException       when method encounters an exception while creating handles for Inbox or file
@@ -160,10 +160,10 @@ public class InboxEntryStream {
             String inboxId,
             EntryStreamListener entryStreamListener,
             byte[] data,
-            List<FileInfo> filesConfig,
+            List<FileInfo> fileInfos,
             String userPrivKey
     ) throws PrivmxException, NativeException, IllegalStateException {
-        Map<FileInfo, InboxFileStreamWriter> files = Optional.ofNullable(filesConfig)
+        Map<FileInfo, InboxFileStreamWriter> files = Optional.ofNullable(fileInfos)
                 .orElse(Collections.emptyList())
                 .stream()
                 .collect(
@@ -277,8 +277,7 @@ public class InboxEntryStream {
         }
     }
 
-    private void onError(Throwable t) {
-        cancel();
+    private synchronized void onError(Throwable t) {
         stopFileStreams();
         closeFileHandles();
         updateState(State.ERROR);
@@ -462,7 +461,7 @@ public class InboxEntryStream {
         /**
          * Override this method to handle event when {@link FileInfo#fileStream} is {@code null}
          * and the stream requests a chunk of the file to send.
-         * <p>This method should return the next chunk of the file.
+         * <p>If you override this method, you should return the next chunk of the file.
          * <p>Returning {@code null} will cause a
          * {@link NullPointerException} while sending the file and stop the {@link InboxEntryStream} instance with
          * the state {@link State#ERROR}.

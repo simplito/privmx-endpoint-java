@@ -25,8 +25,23 @@ public class SpecialPolicyValue extends PolicyValue {
         super(value);
     }
 
+    /**
+     * Uses the default value provided by the Bridge.
+     */
     public static final SpecialPolicyValue DEFAULT = new SpecialPolicyValue("default");
+
+    /**
+     * Uses the inherited value.
+     */
     public static final SpecialPolicyValue INHERIT = new SpecialPolicyValue("inherit");
+
+    /**
+     * Allows to perform an action.
+     */
     public static final SpecialPolicyValue YES = new SpecialPolicyValue("yes");
+
+    /**
+     * Denies to perform an action.
+     */
     public static final SpecialPolicyValue NO = new SpecialPolicyValue("no");
 }

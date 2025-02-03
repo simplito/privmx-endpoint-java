@@ -130,7 +130,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_createInbox(
                 ctx,
                 ctx.jObject2jArray(managers)
         );
-        auto container_policies_n = std::optional<core::ContainerPolicyWithoutItem>(parseContainerPolicy(ctx,container_policies));
+        auto container_policies_n = std::optional<core::ContainerPolicyWithoutItem>(
+                parseContainerPolicyWithoutItem(ctx, container_policies));
         return ctx->NewStringUTF(
                 getInboxApi(ctx, thiz)->createInbox(
                         ctx.jString2string(context_id),
@@ -204,7 +205,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_updateInbox(
                 ctx,
                 ctx.jObject2jArray(managers)
         );
-        auto container_policies_n = std::optional<core::ContainerPolicyWithoutItem>(parseContainerPolicy(ctx,container_policies));
+        auto container_policies_n = std::optional<core::ContainerPolicyWithoutItem>(
+                parseContainerPolicyWithoutItem(ctx, container_policies));
         getInboxApi(ctx, thiz)->updateInbox(
                 ctx.jString2string(inbox_id),
                 users_c,

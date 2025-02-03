@@ -210,7 +210,7 @@ public class InboxApi implements AutoCloseable {
             long version,
             boolean force
     ) throws PrivmxException, NativeException, IllegalStateException {
-        updateInbox(inboxId, users, managers, publicMeta, privateMeta, filesConfig, version, force, true);
+        updateInbox(inboxId, users, managers, publicMeta, privateMeta, filesConfig, version, force, false);
     }
 
     /**
@@ -518,7 +518,7 @@ public class InboxApi implements AutoCloseable {
      * To send the entire file - divide it into pieces of the desired size and call the function for each fragment.
      * You do not have to be logged in to call this function.
      *
-     * @param inboxHandle     ID of the Inbox to which the request applies
+     * @param inboxHandle     handle to the prepared Inbox entry
      * @param inboxFileHandle handle to the file where the uploaded chunk belongs
      * @param dataChunk       file chunk to send
      * @throws PrivmxException       thrown when method encounters an exception.
