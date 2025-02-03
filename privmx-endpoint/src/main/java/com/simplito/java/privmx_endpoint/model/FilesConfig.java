@@ -13,9 +13,11 @@ package com.simplito.java.privmx_endpoint.model;
 
 /**
  * Holds Inbox files configuration.
+ *
  * @category inbox
  * @group Inbox
  */
+@SuppressWarnings("CanBeFinal")
 public class FilesConfig {
 
     /**
@@ -40,9 +42,10 @@ public class FilesConfig {
 
     /**
      * Creates instance of {@code FilesConfig}.
-     * @param minCount Minimum number of files required when sending Inbox entry.
-     * @param maxCount Maximum number of files allowed when sending Inbox entry.
-     * @param maxFileSize Maximum file size allowed when sending Inbox entry.
+     *
+     * @param minCount           Minimum number of files required when sending Inbox entry.
+     * @param maxCount           Maximum number of files allowed when sending Inbox entry.
+     * @param maxFileSize        Maximum file size allowed when sending Inbox entry.
      * @param maxWholeUploadSize Maximum size of all files in total allowed when sending Inbox entry.
      */
     public FilesConfig(Long minCount, Long maxCount, Long maxFileSize, Long maxWholeUploadSize) {

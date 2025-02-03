@@ -17,6 +17,7 @@ package com.simplito.java.privmx_endpoint.model;
  * @category thread
  * @group Thread
  */
+@SuppressWarnings("CanBeFinal")
 public class Message {
 
     /**
@@ -51,12 +52,13 @@ public class Message {
 
     /**
      * Creates instance of {@code Message}.
-     * @param info Message's information created by server.
-     * @param publicMeta Message's public metadata.
-     * @param privateMeta Message's private metadata.
-     * @param data Message's data.
+     *
+     * @param info         Message's information created by server.
+     * @param publicMeta   Message's public metadata.
+     * @param privateMeta  Message's private metadata.
+     * @param data         Message's data.
      * @param authorPubKey Public key of the author of the message.
-     * @param statusCode Status code of retrieval and decryption of the {@code Message}.
+     * @param statusCode   Status code of retrieval and decryption of the {@code Message}.
      */
     public Message(
             ServerMessageInfo info,

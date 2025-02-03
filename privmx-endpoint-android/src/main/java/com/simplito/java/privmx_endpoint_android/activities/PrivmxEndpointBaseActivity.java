@@ -23,8 +23,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.simplito.java.privmx_endpoint_android.services.PrivmxEndpointService;
 import com.simplito.java.privmx_endpoint_extra.events.EventCallback;
 import com.simplito.java.privmx_endpoint_extra.events.EventType;
-import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer;
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint;
+import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer;
 
 /**
  * Manages {@link PrivmxEndpointService} and active connections.
@@ -46,9 +46,9 @@ public abstract class PrivmxEndpointBaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG,"onStart");
+        Log.d(TAG, "onStart");
         Intent intent = new Intent(this, PrivmxEndpointService.class);
-        intent.putExtra(PrivmxEndpointService.CERTS_PATH_EXTRA,getCertPath());
+        intent.putExtra(PrivmxEndpointService.CERTS_PATH_EXTRA, getCertPath());
         startService(intent);
         bindService(intent, privmxEndpointServiceConnection, Context.BIND_AUTO_CREATE);
     }
@@ -69,12 +69,16 @@ public abstract class PrivmxEndpointBaseActivity extends AppCompatActivity {
      * Method called when {@link PrivmxEndpointService} and {@link PrivmxEndpointContainer}
      * have been successfully initialized.
      * Override this method to safely work with {@link PrivmxEndpointBaseActivity#privmxEndpointContainer}.
+     *
+     * @noinspection EmptyMethod
      */
-    protected void onPrivmxEndpointStart() {}
+    protected void onPrivmxEndpointStart() {
+    }
 
     /**
      * Override this method to set the path to your .pem certificate to create secure connection with PrivMX Bridge.
      * If the passed path does not contain .pem file, the default PrivMX certificate is installed.
+     *
      * @return Path to .pem certificate used to initialize {@link PrivmxEndpointService}
      */
     protected abstract String getCertPath();

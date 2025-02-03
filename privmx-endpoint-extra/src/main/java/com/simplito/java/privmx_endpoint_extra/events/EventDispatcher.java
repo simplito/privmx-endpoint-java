@@ -14,10 +14,10 @@ package com.simplito.java.privmx_endpoint_extra.events;
 
 import com.simplito.java.privmx_endpoint.model.Event;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -63,7 +63,8 @@ public class EventDispatcher {
 
     /**
      * Emits specified event. It should only be called by event loops.
-     * @param <T> type of event data
+     *
+     * @param <T>   type of event data
      * @param event event data to emit
      */
     public <T> void emit(Event<T> event) {
@@ -73,8 +74,7 @@ public class EventDispatcher {
                 EventCallback<T> e = (EventCallback<T>) p.callback;
                 try {
                     e.call(event.data);
-                } catch (Exception error) {
-                    error.printStackTrace();
+                } catch (Exception ignored) {
                 }
             } catch (ClassCastException e) {
                 System.out.println("Cannot process event: issue with cast event data");
@@ -84,20 +84,12 @@ public class EventDispatcher {
 
     private boolean channelHasNoCallbacks(String channel) {
         synchronized (map) {
-            return Optional.ofNullable(
-                            map
-                                    .entrySet()
-                                    .stream()
-                                    .collect(
-                                            Collectors.groupingBy(
-                                                    entry -> entry.getKey().split("_")[0],
-                                                    Collectors.mapping(Map.Entry::getValue, Collectors.toList())
-                                            )
-                                    ).get(channel)
-                    ).orElse(List.of())
+            return map
+                    .entrySet()
                     .stream()
-                    .flatMap(List::stream)
-                    .count() == 0;
+                    .filter(it -> it.getKey().split("_")[0].equals(channel))
+                    .mapToLong(it -> it.getValue().size())
+                    .sum() == 0;
         }
     }
 
@@ -111,7 +103,7 @@ public class EventDispatcher {
             map.entrySet()
                     .stream()
                     .map(entry ->
-                            Map.entry(entry.getKey().split("_")[0], entry.getValue())
+                            new AbstractMap.SimpleImmutableEntry<>(entry.getKey().split("_")[0], entry.getValue())
                     )
                     .filter(entry -> !entry.getValue().isEmpty())
                     .forEach(entry -> {

@@ -11,6 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.store;
 
+import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.File;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.Store;
@@ -37,6 +38,7 @@ public class StoreApi implements AutoCloseable {
         System.loadLibrary("privmx-endpoint-java");
     }
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final Long api;
 
     /**
@@ -71,7 +73,29 @@ public class StoreApi implements AutoCloseable {
      * channel: store
      * payload: {@link Store}
      */
-    public native String createStore(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta) throws PrivmxException, NativeException, IllegalStateException;
+    public String createStore(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta) throws PrivmxException, NativeException, IllegalStateException {
+        return createStore(contextId, users, managers, publicMeta, privateMeta, null);
+    }
+
+    /**
+     * Creates a new Store in given Context.
+     *
+     * @param contextId   ID of the Context to create the Store in
+     * @param users       list of {@link UserWithPubKey} which indicates who will have access to the created Store
+     * @param managers    list of {@link UserWithPubKey} which indicates who will have access (and management rights) to the
+     *                    created Store
+     * @param publicMeta  public (unencrypted) metadata
+     * @param privateMeta private (encrypted) metadata
+     * @param policies    additional container access policies
+     * @return Created Store ID
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @event type: storeCreated
+     * channel: store
+     * payload: {@link Store}
+     */
+    public native String createStore(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, ContainerPolicy policies) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Updates an existing Store.
@@ -92,7 +116,7 @@ public class StoreApi implements AutoCloseable {
      * payload: {@link Store}
      */
     public void updateStore(String storeId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, long version, boolean force) throws PrivmxException, NativeException, IllegalStateException {
-        updateStore(storeId, users, managers, publicMeta, privateMeta, version, force, true);
+        updateStore(storeId, users, managers, publicMeta, privateMeta, version, force, false);
     }
 
     /**
@@ -114,7 +138,31 @@ public class StoreApi implements AutoCloseable {
      * channel: store
      * payload: {@link Store}
      */
-    public native void updateStore(String storeId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, long version, boolean force, boolean forceGenerateNewKey) throws PrivmxException, NativeException, IllegalStateException;
+    public void updateStore(String storeId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, long version, boolean force, boolean forceGenerateNewKey) throws PrivmxException, NativeException, IllegalStateException {
+        this.updateStore(storeId, users, managers, publicMeta, privateMeta, version, force, forceGenerateNewKey, null);
+    }
+
+    /**
+     * Updates an existing Store.
+     *
+     * @param storeId             ID of the Store to update
+     * @param users               list of {@link UserWithPubKey} which indicates who will have access to the updated Store
+     * @param managers            list of {@link UserWithPubKey} which indicates who will have access (and management rights) to the
+     *                            updated Store
+     * @param publicMeta          public (unencrypted) metadata
+     * @param privateMeta         private (encrypted) metadata
+     * @param version             current version of the updated Store
+     * @param force               force update (without checking version)
+     * @param forceGenerateNewKey force to regenerate a key for the Store
+     * @param policies            additional container access policies
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @event type: storeUpdated
+     * channel: store
+     * payload: {@link Store}
+     */
+    public native void updateStore(String storeId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, long version, boolean force, boolean forceGenerateNewKey, ContainerPolicy policies) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Gets a single Store by given Store ID.
@@ -150,7 +198,7 @@ public class StoreApi implements AutoCloseable {
      * @param skip      skip number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
-     * @param lastId      ID of the element from which query results should start
+     * @param lastId    ID of the element from which query results should start
      * @return list of Stores
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
@@ -252,6 +300,7 @@ public class StoreApi implements AutoCloseable {
 
     /**
      * Gets a list of files in given Store.
+     *
      * @param storeId   ID of the Store to get files from
      * @param skip      skip number of elements to skip from result
      * @param limit     limit of elements to return for query
@@ -267,11 +316,12 @@ public class StoreApi implements AutoCloseable {
 
     /**
      * Gets a list of files in given Store.
+     *
      * @param storeId   ID of the Store to get files from
      * @param skip      skip number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
-     * @param lastId      ID of the element from which query results should start
+     * @param lastId    ID of the element from which query results should start
      * @return list of files
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.

@@ -214,7 +214,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_createStore(
         jobject users,
         jobject managers,
         jbyteArray public_meta,
-        jbyteArray private_meta
+        jbyteArray private_meta,
+        jobject container_policies
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
@@ -233,13 +234,15 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_createStore(
                 ctx,
                 ctx.jObject2jArray(users)
         );
+        auto container_policies_n = std::optional<core::ContainerPolicy>(parseContainerPolicy(ctx,container_policies));
         return env->NewStringUTF(
                 getStoreApi(ctx, thiz)->createStore(
                         ctx.jString2string(context_id),
                         users_c,
                         managers_c,
                         core::Buffer::from(ctx.jByteArray2String(public_meta)),
-                        core::Buffer::from(ctx.jByteArray2String(private_meta))
+                        core::Buffer::from(ctx.jByteArray2String(private_meta)),
+                        container_policies_n
                 ).c_str()
         );
     } catch (const core::Exception &e) {
@@ -645,7 +648,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_updateStore(
         jbyteArray private_meta,
         jlong version,
         jboolean force,
-        jboolean force_generate_new_key
+        jboolean force_generate_new_key,
+        jobject container_policies
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(store_id, "Store ID") ||
@@ -664,7 +668,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_updateStore(
                 ctx,
                 ctx.jObject2jArray(managers)
         );
-
+        auto container_policies_n = std::optional<core::ContainerPolicy>(parseContainerPolicy(ctx,container_policies));
         getStoreApi(ctx, thiz)->updateStore(
                 ctx.jString2string(store_id),
                 users_c,
@@ -673,7 +677,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_updateStore(
                 core::Buffer::from(ctx.jByteArray2String(private_meta)),
                 version,
                 force == JNI_TRUE,
-                force_generate_new_key == JNI_TRUE
+                force_generate_new_key == JNI_TRUE,
+                container_policies_n
         );
     } catch (const core::Exception &e) {
         env->Throw(ctx.coreException2jthrowable(e));

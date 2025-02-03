@@ -34,40 +34,123 @@ usersToVector(JniContextUtils &ctx, jobjectArray users) {
     return users_c;
 }
 
-//privmx::endpoint::inbox::InboxCreateMeta
-//parseInboxCreateMeta(JniContextUtils &ctx, jobject inboxCreateMeta) {
-//    auto result = privmx::endpoint::inbox::InboxCreateMeta();
-//    jclass inboxCreateMetaCls = ctx->FindClass(
-//            "com/simplito/java/privmx_endpoint/model/InboxCreateMeta");
-//    jfieldID nameFID = ctx->GetFieldID(inboxCreateMetaCls, "name", "Ljava/lang/String;");
-//    jfieldID customDataFID = ctx->GetFieldID(inboxCreateMetaCls, "customData", "[B");
-//    result.name = ctx.jString2string(
-//            (jstring) ctx->GetObjectField(inboxCreateMeta, nameFID)
-//    );
-//    result.customData = core::Buffer::from(
-//            ctx.jByteArray2String(
-//                    (jbyteArray) ctx->GetObjectField(inboxCreateMeta, customDataFID)
-//            )
-//    );
-//    return result;
-//}
-//
-//privmx::endpoint::inbox::InboxOptions
-//parseInboxOptions(JniContextUtils &ctx, jobject inboxOptions) {
-//    auto result = privmx::endpoint::inbox::InboxOptions();
-//    jclass inboxCreateMetaCls = ctx->FindClass(
-//            "com/simplito/java/privmx_endpoint/model/InboxOptions");
-//    jfieldID fileConfigFID = ctx->GetFieldID(inboxCreateMetaCls, "fileConfig",
-//                                             "Lcom/simplito/java/privmx_endpoint/model/FileConfig;");
-//    jfieldID publicCustomDataFID = ctx->GetFieldID(inboxCreateMetaCls, "publicCustomData", "[B");
-//    result.fileConfig = parseFileConfig(ctx, ctx->GetObjectField(
-//            inboxOptions, fileConfigFID)
-//    );
-//    result.publicCustomData = ctx.jByteArray2String(
-//            (jbyteArray) ctx->GetObjectField(inboxOptions, publicCustomDataFID)
-//    );
-//    return result;
-//}
+privmx::endpoint::core::ContainerPolicyWithoutItem
+parseContainerPolicyWithoutItem(JniContextUtils &ctx, jobject containerPolicyWithoutItem) {
+    auto result = privmx::endpoint::core::ContainerPolicyWithoutItem();
+    if (containerPolicyWithoutItem == nullptr) return result;
+    jclass policyClass = ctx->GetObjectClass(containerPolicyWithoutItem);
+    jfieldID get = ctx->GetFieldID(policyClass, "get", "Ljava/lang/String;");
+    jfieldID update = ctx->GetFieldID(policyClass, "update", "Ljava/lang/String;");
+    jfieldID delete_ = ctx->GetFieldID(policyClass, "delete", "Ljava/lang/String;");
+    jfieldID updatePolicy = ctx->GetFieldID(policyClass, "updatePolicy", "Ljava/lang/String;");
+    jfieldID updaterCanBeRemovedFromManagers = ctx->GetFieldID(policyClass,
+                                                               "updaterCanBeRemovedFromManagers",
+                                                               "Ljava/lang/String;");
+    jfieldID ownerCanBeRemovedFromManagers = ctx->GetFieldID(policyClass,
+                                                             "ownerCanBeRemovedFromManagers",
+                                                             "Ljava/lang/String;");
+    jstring value;
+    if ((value = (jstring) ctx->GetObjectField(containerPolicyWithoutItem, get)) != NULL) {
+        result.get = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(containerPolicyWithoutItem, update)) != NULL) {
+        result.update = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(containerPolicyWithoutItem, delete_)) != NULL) {
+        result.delete_ = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(containerPolicyWithoutItem, updatePolicy)) != NULL) {
+        result.updatePolicy = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(containerPolicyWithoutItem,
+                                               updaterCanBeRemovedFromManagers)) != NULL) {
+        result.updaterCanBeRemovedFromManagers = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(containerPolicyWithoutItem,
+                                               ownerCanBeRemovedFromManagers)) != NULL) {
+        result.ownerCanBeRemovedFromManagers = ctx.jString2string(value);
+    }
+    return result;
+}
+
+privmx::endpoint::core::ContainerPolicy
+parseContainerPolicy(JniContextUtils &ctx, jobject containerPolicy) {
+    auto result = privmx::endpoint::core::ContainerPolicy();
+    if (containerPolicy == nullptr) return result;
+
+    jclass policyClass = ctx->GetObjectClass(containerPolicy);
+    jfieldID get = ctx->GetFieldID(policyClass, "get", "Ljava/lang/String;");
+    jfieldID update = ctx->GetFieldID(policyClass, "update", "Ljava/lang/String;");
+    jfieldID delete_ = ctx->GetFieldID(policyClass, "delete", "Ljava/lang/String;");
+    jfieldID updatePolicy = ctx->GetFieldID(policyClass, "updatePolicy", "Ljava/lang/String;");
+    jfieldID updaterCanBeRemovedFromManagers = ctx->GetFieldID(policyClass,
+                                                               "updaterCanBeRemovedFromManagers",
+                                                               "Ljava/lang/String;");
+    jfieldID ownerCanBeRemovedFromManagers = ctx->GetFieldID(policyClass,
+                                                             "ownerCanBeRemovedFromManagers",
+                                                             "Ljava/lang/String;");
+
+    jfieldID item = ctx->GetFieldID(policyClass,
+                                    "item",
+                                    "Lcom/simplito/java/privmx_endpoint/model/ItemPolicy;");
+    jstring value;
+    if ((value = (jstring) ctx->GetObjectField(containerPolicy, get)) != NULL) {
+        result.get = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(containerPolicy, update)) != NULL) {
+        result.update = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(containerPolicy, delete_)) != NULL) {
+        result.delete_ = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(containerPolicy, updatePolicy)) != NULL) {
+        result.updatePolicy = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(containerPolicy,
+                                               updaterCanBeRemovedFromManagers)) != NULL) {
+        result.updaterCanBeRemovedFromManagers = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(containerPolicy,
+                                               ownerCanBeRemovedFromManagers)) != NULL) {
+        result.ownerCanBeRemovedFromManagers = ctx.jString2string(value);
+    }
+    result.item = parseItemPolicy(ctx, ctx->GetObjectField(containerPolicy, item));
+    return result;
+}
+
+privmx::endpoint::core::ItemPolicy
+parseItemPolicy(JniContextUtils &ctx, jobject itemPolicy) {
+    auto result = privmx::endpoint::core::ItemPolicy();
+    if (itemPolicy == nullptr) return result;
+    jclass policyClass = ctx->GetObjectClass(itemPolicy);
+    jfieldID get = ctx->GetFieldID(policyClass, "get", "Ljava/lang/String;");
+    jfieldID listMy = ctx->GetFieldID(policyClass, "listMy", "Ljava/lang/String;");
+    jfieldID listAll = ctx->GetFieldID(policyClass, "listAll", "Ljava/lang/String;");
+    jfieldID create = ctx->GetFieldID(policyClass, "create", "Ljava/lang/String;");
+    jfieldID update = ctx->GetFieldID(policyClass, "update", "Ljava/lang/String;");
+    jfieldID delete_ = ctx->GetFieldID(policyClass, "delete", "Ljava/lang/String;");
+
+    jstring value;
+    if ((value = (jstring) ctx->GetObjectField(itemPolicy, get)) != NULL) {
+        result.get = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(itemPolicy, listMy)) != NULL) {
+        result.listMy = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(itemPolicy, listAll)) != NULL) {
+        result.listAll = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(itemPolicy, create)) != NULL) {
+        result.create = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(itemPolicy, update)) != NULL) {
+        result.update = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(itemPolicy, delete_)) != NULL) {
+        result.delete_ = ctx.jString2string(value);
+    }
+    return result;
+}
 
 privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobject filesConfig) {
     auto result = privmx::endpoint::inbox::FilesConfig();
@@ -78,10 +161,12 @@ privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobj
     jfieldID maxFileSizeFID = ctx->GetFieldID(filesConfigCls, "maxFileSize", "Ljava/lang/Long;");
     jfieldID maxWholeUploadSizeFID = ctx->GetFieldID(filesConfigCls, "maxWholeUploadSize",
                                                      "Ljava/lang/Long;");
-    result.minCount = (jlong) ctx->GetObjectField(filesConfig, minCountFID);
-    result.maxCount = (jlong) ctx->GetObjectField(filesConfig, maxCountFID);
-    result.maxFileSize = (jlong) ctx->GetObjectField(filesConfig, maxFileSizeFID);
-    result.maxWholeUploadSize = (jlong) ctx->GetObjectField(filesConfig, maxWholeUploadSizeFID);
+    result.minCount = ctx.getObject(ctx->GetObjectField(filesConfig, minCountFID)).getLongValue();
+    result.maxCount = ctx.getObject(ctx->GetObjectField(filesConfig, maxCountFID)).getLongValue();
+    result.maxFileSize = ctx.getObject(
+            ctx->GetObjectField(filesConfig, maxFileSizeFID)).getLongValue();
+    result.maxWholeUploadSize = ctx.getObject(
+            ctx->GetObjectField(filesConfig, maxWholeUploadSizeFID)).getLongValue();
     return result;
 }
 
@@ -333,33 +418,8 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     nullptr
             );
         }
-
-//        else if (core::Events::isLibPlatformDisconnectedEvent(event)) {
-//            return initEvent(
-//                    ctx,
-//                    event->type,
-//                    event->channel,
-//                    nullptr
-//            );
-//        }
-//        else if (core::Events::libs(event)) {
-//            return initEvent(
-//                    ctx,
-//                    event->type,
-//                    event->channel,
-//                    nullptr
-//            );
-//        } else if (event->type == "libDisconnected") {
-//            return initEvent(
-//                    ctx,
-//                    event->type,
-//                    event->channel,
-//                    nullptr
-//            );
-//        }
     } catch (const std::exception &e) {
         throw e;
-//        return nullptr;
     }
     return nullptr;
 }

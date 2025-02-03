@@ -17,6 +17,7 @@ package com.simplito.java.privmx_endpoint.model;
  * @category inbox
  * @group Inbox
  */
+@SuppressWarnings("CanBeFinal")
 public class InboxPublicView {
 
     /**
@@ -36,8 +37,9 @@ public class InboxPublicView {
 
     /**
      * Creates instance of {@code InboxPublicView}.
-     * @param inboxId ID of the Inbox.
-     * @param version Version of the Inbox.
+     *
+     * @param inboxId    ID of the Inbox.
+     * @param version    Version of the Inbox.
      * @param publicMeta Inbox public metadata.
      */
     public InboxPublicView(

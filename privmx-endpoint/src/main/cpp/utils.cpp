@@ -12,7 +12,6 @@
 #include "utils.hpp"
 
 std::string JniContextUtils::jString2string(jstring str) {
-    if (str == nullptr) return nullptr;
     const char *tmp = _env->GetStringUTFChars(str, NULL);
     std::string result(tmp);
     _env->ReleaseStringUTFChars(str, tmp);

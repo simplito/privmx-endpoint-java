@@ -96,7 +96,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_createThread(
         jobject users,
         jobject managers,
         jbyteArray public_meta,
-        jbyteArray private_meta
+        jbyteArray private_meta,
+        jobject container_policies
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
@@ -115,13 +116,18 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_createThread(
                 ctx,
                 ctx.jObject2jArray(managers)
         );
+        auto container_policies_opt = std::optional<core::ContainerPolicy>(
+                parseContainerPolicy(ctx,container_policies)
+        );
+
         return ctx->NewStringUTF(
                 getThreadApi(ctx, thiz)->createThread(
                         ctx.jString2string(context_id),
                         users_c,
                         managers_c,
                         core::Buffer::from(ctx.jByteArray2String(public_meta)),
-                        core::Buffer::from(ctx.jByteArray2String(private_meta))
+                        core::Buffer::from(ctx.jByteArray2String(private_meta)),
+                        container_policies_opt
                 ).c_str()
         );
     } catch (const core::Exception &e) {
@@ -476,7 +482,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_updateThread(
         jbyteArray private_meta,
         jlong version,
         jboolean force,
-        jboolean force_generate_new_key
+        jboolean force_generate_new_key,
+        jobject container_policies
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(thread_id, "Thread ID") ||
@@ -495,6 +502,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_updateThread(
                 ctx,
                 ctx.jObject2jArray(managers)
         );
+        auto container_policies_opt = std::optional<core::ContainerPolicy>(
+                parseContainerPolicy(ctx,container_policies)
+        );
         getThreadApi(ctx, thiz)->updateThread(
                 ctx.jString2string(thread_id),
                 users_c,
@@ -503,7 +513,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_updateThread(
                 core::Buffer::from(ctx.jByteArray2String(private_meta)),
                 version,
                 force == JNI_TRUE,
-                force_generate_new_key == JNI_TRUE
+                force_generate_new_key == JNI_TRUE,
+                container_policies_opt
         );
     } catch (const core::Exception &e) {
         env->Throw(ctx.coreException2jthrowable(e));

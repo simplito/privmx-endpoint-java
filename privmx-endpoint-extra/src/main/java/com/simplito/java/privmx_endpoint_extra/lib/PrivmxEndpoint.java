@@ -44,7 +44,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
      *
      * @param enableModule   set of modules to initialize; should contain {@link Modules#THREAD }
      *                       to enable Thread module or {@link Modules#STORE } to enable Store module
-     * @param platformUrl        Platform's Endpoint URL
+     * @param bridgeUrl      Bridge's Endpoint URL
      * @param solutionId     {@code SolutionId} of the current project
      * @param userPrivateKey user private key used to authorize; generated from:
      *                       {@link CryptoApi#generatePrivateKey} or
@@ -57,17 +57,18 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
             Set<Modules> enableModule,
             String userPrivateKey,
             String solutionId,
-            String platformUrl
+            String bridgeUrl
     ) throws IllegalStateException, PrivmxException, NativeException {
-        super(enableModule, userPrivateKey, solutionId, platformUrl);
+        super(enableModule, userPrivateKey, solutionId, bridgeUrl);
     }
 
     /**
      * Registers callbacks with the specified type.
-     * @param context an object that identifies callbacks in the list
+     *
+     * @param context   an object that identifies callbacks in the list
      * @param eventType type of event to listen to
-     * @param callback a block of code to execute when event was handled
-     * @param <T> type of data passed to callback
+     * @param callback  a block of code to execute when event was handled
+     * @param <T>       type of data passed to callback
      * @throws RuntimeException thrown when method encounters an exception during subscribing on channel.
      */
     public final <T> void registerCallback(Object context, EventType<T> eventType, EventCallback<T> callback) throws RuntimeException {
@@ -82,6 +83,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
 
     /**
      * Unregisters all callbacks registered by {@link #registerCallback(Object, EventType, EventCallback)} and identified with given Context.
+     *
      * @param context an object that identifies callbacks in the list.
      */
     public void unregisterCallbacks(Object context) {
@@ -97,6 +99,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
 
     /**
      * Handles event and invokes all related callbacks. It should only be called by event loops.
+     *
      * @param event event to handle
      */
     public void handleEvent(Event<?> event) {
@@ -145,7 +148,6 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                 return;
             }
             inboxApi.subscribeForInboxEvents();
-            return;
         }
     }
 
@@ -191,7 +193,6 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                 return;
             }
             inboxApi.unsubscribeFromInboxEvents();
-            return;
         }
     }
 
@@ -226,15 +227,5 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                     type
             );
         }
-    }
-
-    /**
-     * Disconnects from PrivMX Bridge and frees memory.
-     *
-     * @throws Exception when instance is currently closed
-     */
-    @Override
-    public void close() throws Exception {
-        super.close();
     }
 }

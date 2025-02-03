@@ -33,15 +33,15 @@ public class StoreFileStreamWriter extends StoreFileStream {
     /**
      * Creates a new file in given Store.
      *
-     * @param api reference to Store API
-     * @param storeId ID of the Store
-     * @param publicMeta byte array of any arbitrary metadata that can be read by anyone
+     * @param api         reference to Store API
+     * @param storeId     ID of the Store
+     * @param publicMeta  byte array of any arbitrary metadata that can be read by anyone
      * @param privateMeta byte array of any arbitrary metadata that will be encrypted before sending
-     * @param size size of data to write
+     * @param size        size of data to write
      * @return Instance ready to write to the created Store file
      * @throws IllegalStateException when storeApi is not initialized or there's no connection
-     * @throws PrivmxException if there is an error while creating Store file metadata
-     * @throws NativeException if there is an unknown error while creating store file metadata
+     * @throws PrivmxException       if there is an error while creating Store file metadata
+     * @throws NativeException       if there is an unknown error while creating store file metadata
      */
     public static StoreFileStreamWriter createFile(
             StoreApi api,
@@ -61,15 +61,15 @@ public class StoreFileStreamWriter extends StoreFileStream {
     /**
      * Updates an existing file.
      *
-     * @param api reference to Store API
-     * @param fileId ID of the file to update
-     * @param publicMeta new public metadata for the matching file
+     * @param api         reference to Store API
+     * @param fileId      ID of the file to update
+     * @param publicMeta  new public metadata for the matching file
      * @param privateMeta new private (encrypted) metadata for the matching file
-     * @param size size of data to write
+     * @param size        size of data to write
      * @return {@link StoreFileStreamWriter} instance prepared for writing
      * @throws IllegalStateException when {@code storeApi} is not initialized or there's no connection
-     * @throws PrivmxException if there is an error while updating Store file metadata
-     * @throws NativeException if there is an unknown error while updating Store file metadata
+     * @throws PrivmxException       if there is an error while updating Store file metadata
+     * @throws NativeException       if there is an unknown error while updating Store file metadata
      */
     public static StoreFileStreamWriter updateFile(
             StoreApi api,
@@ -88,17 +88,17 @@ public class StoreFileStreamWriter extends StoreFileStream {
     /**
      * Creates a new file in given Store and writes data from given {@link InputStream}.
      *
-     * @param api reference to Store API
-     * @param storeId ID of the Store
-     * @param publicMeta byte array of any arbitrary metadata that can be read by anyone
+     * @param api         reference to Store API
+     * @param storeId     ID of the Store
+     * @param publicMeta  byte array of any arbitrary metadata that can be read by anyone
      * @param privateMeta byte array of any arbitrary metadata that will be encrypted before sending
-     * @param size size of data to write
+     * @param size        size of data to write
      * @param inputStream stream with data to write to the file using optimal chunk size {@link  StoreFileStream#OPTIMAL_SEND_SIZE}
      * @return ID of the created file
-     * @throws IOException if there is an error while reading stream or {@code this} is closed
+     * @throws IOException           if there is an error while reading stream or {@code this} is closed
      * @throws IllegalStateException when storeApi is not initialized or there's no connection
-     * @throws PrivmxException if there is an error while creating Store file metadata
-     * @throws NativeException if there is an unknown error while creating Store file metadata
+     * @throws PrivmxException       if there is an error while creating Store file metadata
+     * @throws NativeException       if there is an unknown error while creating Store file metadata
      */
     public static String createFile(
             StoreApi api,
@@ -114,18 +114,18 @@ public class StoreFileStreamWriter extends StoreFileStream {
     /**
      * Creates new file in given Store and writes data from given {@link InputStream}.
      *
-     * @param api reference to Store API
-     * @param storeId ID of the Store
-     * @param publicMeta byte array of any arbitrary metadata that can be read by anyone
-     * @param privateMeta byte array of any arbitrary metadata that will be encrypted before sending
-     * @param size size of data to write
-     * @param inputStream stream with data to write to the file using optimal chunk size {@link  StoreFileStream#OPTIMAL_SEND_SIZE}
+     * @param api              reference to Store API
+     * @param storeId          ID of the Store
+     * @param publicMeta       byte array of any arbitrary metadata that can be read by anyone
+     * @param privateMeta      byte array of any arbitrary metadata that will be encrypted before sending
+     * @param size             size of data to write
+     * @param inputStream      stream with data to write to the file using optimal chunk size {@link  StoreFileStream#OPTIMAL_SEND_SIZE}
      * @param streamController controls the process of writing file
      * @return ID of the created file
-     * @throws IOException if there is an error while reading stream or {@code this} is closed
+     * @throws IOException           if there is an error while reading stream or {@code this} is closed
      * @throws IllegalStateException when {@code storeApi} is not initialized or there's no connection
-     * @throws PrivmxException if there is an error while creating Store file metadata
-     * @throws NativeException if there is an unknown error while creating Store file metadata
+     * @throws PrivmxException       if there is an error while creating Store file metadata
+     * @throws NativeException       if there is an unknown error while creating Store file metadata
      */
     public static String createFile(
             StoreApi api,
@@ -137,7 +137,7 @@ public class StoreFileStreamWriter extends StoreFileStream {
             Controller streamController
     ) throws IOException, PrivmxException, NativeException, IllegalStateException {
         if (api == null) throw new NullPointerException("api could not be null");
-        StoreFileStreamWriter output =  StoreFileStreamWriter.createFile(
+        StoreFileStreamWriter output = StoreFileStreamWriter.createFile(
                 api,
                 storeId,
                 publicMeta,
@@ -149,12 +149,12 @@ public class StoreFileStreamWriter extends StoreFileStream {
             output.setProgressListener(streamController);
         }
         byte[] chunk = new byte[(int) StoreFileStream.OPTIMAL_SEND_SIZE];
-        int readed;
-        while ((readed = inputStream.read(chunk)) >= 0) {
-            if(streamController != null && streamController.isStopped()){
+        int read;
+        while ((read = inputStream.read(chunk)) >= 0) {
+            if (streamController != null && streamController.isStopped()) {
                 output.close();
             }
-            output.write(Arrays.copyOf(chunk, readed));
+            output.write(Arrays.copyOf(chunk, read));
         }
         return output.close();
     }
@@ -162,17 +162,17 @@ public class StoreFileStreamWriter extends StoreFileStream {
     /**
      * Updates existing file and writes data from passed {@link InputStream}.
      *
-     * @param api reference to Store API
-     * @param fileId ID of the file to update
-     * @param publicMeta new public metadata for the matching file
+     * @param api         reference to Store API
+     * @param fileId      ID of the file to update
+     * @param publicMeta  new public metadata for the matching file
      * @param privateMeta new private (encrypted) metadata for the matching file
-     * @param size size of data to write
+     * @param size        size of data to write
      * @param inputStream stream with data to write to the file using optimal chunk size {@link  StoreFileStream#OPTIMAL_SEND_SIZE}
      * @return Updated file ID
-     * @throws IOException if there is an error while reading stream or {@code this} is closed
+     * @throws IOException           if there is an error while reading stream or {@code this} is closed
      * @throws IllegalStateException when {@code storeApi} is not initialized or there's no connection
-     * @throws PrivmxException if there is an error while updating Store file metadata
-     * @throws NativeException if there is an unknown error while updating Store file metadata
+     * @throws PrivmxException       if there is an error while updating Store file metadata
+     * @throws NativeException       if there is an unknown error while updating Store file metadata
      */
     public static String updateFile(
             StoreApi api,
@@ -188,18 +188,18 @@ public class StoreFileStreamWriter extends StoreFileStream {
     /**
      * Updates existing file and writes data from passed {@link InputStream}.
      *
-     * @param api reference to Store API
-     * @param fileId ID of the file to update
-     * @param publicMeta new public metadata for the matching file
-     * @param privateMeta new private (encrypted) metadata for the matching file
-     * @param size size of data to write
-     * @param inputStream stream with data to write to the file using optimal chunk size {@link  StoreFileStream#OPTIMAL_SEND_SIZE}
+     * @param api              reference to Store API
+     * @param fileId           ID of the file to update
+     * @param publicMeta       new public metadata for the matching file
+     * @param privateMeta      new private (encrypted) metadata for the matching file
+     * @param size             size of data to write
+     * @param inputStream      stream with data to write to the file using optimal chunk size {@link  StoreFileStream#OPTIMAL_SEND_SIZE}
      * @param streamController controls the process of writing file
      * @return Updated file ID
-     * @throws IOException if there is an error while reading stream or {@code this} is closed
+     * @throws IOException           if there is an error while reading stream or {@code this} is closed
      * @throws IllegalStateException when {@code storeApi} is not initialized or there's no connection
-     * @throws PrivmxException if there is an error while updating Store file metadata
-     * @throws NativeException if there is an unknown error while updating Store file metadata
+     * @throws PrivmxException       if there is an error while updating Store file metadata
+     * @throws NativeException       if there is an unknown error while updating Store file metadata
      */
     public static String updateFile(
             StoreApi api,
@@ -215,16 +215,16 @@ public class StoreFileStreamWriter extends StoreFileStream {
         if (streamController != null) {
             output.setProgressListener(streamController);
         }
-        byte[] chunk = new byte[(int)StoreFileStream.OPTIMAL_SEND_SIZE];
-        int readed;
+        byte[] chunk = new byte[(int) StoreFileStream.OPTIMAL_SEND_SIZE];
+        int read;
         while (true) {
-            if(streamController != null && streamController.isStopped()){
+            if (streamController != null && streamController.isStopped()) {
                 output.close();
             }
-            if((readed = inputStream.read(chunk)) <= 0){
+            if ((read = inputStream.read(chunk)) <= 0) {
                 break;
             }
-            output.write(Arrays.copyOf(chunk, readed));
+            output.write(Arrays.copyOf(chunk, read));
         }
         return output.close();
     }
@@ -234,12 +234,12 @@ public class StoreFileStreamWriter extends StoreFileStream {
      * Writes data to Store file.
      *
      * @param data data to write (the recommended size of data chunk is {@link StoreFileStream#OPTIMAL_SEND_SIZE})
-     * @throws PrivmxException if there is an error while writing chunk
-     * @throws NativeException if there is an unknown error while writing chunk
+     * @throws PrivmxException       if there is an error while writing chunk
+     * @throws NativeException       if there is an unknown error while writing chunk
      * @throws IllegalStateException when storeApi is not initialized or there's no connection
-     * @throws IOException when {@code this} is closed
-     * @throws PrivmxException when method encounters an exception
-     * @throws NativeException when method encounters an unknown exception
+     * @throws IOException           when {@code this} is closed
+     * @throws PrivmxException       when method encounters an exception
+     * @throws NativeException       when method encounters an unknown exception
      * @throws IllegalStateException when {@link #storeApi} is closed
      */
     public void write(byte[] data) throws PrivmxException, NativeException, IllegalStateException, IOException {

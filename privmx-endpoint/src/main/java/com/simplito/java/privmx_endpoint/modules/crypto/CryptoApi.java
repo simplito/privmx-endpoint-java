@@ -25,16 +25,19 @@ public class CryptoApi implements AutoCloseable {
         System.loadLibrary("ssl");
         System.loadLibrary("privmx-endpoint-java");
     }
+
+    @SuppressWarnings("FieldCanBeLocal")
     private final Long api;
 
     /**
      * Create instance of {@code CryptoApi}.
      */
-    public CryptoApi(){
+    public CryptoApi() {
         api = init();
     }
 
     private native Long init();
+
     private native void deinit() throws IllegalStateException;
 
     /**
@@ -49,8 +52,7 @@ public class CryptoApi implements AutoCloseable {
      * Generates a new private ECC key from a password using pbkdf2.
      *
      * @param password the password used to generate the new key
-     * @param salt random string (additional input for the hashing function)
-
+     * @param salt     random string (additional input for the hashing function)
      * @return Generated ECC key in WIF format
      */
     public native String derivePrivateKey(String password, String salt) throws PrivmxException, NativeException;
@@ -66,7 +68,7 @@ public class CryptoApi implements AutoCloseable {
     /**
      * Encrypts buffer with a given key using AES.
      *
-     * @param data buffer to encrypt
+     * @param data         buffer to encrypt
      * @param symmetricKey key used to encrypt data
      * @return Encrypted data buffer
      */
@@ -75,7 +77,7 @@ public class CryptoApi implements AutoCloseable {
     /**
      * Decrypts buffer with a given key using AES.
      *
-     * @param data buffer to decrypt
+     * @param data         buffer to decrypt
      * @param symmetricKey key used to decrypt data
      * @return Plain (decrypted) data buffer
      */
@@ -84,7 +86,7 @@ public class CryptoApi implements AutoCloseable {
     /**
      * Creates a signature of data using given key.
      *
-     * @param data data the buffer to sign
+     * @param data       data the buffer to sign
      * @param privateKey the key used to sign data
      * @return Signature of data
      */
@@ -110,6 +112,7 @@ public class CryptoApi implements AutoCloseable {
 
     /**
      * Generates a new symmetric key.
+     *
      * @return Generated key
      */
     public native byte[] generateKeySymmetric();

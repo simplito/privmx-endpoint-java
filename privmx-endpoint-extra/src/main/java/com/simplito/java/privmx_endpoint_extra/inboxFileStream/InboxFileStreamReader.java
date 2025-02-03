@@ -9,91 +9,91 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint_extra.storeFileStream;
+package com.simplito.java.privmx_endpoint_extra.inboxFileStream;
 
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
-import com.simplito.java.privmx_endpoint.modules.store.StoreApi;
+import com.simplito.java.privmx_endpoint.modules.inbox.InboxApi;
+import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 
 /**
- * Manages handle for file reading.
+ * Manages handle for file reading from Inbox.
  *
- * @category store
+ * @category inbox
  */
-public class StoreFileStreamReader extends StoreFileStream {
+public class InboxFileStreamReader extends InboxFileStream {
 
-
-    private StoreFileStreamReader(
+    private InboxFileStreamReader(
             Long handle,
-            StoreApi api
+            InboxApi api
     ) {
         super(handle, api);
     }
 
     /**
-     * Opens Store file.
+     * Opens Inbox file.
      *
-     * @param api    reference to Store API
+     * @param api    reference to Inbox API
      * @param fileId ID of the file to open
-     * @return Instance ready to read from the Store file
-     * @throws IllegalStateException when {@code storeApi} is not initialized or there's no connection
-     * @throws PrivmxException       if there is an error while opening Store file
-     * @throws NativeException       if there is an unknown error while opening Store file
+     * @return Instance ready to read from the Inbox file
+     * @throws IllegalStateException when {@code inboxApi} is not initialized or there's no connection
+     * @throws PrivmxException       if there is an error while opening Inbox file
+     * @throws NativeException       if there is an unknown error while opening Inbox file
      */
-    public static StoreFileStreamReader openFile(
-            StoreApi api,
+    public static InboxFileStreamReader openFile(
+            InboxApi api,
             String fileId
     ) throws IllegalStateException, PrivmxException, NativeException {
-        return new StoreFileStreamReader(
+        return new InboxFileStreamReader(
                 api.openFile(fileId),
                 api
         );
     }
 
     /**
-     * Opens Store file and writes it into {@link OutputStream}.
+     * Opens Inbox file and writes it into {@link OutputStream} with optimized chunk size {@link  InboxFileStream#OPTIMAL_SEND_SIZE}.
      *
-     * @param api          reference to Store API
+     * @param api          reference to Inbox API
      * @param fileId       ID of the file to open
-     * @param outputStream stream to write downloaded data with optimized chunk size {@link  StoreFileStream#OPTIMAL_SEND_SIZE}
+     * @param outputStream stream to write downloaded data
      * @return ID of the read file
      * @throws IOException           if there is an error while writing the stream
-     * @throws IllegalStateException when storeApi is not initialized or there's no connection
-     * @throws PrivmxException       if there is an error while opening Store file
-     * @throws NativeException       if there is an unknown error while opening Store file
+     * @throws IllegalStateException when inboxApi is not initialized or there's no connection
+     * @throws PrivmxException       if there is an error while opening Inbox file
+     * @throws NativeException       if there is an unknown error while opening Inbox file
      */
     public static String openFile(
-            StoreApi api,
+            InboxApi api,
             String fileId,
             OutputStream outputStream
     ) throws IOException, IllegalStateException, PrivmxException, NativeException {
-        return StoreFileStreamReader.openFile(api, fileId, outputStream, null);
+        return InboxFileStreamReader.openFile(api, fileId, outputStream, null);
     }
 
     /**
-     * Opens Store file and writes it into {@link OutputStream}.
+     * Opens Inbox file and writes it into {@link OutputStream} with optimized chunk size {@link  InboxFileStream#OPTIMAL_SEND_SIZE}.
      *
-     * @param api              reference to Store API
+     * @param api              reference to Inbox API
      * @param fileId           ID of the file to open
-     * @param outputStream     stream to write downloaded data with optimized chunk size {@link  StoreFileStream#OPTIMAL_SEND_SIZE}
+     * @param outputStream     stream to write downloaded data
      * @param streamController controls the process of reading file
      * @return ID of the read file
      * @throws IOException           if there is an error while writing stream
-     * @throws IllegalStateException when storeApi is not initialized or there's no connection
-     * @throws PrivmxException       if there is an error while reading Store file
-     * @throws NativeException       if there is an unknown error while reading Store file
+     * @throws IllegalStateException when inboxApi is not initialized or there's no connection
+     * @throws PrivmxException       if there is an error while reading Inbox file
+     * @throws NativeException       if there is an unknown error while reading Inbox file
      */
     public static String openFile(
-            StoreApi api,
+            InboxApi api,
             String fileId,
             OutputStream outputStream,
-            Controller streamController
+            StoreFileStream.Controller streamController
     ) throws IOException, IllegalStateException, PrivmxException, NativeException {
-        StoreFileStreamReader input = StoreFileStreamReader.openFile(api, fileId);
+        InboxFileStreamReader input = InboxFileStreamReader.openFile(api, fileId);
         if (streamController != null) {
             input.setProgressListener(streamController);
         }
@@ -102,9 +102,9 @@ public class StoreFileStreamReader extends StoreFileStream {
             if (streamController != null && streamController.isStopped()) {
                 input.close();
             }
-            chunk = input.read(StoreFileStream.OPTIMAL_SEND_SIZE);
+            chunk = input.read(InboxFileStream.OPTIMAL_SEND_SIZE);
             outputStream.write(chunk);
-        } while (chunk.length == StoreFileStream.OPTIMAL_SEND_SIZE);
+        } while (chunk.length == InboxFileStream.OPTIMAL_SEND_SIZE);
 
         return input.close();
     }
@@ -112,16 +112,16 @@ public class StoreFileStreamReader extends StoreFileStream {
     /**
      * Reads file data and moves the cursor. If read data size is less than length, then EOF.
      *
-     * @param size size of data to read (the recommended size is {@link  StoreFileStream#OPTIMAL_SEND_SIZE})
+     * @param size size of data to read (the recommended size is {@link  InboxFileStream#OPTIMAL_SEND_SIZE})
      * @return Read data
      * @throws IOException           when {@code this} is closed
      * @throws PrivmxException       when method encounters an exception
      * @throws NativeException       when method encounters an unknown exception
-     * @throws IllegalStateException when {@link #storeApi} is closed
+     * @throws IllegalStateException when {@link #inboxApi} is closed
      */
     public byte[] read(Long size) throws IOException, PrivmxException, NativeException, IllegalStateException {
         if (isClosed()) throw new IOException("File handle is closed");
-        byte[] result = storeApi.readFromFile(handle, size);
+        byte[] result = inboxApi.readFromFile(handle, size);
         callChunkProcessed((long) result.length);
         return result;
     }
@@ -130,11 +130,11 @@ public class StoreFileStreamReader extends StoreFileStream {
      * Moves read cursor.
      *
      * @param position new cursor position
-     * @throws IllegalStateException if {@code storeApi} is not initialized or connected
+     * @throws IllegalStateException if {@code inboxApi} is not initialized or connected
      * @throws PrivmxException       if there is an error while seeking
      * @throws NativeException       if there is an unknown error while seeking
      */
     public void seek(long position) throws IllegalStateException, PrivmxException, NativeException {
-        storeApi.seekInFile(handle, position);
+        inboxApi.seekInFile(handle, position);
     }
 }
