@@ -120,6 +120,47 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_generatePrivate
 }
 extern "C"
 JNIEXPORT jstring JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_generatePrivateKey2(
+        JNIEnv *env,
+        jobject thiz,
+        jstring random_seed
+) {
+    JniContextUtils ctx(env);
+    try {
+        std::optional<std::string> random_seed_c = std::nullopt;
+        if (random_seed != nullptr) {
+            random_seed_c = ctx.jString2string(random_seed);
+        }
+        return env->NewStringUTF(
+                getCryptoApi(env, thiz)->generatePrivateKey2(
+                    random_seed_c
+                ).c_str()
+        );
+    } catch (const core::Exception &e) {
+        env->Throw(ctx.coreException2jthrowable(e));
+    } catch (const IllegalStateException &e) {
+        ctx->ThrowNew(
+                ctx->FindClass("java/lang/IllegalStateException"),
+        e.what()
+    );
+    } catch (const std::exception &e) {
+        env->ThrowNew(
+                env->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+        e.what()
+    );
+    } catch (...) {
+        env->ThrowNew(
+                env->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"
+                ),
+                "Unknown exception"
+        );
+    }
+    return nullptr;
+}
+extern "C"
+JNIEXPORT jstring JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_derivePublicKey(
         JNIEnv *env,
         jobject thiz,
@@ -364,6 +405,47 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_derivePrivateKe
         env->ThrowNew(
                 env->FindClass(
                         "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+                "Unknown exception"
+        );
+    }
+    return nullptr;
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_derivePrivateKey2(
+        JNIEnv *env,
+        jobject thiz,
+        jstring password,
+        jstring salt
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(password, "Password") || ctx.nullCheck(salt, "Salt")) {
+        return nullptr;
+    }
+    try {
+        auto result = getCryptoApi(env, thiz)->derivePrivateKey2(
+                ctx.jString2string(password),
+                ctx.jString2string(salt)
+        );
+        return env->NewStringUTF(result.c_str());
+    } catch (const core::Exception &e) {
+        env->Throw(ctx.coreException2jthrowable(e));
+    } catch (const IllegalStateException &e) {
+        ctx->ThrowNew(
+                ctx->FindClass("java/lang/IllegalStateException"),
+            e.what()
+        );
+    } catch (const std::exception &e) {
+        env->ThrowNew(
+            env->FindClass(
+                "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+            e.what()
+        );
+    } catch (...) {
+        env->ThrowNew(
+            env->FindClass(
+                "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
                 "Unknown exception"
         );
     }
