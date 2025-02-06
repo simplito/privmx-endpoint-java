@@ -45,19 +45,10 @@ public class CryptoApi implements AutoCloseable {
      *
      * @param randomSeed optional string used as the base to generate the new key
      * @return Generated ECC key in WIF format
-     * @deprecated Use {@link CryptoApi#generatePrivateKey2(String)} instead.
      */
     @Deprecated
     public native String generatePrivateKey(String randomSeed) throws PrivmxException, NativeException;
-
-    /**
-     * Generates a new private ECC key.
-     *
-     * @param randomSeed optional string used as the base to generate the new key
-     * @return generated ECC key in WIF format
-     */
-    public native String generatePrivateKey2(String randomSeed) throws PrivmxException, NativeException;
-
+    
     /**
      * Generates a new private ECC key from a password using pbkdf2.
      *
