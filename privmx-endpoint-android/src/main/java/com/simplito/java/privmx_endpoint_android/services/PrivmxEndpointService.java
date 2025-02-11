@@ -26,6 +26,7 @@ import java.util.ArrayList;
  * Runs and manages active PrivMX Bridge connections.
  */
 public class PrivmxEndpointService extends Service {
+    private boolean isCertSet = false;
     private static final String TAG = "[PrivmxEndpointService]";
     private final PrivmxEndpointBinder binder = new PrivmxEndpointBinder();
     private final PrivmxEndpointContainer privmxEndpoint = new PrivmxEndpointContainer();
@@ -33,6 +34,7 @@ public class PrivmxEndpointService extends Service {
     /**
      * Defines a key for Intent extras.
      */
+    @Deprecated
     public static final String CERTS_PATH_EXTRA = "com.simplito.android.privmx_endpoint_wrapper.services.PrivmxEndpointService.CERTS_PATH_EXTRA";
 
     /**
@@ -54,8 +56,9 @@ public class PrivmxEndpointService extends Service {
      *
      * @param onInit callback
      */
+    @Deprecated
     public void setOnInit(Runnable onInit) {
-        if (privmxEndpoint.initialized()) {
+        if (isCertSet()) {
             onInit.run();
         } else {
             binder.onInit.add(onInit);
@@ -70,7 +73,9 @@ public class PrivmxEndpointService extends Service {
      */
     @Override
     public IBinder onBind(Intent intent) {
-        init(getCertsPath(intent));
+        if (isCertSet()) {
+            init(getCertsPath(intent));
+        }
         return binder;
     }
 
@@ -102,8 +107,9 @@ public class PrivmxEndpointService extends Service {
         super.onDestroy();
     }
 
+    @Deprecated
     private String getCertsPath(Intent intent) {
-        String certsPath = getFilesDir() + "/cacert.pem";
+        String certsPath = null;
         if (intent != null) {
             Bundle extras = intent.getExtras();
             if (extras != null) {
@@ -122,18 +128,20 @@ public class PrivmxEndpointService extends Service {
         return privmxEndpoint;
     }
 
+    @Deprecated
     private synchronized void init(String certsPath) {
-        Log.d(TAG, "PrivmxEndpoint init");
-        if (privmxEndpoint.initialized()) {
-            return;
-        }
-        try {
-            privmxEndpoint.setCertsPath(certsPath);
-            binder.onInit.forEach(Runnable::run);
-        } catch (Exception e) {
-            Log.e(TAG, "Cannot initialize lib");
+        if (certsPath != null) {
+            try {
+                privmxEndpoint.setCertsPath(certsPath);
+                isCertSet = true;
+                binder.onInit.forEach(Runnable::run);
+            } catch (Exception e) {
+                Log.e(TAG, "Cannot initialize lib");
+            }
         }
     }
 
-
+    private boolean isCertSet() {
+        return isCertSet;
+    }
 }
