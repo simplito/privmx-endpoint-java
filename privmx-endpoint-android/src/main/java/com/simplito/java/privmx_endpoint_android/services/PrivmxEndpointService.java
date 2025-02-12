@@ -26,7 +26,6 @@ import java.util.ArrayList;
  * Runs and manages active PrivMX Bridge connections.
  */
 public class PrivmxEndpointService extends Service {
-    private boolean isCertSet = false;
     private static final String TAG = "[PrivmxEndpointService]";
     private final PrivmxEndpointBinder binder = new PrivmxEndpointBinder();
     private final PrivmxEndpointContainer privmxEndpoint = new PrivmxEndpointContainer();
@@ -41,6 +40,7 @@ public class PrivmxEndpointService extends Service {
      * Implements Service Binder.
      */
     public class PrivmxEndpointBinder extends Binder {
+        @Deprecated
         private final ArrayList<Runnable> onInit = new ArrayList<>();
 
         /**
@@ -58,7 +58,7 @@ public class PrivmxEndpointService extends Service {
      */
     @Deprecated
     public void setOnInit(Runnable onInit) {
-        if (isCertSet()) {
+        if (privmxEndpoint.initialized()) {
             onInit.run();
         } else {
             binder.onInit.add(onInit);
@@ -73,7 +73,7 @@ public class PrivmxEndpointService extends Service {
      */
     @Override
     public IBinder onBind(Intent intent) {
-        if (isCertSet()) {
+        if (privmxEndpoint.initialized()) {
             init(getCertsPath(intent));
         }
         return binder;
@@ -130,18 +130,13 @@ public class PrivmxEndpointService extends Service {
 
     @Deprecated
     private synchronized void init(String certsPath) {
-        if (certsPath != null) {
+        if (!privmxEndpoint.initialized() && certsPath != null) {
             try {
                 privmxEndpoint.setCertsPath(certsPath);
-                isCertSet = true;
                 binder.onInit.forEach(Runnable::run);
             } catch (Exception e) {
-                Log.e(TAG, "Cannot initialize lib");
+                Log.e(TAG, "Cannot set certs path for PrivMX Endpoint");
             }
         }
-    }
-
-    private boolean isCertSet() {
-        return isCertSet;
     }
 }

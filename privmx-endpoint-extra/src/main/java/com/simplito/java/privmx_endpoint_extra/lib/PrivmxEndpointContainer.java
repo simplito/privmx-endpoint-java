@@ -38,7 +38,8 @@ import java.util.concurrent.Future;
 public class PrivmxEndpointContainer implements AutoCloseable {
     private static final String TAG = "[PrivmxEndpointContainer]";
     private final Map<Long, PrivmxEndpoint> privmxEndpoints = new HashMap<>();
-
+    @Deprecated
+    private boolean isInitialized = false;
     /**
      * Instance of {@link CryptoApi}.
      */
@@ -57,10 +58,11 @@ public class PrivmxEndpointContainer implements AutoCloseable {
      * Returns initialization state.
      *
      * @return {@code true} if path to certificate is set successfully
+     * @deprecated Setting path to certs is not required.
      */
     @Deprecated
     public boolean initialized() {
-        return true;
+        return isInitialized;
     }
 
     private boolean eventLoopStarted = false;
@@ -110,6 +112,7 @@ public class PrivmxEndpointContainer implements AutoCloseable {
         }
 
         Connection.setCertsPath(certsPath);
+        isInitialized = true;
     }
 
     /**
