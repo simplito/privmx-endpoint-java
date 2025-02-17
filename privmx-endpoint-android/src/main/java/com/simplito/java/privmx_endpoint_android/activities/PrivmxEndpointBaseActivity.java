@@ -77,11 +77,13 @@ public abstract class PrivmxEndpointBaseActivity extends AppCompatActivity {
 
     /**
      * Override this method to set the path to your .pem certificate to create secure connection with PrivMX Bridge.
-     * If the passed path does not contain .pem file, the default PrivMX certificate is installed.
      *
-     * @return Path to .pem certificate used to initialize {@link PrivmxEndpointService}
+     * @return Path to .pem certificate.
      */
-    protected abstract String getCertPath();
+    @Deprecated
+    protected String getCertPath() {
+        return null;
+    }
 
     private final ServiceConnection privmxEndpointServiceConnection = new ServiceConnection() {
         @Override
