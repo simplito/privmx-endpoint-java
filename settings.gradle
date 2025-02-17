@@ -28,4 +28,5 @@ include ':privmx-endpoint'
 include ':privmx-endpoint-extra'
 include ':privmx-endpoint-android'
 include ':privmx-endpoint-jni'
+include ':examples:privmx-snippets'
 project(':privmx-endpoint-jni').projectDir = file("privmx-endpoint/src/main/cpp")
