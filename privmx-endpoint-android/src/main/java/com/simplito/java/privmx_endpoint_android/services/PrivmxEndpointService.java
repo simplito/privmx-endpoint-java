@@ -33,12 +33,14 @@ public class PrivmxEndpointService extends Service {
     /**
      * Defines a key for Intent extras.
      */
+    @Deprecated
     public static final String CERTS_PATH_EXTRA = "com.simplito.android.privmx_endpoint_wrapper.services.PrivmxEndpointService.CERTS_PATH_EXTRA";
 
     /**
      * Implements Service Binder.
      */
     public class PrivmxEndpointBinder extends Binder {
+        @Deprecated
         private final ArrayList<Runnable> onInit = new ArrayList<>();
 
         /**
@@ -54,6 +56,7 @@ public class PrivmxEndpointService extends Service {
      *
      * @param onInit callback
      */
+    @Deprecated
     public void setOnInit(Runnable onInit) {
         if (privmxEndpoint.initialized()) {
             onInit.run();
@@ -70,7 +73,9 @@ public class PrivmxEndpointService extends Service {
      */
     @Override
     public IBinder onBind(Intent intent) {
-        init(getCertsPath(intent));
+        if (privmxEndpoint.initialized()) {
+            init(getCertsPath(intent));
+        }
         return binder;
     }
 
@@ -102,8 +107,9 @@ public class PrivmxEndpointService extends Service {
         super.onDestroy();
     }
 
+    @Deprecated
     private String getCertsPath(Intent intent) {
-        String certsPath = getFilesDir() + "/cacert.pem";
+        String certsPath = null;
         if (intent != null) {
             Bundle extras = intent.getExtras();
             if (extras != null) {
@@ -122,18 +128,15 @@ public class PrivmxEndpointService extends Service {
         return privmxEndpoint;
     }
 
+    @Deprecated
     private synchronized void init(String certsPath) {
-        Log.d(TAG, "PrivmxEndpoint init");
-        if (privmxEndpoint.initialized()) {
-            return;
-        }
-        try {
-            privmxEndpoint.setCertsPath(certsPath);
-            binder.onInit.forEach(Runnable::run);
-        } catch (Exception e) {
-            Log.e(TAG, "Cannot initialize lib");
+        if (!privmxEndpoint.initialized() && certsPath != null) {
+            try {
+                privmxEndpoint.setCertsPath(certsPath);
+                binder.onInit.forEach(Runnable::run);
+            } catch (Exception e) {
+                Log.e(TAG, "Cannot set certs path for PrivMX Endpoint");
+            }
         }
     }
-
-
 }
