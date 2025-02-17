@@ -14,19 +14,19 @@ project("privmx-endpoint-java")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
 
-if( NOT DEFINED CMAKE_DESTINATION_OS )
+if (NOT DEFINED CMAKE_DESTINATION_OS)
     set(CMAKE_DESTINATION_OS ${CMAKE_SYSTEM_NAME})
 endif ()
 
-if( NOT DEFINED CMAKE_DESTINATION_ARCHITECTURE)
-    if(CMAKE_DESTINATION_OS STREQUAL "Android" AND DEFINED CMAKE_ANDROID_ARCH_ABI)
+if (NOT DEFINED CMAKE_DESTINATION_ARCHITECTURE)
+    if (CMAKE_DESTINATION_OS STREQUAL "Android" AND DEFINED CMAKE_ANDROID_ARCH_ABI)
         set(CMAKE_DESTINATION_ARCHITECTURE ${CMAKE_ANDROID_ARCH_ABI})
-    else()
+    else ()
         set(CMAKE_DESTINATION_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
     endif ()
-endif()
+endif ()
 
-if("${CMAKE_DESTINATION_OS}" STREQUAL "Darwin")
+if ("${CMAKE_DESTINATION_OS}" STREQUAL "Darwin")
     set(file_extension "dylib")
     set(CMAKE_MACOSX_RPATH 1)
     set(CMAKE_INSTALL_RPATH "@loader_path")
@@ -102,8 +102,10 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/modules/StoreApi.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/modules/InboxApi.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/modules/EventQueue.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/exceptions.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/modules/BackendRequester.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/modules/WebRTCInterfaceJNI.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/modules/StreamApiLow.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/exceptions.cpp
 )
 
 # Android Debugging

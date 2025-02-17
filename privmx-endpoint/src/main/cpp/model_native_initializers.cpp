@@ -786,5 +786,146 @@ namespace privmx {
                     ctx->NewStringUTF(inboxEntryDeletedEventData_c.entryId.c_str())
             );
         }
+
+        //Streams
+
+        jobject keyType2Java(JniContextUtils &ctx, privmx::endpoint::stream::KeyType keyType_c) {
+            jclass keyTypeClass = ctx->FindClass("com/simplito/java/privmx_endpoint/model/KeyType");
+            jfieldID caseFieldId = nullptr;
+            switch (keyType_c) {
+                case privmx::endpoint::stream::KeyType::LOCAL:
+                    caseFieldId = ctx->GetStaticFieldID(
+                            keyTypeClass,
+                            "LOCAL",
+                            "Lcom/simplito/java/privmx_endpoint/model/KeyType;");
+                    break;
+                default:
+                    caseFieldId = ctx->GetStaticFieldID(
+                            keyTypeClass,
+                            "REMOTE",
+                            "Lcom/simplito/java/privmx_endpoint/model/KeyType;");
+                    break;
+            }
+            return ctx->GetStaticObjectField(keyTypeClass, caseFieldId);
+        }
+
+        jobject key2Java(JniContextUtils &ctx, privmx::endpoint::stream::Key key_c) {
+            jclass keyCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/Key");
+            jmethodID initKeyMID = ctx->GetMethodID(
+                    keyCls,
+                    "<init>",
+                    "(Ljava/lang/String;Ljava/lang/String;Lcom/simplito/java/privmx_endpoint/model/KeyType;)V"
+            );
+
+            jbyteArray jKey = ctx->NewByteArray(key_c.key.size());
+            ctx->SetByteArrayRegion(jKey, 0, key_c.key.size(), (jbyte *) key_c.key.data());
+
+            jbyteArray jKeyId = ctx->NewByteArray(key_c.keyId.size());
+            ctx->SetByteArrayRegion(jKey, 0, key_c.key.size(), (jbyte *) key_c.key.data());
+
+            return ctx->NewObject(
+                    keyCls,
+                    initKeyMID,
+                    jKeyId,
+                    jKey,
+                    keyType2Java(ctx, key_c.type)
+            );
+        }
+
+        jobject
+        streamRoom2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamRoom streamRoom_c) {
+            jclass streamRoomCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/StreamRoom");
+            jmethodID initStreamRoomMID = ctx->GetMethodID(
+                    streamRoomCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"  //contextId
+                    "Ljava/lang/String;"  //streamRoomId
+                    "Ljava/lang/Long;"  //createDate
+                    "Ljava/lang/String;"  //creator
+                    "Ljava/lang/Long;"  //lastModificationDate
+                    "Ljava/lang/String;"  //lastModifier
+                    "Ljava/util/List;"  //users
+                    "Ljava/util/List;"  //managers
+                    "Ljava/lang/Long;"  //version
+                    "[B"  //publicMeta
+                    "[B"  //privateMeta
+                    "Lcom/simplito/java/privmx_endpoint/model/ContainerPolicy;"  //policy
+                    "Ljava/lang/Long;"  //statusCode
+                    ")V"
+            );
+
+            jclass arrayCls = ctx->FindClass("java/util/ArrayList");
+            jmethodID initArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "<init>",
+                    "()V");
+            jmethodID addToArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "add",
+                    "(Ljava/lang/Object;)Z"
+            );
+            jstring contextId = ctx->NewStringUTF(streamRoom_c.contextId.c_str());
+            jstring streamRoomId = ctx->NewStringUTF(streamRoom_c.streamRoomId.c_str());
+            jstring creator = ctx->NewStringUTF(streamRoom_c.creator.c_str());
+            jstring lastModifier = ctx->NewStringUTF(streamRoom_c.lastModifier.c_str());
+            jobject users = ctx->NewObject(arrayCls, initArrayMID);
+            jobject managers = ctx->NewObject(arrayCls, initArrayMID);
+            jbyteArray publicMeta = ctx->NewByteArray(streamRoom_c.publicMeta.size());
+            jbyteArray privateMeta = ctx->NewByteArray(streamRoom_c.privateMeta.size());
+            ctx->SetByteArrayRegion(publicMeta, 0, streamRoom_c.publicMeta.size(),
+                                    (jbyte *) streamRoom_c.publicMeta.data());
+            ctx->SetByteArrayRegion(privateMeta, 0, streamRoom_c.privateMeta.size(),
+                                    (jbyte *) streamRoom_c.privateMeta.data());
+            for (auto &user: streamRoom_c.users) {
+                ctx->CallBooleanMethod(users,
+                                       addToArrayMID,
+                                       ctx->NewStringUTF(user.c_str()));
+            }
+            for (auto &manager: streamRoom_c.managers) {
+                ctx->CallBooleanMethod(managers,
+                                       addToArrayMID,
+                                       ctx->NewStringUTF(manager.c_str()));
+            }
+            return ctx->NewObject(
+                    streamRoomCls,
+                    initStreamRoomMID,
+                    contextId,
+                    streamRoomId,
+                    ctx.long2jLong(streamRoom_c.createDate),
+                    creator,
+                    ctx.long2jLong(streamRoom_c.lastModificationDate),
+                    lastModifier,
+                    users,
+                    managers,
+                    ctx.long2jLong(streamRoom_c.version),
+                    publicMeta,
+                    privateMeta,
+                    containerPolicy2Java(ctx, streamRoom_c.policy),
+                    ctx.long2jLong(streamRoom_c.statusCode)
+            );
+        }
+
+        jobject stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c) {
+            jclass streamCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/Stream");
+            jmethodID initStreamMID = ctx->GetMethodID(
+                    streamCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/Long;"  //streamId
+                    "Ljava/lang/String;"  //userId
+                    ")V"
+            );
+            return ctx->NewObject(
+                    streamCls,
+                    initStreamMID,
+                    ctx.long2jLong(stream_c.streamId),
+                    ctx->NewStringUTF(stream_c.userId.c_str())
+            );
+        }
+
     } // wrapper
 } // privmx

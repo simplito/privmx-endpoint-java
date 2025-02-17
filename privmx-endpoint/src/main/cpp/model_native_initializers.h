@@ -26,6 +26,8 @@
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
+#include "privmx/endpoint/stream/StreamApiLow.hpp"
+#include "privmx/endpoint/stream/WebRTCInterface.hpp"
 
 namespace privmx {
     namespace wrapper {
@@ -35,7 +37,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ItemPolicy itemPolicy
         );
-        
+
         jobject containerPolicyWithoutItem2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ContainerPolicyWithoutItem containerPolicyWithoutItem
@@ -103,6 +105,17 @@ namespace privmx {
 
         jobject inboxEntryDeletedEventData2Java(JniContextUtils &ctx,
                                                 privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
+
+        //Streams
+        jobject keyType2Java(JniContextUtils &ctx, privmx::endpoint::stream::KeyType keyType_c);
+
+        jobject key2Java(JniContextUtils &ctx, privmx::endpoint::stream::Key key_c);
+
+        jobject
+        streamRoom2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamRoom streamRoom_c);
+
+        jobject
+        stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
 
     } // wrapper
 } // privmx
