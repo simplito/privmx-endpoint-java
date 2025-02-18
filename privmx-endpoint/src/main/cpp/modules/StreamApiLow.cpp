@@ -14,9 +14,6 @@
 using namespace privmx::endpoint::stream;
 using namespace privmx::endpoint;
 
-template<class T>
-void exec(JniContextUtils &ctx, T *result, std::function<T()> fun);
-
 StreamApiLow *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
     jclass cls = ctx->GetObjectClass(streamApiInstance);
     jfieldID apiFID = ctx->GetFieldID(cls, "api", "Ljava/lang/Long;");
@@ -612,32 +609,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_leaveStream(
     } catch (...) {
         env->ThrowNew(
                 env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
-    }
-}
-
-template<class T>
-void exec(JniContextUtils &ctx, T *result, std::function<T()> fun) {
-    try {
-        *result = fun();
-    } catch (const core::Exception &e) {
-        ctx->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        ctx->ThrowNew(
-                ctx->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        ctx->ThrowNew(
-                ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
                 "Unknown exception"
         );
