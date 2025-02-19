@@ -5,10 +5,31 @@
 #include "WebRTCInterfaceJNI.h"
 #include "../model_native_initializers.h"
 #include "../utils.hpp"
+#include <thread>
+
+JNIEnv *WebRTCInterfaceJNI::AttachCurrentThreadIfNeeded() {
+    JNIEnv *env = nullptr;
+    jint status = javaVM->GetEnv((void **) &env, JNI_VERSION_1_6);
+    //return if current thread is attached
+    if (env != nullptr && status == JNI_OK) return env;
+
+    std::string name(
+            "WebRTCInterfaceJNI - " + std::to_string(
+                    std::hash<std::thread::id>{}(std::this_thread::get_id())));
+    JavaVMAttachArgs args;
+    args.version = JNI_VERSION_1_6;
+    args.name = &name[0];
+    args.group = nullptr;
+    if (javaVM->AttachCurrentThread(&env, &args) == JNI_OK) {
+        return env;
+    }
+    return nullptr;
+}
 
 WebRTCInterfaceJNI::WebRTCInterfaceJNI(JNIEnv *env, jobject jwebRTCInterface) {
     jwebRTCInterfaceClass = env->FindClass(
             "com/simplito/java/privmx_endpoint/modules/stream/WebRTCInterface");
+    javaVM = nullptr;
     if (!env->IsInstanceOf(jwebRTCInterface, jwebRTCInterfaceClass)) {
         env->ThrowNew(
                 env->FindClass("java/lang/IllegalArgumentException"),
@@ -20,8 +41,7 @@ WebRTCInterfaceJNI::WebRTCInterfaceJNI(JNIEnv *env, jobject jwebRTCInterface) {
 }
 
 std::string WebRTCInterfaceJNI::createOfferAndSetLocalDescription() {
-    JNIEnv *env = nullptr;
-    javaVM->GetEnv((void **) &env, JNI_VERSION_1_6);
+    JNIEnv *env = AttachCurrentThreadIfNeeded();
     JniContextUtils ctx(env);
 
     jmethodID jmethodId = env->GetMethodID(
@@ -44,9 +64,7 @@ std::string WebRTCInterfaceJNI::createAnswerAndSetDescriptions(
         const std::string &sdp,
         const std::string &type
 ) {
-    JNIEnv *env = nullptr;
-    //TODO: Check which version use
-    javaVM->GetEnv((void **) &env, JNI_VERSION_1_6);
+    JNIEnv *env = AttachCurrentThreadIfNeeded();
     JniContextUtils ctx(env);
 
     jmethodID jmethodId = env->GetMethodID(
@@ -71,8 +89,7 @@ void WebRTCInterfaceJNI::setAnswerAndSetRemoteDescription(
         const std::string &sdp,
         const std::string &type
 ) {
-    JNIEnv *env = nullptr;
-    javaVM->GetEnv((void **) &env, JNI_VERSION_1_6);
+    JNIEnv *env = AttachCurrentThreadIfNeeded();
     JniContextUtils ctx(env);
 
     jmethodID jmethodId = env->GetMethodID(
@@ -88,8 +105,7 @@ void WebRTCInterfaceJNI::setAnswerAndSetRemoteDescription(
 }
 
 void WebRTCInterfaceJNI::close() {
-    JNIEnv *env = nullptr;
-    javaVM->GetEnv((void **) &env, JNI_VERSION_1_6);
+    JNIEnv *env = AttachCurrentThreadIfNeeded();
 
     jmethodID jmethodId = env->GetMethodID(
             jwebRTCInterfaceClass,
@@ -100,8 +116,7 @@ void WebRTCInterfaceJNI::close() {
 }
 
 void WebRTCInterfaceJNI::updateKeys(const std::vector<Key> &keys) {
-    JNIEnv *env = nullptr;
-    javaVM->GetEnv((void **) &env, JNI_VERSION_1_6);
+    JNIEnv *env = AttachCurrentThreadIfNeeded();
     JniContextUtils ctx(env);
 
     jmethodID jmethodId = env->GetMethodID(
