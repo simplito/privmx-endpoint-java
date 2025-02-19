@@ -18,8 +18,7 @@
 
 using namespace privmx::endpoint;
 
-crypto::CryptoApi *getCryptoApi(JNIEnv *env, jobject thiz) {
-    JniContextUtils ctx(env);
+crypto::CryptoApi *getCryptoApi(JniContextUtils &ctx, jobject thiz) {
     jclass cls = ctx->GetObjectClass(thiz);
     jfieldID apiFID = ctx->GetFieldID(cls, "api", "Ljava/lang/Long;");
     jobject apiLong = ctx->GetObjectField(thiz, apiFID);
@@ -34,39 +33,27 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_init(JNIEnv *env, jobject thiz) {
     JniContextUtils ctx(env);
-    try {
-        auto cryptoApi = crypto::CryptoApi::create();
-        auto cryptoApi_ptr = new crypto::CryptoApi();
-        *cryptoApi_ptr = cryptoApi;
-        return ctx.long2jLong((jlong) cryptoApi_ptr);
-    } catch (const core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx]() {
+                auto cryptoApi = crypto::CryptoApi::create();
+                auto cryptoApi_ptr = new crypto::CryptoApi();
+                *cryptoApi_ptr = cryptoApi;
+                return ctx.long2jLong((jlong) cryptoApi_ptr);
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
     }
-    return nullptr;
+    return result;
 }
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_deinit(JNIEnv *env, jobject thiz) {
     try {
+        JniContextUtils ctx(env);
         //if null go to catch
-        auto api = getCryptoApi(env, thiz);
+        auto api = getCryptoApi(ctx, thiz);
         delete api;
         jclass cls = env->GetObjectClass(thiz);
         jfieldID apiFID = env->GetFieldID(cls, "api", "Ljava/lang/Long;");
@@ -86,37 +73,24 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_generatePrivate
         jstring random_seed
 ) {
     JniContextUtils ctx(env);
-    try {
-        std::optional<std::string> random_seed_c = std::nullopt;
-        if (random_seed != nullptr) {
-            random_seed_c = ctx.jString2string(random_seed);
-        }
-        return env->NewStringUTF(
-                getCryptoApi(env, thiz)->generatePrivateKey(
-                        random_seed_c
-                ).c_str()
-        );
-    } catch (const core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
+    jstring result;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &random_seed]() {
+                std::optional<std::string> random_seed_c = std::nullopt;
+                if (random_seed != nullptr) {
+                    random_seed_c = ctx.jString2string(random_seed);
+                }
+                return ctx->NewStringUTF(
+                        getCryptoApi(ctx, thiz)->generatePrivateKey(
+                                random_seed_c
+                        ).c_str()
+                );
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
     }
-    return nullptr;
+    return result;
 }
 extern "C"
 JNIEXPORT jstring JNICALL
@@ -129,33 +103,19 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_derivePublicKey
     if (ctx.nullCheck(private_key, "Private key")) {
         return nullptr;
     }
-    try {
-        return env->NewStringUTF(
-                getCryptoApi(env, thiz)->derivePublicKey(
-                        ctx.jString2string(private_key)
-                ).c_str()
-        );
-    } catch (const core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
+    jstring result;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &private_key]() {
+                return ctx->NewStringUTF(
+                        getCryptoApi(ctx, thiz)->derivePublicKey(
+                                ctx.jString2string(private_key)
+                        ).c_str());
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
     }
-    return nullptr;
+    return result;
 }
 extern "C"
 JNIEXPORT jbyteArray JNICALL
@@ -170,36 +130,21 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_encryptDataSymm
         ctx.nullCheck(symmetric_key, "Symmetric key")) {
         return nullptr;
     }
-    try {
-        auto response = getCryptoApi(env, thiz)->encryptDataSymmetric(
-                core::Buffer::from(ctx.jByteArray2String(data)),
-                core::Buffer::from(ctx.jByteArray2String(symmetric_key))
-        );
-        jbyteArray result = env->NewByteArray(response.size());
-        env->SetByteArrayRegion(result, 0, response.size(), (jbyte *) response.data());
-
-        return result;
-    } catch (const core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
+    jbyteArray result;
+    ctx.callResultEndpointApi<jbyteArray>(
+            &result,
+            [&ctx, &thiz, &data, &symmetric_key]() {
+                auto response = getCryptoApi(ctx, thiz)->encryptDataSymmetric(
+                        core::Buffer::from(ctx.jByteArray2String(data)),
+                        core::Buffer::from(ctx.jByteArray2String(symmetric_key)));
+                jbyteArray result = ctx->NewByteArray(response.size());
+                ctx->SetByteArrayRegion(result, 0, response.size(), (jbyte *) response.data());
+                return result;
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
     }
-    return nullptr;
+    return result;
 }
 extern "C"
 JNIEXPORT jbyteArray JNICALL
@@ -214,35 +159,22 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_decryptDataSymm
         ctx.nullCheck(symmetric_key, "Symmetric key")) {
         return nullptr;
     }
-    try {
-        auto response = getCryptoApi(env, thiz)->decryptDataSymmetric(
-                core::Buffer::from(ctx.jByteArray2String(data)),
-                core::Buffer::from(ctx.jByteArray2String(symmetric_key))
-        );
-        jbyteArray result = env->NewByteArray(response.size());
-        env->SetByteArrayRegion(result, 0, response.size(), (jbyte *) response.data());
-        return result;
-    } catch (const core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
+    jbyteArray result;
+    ctx.callResultEndpointApi<jbyteArray>(
+            &result,
+            [&ctx, &thiz, &data, &symmetric_key]() {
+                auto response = getCryptoApi(ctx, thiz)->decryptDataSymmetric(
+                        core::Buffer::from(ctx.jByteArray2String(data)),
+                        core::Buffer::from(ctx.jByteArray2String(symmetric_key))
+                );
+                jbyteArray result = ctx->NewByteArray(response.size());
+                ctx->SetByteArrayRegion(result, 0, response.size(), (jbyte *) response.data());
+                return result;
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
     }
-    return nullptr;
+    return result;
 }
 
 extern "C"
@@ -258,37 +190,23 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_signData(
         ctx.nullCheck(private_key, "Private key")) {
         return nullptr;
     }
-    try {
-        auto response = getCryptoApi(env, thiz)->signData(
-                core::Buffer::from(ctx.jByteArray2String(data)),
-                ctx.jString2string(private_key)
-        );
+    jbyteArray result;
+    ctx.callResultEndpointApi<jbyteArray>(
+            &result,
+            [&ctx, &thiz, &data, &private_key]() {
+                auto response = getCryptoApi(ctx, thiz)->signData(
+                        core::Buffer::from(ctx.jByteArray2String(data)),
+                        ctx.jString2string(private_key)
+                );
 
-        jbyteArray result = env->NewByteArray(response.size());
-        env->SetByteArrayRegion(result, 0, response.size(), (jbyte *) response.data());
-        return result;
-    } catch (const core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
+                jbyteArray result = ctx->NewByteArray(response.size());
+                ctx->SetByteArrayRegion(result, 0, response.size(), (jbyte *) response.data());
+                return result;
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
     }
-
-    return nullptr;
+    return result;
 }
 
 extern "C"
@@ -302,31 +220,18 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_convertPEMKeyTo
     if (ctx.nullCheck(pem_key, "Pem key")) {
         return nullptr;
     }
-    try {
-        std::string convertedKey = getCryptoApi(env, thiz)->convertPEMKeytoWIFKey(
-                ctx.jString2string(pem_key));
-        return env->NewStringUTF(convertedKey.c_str());
-    } catch (const core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
+    jstring result;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &pem_key]() {
+                std::string convertedKey = getCryptoApi(ctx, thiz)->convertPEMKeytoWIFKey(
+                        ctx.jString2string(pem_key));
+                return ctx->NewStringUTF(convertedKey.c_str());
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
     }
-    return nullptr;
+    return result;
 }
 extern "C"
 JNIEXPORT jstring JNICALL
@@ -341,33 +246,20 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_derivePrivateKe
         ctx.nullCheck(salt, "Salt")) {
         return nullptr;
     }
-    try {
-        auto result = getCryptoApi(env, thiz)->derivePrivateKey(
-                ctx.jString2string(password),
-                ctx.jString2string(salt)
-        );
-        return env->NewStringUTF(result.c_str());
-    } catch (const core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
+    jstring result;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &password, &salt]() {
+                auto result = getCryptoApi(ctx, thiz)->derivePrivateKey(
+                        ctx.jString2string(password),
+                        ctx.jString2string(salt)
+                );
+                return ctx->NewStringUTF(result.c_str());
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
     }
-    return nullptr;
+    return result;
 }
 
 extern "C"
@@ -382,33 +274,20 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_derivePrivateKe
     if (ctx.nullCheck(password, "Password") || ctx.nullCheck(salt, "Salt")) {
         return nullptr;
     }
-    try {
-        auto result = getCryptoApi(env, thiz)->derivePrivateKey2(
-                ctx.jString2string(password),
-                ctx.jString2string(salt)
-        );
-        return env->NewStringUTF(result.c_str());
-    } catch (const core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
+    jstring result;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &password, &salt]() {
+                auto result = getCryptoApi(ctx, thiz)->derivePrivateKey2(
+                        ctx.jString2string(password),
+                        ctx.jString2string(salt)
+                );
+                return ctx->NewStringUTF(result.c_str());
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
     }
-    return nullptr;
+    return result;
 }
 
 extern "C"
@@ -418,32 +297,19 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_generateKeySymm
         jobject thiz
 ) {
     JniContextUtils ctx(env);
-    try {
-        auto response = getCryptoApi(env, thiz)->generateKeySymmetric();
-        jbyteArray result = env->NewByteArray(response.size());
-        env->SetByteArrayRegion(result, 0, response.size(), (jbyte *) response.data());
-        return result;
-    } catch (const core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
+    jbyteArray result;
+    ctx.callResultEndpointApi<jbyteArray>(
+            &result,
+            [&ctx, &thiz]() {
+                auto response = getCryptoApi(ctx, thiz)->generateKeySymmetric();
+                jbyteArray result = ctx->NewByteArray(response.size());
+                ctx->SetByteArrayRegion(result, 0, response.size(), (jbyte *) response.data());
+                return result;
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
     }
-    return nullptr;
+    return result;
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
@@ -461,33 +327,19 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_verifySignature
             ) {
         return JNI_FALSE;
     }
-    try {
-        auto response = getCryptoApi(env, thiz)->verifySignature(
-                core::Buffer::from(ctx.jByteArray2String(data)),
-                core::Buffer::from(ctx.jByteArray2String(signature)),
-                ctx.jString2string(public_key)
-        );
-        return response ? JNI_TRUE : JNI_FALSE;
-    } catch (const core::Exception &e) {
-        env->Throw(ctx.coreException2jthrowable(e));
-    } catch (const IllegalStateException &e) {
-        ctx->ThrowNew(
-                ctx->FindClass("java/lang/IllegalStateException"),
-                e.what()
-        );
-    } catch (const std::exception &e) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                e.what()
-        );
-    } catch (...) {
-        env->ThrowNew(
-                env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
-                "Unknown exception"
-        );
+    jboolean result;
+    ctx.callResultEndpointApi<jboolean>(
+            &result,
+            [&ctx, &thiz, &data, &signature, &public_key]() {
+                auto response = getCryptoApi(ctx, thiz)->verifySignature(
+                        core::Buffer::from(ctx.jByteArray2String(data)),
+                        core::Buffer::from(ctx.jByteArray2String(signature)),
+                        ctx.jString2string(public_key)
+                );
+                return response ? JNI_TRUE : JNI_FALSE;
+            });
+    if (ctx->ExceptionCheck()) {
+        return JNI_FALSE;
     }
-
-    return JNI_FALSE;
+    return result;
 }
