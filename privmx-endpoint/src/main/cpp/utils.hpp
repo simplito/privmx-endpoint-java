@@ -14,7 +14,7 @@
 
 #include <string>
 #include <jni.h>
-
+#include <functional>
 #include <privmx/endpoint/core/Exception.hpp>
 #include "privmx/endpoint/core/Exception.hpp"
 #include "exceptions.h"
