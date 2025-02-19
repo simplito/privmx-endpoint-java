@@ -47,15 +47,29 @@ public class CryptoApi implements AutoCloseable {
      * @return Generated ECC key in WIF format
      */
     public native String generatePrivateKey(String randomSeed) throws PrivmxException, NativeException;
-
+    
     /**
      * Generates a new private ECC key from a password using pbkdf2.
      *
      * @param password the password used to generate the new key
      * @param salt     random string (additional input for the hashing function)
      * @return Generated ECC key in WIF format
+     * @deprecated Use {@link CryptoApi#derivePrivateKey2(String, String)} instead.
      */
+    @Deprecated
     public native String derivePrivateKey(String password, String salt) throws PrivmxException, NativeException;
+
+    /**
+     * Generates a new private ECC key from a password using pbkdf2.
+     * This version of the derive function has a rounds count increased to 200k.
+     * This makes using this function a safer choice, but it makes the received key
+     * different than in the original version.
+     *
+     * @param password the password used to generate the new key
+     * @param salt     random string (additional input for the hashing function)
+     * @return generated ECC key in WIF format
+     */
+    public native String derivePrivateKey2(String password, String salt) throws PrivmxException, NativeException;
 
     /**
      * Generates a new public ECC key as a pair for an existing private key.

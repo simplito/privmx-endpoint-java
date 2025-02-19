@@ -1,0 +1,22 @@
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlinPluginSerialization)
+    alias(libs.plugins.privmx.install.native)
+}
+
+group = "com.simplito.privmx-endpoint-snippets"
+version = "2.2.0"
+
+kotlin {
+    jvmToolchain(21)
+}
+
+privmxEndpointInstallJni {
+    version = project.version
+}
+
+dependencies {
+    implementation(project(":privmx-endpoint-extra"))
+    implementation(libs.gson)
+    implementation(libs.kotlinx.serialization.json)
+}
