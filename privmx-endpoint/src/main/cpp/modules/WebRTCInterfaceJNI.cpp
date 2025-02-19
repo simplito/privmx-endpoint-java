@@ -8,10 +8,10 @@
 #include <thread>
 
 JNIEnv *WebRTCInterfaceJNI::AttachCurrentThreadIfNeeded() {
-    JNIEnv *env = nullptr;
-    jint status = javaVM->GetEnv((void **) &env, JNI_VERSION_1_6);
+    JNIEnv *jni = nullptr;
+    jint status = javaVM->GetEnv((void **) &jni, JNI_VERSION_1_6);
     //return if current thread is attached
-    if (env != nullptr && status == JNI_OK) return env;
+    if (jni != nullptr && status == JNI_OK) return jni;
 
     std::string name(
             "WebRTCInterfaceJNI - " + std::to_string(
@@ -20,8 +20,13 @@ JNIEnv *WebRTCInterfaceJNI::AttachCurrentThreadIfNeeded() {
     args.version = JNI_VERSION_1_6;
     args.name = &name[0];
     args.group = nullptr;
+#ifdef _JAVASOFT_JNI_H_  // Oracle's jni.h violates the JNI spec!
+    void* env = nullptr;
+#else
+    JNIEnv *env = nullptr;
+#endif
     if (javaVM->AttachCurrentThread(&env, &args) == JNI_OK) {
-        return env;
+        return reinterpret_cast<JNIEnv *>(env);
     }
     return nullptr;
 }
