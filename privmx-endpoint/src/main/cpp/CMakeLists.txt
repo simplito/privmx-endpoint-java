@@ -17,7 +17,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/modules/BackendRequester.cpp
 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/include ${JAVA_HOME}/include ${JAVA_HOME}/include/darwin)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/include ${JAVA_HOME}/include ${JAVA_HOME}/include/linux ${JAVA_HOME}/include/darwin)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC
         privmxendpoint::privmxendpointcore
