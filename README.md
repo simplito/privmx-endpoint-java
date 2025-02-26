@@ -86,7 +86,7 @@ dependencyResolutionManagement {
 
 ```groovy
 dependencies {
-    def privmxLibVersion = "2.2.0" // privmx-endpoint version
+    def privmxLibVersion = "2.2.1" // privmx-endpoint version
     implementation("com.simplito.java:privmx-endpoint-extra:$privmxLibVersion")
     //implementation("com.simplito.java:privmx-endpoint:$privmxLibVersion")  //for base Java library 
     //implementation("com.simplito.java:privmx-endpoint-android:$privmxLibVersion") //for Android Java library 
