@@ -815,7 +815,7 @@ namespace privmx {
             jmethodID initKeyMID = ctx->GetMethodID(
                     keyCls,
                     "<init>",
-                    "(Ljava/lang/String;Ljava/lang/String;Lcom/simplito/java/privmx_endpoint/model/KeyType;)V"
+                    "([B[BLcom/simplito/java/privmx_endpoint/model/KeyType;)V"
             );
 
             jbyteArray jKey = ctx->NewByteArray(key_c.key.size());
