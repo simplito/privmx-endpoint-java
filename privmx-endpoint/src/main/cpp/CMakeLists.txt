@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.15)
 project("privmx-endpoint-java")
 set(CMAKE_CXX_STANDARD 17)
 
+if ("${JAVA_HOME}" STREQUAL "")
+    SET(JAVA_HOME "$ENV{JAVA_HOME}")
+endif ()
+
 find_package(privmxendpoint REQUIRED)
 add_library(${CMAKE_PROJECT_NAME} SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/parser.cpp
