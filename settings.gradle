@@ -16,19 +16,14 @@ plugins {
 }
 
 dependencyResolutionManagement {
-    def props = new Properties()
-    file("./local.properties").withInputStream { props.load(it) }
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
-        maven {
-            url = uri(props.repositoryURL)
-        }
     }
 }
 
-rootProject.name = "PrivmxEndpointBuildScripts"
+rootProject.name = "PrivmxEndpointJava"
 include ':privmx-endpoint'
 include ':privmx-endpoint-extra'
 include ':privmx-endpoint-android'
