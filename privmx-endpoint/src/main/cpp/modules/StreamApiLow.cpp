@@ -387,8 +387,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_createStream
                 WebRTCInterfaceJNI(env, web_rtc));
         return ctx.long2jLong(
                 getStreamApi(ctx, thiz)->createStream(
-                        "",
-                        0,
+                        ctx.jString2string(stream_room_id),
+                        local_stream_id,
                         webrtc));
     } catch (const core::Exception &e) {
         env->Throw(ctx.coreException2jthrowable(e));
