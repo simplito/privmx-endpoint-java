@@ -34,7 +34,7 @@ public class StreamApiLow implements AutoCloseable {
         this.api = api;
     }
 
-    static native StreamApiLow create(Connection connection);
+    public static native StreamApiLow create(Connection connection);
 
     public String createStreamRoom(
             String contextId,
