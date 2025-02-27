@@ -815,19 +815,16 @@ namespace privmx {
             jmethodID initKeyMID = ctx->GetMethodID(
                     keyCls,
                     "<init>",
-                    "([B[BLcom/simplito/java/privmx_endpoint/model/KeyType;)V"
+                    "(Ljava/lang/String;[BLcom/simplito/java/privmx_endpoint/model/KeyType;)V"
             );
 
             jbyteArray jKey = ctx->NewByteArray(key_c.key.size());
             ctx->SetByteArrayRegion(jKey, 0, key_c.key.size(), (jbyte *) key_c.key.data());
 
-            jbyteArray jKeyId = ctx->NewByteArray(key_c.keyId.size());
-            ctx->SetByteArrayRegion(jKey, 0, key_c.key.size(), (jbyte *) key_c.key.data());
-
             return ctx->NewObject(
                     keyCls,
                     initKeyMID,
-                    jKeyId,
+                    ctx->NewStringUTF(key_c.keyId.c_str()),
                     jKey,
                     keyType2Java(ctx, key_c.type)
             );

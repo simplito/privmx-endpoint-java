@@ -12,12 +12,12 @@
 package com.simplito.java.privmx_endpoint.model;
 
 public class Key {
-    public byte[] keyId;
+    public String keyId;
     public byte[] key;
     public KeyType type;
 
     public Key(
-            byte[] keyId,
+            String keyId,
             byte[] key,
             KeyType type
     ) {
