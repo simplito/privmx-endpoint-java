@@ -42,13 +42,14 @@ WebRTCInterfaceJNI::WebRTCInterfaceJNI(JNIEnv *env, jobject jwebRTCInterface) {
         return;
     }
     env->GetJavaVM(&this->javaVM);
-    this->jwebRTCInterface = jwebRTCInterface;
+    //TODO: Clean this global ref on close()
+    this->jwebRTCInterface = env->NewGlobalRef(jwebRTCInterface);
 }
 
 std::string WebRTCInterfaceJNI::createOfferAndSetLocalDescription() {
     JNIEnv *env = AttachCurrentThreadIfNeeded();
     JniContextUtils ctx(env);
-
+    jclass jwebRTCInterfaceClass = env->GetObjectClass(jwebRTCInterface);
     jmethodID jmethodId = env->GetMethodID(
             jwebRTCInterfaceClass,
             "createOfferAndSetLocalDescription",
@@ -71,7 +72,7 @@ std::string WebRTCInterfaceJNI::createAnswerAndSetDescriptions(
 ) {
     JNIEnv *env = AttachCurrentThreadIfNeeded();
     JniContextUtils ctx(env);
-
+    jclass jwebRTCInterfaceClass = env->GetObjectClass(jwebRTCInterface);
     jmethodID jmethodId = env->GetMethodID(
             jwebRTCInterfaceClass,
             "createAnswerAndSetDescriptions",
@@ -96,7 +97,7 @@ void WebRTCInterfaceJNI::setAnswerAndSetRemoteDescription(
 ) {
     JNIEnv *env = AttachCurrentThreadIfNeeded();
     JniContextUtils ctx(env);
-
+    jclass jwebRTCInterfaceClass = env->GetObjectClass(jwebRTCInterface);
     jmethodID jmethodId = env->GetMethodID(
             jwebRTCInterfaceClass,
             "setAnswerAndSetRemoteDescription",
@@ -111,7 +112,7 @@ void WebRTCInterfaceJNI::setAnswerAndSetRemoteDescription(
 
 void WebRTCInterfaceJNI::close() {
     JNIEnv *env = AttachCurrentThreadIfNeeded();
-
+    jclass jwebRTCInterfaceClass = env->GetObjectClass(jwebRTCInterface);
     jmethodID jmethodId = env->GetMethodID(
             jwebRTCInterfaceClass,
             "close",
@@ -123,7 +124,7 @@ void WebRTCInterfaceJNI::close() {
 void WebRTCInterfaceJNI::updateKeys(const std::vector<Key> &keys) {
     JNIEnv *env = AttachCurrentThreadIfNeeded();
     JniContextUtils ctx(env);
-
+    jclass jwebRTCInterfaceClass = env->GetObjectClass(jwebRTCInterface);
     jmethodID jmethodId = env->GetMethodID(
             jwebRTCInterfaceClass,
             "updateKeys",
