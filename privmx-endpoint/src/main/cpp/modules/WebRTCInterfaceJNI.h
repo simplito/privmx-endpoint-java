@@ -28,7 +28,6 @@ public:
 private:
     jobject jwebRTCInterface;
     JavaVM *javaVM;
-    jclass jwebRTCInterfaceClass;
 
     JNIEnv *AttachCurrentThreadIfNeeded();
 };
