@@ -1,5 +1,5 @@
 [requires]
-privmx-endpoint/2.2.2
+privmx-endpoint/2.2.4
 
 [generators]
 CMakeDeps
