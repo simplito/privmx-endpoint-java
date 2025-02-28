@@ -25,6 +25,7 @@ JNIEnv *WebRTCInterfaceJNI::AttachCurrentThreadIfNeeded() {
 #else
     JNIEnv *env = nullptr;
 #endif
+    //TODO: Attached thread should be also detached
     if (javaVM->AttachCurrentThread(&env, &args) == JNI_OK) {
         return reinterpret_cast<JNIEnv *>(env);
     }
@@ -32,7 +33,7 @@ JNIEnv *WebRTCInterfaceJNI::AttachCurrentThreadIfNeeded() {
 }
 
 WebRTCInterfaceJNI::WebRTCInterfaceJNI(JNIEnv *env, jobject jwebRTCInterface) {
-    jwebRTCInterfaceClass = env->FindClass(
+    jclass jwebRTCInterfaceClass = env->FindClass(
             "com/simplito/java/privmx_endpoint/modules/stream/WebRTCInterface");
     javaVM = nullptr;
     if (!env->IsInstanceOf(jwebRTCInterface, jwebRTCInterfaceClass)) {
