@@ -140,6 +140,7 @@ void WebRTCInterfaceJNI::updateKeys(const std::vector<Key> &keys) {
             arrayCls,
             "add",
             "(Ljava/lang/Object;)Z");
+    ctx.setClassLoaderFromObject(jwebRTCInterface);
     for (auto &key_c: keys) {
         env->CallBooleanMethod(jKeysArray,
                                addToArrayMID,
