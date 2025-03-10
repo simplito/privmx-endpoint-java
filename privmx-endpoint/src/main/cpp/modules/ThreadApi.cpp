@@ -159,7 +159,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listThreads(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
@@ -169,7 +170,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listThreads(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id]() {
+            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id, &query_as_json]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -189,6 +190,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listThreads(
                 query.sortOrder = ctx.jString2string(sort_order);
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
                 }
                 core::PagingList<thread::Thread>
                         threads_c = getThreadApi(ctx, thiz)->listThreads(
@@ -260,7 +264,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listMessages(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(thread_id, "Thread ID") ||
@@ -270,7 +275,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listMessages(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &thread_id, &skip, &limit, &sort_order, last_id]() {
+            [&ctx, &thiz, &thread_id, &skip, &limit, &sort_order, &last_id, &query_as_json]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -286,6 +291,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listMessages(
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
                 }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
+                }
+
                 core::PagingList<thread::Message> messages_c = getThreadApi(
                         ctx,
                         thiz)->
@@ -455,6 +464,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_updateMessage(
         );
     });
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_subscribeForThreadEvents(
@@ -466,6 +476,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_subscribeForThr
         getThreadApi(ctx, thiz)->subscribeForThreadEvents();
     });
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_unsubscribeFromThreadEvents(
@@ -477,6 +488,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_unsubscribeFrom
         getThreadApi(ctx, thiz)->unsubscribeFromThreadEvents();
     });
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_subscribeForMessageEvents(
@@ -494,6 +506,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_subscribeForMes
         );
     });
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_unsubscribeFromMessageEvents(
@@ -508,6 +521,64 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_unsubscribeFrom
     ctx.callVoidEndpointApi([&ctx, &thiz, &thread_id]() {
         getThreadApi(ctx, thiz)->unsubscribeFromMessageEvents(
                 ctx.jString2string(thread_id)
+        );
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_emitEvent(
+        JNIEnv *env,
+        jobject thiz,
+        jstring thread_id,
+        jstring channel_name,
+        jbyteArray event_data,
+        jobject users_ids
+) {
+    JniContextUtils ctx(env);
+    ctx.callVoidEndpointApi([&ctx, &thiz, &thread_id, &channel_name, &event_data, &users_ids]() {
+        auto users_ids_arr = ctx.jObject2jArray(users_ids);
+        auto users_ids_c = std::vector<std::string>();
+        for (int i = 0; i < ctx->GetArrayLength(users_ids_arr); i++) {
+            jobject arrayElement = ctx->GetObjectArrayElement(users_ids_arr, i);
+            users_ids_c.push_back(ctx.jString2string((jstring) arrayElement));
+        }
+
+        getThreadApi(ctx, thiz)->emitEvent(
+                ctx.jString2string(thread_id),
+                ctx.jString2string(channel_name),
+                core::Buffer::from(ctx.jByteArray2String(event_data)),
+                users_ids_c
+        );
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_subscribeForThreadCustomEvents(
+        JNIEnv *env,
+        jobject thiz,
+        jstring thread_id,
+        jstring channel_name
+) {
+    JniContextUtils ctx(env);
+    ctx.callVoidEndpointApi([&ctx, &thiz, &thread_id, &channel_name]() {
+        getThreadApi(ctx, thiz)->subscribeForThreadCustomEvents(
+                ctx.jString2string(thread_id),
+                ctx.jString2string(channel_name)
+        );
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_unsubscribeFromThreadCustomEvents(
+        JNIEnv *env, jobject thiz, jstring thread_id, jstring channel_name) {
+    JniContextUtils ctx(env);
+    ctx.callVoidEndpointApi([&ctx, &thiz, &thread_id, &channel_name]() {
+        getThreadApi(ctx, thiz)->unsubscribeFromThreadCustomEvents(
+                ctx.jString2string(thread_id),
+                ctx.jString2string(channel_name)
         );
     });
 }

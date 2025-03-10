@@ -26,6 +26,7 @@
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
+#include "privmx/endpoint/event/Events.hpp"
 
 namespace privmx {
     namespace wrapper {
@@ -35,7 +36,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ItemPolicy itemPolicy
         );
-        
+
         jobject containerPolicyWithoutItem2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ContainerPolicyWithoutItem containerPolicyWithoutItem
@@ -48,6 +49,13 @@ namespace privmx {
 
         //Context
         jobject context2Java(JniContextUtils &ctx, privmx::endpoint::core::Context context_c);
+
+        // UserWithPubKey
+        jobject userWithPubKey2Java(JniContextUtils &ctx,
+                                    privmx::endpoint::core::UserWithPubKey userWithPubKey);
+
+        //UserInfo
+        jobject userInfo2Java(JniContextUtils &ctx, privmx::endpoint::core::UserInfo userInfo);
 
         //Threads
         jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c);
@@ -80,6 +88,10 @@ namespace privmx {
         jobject file2Java(JniContextUtils &ctx, privmx::endpoint::store::File file_c);
 
         //Event
+        jobject contextCustomEventData2Java(JniContextUtils &ctx,
+                                            privmx::endpoint::event::ContextCustomEvent contextCustomEvent_c
+        );
+
         jobject storeDeletedEventData2Java(JniContextUtils &ctx,
                                            privmx::endpoint::store::StoreDeletedEventData storeDeletedEventData_c);
 
@@ -88,6 +100,9 @@ namespace privmx {
 
         jobject storeStatsChangedEventData2Java(JniContextUtils &ctx,
                                                 privmx::endpoint::store::StoreStatsChangedEventData storeStatsChangedEventData_c);
+
+        jobject storeCustomEventData2Java(JniContextUtils &ctx,
+                                          privmx::endpoint::store::StoreCustomEvent storeCustomEvent_c);
 
         jobject threadDeletedEventData2Java(JniContextUtils &ctx,
                                             privmx::endpoint::thread::ThreadDeletedEventData threadDeletedEventData_c);
@@ -98,11 +113,18 @@ namespace privmx {
         jobject threadStatsEventData2Java(JniContextUtils &ctx,
                                           privmx::endpoint::thread::ThreadStatsEventData threadStatsEventData_c);
 
+        jobject threadCustomEventData2Java(JniContextUtils &ctx,
+                                           privmx::endpoint::thread::ThreadCustomEvent threadCustomEvent_c);
+
         jobject inboxDeletedEventData2Java(JniContextUtils &ctx,
                                            privmx::endpoint::inbox::InboxDeletedEventData inboxDeletedEventData_c);
 
         jobject inboxEntryDeletedEventData2Java(JniContextUtils &ctx,
                                                 privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
+
+        jobject inboxCustomEventData2Java(JniContextUtils &ctx,
+                                          privmx::endpoint::inbox::InboxCustomEvent inboxCustomEvent_c
+        );
 
     } // wrapper
 } // privmx

@@ -173,6 +173,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
     }
     return result;
 }
+
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
@@ -203,6 +204,51 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
                         ctx.long2jLong((jlong) api),
                         ctx.long2jLong(api->getConnectionId()));
                 return result;
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_getContextUsers(
+        JNIEnv *env,
+        jobject thiz,
+        jstring context_id
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(context_id, "Context ID")) {
+        return nullptr;
+    }
+
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &env, &thiz, &context_id]() {
+
+                jclass arrayListCls = env->FindClass("java/util/ArrayList");
+                jmethodID initMID = env->GetMethodID(arrayListCls, "<init>", "()V");
+                jmethodID addToListMID = env->GetMethodID(arrayListCls, "add",
+                                                          "(Ljava/lang/Object;)Z");
+                jobject array = env->NewObject(arrayListCls, initMID);
+
+
+                std::vector<privmx::endpoint::core::UserInfo> users = getConnection(
+                        env,
+                        thiz
+                )->getContextUsers(ctx.jString2string(context_id));
+
+                for (auto &user: users) {
+                    env->CallBooleanMethod(
+                            array,
+                            addToListMID,
+                            privmx::wrapper::userInfo2Java(ctx, user)
+                    );
+                }
+
+                return array;
             });
     if (ctx->ExceptionCheck()) {
         return nullptr;

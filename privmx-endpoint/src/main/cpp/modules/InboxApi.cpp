@@ -242,7 +242,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_listInboxes(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
@@ -252,7 +253,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_listInboxes(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id]() {
+            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id, &query_as_json]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -267,6 +268,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_listInboxes(
                 query.sortOrder = ctx.jString2string(sort_order);
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
                 }
                 auto inboxes_c(
                         getInboxApi(ctx, thiz)->listInboxes(
@@ -699,6 +703,58 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_unsubscribeFromEn
     ctx.callVoidEndpointApi([&ctx, &thiz, &inbox_id]() {
         getInboxApi(ctx, thiz)->unsubscribeFromEntryEvents(
                 ctx.jString2string(inbox_id)
+        );
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_emitEvent(
+        JNIEnv *env, jobject thiz,
+        jstring inbox_id,
+        jstring channel_name,
+        jbyteArray event_data,
+        jobject users_ids
+) {
+    JniContextUtils ctx(env);
+    ctx.callVoidEndpointApi([&ctx, &thiz, &inbox_id, &channel_name, &event_data, &users_ids]() {
+        auto users_ids_arr = ctx.jObject2jArray(users_ids);
+        auto users_ids_c = std::vector<std::string>();
+        for (int i = 0; i < ctx->GetArrayLength(users_ids_arr); i++) {
+            jobject arrayElement = ctx->GetObjectArrayElement(users_ids_arr, i);
+            users_ids_c.push_back(ctx.jString2string((jstring) arrayElement));
+        }
+        getInboxApi(ctx, thiz)->emitEvent(
+                ctx.jString2string(inbox_id),
+                ctx.jString2string(channel_name),
+                core::Buffer::from(ctx.jByteArray2String(event_data)),
+                users_ids_c
+        );
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_subscribeForInboxCustomEvents(
+        JNIEnv *env, jobject thiz, jstring inbox_id, jstring channel_name) {
+    JniContextUtils ctx(env);
+    ctx.callVoidEndpointApi([&ctx, &thiz, &inbox_id, &channel_name]() {
+        getInboxApi(ctx, thiz)->subscribeForInboxCustomEvents(
+                ctx.jString2string(inbox_id),
+                ctx.jString2string(channel_name)
+        );
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_unsubscribeFromInboxCustomEvents(
+        JNIEnv *env, jobject thiz, jstring inbox_id, jstring channel_name) {
+    JniContextUtils ctx(env);
+    ctx.callVoidEndpointApi([&ctx, &thiz, &inbox_id, &channel_name]() {
+        getInboxApi(ctx, thiz)->unsubscribeFromInboxCustomEvents(
+                ctx.jString2string(inbox_id),
+                ctx.jString2string(channel_name)
         );
     });
 }

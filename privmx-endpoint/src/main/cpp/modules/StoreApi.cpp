@@ -85,7 +85,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listStores(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(sort_order, "Sort order") ||
@@ -95,7 +96,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listStores(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id]() {
+            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id, &query_as_json]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -111,6 +112,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listStores(
                 query.sortOrder = ctx.jString2string(sort_order);
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
                 }
                 auto stores_c(
                         getStoreApi(ctx, thiz)->listStores(
@@ -252,7 +256,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listFiles(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(store_id, "Store ID") ||
@@ -262,7 +267,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listFiles(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &store_id, &skip, &limit, &sort_order, last_id]() {
+            [&ctx, &thiz, &store_id, &skip, &limit, &sort_order, last_id, &query_as_json]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -277,6 +282,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listFiles(
                 query.sortOrder = ctx.jString2string(sort_order);
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.lastId = ctx.jString2string(query_as_json);
                 }
                 auto files_c(
                         getStoreApi(ctx, thiz)->listFiles(
@@ -607,6 +615,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_subscribeForStore
         getStoreApi(ctx, thiz)->subscribeForStoreEvents();
     });
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_unsubscribeFromStoreEvents(
@@ -618,6 +627,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_unsubscribeFromSt
         getStoreApi(ctx, thiz)->unsubscribeFromStoreEvents();
     });
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_subscribeForFileEvents(
@@ -635,6 +645,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_subscribeForFileE
         );
     });
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_unsubscribeFromFileEvents(
@@ -649,6 +660,59 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_unsubscribeFromFi
     ctx.callVoidEndpointApi([&ctx, &thiz, &store_id]() {
         getStoreApi(ctx, thiz)->unsubscribeFromFileEvents(
                 ctx.jString2string(store_id)
+        );
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_emitEvent(
+        JNIEnv *env, jobject thiz,
+        jstring store_id,
+        jstring channel_name,
+        jbyteArray event_data,
+        jobject users_ids
+) {
+    JniContextUtils ctx(env);
+    ctx.callVoidEndpointApi([&ctx, &thiz, &store_id, &channel_name, &event_data, &users_ids]() {
+        auto users_ids_arr = ctx.jObject2jArray(users_ids);
+        auto users_ids_c = std::vector<std::string>();
+        for (int i = 0; i < ctx->GetArrayLength(users_ids_arr); i++) {
+            jobject arrayElement = ctx->GetObjectArrayElement(users_ids_arr, i);
+            users_ids_c.push_back(ctx.jString2string((jstring) arrayElement));
+        }
+
+        getStoreApi(ctx, thiz)->emitEvent(
+                ctx.jString2string(store_id),
+                ctx.jString2string(channel_name),
+                core::Buffer::from(ctx.jByteArray2String(event_data)),
+                users_ids_c
+        );
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_subscribeForStoreCustomEvents(
+        JNIEnv *env, jobject thiz, jstring store_id, jstring channel_name) {
+    JniContextUtils ctx(env);
+    ctx.callVoidEndpointApi([&ctx, &thiz, &store_id, &channel_name]() {
+        getStoreApi(ctx, thiz)->subscribeForStoreCustomEvents(
+                ctx.jString2string(store_id),
+                ctx.jString2string(channel_name)
+        );
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_unsubscribeFromStoreCustomEvents(
+        JNIEnv *env, jobject thiz, jstring store_id, jstring channel_name) {
+    JniContextUtils ctx(env);
+    ctx.callVoidEndpointApi([&ctx, &thiz, &store_id, &channel_name]() {
+        getStoreApi(ctx, thiz)->unsubscribeFromStoreCustomEvents(
+                ctx.jString2string(store_id),
+                ctx.jString2string(channel_name)
         );
     });
 }
