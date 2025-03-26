@@ -61,8 +61,8 @@ public class Connection implements AutoCloseable {
      * payload: {@link Void}
      */
     @Deprecated
-    public static Connection platformConnect(String userPrivKey, String solutionId, String platformUrl) throws PrivmxException, NativeException{
-        return connect(userPrivKey,solutionId,platformUrl);
+    public static Connection platformConnect(String userPrivKey, String solutionId, String platformUrl) throws PrivmxException, NativeException {
+        return connect(userPrivKey, solutionId, platformUrl);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Connection implements AutoCloseable {
      *
      * @param userPrivKey user's private key
      * @param solutionId  ID of the Solution
-     * @param bridgeUrl Bridge's Endpoint URL
+     * @param bridgeUrl   Bridge's Endpoint URL
      * @return Connection object
      * @throws PrivmxException thrown when method encounters an exception.
      * @throws NativeException thrown when method encounters an unknown exception.
@@ -93,15 +93,15 @@ public class Connection implements AutoCloseable {
      * payload: {@link Void}
      */
     @Deprecated
-    public static Connection platformConnectPublic(String solutionId, String platformUrl) throws PrivmxException, NativeException{
-        return connectPublic(solutionId,platformUrl);
+    public static Connection platformConnectPublic(String solutionId, String platformUrl) throws PrivmxException, NativeException {
+        return connectPublic(solutionId, platformUrl);
     }
 
     /**
      * Connects to PrivMX Bridge server as a guest user.
      *
-     * @param solutionId  ID of the Solution
-     * @param bridgeUrl Bridge's Endpoint URL
+     * @param solutionId ID of the Solution
+     * @param bridgeUrl  Bridge's Endpoint URL
      * @return Connection object
      * @throws PrivmxException thrown when method encounters an exception.
      * @throws NativeException thrown when method encounters an unknown exception.
@@ -129,9 +129,9 @@ public class Connection implements AutoCloseable {
     /**
      * Gets a list of Contexts available for the user.
      *
-     * @param skip        skip number of elements to skip from result
-     * @param limit       limit of elements to return for query
-     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of Contexts
      * @throws IllegalStateException thrown when instance is not connected.
      * @throws PrivmxException       thrown when method encounters an exception.
@@ -144,10 +144,10 @@ public class Connection implements AutoCloseable {
     /**
      * Gets a list of Contexts available for the user.
      *
-     * @param skip        skip number of elements to skip from result
-     * @param limit       limit of elements to return for query
-     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
-     * @param lastId      ID of the element from which query results should start
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId    ID of the element from which query results should start
      * @return list of Contexts
      * @throws IllegalStateException thrown when instance is not connected.
      * @throws PrivmxException       thrown when method encounters an exception.
@@ -161,9 +161,7 @@ public class Connection implements AutoCloseable {
      *
      * @return ID of the connection
      */
-    public Long getConnectionId() {
-        return this.connectionId;
-    }
+    public native Long getConnectionId() throws PrivmxException, NativeException;
 
 
     /**
@@ -174,6 +172,7 @@ public class Connection implements AutoCloseable {
     public void close() {
         if (api != null) {
             disconnect();
+            deinit();
         }
     }
 }
