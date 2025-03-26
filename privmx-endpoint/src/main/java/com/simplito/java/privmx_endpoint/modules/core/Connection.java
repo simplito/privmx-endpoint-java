@@ -171,7 +171,12 @@ public class Connection implements AutoCloseable {
     @Override
     public void close() {
         if (api != null) {
-            disconnect();
+            try {
+                disconnect();
+            } catch (PrivmxException e) {
+                //if endpoint not throw exception about disconnected state
+                if (e.getCode() != 131073) throw e;
+            }
             deinit();
         }
     }

@@ -119,7 +119,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_disconnect(JNIEn
     JniContextUtils ctx(env);
     ctx.callVoidEndpointApi([&env, &thiz]() {
         getConnection(env, thiz)->disconnect();
-//        Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_deinit(env, thiz);
     });
 }
 
