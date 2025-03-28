@@ -71,12 +71,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContexts(
                 jclass pagingListCls = env->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = env->GetMethodID(
-                        pagingListCls, "<init>",
+                        pagingListCls,
+                        "<init>",
                         "(Ljava/lang/Long;Ljava/util/List;)V");
-                jclass arrayListCls = env->FindClass(
-                        "java/util/ArrayList");
-                jmethodID initMID = env->GetMethodID(arrayListCls,
-                                                     "<init>", "()V");
+                jclass arrayListCls = env->FindClass("java/util/ArrayList");
+                jmethodID initMID = env->GetMethodID(arrayListCls, "<init>", "()V");
                 jmethodID addToListMID = env->GetMethodID(arrayListCls,
                                                           "add",
                                                           "(Ljava/lang/Object;)Z");
@@ -173,23 +172,25 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
         return nullptr;
     }
     jobject result;
-    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &clazz, &solution_id, &bridge_url]() {
-        jmethodID initMID = ctx->GetMethodID(
-                clazz,
-                "<init>",
-                "(Ljava/lang/Long;Ljava/lang/Long;)V");
-        privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connectPublic(
-                ctx.jString2string(solution_id),
-                ctx.jString2string(bridge_url));
-        auto *api = new privmx::endpoint::core::Connection();
-        *api = connection;
-        jobject result = ctx->NewObject(
-                clazz,
-                initMID,
-                ctx.long2jLong((jlong) api),
-                ctx.long2jLong(api->getConnectionId()));
-        return result;
-    });
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &clazz, &solution_id, &bridge_url]() {
+                jmethodID initMID = ctx->GetMethodID(
+                        clazz,
+                        "<init>",
+                        "(Ljava/lang/Long;Ljava/lang/Long;)V");
+                privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connectPublic(
+                        ctx.jString2string(solution_id),
+                        ctx.jString2string(bridge_url));
+                auto *api = new privmx::endpoint::core::Connection();
+                *api = connection;
+                jobject result = ctx->NewObject(
+                        clazz,
+                        initMID,
+                        ctx.long2jLong((jlong) api),
+                        ctx.long2jLong(api->getConnectionId()));
+                return result;
+            });
     if (ctx->ExceptionCheck()) {
         return nullptr;
     }
