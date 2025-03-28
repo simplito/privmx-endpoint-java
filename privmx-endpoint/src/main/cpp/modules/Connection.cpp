@@ -39,7 +39,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_deinit(JNIEnv *e
         jfieldID apiFID = env->GetFieldID(cls, "api", "Ljava/lang/Long;");
         env->SetObjectField(thiz, apiFID, (jobject) nullptr);
     } catch (const IllegalStateException &e) {
-        env->ThrowNew(env->FindClass("java/lang/IllegalStateException"), e.what());
+        env->ThrowNew(
+                env->FindClass("java/lang/IllegalStateException"),
+                e.what()
+        );
     }
 }
 
@@ -58,7 +61,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContexts(
     }
     jobject result;
     ctx.callResultEndpointApi<jobject>(
-            &result, [&ctx, &env, &thiz, &skip, &limit, &sort_order, &last_id]() {
+            &result,
+            [&ctx, &env, &thiz, &skip, &limit, &sort_order, &last_id]() {
                 auto query = privmx::endpoint::core::PagingQuery();
                 query.skip = skip;
                 query.limit = limit;
@@ -81,14 +85,16 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContexts(
                                                           "(Ljava/lang/Object;)Z");
                 jobject array = env->NewObject(arrayListCls, initMID);
                 for (auto &context: infos.readItems) {
-                    env->CallBooleanMethod(array, addToListMID,
-                                           privmx::wrapper::context2Java(
-                                                   ctx, context));
+                    env->CallBooleanMethod(
+                            array,
+                            addToListMID,
+                            privmx::wrapper::context2Java(ctx, context));
                 }
-                return ctx->NewObject(pagingListCls, pagingListInitMID,
-                                      ctx.long2jLong(
-                                              infos.totalAvailable),
-                                      array);
+                return ctx->NewObject(
+                        pagingListCls,
+                        pagingListInitMID,
+                        ctx.long2jLong(infos.totalAvailable),
+                        array);
             });
     if (ctx->ExceptionCheck()) {
         return nullptr;
@@ -132,7 +138,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(user_priv_key, "User Private Key") ||
-        ctx.nullCheck(solution_id, "Solution ID") || ctx.nullCheck(bridge_url, "Bridge URL")) {
+        ctx.nullCheck(solution_id, "Solution ID")
+        || ctx.nullCheck(bridge_url, "Bridge URL")) {
         return nullptr;
     }
     jobject result;
@@ -168,7 +175,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
         jstring bridge_url
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(solution_id, "Solution ID") || ctx.nullCheck(bridge_url, "Bridge URL")) {
+    if (ctx.nullCheck(solution_id, "Solution ID") ||
+        ctx.nullCheck(bridge_url, "Bridge URL")) {
         return nullptr;
     }
     jobject result;
