@@ -10,6 +10,7 @@
 //
 
 #include "utils.hpp"
+#include "exceptions.h"
 
 std::string JniContextUtils::jString2string(jstring str) {
     const char *tmp = _env->GetStringUTFChars(str, NULL);
@@ -109,6 +110,31 @@ bool JniContextUtils::nullCheck(void *value, std::string value_name) {
         return true;
     }
     return false;
+}
+
+void JniContextUtils::callVoidEndpointApi(const std::function<void()> &fun) {
+    try {
+        fun();
+    } catch (const privmx::endpoint::core::Exception &e) {
+        _env->Throw(coreException2jthrowable(e));
+    } catch (const IllegalStateException &e) {
+        _env->ThrowNew(
+                _env->FindClass("java/lang/IllegalStateException"),
+                e.what()
+        );
+    } catch (const std::exception &e) {
+        _env->ThrowNew(
+                _env->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+                e.what()
+        );
+    } catch (...) {
+        _env->ThrowNew(
+                _env->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+                "Unknown exception"
+        );
+    }
 }
 
 jclass JniContextUtils::findClass(const char *name) {

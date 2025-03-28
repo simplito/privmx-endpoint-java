@@ -107,15 +107,15 @@ namespace privmx {
                                                 privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
 
         //Streams
-        jobject keyType2Java(JniContextUtils &ctx, privmx::endpoint::stream::KeyType keyType_c);
+//        jobject keyType2Java(JniContextUtils &ctx, privmx::endpoint::stream::KeyType keyType_c);
 
-        jobject key2Java(JniContextUtils &ctx, privmx::endpoint::stream::Key key_c);
+//        jobject key2Java(JniContextUtils &ctx, privmx::endpoint::stream::Key key_c);
 
-        jobject
-        streamRoom2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamRoom streamRoom_c);
+//        jobject
+//        streamRoom2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamRoom streamRoom_c);
 
-        jobject
-        stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
+//        jobject
+//        stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
 
     } // wrapper
 } // privmx
