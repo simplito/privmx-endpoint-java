@@ -29,11 +29,9 @@ public class Connection implements AutoCloseable {
     }
 
     private final Long api;
-    private final Long connectionId;
 
-    private Connection(Long api, Long connectionId) {
+    private Connection(Long api) {
         this.api = api;
-        this.connectionId = connectionId;
     }
 
     private native void deinit() throws IllegalStateException, PrivmxException, NativeException;

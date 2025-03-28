@@ -149,7 +149,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
                 jmethodID initMID = ctx->GetMethodID(
                         clazz,
                         "<init>",
-                        "(Ljava/lang/Long;Ljava/lang/Long;)V");
+                        "(Ljava/lang/Long;)V");
                 privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connect(
                         ctx.jString2string(user_priv_key),
                         ctx.jString2string(solution_id),
@@ -159,8 +159,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
                 jobject result = ctx->NewObject(
                         clazz,
                         initMID,
-                        ctx.long2jLong((jlong) api),
-                        ctx.long2jLong(api->getConnectionId()));
+                        ctx.long2jLong((jlong) api));
                 return result;
             });
     if (ctx->ExceptionCheck()) {
@@ -187,7 +186,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
                 jmethodID initMID = ctx->GetMethodID(
                         clazz,
                         "<init>",
-                        "(Ljava/lang/Long;Ljava/lang/Long;)V");
+                        "(Ljava/lang/Long;)V");
                 privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connectPublic(
                         ctx.jString2string(solution_id),
                         ctx.jString2string(bridge_url));
@@ -196,8 +195,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
                 jobject result = ctx->NewObject(
                         clazz,
                         initMID,
-                        ctx.long2jLong((jlong) api),
-                        ctx.long2jLong(api->getConnectionId()));
+                        ctx.long2jLong((jlong) api));
                 return result;
             });
     if (ctx->ExceptionCheck()) {
