@@ -138,13 +138,14 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(user_priv_key, "User Private Key") ||
-        ctx.nullCheck(solution_id, "Solution ID")
-        || ctx.nullCheck(bridge_url, "Bridge URL")) {
+        ctx.nullCheck(solution_id, "Solution ID") ||
+        ctx.nullCheck(bridge_url, "Bridge URL")) {
         return nullptr;
     }
     jobject result;
     ctx.callResultEndpointApi<jobject>(
-            &result, [&ctx, &clazz, &user_priv_key, &solution_id, &bridge_url]() {
+            &result,
+            [&ctx, &clazz, &user_priv_key, &solution_id, &bridge_url]() {
                 jmethodID initMID = ctx->GetMethodID(
                         clazz,
                         "<init>",
