@@ -13,6 +13,7 @@ package com.simplito.java.privmx_endpoint.modules.core;
 
 import com.simplito.java.privmx_endpoint.model.Context;
 import com.simplito.java.privmx_endpoint.model.PagingList;
+import com.simplito.java.privmx_endpoint.model.UserVerifierInterface;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 
@@ -153,7 +154,6 @@ public class Connection implements AutoCloseable {
      */
     public native PagingList<Context> listContexts(long skip, long limit, String sortOrder, String lastId) throws IllegalStateException, PrivmxException, NativeException;
 
-
     /**
      * Gets the ID of the current connection.
      *
@@ -161,6 +161,7 @@ public class Connection implements AutoCloseable {
      */
     public native Long getConnectionId() throws PrivmxException, NativeException;
 
+    public native void setUserVerifier(UserVerifierInterface userVerifier);
 
     /**
      * If there is an active connection then it

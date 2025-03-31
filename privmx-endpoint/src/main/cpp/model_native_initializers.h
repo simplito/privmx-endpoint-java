@@ -26,6 +26,7 @@
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
+#include "privmx/endpoint/core/UserVerifierInterface.hpp"
 #include "privmx/endpoint/stream/StreamApiLow.hpp"
 #include "privmx/endpoint/stream/WebRTCInterface.hpp"
 
@@ -50,6 +51,9 @@ namespace privmx {
 
         //Context
         jobject context2Java(JniContextUtils &ctx, privmx::endpoint::core::Context context_c);
+
+        jobject verificationRequest2Java(JniContextUtils &ctx,
+                                         privmx::endpoint::core::VerificationRequest verificationRequest_c);
 
         //Threads
         jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c);
@@ -107,15 +111,15 @@ namespace privmx {
                                                 privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
 
         //Streams
-//        jobject keyType2Java(JniContextUtils &ctx, privmx::endpoint::stream::KeyType keyType_c);
+        jobject keyType2Java(JniContextUtils &ctx, privmx::endpoint::stream::KeyType keyType_c);
 
-//        jobject key2Java(JniContextUtils &ctx, privmx::endpoint::stream::Key key_c);
+        jobject key2Java(JniContextUtils &ctx, privmx::endpoint::stream::Key key_c);
 
-//        jobject
-//        streamRoom2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamRoom streamRoom_c);
+        jobject
+        streamRoom2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamRoom streamRoom_c);
 
-//        jobject
-//        stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
+        jobject
+        stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
 
     } // wrapper
 } // privmx

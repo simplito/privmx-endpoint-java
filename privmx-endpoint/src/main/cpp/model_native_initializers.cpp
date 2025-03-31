@@ -203,6 +203,33 @@ namespace privmx {
             );
         }
 
+        jobject verificationRequest2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::VerificationRequest verificationRequest_c
+        ) {
+            jclass verificationRequestCls = ctx.findClass(
+                    "com/simplito/java/privmx_endpoint/model/VerificationRequest");
+            jmethodID initThreadDataMID = ctx->GetMethodID(
+                    verificationRequestCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"
+                    "Ljava/lang/String;"
+                    "Ljava/lang/String;"
+                    "Ljava/lang/String;"
+                    "Ljava/lang/Long;"
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    verificationRequestCls,
+                    initThreadDataMID,
+                    ctx->NewStringUTF(verificationRequest_c.contextId.c_str()),
+                    ctx->NewStringUTF(verificationRequest_c.senderId.c_str()),
+                    ctx->NewStringUTF(verificationRequest_c.senderPubKey.c_str()),
+                    ctx.long2jLong(verificationRequest_c.date));
+        }
+
         //Threads
         jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c) {
             jclass threadCls = ctx.findClass(
@@ -788,7 +815,6 @@ namespace privmx {
         }
 
         //Streams
-
 //        jobject keyType2Java(JniContextUtils &ctx, privmx::endpoint::stream::KeyType keyType_c) {
 //            jclass keyTypeClass = ctx.findClass("com/simplito/java/privmx_endpoint/model/KeyType");
 //            jfieldID caseFieldId = nullptr;
