@@ -26,6 +26,8 @@
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
+#include "privmx/endpoint/kvdb/KvdbApi.hpp"
+#include "privmx/endpoint/kvdb/Types.hpp"
 
 namespace privmx {
     namespace wrapper {
@@ -35,7 +37,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ItemPolicy itemPolicy
         );
-        
+
         jobject containerPolicyWithoutItem2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ContainerPolicyWithoutItem containerPolicyWithoutItem
@@ -103,6 +105,15 @@ namespace privmx {
 
         jobject inboxEntryDeletedEventData2Java(JniContextUtils &ctx,
                                                 privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
+
+        //Kvdb
+        jobject kvdb2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Kvdb kvdb_c);
+
+        jobject serverItemInfo2Java(JniContextUtils &ctx,
+                                    privmx::endpoint::kvdb::ServerItemInfo serverItemInfo_c);
+
+        jobject item2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Item item_c);
+
 
     } // wrapper
 } // privmx
