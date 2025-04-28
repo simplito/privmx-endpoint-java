@@ -404,33 +404,7 @@ public class ThreadApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public native void unsubscribeFromMessageEvents(String threadId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Emit Custom Event for selected group users of Thread.
-     *
-     * @param threadId    ID of the Thread on witch event will be send
-     * @param channelName name of event channel
-     * @param eventData   encrypted event data
-     * @param usersIds    list of userId for which event will be send
-     */
-    public native void emitEvent(String threadId, String channelName, byte[] eventData, List<String> usersIds);
-
-    /**
-     * Subscribes for custom events in given Thread on given channel.
-     *
-     * @param threadId    of the Thread to subscribe
-     * @param channelName name of the channel to subscribe
-     */
-    public native void subscribeForThreadCustomEvents(String threadId, String channelName);
-
-    /**
-     * Unsubscribes from custom events in given Thread on given channel.
-     *
-     * @param threadId    of the Thread to unsubscribe
-     * @param channelName name of the channel to unsubscribe
-     */
-    public native void unsubscribeFromThreadCustomEvents(String threadId, String channelName);
-
+    
     /**
      * Frees memory.
      *

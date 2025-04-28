@@ -13,9 +13,9 @@
 
 using namespace privmx::endpoint;
 
-std::vector<privmx::endpoint::core::UserWithPubKey>
+std::vector <privmx::endpoint::core::UserWithPubKey>
 usersToVector(JniContextUtils &ctx, jobjectArray users) {
-    std::vector<privmx::endpoint::core::UserWithPubKey> users_c;
+    std::vector <privmx::endpoint::core::UserWithPubKey> users_c;
     for (int i = 0; i < ctx->GetArrayLength(users); i++) {
 
         jobject arrayElement = ctx->GetObjectArrayElement(users, i);
@@ -205,7 +205,7 @@ jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, i
 }
 
 jobject
-parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event) {
+parseEvent(JniContextUtils &ctx, std::shared_ptr <privmx::endpoint::core::Event> event) {
     try {
         if (event::Events::isContextCustomEvent(event)) {
             privmx::endpoint::event::ContextCustomEvent event_cast = event::Events::extractContextCustomEvent(
@@ -289,16 +289,6 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.connectionId,
                     privmx::wrapper::threadDeletedMessageEventData2Java(ctx, event_cast.data)
             );
-        } else if (thread::Events::isThreadCustomEvent(event)) {
-            privmx::endpoint::thread::ThreadCustomEvent event_cast = thread::Events::extractThreadCustomEvent(
-                    event);
-            return initEvent(
-                    ctx,
-                    event_cast.type,
-                    event_cast.channel,
-                    event_cast.connectionId,
-                    privmx::wrapper::threadCustomEventData2Java(ctx, event_cast)
-            );
         } else if (store::Events::isStoreCreatedEvent(event)) {
             privmx::endpoint::store::StoreCreatedEvent event_cast = store::Events::extractStoreCreatedEvent(
                     event);
@@ -379,16 +369,6 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.connectionId,
                     privmx::wrapper::storeFileDeletedEventData2Java(ctx, event_cast.data)
             );
-        } else if (store::Events::isStoreCustomEvent(event)) {
-            privmx::endpoint::store::StoreCustomEvent event_cast = store::Events::extractStoreCustomEvent(
-                    event);
-            return initEvent(
-                    ctx,
-                    event_cast.type,
-                    event_cast.channel,
-                    event_cast.connectionId,
-                    privmx::wrapper::storeCustomEventData2Java(ctx, event_cast)
-            );
         } else if (inbox::Events::isInboxCreatedEvent(event)) {
             privmx::endpoint::inbox::InboxCreatedEvent event_cast = inbox::Events::extractInboxCreatedEvent(
                     event);
@@ -438,16 +418,6 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     privmx::wrapper::inboxEntryDeletedEventData2Java(ctx, event_cast.data)
-            );
-        } else if (inbox::Events::isInboxCustomEvent(event)) {
-            privmx::endpoint::inbox::InboxCustomEvent event_cast = inbox::Events::extractInboxCustomEvent(
-                    event);
-            return initEvent(
-                    ctx,
-                    event_cast.type,
-                    event_cast.channel,
-                    event_cast.connectionId,
-                    privmx::wrapper::inboxCustomEventData2Java(ctx, event_cast)
             );
         } else {
             return initEvent(

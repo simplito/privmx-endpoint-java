@@ -640,32 +640,6 @@ public class InboxApi implements AutoCloseable {
     public native void unsubscribeFromEntryEvents(String inboxId) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Emit Custom Event for selected group users of Inbox.
-     *
-     * @param inboxId     ID of the Inbox on witch event will be send
-     * @param channelName name of event channel
-     * @param eventData   encrypted event data
-     * @param usersIds    list of userId for which event will be send
-     */
-    public native void emitEvent(String inboxId, String channelName, byte[] eventData, List<String> usersIds);
-
-    /**
-     * Subscribes for custom events in given Inbox on given channel.
-     *
-     * @param inboxId     of the Inbox to subscribe
-     * @param channelName name of the channel to subscribe
-     */
-    public native void subscribeForInboxCustomEvents(String inboxId, String channelName);
-
-    /**
-     * Unsubscribes from custom events in given Inbox on given channel.
-     *
-     * @param inboxId     of the Inbox to unsubscribe
-     * @param channelName name of the channel to unsubscribe
-     */
-    public native void unsubscribeFromInboxCustomEvents(String inboxId, String channelName);
-
-    /**
      * Frees memory.
      *
      * @throws Exception when instance is currently closed.

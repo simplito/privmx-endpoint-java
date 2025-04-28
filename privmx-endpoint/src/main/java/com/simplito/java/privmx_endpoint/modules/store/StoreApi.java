@@ -459,32 +459,6 @@ public class StoreApi implements AutoCloseable {
     public native void unsubscribeFromFileEvents(String storeId) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Emit Custom Event for selected group users of Store.
-     *
-     * @param storeId     ID of the Store on witch event will be send
-     * @param channelName name of event channel
-     * @param eventData   encrypted event data
-     * @param usersIds    list of userId for which event will be send
-     */
-    public native void emitEvent(String storeId, String channelName, byte[] eventData, List<String> usersIds);
-
-    /**
-     * Subscribes for custom events in given Store on given channel.
-     *
-     * @param storeId     of the Store to subscribe
-     * @param channelName name of the channel to subscribe
-     */
-    public native void subscribeForStoreCustomEvents(String storeId, String channelName);
-
-    /**
-     * Unsubscribes from custom events in given Store on given channel.
-     *
-     * @param storeId     of the Store to unsubscribe
-     * @param channelName name of the channel to unsubscribe
-     */
-    public native void unsubscribeFromStoreCustomEvents(String storeId, String channelName);
-
-    /**
      * Frees memory.
      *
      * @throws Exception when instance is currently closed.
