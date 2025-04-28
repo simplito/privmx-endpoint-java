@@ -14,13 +14,11 @@ namespace privmx::wrapper {
         UserVerifierInterfaceJNI(JNIEnv *env, jobject juserVerifierInterface);
 
         std::vector<bool>
-        verify(const std::vector<endpoint::core::VerificationRequest> &request) override;
+        verify(const std::vector <endpoint::core::VerificationRequest> &request) override;
 
     private:
         jobject juserVerifierInterface;
         JavaVM *javaVM;
-
-        JNIEnv *AttachCurrentThreadIfNeeded();
     };
 };
 
