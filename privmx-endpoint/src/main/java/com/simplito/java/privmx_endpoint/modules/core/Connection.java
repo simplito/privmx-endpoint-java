@@ -13,6 +13,7 @@ package com.simplito.java.privmx_endpoint.modules.core;
 
 import com.simplito.java.privmx_endpoint.model.Context;
 import com.simplito.java.privmx_endpoint.model.PagingList;
+import com.simplito.java.privmx_endpoint.model.UserVerifierInterface;
 import com.simplito.java.privmx_endpoint.model.UserInfo;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
@@ -32,11 +33,9 @@ public class Connection implements AutoCloseable {
     }
 
     private final Long api;
-    private final Long connectionId;
 
-    private Connection(Long api, Long connectionId) {
+    private Connection(Long api) {
         this.api = api;
-        this.connectionId = connectionId;
     }
 
     private native void deinit() throws IllegalStateException, PrivmxException, NativeException;
@@ -64,8 +63,8 @@ public class Connection implements AutoCloseable {
      * payload: {@link Void}
      */
     @Deprecated
-    public static Connection platformConnect(String userPrivKey, String solutionId, String platformUrl) throws PrivmxException, NativeException {
-        return connect(userPrivKey, solutionId, platformUrl);
+    public static Connection platformConnect(String userPrivKey, String solutionId, String platformUrl) throws PrivmxException, NativeException{
+        return connect(userPrivKey,solutionId,platformUrl);
     }
 
     /**
@@ -73,7 +72,7 @@ public class Connection implements AutoCloseable {
      *
      * @param userPrivKey user's private key
      * @param solutionId  ID of the Solution
-     * @param bridgeUrl   Bridge's Endpoint URL
+     * @param bridgeUrl Bridge's Endpoint URL
      * @return Connection object
      * @throws PrivmxException thrown when method encounters an exception.
      * @throws NativeException thrown when method encounters an unknown exception.
@@ -96,15 +95,15 @@ public class Connection implements AutoCloseable {
      * payload: {@link Void}
      */
     @Deprecated
-    public static Connection platformConnectPublic(String solutionId, String platformUrl) throws PrivmxException, NativeException {
-        return connectPublic(solutionId, platformUrl);
+    public static Connection platformConnectPublic(String solutionId, String platformUrl) throws PrivmxException, NativeException{
+        return connectPublic(solutionId,platformUrl);
     }
 
     /**
      * Connects to PrivMX Bridge server as a guest user.
      *
-     * @param solutionId ID of the Solution
-     * @param bridgeUrl  Bridge's Endpoint URL
+     * @param solutionId  ID of the Solution
+     * @param bridgeUrl Bridge's Endpoint URL
      * @return Connection object
      * @throws PrivmxException thrown when method encounters an exception.
      * @throws NativeException thrown when method encounters an unknown exception.
@@ -132,9 +131,9 @@ public class Connection implements AutoCloseable {
     /**
      * Gets a list of Contexts available for the user.
      *
-     * @param skip      skip number of elements to skip from result
-     * @param limit     limit of elements to return for query
-     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of Contexts
      * @throws IllegalStateException thrown when instance is not connected.
      * @throws PrivmxException       thrown when method encounters an exception.
@@ -147,10 +146,10 @@ public class Connection implements AutoCloseable {
     /**
      * Gets a list of Contexts available for the user.
      *
-     * @param skip      skip number of elements to skip from result
-     * @param limit     limit of elements to return for query
-     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
-     * @param lastId    ID of the element from which query results should start
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start
      * @return list of Contexts
      * @throws IllegalStateException thrown when instance is not connected.
      * @throws PrivmxException       thrown when method encounters an exception.
@@ -187,10 +186,23 @@ public class Connection implements AutoCloseable {
      * Gets the ID of the current connection.
      *
      * @return ID of the connection
+     * @throws PrivmxException thrown when method encounters an exception.
+     * @throws NativeException thrown when method encounters an unknown exception.
      */
-    public Long getConnectionId() {
-        return this.connectionId;
-    }
+    public native Long getConnectionId() throws PrivmxException, NativeException;
+
+    /**
+     * Sets user's custom verification callback.
+     * <p>
+     * The feature allows the developer to set up a callback for user verification.
+     * A developer can implement an interface and pass the implementation to the function.
+     * Each time data is read from the container, a callback will be triggered, allowing the developer to validate the sender in an external service,
+     * e.g. Developers Application Server or PKI Server.
+     *
+     * @param userVerifier an implementation of the {@link UserVerifierInterface}
+     * @throws IllegalStateException thrown when instance is not connected.
+     */
+    public native void setUserVerifier(UserVerifierInterface userVerifier) throws IllegalStateException;
 
     /**
      * If there is an active connection then it
@@ -199,7 +211,13 @@ public class Connection implements AutoCloseable {
     @Override
     public void close() {
         if (api != null) {
-            disconnect();
+            try {
+                disconnect();
+            } catch (PrivmxException e) {
+                //if endpoint not throw exception about disconnected state
+                if (e.getCode() != 131073) throw e;
+            }
+            deinit();
         }
     }
 }

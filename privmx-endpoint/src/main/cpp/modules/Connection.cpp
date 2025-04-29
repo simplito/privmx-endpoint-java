@@ -13,6 +13,8 @@
 #include <privmx/endpoint/core/Connection.hpp>
 #include "privmx/endpoint/core/Config.hpp"
 #include <privmx/endpoint/core/Exception.hpp>
+#include <privmx/endpoint/core/UserVerifierInterface.hpp>
+#include "UserVerifierInterfaceJNI.h"
 #include "Connection.h"
 #include "../utils.hpp"
 #include "../parser.h"
@@ -29,8 +31,7 @@ privmx::endpoint::core::Connection *getConnection(JNIEnv *env, jobject thiz) {
     return (privmx::endpoint::core::Connection *) ctx.getObject(apiLong).getLongValue();
 }
 
-extern "C"
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_deinit(JNIEnv *env, jobject thiz) {
     try {
         //if null go to catch
@@ -77,8 +78,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContexts(
                     query.queryAsJson = ctx.jString2string(query_as_json);
                 }
                 privmx::endpoint::core::PagingList<privmx::endpoint::core::Context> infos = getConnection(
-                        env, thiz)->listContexts(
-                        query);
+                        env, thiz)->listContexts(query);
                 jclass pagingListCls = env->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = env->GetMethodID(
@@ -108,8 +108,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContexts(
     return result;
 }
 
-extern "C"
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_disconnect(
         JNIEnv *env,
         jobject thiz
@@ -117,12 +116,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_disconnect(
     JniContextUtils ctx(env);
     ctx.callVoidEndpointApi([&env, &thiz]() {
         getConnection(env, thiz)->disconnect();
-        Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_deinit(env, thiz);
     });
 }
 
-extern "C"
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_setCertsPath(
         JNIEnv *env,
         jclass clazz,
@@ -138,8 +135,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_setCertsPath(
     });
 }
 
-extern "C"
-JNIEXPORT jobject JNICALL
+extern "C" JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
         JNIEnv *env,
         jclass clazz,
@@ -157,8 +153,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
     ctx.callResultEndpointApi<jobject>(
             &result,
             [&ctx, &clazz, &user_priv_key, &solution_id, &bridge_url]() {
-                jmethodID initMID = ctx->GetMethodID(clazz, "<init>",
-                                                     "(Ljava/lang/Long;Ljava/lang/Long;)V");
+                jmethodID initMID = ctx->GetMethodID(
+                        clazz,
+                        "<init>",
+                        "(Ljava/lang/Long;)V");
                 privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connect(
                         ctx.jString2string(user_priv_key),
                         ctx.jString2string(solution_id),
@@ -168,8 +166,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
                 jobject result = ctx->NewObject(
                         clazz,
                         initMID,
-                        ctx.long2jLong((jlong) api),
-                        ctx.long2jLong(api->getConnectionId()));
+                        ctx.long2jLong((jlong) api));
                 return result;
             });
     if (ctx->ExceptionCheck()) {
@@ -177,9 +174,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
     }
     return result;
 }
-
-extern "C"
-JNIEXPORT jobject JNICALL
+extern "C" JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
         JNIEnv *env,
         jclass clazz,
@@ -195,8 +190,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
     ctx.callResultEndpointApi<jobject>(
             &result,
             [&ctx, &clazz, &solution_id, &bridge_url]() {
-                jmethodID initMID = ctx->GetMethodID(clazz, "<init>",
-                                                     "(Ljava/lang/Long;Ljava/lang/Long;)V");
+                jmethodID initMID = ctx->GetMethodID(
+                        clazz,
+                        "<init>",
+                        "(Ljava/lang/Long;)V");
                 privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connectPublic(
                         ctx.jString2string(solution_id),
                         ctx.jString2string(bridge_url));
@@ -205,54 +202,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
                 jobject result = ctx->NewObject(
                         clazz,
                         initMID,
-                        ctx.long2jLong((jlong) api),
-                        ctx.long2jLong(api->getConnectionId()));
+                        ctx.long2jLong((jlong) api));
                 return result;
-            });
-    if (ctx->ExceptionCheck()) {
-        return nullptr;
-    }
-    return result;
-}
-
-extern "C"
-JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_getContextUsers(
-        JNIEnv *env,
-        jobject thiz,
-        jstring context_id
-) {
-    JniContextUtils ctx(env);
-    if (ctx.nullCheck(context_id, "Context ID")) {
-        return nullptr;
-    }
-
-    jobject result;
-    ctx.callResultEndpointApi<jobject>(
-            &result,
-            [&ctx, &env, &thiz, &context_id]() {
-
-                jclass arrayListCls = env->FindClass("java/util/ArrayList");
-                jmethodID initMID = env->GetMethodID(arrayListCls, "<init>", "()V");
-                jmethodID addToListMID = env->GetMethodID(arrayListCls, "add",
-                                                          "(Ljava/lang/Object;)Z");
-                jobject array = env->NewObject(arrayListCls, initMID);
-
-
-                std::vector<privmx::endpoint::core::UserInfo> users = getConnection(
-                        env,
-                        thiz
-                )->getContextUsers(ctx.jString2string(context_id));
-
-                for (auto &user: users) {
-                    env->CallBooleanMethod(
-                            array,
-                            addToListMID,
-                            privmx::wrapper::userInfo2Java(ctx, user)
-                    );
-                }
-
-                return array;
             });
     if (ctx->ExceptionCheck()) {
         return nullptr;

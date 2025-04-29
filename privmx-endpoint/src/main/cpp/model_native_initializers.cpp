@@ -20,7 +20,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ItemPolicy itemPolicy
         ) {
-            jclass itemPolicyCls = ctx->FindClass(
+            jclass itemPolicyCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/ItemPolicy");
             jmethodID initItemPolicyMID = ctx->GetMethodID(
                     itemPolicyCls,
@@ -67,7 +67,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ContainerPolicyWithoutItem containerPolicyWithoutItem
         ) {
-            jclass containerPolicyWithoutItemCls = ctx->FindClass(
+            jclass containerPolicyWithoutItemCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/ContainerPolicyWithoutItem");
             jmethodID initContainerPolicyWithoutItemMID = ctx->GetMethodID(
                     containerPolicyWithoutItemCls,
@@ -124,7 +124,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ContainerPolicy containerPolicy
         ) {
-            jclass containerPolicyCls = ctx->FindClass(
+            jclass containerPolicyCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/ContainerPolicy");
             jmethodID initContainerPolicyMID = ctx->GetMethodID(
                     containerPolicyCls,
@@ -188,7 +188,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::core::Context context_c
         ) {
-            jclass contextCls = ctx->FindClass(
+            jclass contextCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/Context");
             jmethodID initThreadDataMID = ctx->GetMethodID(
                     contextCls,
@@ -201,6 +201,33 @@ namespace privmx {
                     ctx->NewStringUTF(context_c.userId.c_str()),
                     ctx->NewStringUTF(context_c.contextId.c_str())
             );
+        }
+
+        jobject verificationRequest2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::VerificationRequest verificationRequest_c
+        ) {
+            jclass verificationRequestCls = ctx.findClass(
+                    "com/simplito/java/privmx_endpoint/model/VerificationRequest");
+            jmethodID initThreadDataMID = ctx->GetMethodID(
+                    verificationRequestCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"
+                    "Ljava/lang/String;"
+                    "Ljava/lang/String;"
+                    "Ljava/lang/String;"
+                    "Ljava/lang/Long;"
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    verificationRequestCls,
+                    initThreadDataMID,
+                    ctx->NewStringUTF(verificationRequest_c.contextId.c_str()),
+                    ctx->NewStringUTF(verificationRequest_c.senderId.c_str()),
+                    ctx->NewStringUTF(verificationRequest_c.senderPubKey.c_str()),
+                    ctx.long2jLong(verificationRequest_c.date));
         }
 
         // UserWithPubKey
@@ -249,7 +276,7 @@ namespace privmx {
 
         //Threads
         jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c) {
-            jclass threadCls = ctx->FindClass(
+            jclass threadCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/Thread");
             jmethodID initThreadMID = ctx->GetMethodID(
                     threadCls,
@@ -272,7 +299,7 @@ namespace privmx {
                     "Ljava/lang/Long;"
                     ")V"
             );
-            jclass arrayCls = ctx->FindClass("java/util/ArrayList");
+            jclass arrayCls = ctx.findClass("java/util/ArrayList");
             jmethodID initArrayMID = ctx->GetMethodID(
                     arrayCls,
                     "<init>",
@@ -328,7 +355,7 @@ namespace privmx {
         //Messages
         jobject serverMessageInfo2Java(JniContextUtils &ctx,
                                        privmx::endpoint::thread::ServerMessageInfo serverMessageInfo_c) {
-            jclass messageCls = ctx->FindClass(
+            jclass messageCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/ServerMessageInfo");
             jmethodID initMessageMID = ctx->GetMethodID(
                     messageCls,
@@ -346,7 +373,7 @@ namespace privmx {
         }
 
         jobject message2Java(JniContextUtils &ctx, privmx::endpoint::thread::Message message_c) {
-            jclass messageCls = ctx->FindClass(
+            jclass messageCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/Message");
             jmethodID initMessageMID = ctx->GetMethodID(
                     messageCls,
@@ -380,7 +407,7 @@ namespace privmx {
 
         //Store
         jobject store2Java(JniContextUtils &ctx, privmx::endpoint::store::Store store_c) {
-            jclass arrayCls = ctx->FindClass("java/util/ArrayList");
+            jclass arrayCls = ctx.findClass("java/util/ArrayList");
             jmethodID initArrayMID = ctx->GetMethodID(
                     arrayCls,
                     "<init>",
@@ -391,7 +418,7 @@ namespace privmx {
                     "(Ljava/lang/Object;)Z"
             );
 
-            jclass storeCls = ctx->FindClass(
+            jclass storeCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/Store");
             jmethodID initStoreMID = ctx->GetMethodID(
                     storeCls,
@@ -457,7 +484,7 @@ namespace privmx {
 
         //Inbox
         jobject inbox2Java(JniContextUtils &ctx, privmx::endpoint::inbox::Inbox inbox_c) {
-            jclass inboxCls = ctx->FindClass(
+            jclass inboxCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/Inbox");
             jmethodID initInboxMID = ctx->GetMethodID(
                     inboxCls,
@@ -479,7 +506,7 @@ namespace privmx {
                     "Ljava/lang/Long;" //statusCode
                     ")V"
             );
-            jclass arrayCls = ctx->FindClass("java/util/ArrayList");
+            jclass arrayCls = ctx.findClass("java/util/ArrayList");
             jmethodID initArrayMID = ctx->GetMethodID(
                     arrayCls,
                     "<init>",
@@ -550,7 +577,7 @@ namespace privmx {
                     "Ljava/lang/Long;" // statusCode
                     ")V"
             );
-            jclass arrayCls = ctx->FindClass("java/util/ArrayList");
+            jclass arrayCls = ctx.findClass("java/util/ArrayList");
             jmethodID initArrayMID = ctx->GetMethodID(
                     arrayCls,
                     "<init>",
@@ -584,7 +611,7 @@ namespace privmx {
 
         jobject inboxPublicView2Java(JniContextUtils &ctx,
                                      privmx::endpoint::inbox::InboxPublicView inboxPublicView_c) {
-            jclass inboxPublicViewCls = ctx->FindClass(
+            jclass inboxPublicViewCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/InboxPublicView");
             jmethodID initInboxPublicViewMID = ctx->GetMethodID(
                     inboxPublicViewCls,
@@ -609,7 +636,7 @@ namespace privmx {
 
         jobject
         filesConfig2Java(JniContextUtils &ctx, privmx::endpoint::inbox::FilesConfig filesConfig_c) {
-            jclass filesConfigCls = ctx->FindClass(
+            jclass filesConfigCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/FilesConfig");
             jmethodID initFilesConfigMID = ctx->GetMethodID(
                     filesConfigCls,
@@ -634,7 +661,7 @@ namespace privmx {
         //Files
         jobject serverFileInfo2Java(JniContextUtils &ctx,
                                     privmx::endpoint::store::ServerFileInfo serverFileInfo_c) {
-            jclass serverFileInfoCls = ctx->FindClass(
+            jclass serverFileInfoCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/ServerFileInfo");
             jmethodID initServerFileInfoMID = ctx->GetMethodID(
                     serverFileInfoCls,
@@ -652,7 +679,7 @@ namespace privmx {
         }
 
         jobject file2Java(JniContextUtils &ctx, privmx::endpoint::store::File file_c) {
-            jclass fileCls = ctx->FindClass(
+            jclass fileCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/File");
             jmethodID initFileMID = ctx->GetMethodID(
                     fileCls,
@@ -688,10 +715,9 @@ namespace privmx {
         }
 
         //Event
-
         jobject storeFileDeletedEventData2Java(JniContextUtils &ctx,
                                                privmx::endpoint::store::StoreFileDeletedEventData storeFileDeletedEventData_c) {
-            jclass storeFileDeletedEventDataCls = ctx->FindClass(
+            jclass storeFileDeletedEventDataCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/events/StoreFileDeletedEventData");
             jmethodID initStoreFileDeletedEventDataMID = ctx->GetMethodID(
                     storeFileDeletedEventDataCls,
@@ -709,7 +735,7 @@ namespace privmx {
 
         jobject storeStatsChangedEventData2Java(JniContextUtils &ctx,
                                                 privmx::endpoint::store::StoreStatsChangedEventData storeStatsChangedEventData_c) {
-            jclass storeStatsChangedEventDataCls = ctx->FindClass(
+            jclass storeStatsChangedEventDataCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/events/StoreStatsChangedEventData");
             jmethodID initStoreStatsChangedEventDataMID = ctx->GetMethodID(
                     storeStatsChangedEventDataCls,
@@ -728,7 +754,7 @@ namespace privmx {
 
         jobject threadDeletedEventData2Java(JniContextUtils &ctx,
                                             privmx::endpoint::thread::ThreadDeletedEventData threadDeletedEventData_c) {
-            jclass threadDeletedEventDataCls = ctx->FindClass(
+            jclass threadDeletedEventDataCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/events/ThreadDeletedEventData");
             jmethodID initThreadDeletedEventDataMID = ctx->GetMethodID(
                     threadDeletedEventDataCls,
@@ -744,7 +770,7 @@ namespace privmx {
 
         jobject threadDeletedMessageEventData2Java(JniContextUtils &ctx,
                                                    privmx::endpoint::thread::ThreadDeletedMessageEventData threadDeletedMessageEventData) {
-            jclass threadDeletedMessageEventDataCls = ctx->FindClass(
+            jclass threadDeletedMessageEventDataCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/events/ThreadDeletedMessageEventData");
             jmethodID initThreadDeletedMessageEventDataMID = ctx->GetMethodID(
                     threadDeletedMessageEventDataCls,
@@ -761,7 +787,7 @@ namespace privmx {
 
         jobject storeDeletedEventData2Java(JniContextUtils &ctx,
                                            privmx::endpoint::store::StoreDeletedEventData storeDeletedEventData_c) {
-            jclass storeDeletedEventDataCls = ctx->FindClass(
+            jclass storeDeletedEventDataCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/events/StoreDeletedEventData");
             jmethodID initStoreDeletedEventDataMID = ctx->GetMethodID(
                     storeDeletedEventDataCls,
@@ -779,7 +805,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::thread::ThreadStatsEventData threadStatsEventData_c
         ) {
-            jclass threadStatsEventDataCls = ctx->FindClass(
+            jclass threadStatsEventDataCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/events/ThreadStatsEventData");
             jmethodID initThreadStatsEventDataMID = ctx->GetMethodID(
                     threadStatsEventDataCls,
@@ -799,7 +825,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::inbox::InboxDeletedEventData inboxDeletedEventData_c
         ) {
-            jclass inboxDeletedEventDataCls = ctx->FindClass(
+            jclass inboxDeletedEventDataCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/events/InboxDeletedEventData");
             jmethodID initInboxDeletedEventDataMID = ctx->GetMethodID(
                     inboxDeletedEventDataCls,
@@ -817,7 +843,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c
         ) {
-            jclass inboxEntryDeletedEventDataCls = ctx->FindClass(
+            jclass inboxEntryDeletedEventDataCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/events/InboxEntryDeletedEventData");
             jmethodID initInboxEntryDeletedEventDataMID = ctx->GetMethodID(
                     inboxEntryDeletedEventDataCls,

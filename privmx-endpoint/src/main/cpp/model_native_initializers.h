@@ -26,7 +26,6 @@
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
-#include "privmx/endpoint/event/Events.hpp"
 
 namespace privmx {
     namespace wrapper {
@@ -36,7 +35,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ItemPolicy itemPolicy
         );
-
+        
         jobject containerPolicyWithoutItem2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ContainerPolicyWithoutItem containerPolicyWithoutItem
@@ -49,6 +48,9 @@ namespace privmx {
 
         //Context
         jobject context2Java(JniContextUtils &ctx, privmx::endpoint::core::Context context_c);
+
+        jobject verificationRequest2Java(JniContextUtils &ctx,
+                                         privmx::endpoint::core::VerificationRequest verificationRequest_c);
 
         // UserWithPubKey
         jobject userWithPubKey2Java(JniContextUtils &ctx,
