@@ -436,7 +436,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_listEntries(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(inbox_id, "Inbox ID") ||
@@ -446,7 +447,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_listEntries(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &inbox_id, &skip, &limit, &last_id, &sort_order]() {
+            [&ctx, &thiz, &inbox_id, &skip, &limit, &last_id, &sort_order, &query_as_json]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -461,6 +462,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_listEntries(
                 query.sortOrder = ctx.jString2string(sort_order);
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
                 }
                 auto entries_c(
                         getInboxApi(ctx, thiz)->listEntries(

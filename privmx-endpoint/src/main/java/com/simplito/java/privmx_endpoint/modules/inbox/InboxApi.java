@@ -482,7 +482,7 @@ public class InboxApi implements AutoCloseable {
             long limit,
             String sortOrder
     ) throws PrivmxException, NativeException, IllegalStateException {
-        return listEntries(inboxId, skip, limit, sortOrder, null);
+        return listEntries(inboxId, skip, limit, sortOrder, null, null);
     }
 
     /**
@@ -498,12 +498,37 @@ public class InboxApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      * @throws IllegalStateException thrown when instance is closed.
      */
-    public native PagingList<InboxEntry> listEntries(
+    public PagingList<InboxEntry> listEntries(
             String inboxId,
             long skip,
             long limit,
             String sortOrder,
             String lastId
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listEntries(inboxId, skip, limit, sortOrder, lastId, null);
+    }
+
+    /**
+     * Gets list of entries of given Inbox.
+     *
+     * @param inboxId     ID of the Inbox
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @return list of entries
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is closed.
+     */
+    public native PagingList<InboxEntry> listEntries(
+            String inboxId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson
     ) throws PrivmxException, NativeException, IllegalStateException;
 
     /**

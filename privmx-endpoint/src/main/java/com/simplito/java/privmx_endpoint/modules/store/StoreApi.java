@@ -188,7 +188,7 @@ public class StoreApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public PagingList<Store> listStores(String contextId, long skip, long limit, String sortOrder) throws PrivmxException, NativeException, IllegalStateException {
-        return listStores(contextId, skip, limit, sortOrder, null);
+        return listStores(contextId, skip, limit, sortOrder, null, null);
     }
 
     /**

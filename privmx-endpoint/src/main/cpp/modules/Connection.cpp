@@ -55,7 +55,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContexts(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(sort_order, "Sort Order")) {
@@ -64,13 +65,16 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContexts(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &env, &thiz, &skip, &limit, &sort_order, &last_id]() {
+            [&ctx, &env, &thiz, &skip, &limit, &sort_order, &last_id, &query_as_json]() {
                 auto query = privmx::endpoint::core::PagingQuery();
                 query.skip = skip;
                 query.limit = limit;
                 query.sortOrder = ctx.jString2string(sort_order);
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
                 }
                 privmx::endpoint::core::PagingList<privmx::endpoint::core::Context> infos = getConnection(
                         env, thiz)->listContexts(

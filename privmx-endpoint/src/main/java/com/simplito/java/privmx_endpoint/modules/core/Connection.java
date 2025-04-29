@@ -141,7 +141,7 @@ public class Connection implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public PagingList<Context> listContexts(long skip, long limit, String sortOrder) throws IllegalStateException, PrivmxException, NativeException {
-        return listContexts(skip, limit, sortOrder, null);
+        return listContexts(skip, limit, sortOrder, null, null);
     }
 
     /**
@@ -156,7 +156,24 @@ public class Connection implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native PagingList<Context> listContexts(long skip, long limit, String sortOrder, String lastId) throws IllegalStateException, PrivmxException, NativeException;
+    public PagingList<Context> listContexts(long skip, long limit, String sortOrder, String lastId) throws IllegalStateException, PrivmxException, NativeException {
+        return listContexts(skip, limit, sortOrder, lastId, null);
+    }
+
+    /**
+     * Gets a list of Contexts available for the user.
+     *
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @return list of Contexts
+     * @throws IllegalStateException thrown when instance is not connected.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public native PagingList<Context> listContexts(long skip, long limit, String sortOrder, String lastId, String queryAsJson) throws IllegalStateException, PrivmxException, NativeException;
 
     /**
      * Gets a list of users of given context.
