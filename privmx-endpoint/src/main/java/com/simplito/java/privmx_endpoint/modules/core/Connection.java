@@ -158,10 +158,23 @@ public class Connection implements AutoCloseable {
      * Gets the ID of the current connection.
      *
      * @return ID of the connection
+     * @throws PrivmxException thrown when method encounters an exception.
+     * @throws NativeException thrown when method encounters an unknown exception.
      */
     public native Long getConnectionId() throws PrivmxException, NativeException;
 
-    public native void setUserVerifier(UserVerifierInterface userVerifier);
+    /**
+     * Sets user's custom verification callback.
+     * <p>
+     * The feature allows the developer to set up a callback for user verification.
+     * A developer can implement an interface and pass the implementation to the function.
+     * Each time data is read from the container, a callback will be triggered, allowing the developer to validate the sender in an external service,
+     * e.g. Developers Application Server or PKI Server.
+     *
+     * @param userVerifier an implementation of the {@link UserVerifierInterface}
+     * @throws IllegalStateException thrown when instance is not connected.
+     */
+    public native void setUserVerifier(UserVerifierInterface userVerifier) throws IllegalStateException;
 
     /**
      * If there is an active connection then it
