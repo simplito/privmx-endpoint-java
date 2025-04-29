@@ -300,7 +300,7 @@ public class EventType<T> {
     }
 
     /**
-     * Returns instance to register for custom Context events.
+     * Returns instance to register for custom Context Events.
      *
      * @param contextId ID of the Context to observe
      * @return predefined event type to catch emitted custom Context events

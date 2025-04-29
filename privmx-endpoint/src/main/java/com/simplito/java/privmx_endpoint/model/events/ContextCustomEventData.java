@@ -1,5 +1,11 @@
 package com.simplito.java.privmx_endpoint.model.events;
 
+/**
+ * Holds information about emitted custom event.
+ *
+ * @category core
+ * @group Events
+ */
 public class ContextCustomEventData {
     /**
      * id of inbox from which it was sent
