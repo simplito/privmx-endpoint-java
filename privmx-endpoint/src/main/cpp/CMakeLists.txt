@@ -90,6 +90,9 @@ set_target_properties(privmxendpointthread PROPERTIES IMPORTED_LOCATION ${CMAKE_
 add_library(privmxendpointinbox SHARED IMPORTED GLOBAL)
 set_target_properties(privmxendpointinbox PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/libs/${CMAKE_DESTINATION_OS}/${CMAKE_DESTINATION_ARCHITECTURE}/lib/libprivmxendpointinbox.${file_extension})
 
+add_library(privmxendpointevent SHARED IMPORTED GLOBAL)
+set_target_properties(privmxendpointevent PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/libs/${CMAKE_DESTINATION_OS}/${CMAKE_DESTINATION_ARCHITECTURE}/lib/libprivmxendpointevent.${file_extension})
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/include ${JAVA_HOME}/include ${JAVA_HOME}/include/darwin)
 
 add_library(${CMAKE_PROJECT_NAME} SHARED
