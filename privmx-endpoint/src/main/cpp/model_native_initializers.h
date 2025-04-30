@@ -119,7 +119,7 @@ namespace privmx {
                                                 privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
 
         jobject contextCustomEventData2Java(JniContextUtils &ctx,
-                                            privmx::endpoint::event::ContextCustomEvent contextCustomEvent_c
+                                            privmx::endpoint::event::ContextCustomEventData contextCustomEvent_c
         );
     } // wrapper
 } // privmx
