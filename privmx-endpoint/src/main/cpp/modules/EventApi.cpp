@@ -72,12 +72,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_emitEvent(
         JNIEnv *env,
         jobject thiz,
         jstring context_id,
+        jobject users,
         jstring channel_name,
-        jbyteArray event_data,
-        jobject users
+        jbyteArray event_data
 ) {
     JniContextUtils ctx(env);
-    ctx.callVoidEndpointApi([&ctx, &thiz, &context_id, &channel_name, &event_data, &users]() {
+    ctx.callVoidEndpointApi([&ctx, &thiz, &context_id, &users, &channel_name, &event_data]() {
         std::vector<core::UserWithPubKey> users_c = usersToVector(
                 ctx,
                 ctx.jObject2jArray(users));

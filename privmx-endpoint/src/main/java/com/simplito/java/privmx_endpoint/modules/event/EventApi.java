@@ -37,7 +37,7 @@ public class EventApi implements AutoCloseable {
      * @param channelName name of the Channel
      * @param eventData   event's data
      */
-    public native void emitEvent(String contextId, String channelName, byte[] eventData, List<UserWithPubKey> users);
+    public native void emitEvent(String contextId, List<UserWithPubKey> users, String channelName, byte[] eventData);
 
     /**
      * Subscribe for the custom events on the given channel.
