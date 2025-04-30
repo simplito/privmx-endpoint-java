@@ -5,7 +5,7 @@
 #include "UserVerifierInterfaceJNI.h"
 #include "../model_native_initializers.h"
 #include "../utils.hpp"
-#include "../jniUtils.cpp"
+#include "../jniUtils.h"
 #include <thread>
 #include <jni.h>
 #include <iostream>
@@ -29,11 +29,10 @@ privmx::wrapper::UserVerifierInterfaceJNI::UserVerifierInterfaceJNI(JNIEnv *env,
 
 std::vector<bool>
 privmx::wrapper::UserVerifierInterfaceJNI::verify(
-        const std::vector <privmx::endpoint::core::VerificationRequest> &request) {
+        const std::vector<privmx::endpoint::core::VerificationRequest> &request) {
     JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
             javaVM,
-            "UserVerifierInterfaceJNI",
-            nullptr);
+            "UserVerifierInterfaceJNI");
     JniContextUtils ctx(env);
     jclass juserVerifierInterfaceClass = env->GetObjectClass(juserVerifierInterface);
     jmethodID jmethodId = env->GetMethodID(
