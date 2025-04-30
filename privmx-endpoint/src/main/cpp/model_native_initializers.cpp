@@ -203,6 +203,50 @@ namespace privmx {
             );
         }
 
+        // UserWithPubKey
+        jobject userWithPubKey2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::UserWithPubKey userWithPubKey
+        ) {
+            jclass userCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/UserWithPubKey");
+            jmethodID initUserMID = ctx->GetMethodID(
+                    userCls,
+                    "<init>",
+                    "(Ljava/lang/String;Ljava/lang/String;)V"
+            );
+            return ctx->NewObject(
+                    userCls,
+                    initUserMID,
+                    ctx->NewStringUTF(userWithPubKey.userId.c_str()),
+                    ctx->NewStringUTF(userWithPubKey.pubKey.c_str())
+
+            );
+        }
+
+        //UserInfo
+        jobject userInfo2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::UserInfo userInfo
+        ) {
+            jclass userInfoCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/UserInfo");
+            jmethodID initUserInfoMID = ctx->GetMethodID(
+                    userInfoCls,
+                    "<init>",
+                    "("
+                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;" // userWithPubKey
+                    "Z"
+                    ")V"
+            );
+            return ctx->NewObject(
+                    userInfoCls,
+                    initUserInfoMID,
+                    userWithPubKey2Java(ctx, userInfo.user),
+                    (jboolean) userInfo.isActive
+            );
+        }
+
         //Threads
         jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c) {
             jclass threadCls = ctx->FindClass(
@@ -786,5 +830,29 @@ namespace privmx {
                     ctx->NewStringUTF(inboxEntryDeletedEventData_c.entryId.c_str())
             );
         }
+
+        jobject contextCustomEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::event::ContextCustomEventData contextCustomEvent_c
+        ) {
+            jclass contextCustomEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/ContextCustomEventData");
+            jmethodID initContextEntryDeletedEventDataMID = ctx->GetMethodID(
+                    contextCustomEventDataCls,
+                    "<init>",
+                    "(Ljava/lang/String;Ljava/lang/String;[B)V"
+            );
+            jbyteArray data = ctx->NewByteArray(contextCustomEvent_c.payload.size());
+            ctx->SetByteArrayRegion(data, 0, contextCustomEvent_c.payload.size(),
+                                    (jbyte *) contextCustomEvent_c.payload.data());
+            return ctx->NewObject(
+                    contextCustomEventDataCls,
+                    initContextEntryDeletedEventDataMID,
+                    ctx->NewStringUTF(contextCustomEvent_c.contextId.c_str()),
+                    ctx->NewStringUTF(contextCustomEvent_c.userId.c_str()),
+                    data
+            );
+        }
+
     } // wrapper
 } // privmx

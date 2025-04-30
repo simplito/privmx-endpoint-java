@@ -207,7 +207,17 @@ jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, i
 jobject
 parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event) {
     try {
-        if (thread::Events::isThreadCreatedEvent(event)) {
+        if (event::Events::isContextCustomEvent(event)) {
+            privmx::endpoint::event::ContextCustomEvent event_cast = event::Events::extractContextCustomEvent(
+                    event);
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    privmx::wrapper::contextCustomEventData2Java(ctx, event_cast.data)
+            );
+        } else if (thread::Events::isThreadCreatedEvent(event)) {
             privmx::endpoint::thread::ThreadCreatedEvent event_cast = thread::Events::extractThreadCreatedEvent(
                     event);
             return initEvent(

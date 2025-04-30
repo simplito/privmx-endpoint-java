@@ -26,6 +26,9 @@
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
+#include "privmx/endpoint/event/EventApi.hpp"
+#include "privmx/endpoint/event/Types.hpp"
+#include "privmx/endpoint/event/Events.hpp"
 
 namespace privmx {
     namespace wrapper {
@@ -35,7 +38,7 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ItemPolicy itemPolicy
         );
-        
+
         jobject containerPolicyWithoutItem2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::core::ContainerPolicyWithoutItem containerPolicyWithoutItem
@@ -48,6 +51,13 @@ namespace privmx {
 
         //Context
         jobject context2Java(JniContextUtils &ctx, privmx::endpoint::core::Context context_c);
+
+        // UserWithPubKey
+        jobject userWithPubKey2Java(JniContextUtils &ctx,
+                                    privmx::endpoint::core::UserWithPubKey userWithPubKey);
+
+        //UserInfo
+        jobject userInfo2Java(JniContextUtils &ctx, privmx::endpoint::core::UserInfo userInfo);
 
         //Threads
         jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c);
@@ -104,6 +114,9 @@ namespace privmx {
         jobject inboxEntryDeletedEventData2Java(JniContextUtils &ctx,
                                                 privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
 
+        jobject contextCustomEventData2Java(JniContextUtils &ctx,
+                                            privmx::endpoint::event::ContextCustomEvent contextCustomEvent_c
+        );
     } // wrapper
 } // privmx
 

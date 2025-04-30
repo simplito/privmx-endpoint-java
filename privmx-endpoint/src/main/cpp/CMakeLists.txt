@@ -105,6 +105,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/modules/EventQueue.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/exceptions.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/modules/BackendRequester.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/modules/EventApi.cpp
 )
 
 # Android Debugging
@@ -113,7 +114,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 target_link_libraries(${CMAKE_PROJECT_NAME} ssl crypto)
 target_link_libraries(${CMAKE_PROJECT_NAME} gmp)
 target_link_libraries(${CMAKE_PROJECT_NAME} PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto)
-target_link_libraries(${CMAKE_PROJECT_NAME} Pson libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointthread privmxendpointinbox)
+target_link_libraries(${CMAKE_PROJECT_NAME} Pson libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointthread privmxendpointinbox privmxendpointevent)
 message(DEBUG "Install to ${CMAKE_INSTALL_PREFIX}")
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(IMPORTED_RUNTIME_ARTIFACTS crypto ssl gmp PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto Pson libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointthread privmxendpointinbox DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(IMPORTED_RUNTIME_ARTIFACTS crypto ssl gmp PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto Pson libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointthread privmxendpointinbox privmxendpointevent DESTINATION ${CMAKE_INSTALL_PREFIX})
