@@ -25,6 +25,11 @@ public class VerificationRequest {
     Long date;
 
     /**
+     * Bridge Identity
+     */
+    BridgeIdentity bridgeIdentity;
+
+    /**
      * Creates instance of {@code VerificationRequest}.
      *
      * @param contextId    ID of the Context
@@ -39,6 +44,17 @@ public class VerificationRequest {
         this.date = date;
     }
 
-    public VerificationRequest() {
+    /**
+     * Creates instance of {@code VerificationRequest}.
+     *
+     * @param contextId      ID of the Context
+     * @param senderId       ID of the sender
+     * @param senderPubKey   Public key of the sender
+     * @param date           Creation date of the data
+     * @param bridgeIdentity Bridge Identity
+     */
+    public VerificationRequest(String contextId, String senderId, String senderPubKey, long date, BridgeIdentity bridgeIdentity) {
+        this(contextId, senderId, senderPubKey, date);
+        this.bridgeIdentity = bridgeIdentity;
     }
 };
