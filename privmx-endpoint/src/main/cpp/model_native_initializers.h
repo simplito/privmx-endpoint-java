@@ -15,6 +15,7 @@
 #include <jni.h>
 #include "utils.hpp"
 #include "privmx/endpoint/core/Connection.hpp"
+#include "privmx/endpoint/core/UserVerifierInterface.hpp"
 #include "privmx/endpoint/core/Types.hpp"
 #include "privmx/endpoint/core/Events.hpp"
 #include "privmx/endpoint/thread/ThreadApi.hpp"
@@ -58,6 +59,9 @@ namespace privmx {
 
         //UserInfo
         jobject userInfo2Java(JniContextUtils &ctx, privmx::endpoint::core::UserInfo userInfo);
+
+        jobject verificationRequest2Java(JniContextUtils &ctx,
+                                         privmx::endpoint::core::VerificationRequest verificationRequest_c);
 
         //Threads
         jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c);

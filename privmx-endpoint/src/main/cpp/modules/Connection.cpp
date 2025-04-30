@@ -13,6 +13,8 @@
 #include <privmx/endpoint/core/Connection.hpp>
 #include "privmx/endpoint/core/Config.hpp"
 #include <privmx/endpoint/core/Exception.hpp>
+#include <privmx/endpoint/core/UserVerifierInterface.hpp>
+#include "UserVerifierInterfaceJNI.h"
 #include "Connection.h"
 #include "../utils.hpp"
 #include "../parser.h"
@@ -224,6 +226,22 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_getConnectionId(
         return nullptr;
     }
     return result;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_setUserVerifier(
+        JNIEnv *env,
+        jobject thiz,
+        jobject userVerifierInterface
+) {
+    JniContextUtils ctx(env);
+    auto userVerifier = std::make_shared<privmx::wrapper::UserVerifierInterfaceJNI>(
+            privmx::wrapper::UserVerifierInterfaceJNI(env, userVerifierInterface));
+
+    ctx.callVoidEndpointApi([&env, &thiz, &userVerifier]() {
+        getConnection(env, thiz)->setUserVerifier(userVerifier);
+    });
 }
 
 extern "C"

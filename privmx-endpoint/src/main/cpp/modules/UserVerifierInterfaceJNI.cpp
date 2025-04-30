@@ -1,0 +1,74 @@
+//
+// Created by Dominika on 27/03/2025.
+//
+
+#include "UserVerifierInterfaceJNI.h"
+#include "../model_native_initializers.h"
+#include "../utils.hpp"
+#include "../jniUtils.cpp"
+#include <thread>
+#include <jni.h>
+#include <iostream>
+#include <memory>
+
+privmx::wrapper::UserVerifierInterfaceJNI::UserVerifierInterfaceJNI(JNIEnv *env,
+                                                                    jobject juserVerifierInterface) {
+    jclass juserVerifierInterfaceClass = env->FindClass(
+            "com/simplito/java/privmx_endpoint/model/UserVerifierInterface");
+    javaVM = nullptr;
+    if (!env->IsInstanceOf(juserVerifierInterface, juserVerifierInterfaceClass)) {
+        env->ThrowNew(
+                env->FindClass("java/lang/IllegalArgumentException"),
+                "UserVerifierInterfaceJNI::UserVerifierInterfaceJNI object must be instance of UserVerifierInterface");
+        return;
+    }
+    env->GetJavaVM(&this->javaVM);
+    //TODO: Clean this global ref on close()
+    this->juserVerifierInterface = env->NewGlobalRef(juserVerifierInterface);
+}
+
+std::vector<bool>
+privmx::wrapper::UserVerifierInterfaceJNI::verify(
+        const std::vector <privmx::endpoint::core::VerificationRequest> &request) {
+    JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
+            javaVM,
+            "UserVerifierInterfaceJNI",
+            nullptr);
+    JniContextUtils ctx(env);
+    jclass juserVerifierInterfaceClass = env->GetObjectClass(juserVerifierInterface);
+    jmethodID jmethodId = env->GetMethodID(
+            juserVerifierInterfaceClass,
+            "verify",
+            "(Ljava/util/List;)Ljava/util/List;");
+
+    jclass arrayClass = env->FindClass("java/util/ArrayList");
+    jmethodID initArrayMID = env->GetMethodID(
+            arrayClass,
+            "<init>",
+            "()V");
+    jobject jverificationRequestArray = env->NewObject(arrayClass, initArrayMID);
+    jmethodID addToArrayMID = env->GetMethodID(
+            arrayClass,
+            "add",
+            "(Ljava/lang/Object;)Z");
+
+    ctx.setClassLoaderFromObject(juserVerifierInterface);
+
+    for (auto &request_c: request) {
+        env->CallBooleanMethod(jverificationRequestArray,
+                               addToArrayMID,
+                               privmx::wrapper::verificationRequest2Java(ctx, request_c));
+    }
+
+    auto jresult = ctx.jObject2jArray(
+            env->CallObjectMethod(juserVerifierInterface, jmethodId, jverificationRequestArray));
+
+    std::vector<bool> result_c;
+    for (int i = 0; i < ctx->GetArrayLength(jresult); i++) {
+        jobject arrayElement = ctx->GetObjectArrayElement(jresult, i);
+        bool vectorElement = ctx.getObject(arrayElement).getBooleanValue();
+
+        result_c.push_back(vectorElement);
+    }
+    return result_c;
+}
