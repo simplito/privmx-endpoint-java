@@ -12,6 +12,7 @@
 package com.simplito.java.privmx_endpoint.modules.core;
 
 import com.simplito.java.privmx_endpoint.model.Context;
+import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserInfo;
 import com.simplito.java.privmx_endpoint.model.UserVerifierInterface;
@@ -80,7 +81,25 @@ public class Connection implements AutoCloseable {
      * channel: -
      * payload: {@link Void}
      */
-    public static native Connection connect(String userPrivKey, String solutionId, String bridgeUrl) throws PrivmxException, NativeException;
+    public static Connection connect(String userPrivKey, String solutionId, String bridgeUrl) throws PrivmxException, NativeException {
+        return connect(userPrivKey, solutionId, bridgeUrl, null);
+    }
+
+    /**
+     * Connects to PrivMX Bridge server.
+     *
+     * @param userPrivKey         user's private key
+     * @param solutionId          ID of the Solution
+     * @param bridgeUrl           Bridge's Endpoint URL
+     * @param verificationOptions
+     * @return Connection object
+     * @throws PrivmxException thrown when method encounters an exception.
+     * @throws NativeException thrown when method encounters an unknown exception.
+     * @event type: libConnected
+     * channel: -
+     * payload: {@link Void}
+     */
+    public static native Connection connect(String userPrivKey, String solutionId, String bridgeUrl, PKIVerificationOptions verificationOptions) throws PrivmxException, NativeException;
 
     /**
      * Connects to PrivMX Bridge server as a guest user.
@@ -111,7 +130,24 @@ public class Connection implements AutoCloseable {
      * channel: -
      * payload: {@link Void}
      */
-    public static native Connection connectPublic(String solutionId, String bridgeUrl) throws PrivmxException, NativeException;
+    public static Connection connectPublic(String solutionId, String bridgeUrl) throws PrivmxException, NativeException {
+        return connectPublic(solutionId, bridgeUrl, null);
+    }
+
+    /**
+     * Connects to PrivMX Bridge server as a guest user.
+     *
+     * @param solutionId          ID of the Solution
+     * @param bridgeUrl           Bridge's Endpoint URL
+     * @param verificationOptions
+     * @return Connection object
+     * @throws PrivmxException thrown when method encounters an exception.
+     * @throws NativeException thrown when method encounters an unknown exception.
+     * @event type: libConnected
+     * channel: -
+     * payload: {@link Void}
+     */
+    public static native Connection connectPublic(String solutionId, String bridgeUrl, PKIVerificationOptions verificationOptions) throws PrivmxException, NativeException;
 
     /**
      * Disconnects from PrivMX Bridge server.

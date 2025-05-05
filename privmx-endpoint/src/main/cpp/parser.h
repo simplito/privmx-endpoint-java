@@ -20,6 +20,9 @@
 std::vector<privmx::endpoint::core::UserWithPubKey>
 usersToVector(JniContextUtils &ctx, jobjectArray users);
 
+privmx::endpoint::core::PKIVerificationOptions
+parsePKIVerificationOptions(JniContextUtils &ctx, jobject pkiIVerificationOptions);
+
 privmx::endpoint::core::ContainerPolicyWithoutItem
 parseContainerPolicyWithoutItem(JniContextUtils &ctx, jobject containerPolicyWithoutItem);
 

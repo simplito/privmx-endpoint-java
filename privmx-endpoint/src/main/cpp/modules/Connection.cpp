@@ -140,7 +140,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
         jclass clazz,
         jstring user_priv_key,
         jstring solution_id,
-        jstring bridge_url
+        jstring bridge_url,
+        jobject pki_verification_options
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(user_priv_key, "User Private Key") ||
@@ -149,17 +150,29 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
         return nullptr;
     }
     jobject result;
+
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &clazz, &user_priv_key, &solution_id, &bridge_url]() {
+            [&ctx, &clazz, &user_priv_key, &solution_id, &bridge_url, &pki_verification_options]() {
                 jmethodID initMID = ctx->GetMethodID(
                         clazz,
                         "<init>",
                         "(Ljava/lang/Long;)V");
-                privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connect(
-                        ctx.jString2string(user_priv_key),
-                        ctx.jString2string(solution_id),
-                        ctx.jString2string(bridge_url));
+
+                privmx::endpoint::core::Connection connection;
+                if (pki_verification_options != nullptr) {
+                    connection = privmx::endpoint::core::Connection::connect(
+                            ctx.jString2string(user_priv_key),
+                            ctx.jString2string(solution_id),
+                            ctx.jString2string(bridge_url),
+                            parsePKIVerificationOptions(ctx, pki_verification_options));
+                } else {
+                    connection = privmx::endpoint::core::Connection::connect(
+                            ctx.jString2string(user_priv_key),
+                            ctx.jString2string(solution_id),
+                            ctx.jString2string(bridge_url));
+                }
+
                 auto *api = new privmx::endpoint::core::Connection();
                 *api = connection;
                 jobject result = ctx->NewObject(
@@ -178,7 +191,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
         JNIEnv *env,
         jclass clazz,
         jstring solution_id,
-        jstring bridge_url
+        jstring bridge_url,
+        jobject pki_verification_options
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(solution_id, "Solution ID") ||
@@ -188,14 +202,24 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &clazz, &solution_id, &bridge_url]() {
+            [&ctx, &clazz, &solution_id, &bridge_url, &pki_verification_options]() {
                 jmethodID initMID = ctx->GetMethodID(
                         clazz,
                         "<init>",
                         "(Ljava/lang/Long;)V");
-                privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connectPublic(
-                        ctx.jString2string(solution_id),
-                        ctx.jString2string(bridge_url));
+
+                privmx::endpoint::core::Connection connection;
+                if (pki_verification_options != nullptr) {
+                    connection = privmx::endpoint::core::Connection::connectPublic(
+                            ctx.jString2string(solution_id),
+                            ctx.jString2string(bridge_url),
+                            parsePKIVerificationOptions(ctx, pki_verification_options));
+                } else {
+                    connection = privmx::endpoint::core::Connection::connectPublic(
+                            ctx.jString2string(solution_id),
+                            ctx.jString2string(bridge_url));
+                }
+
                 auto *api = new privmx::endpoint::core::Connection();
                 *api = connection;
                 jobject result = ctx->NewObject(
