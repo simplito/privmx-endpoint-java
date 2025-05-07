@@ -121,6 +121,6 @@ public class ExtKey implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-
+        deinit();
     }
 }
