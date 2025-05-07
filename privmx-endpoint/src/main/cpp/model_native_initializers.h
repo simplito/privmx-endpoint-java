@@ -30,6 +30,8 @@
 #include "privmx/endpoint/event/EventApi.hpp"
 #include "privmx/endpoint/event/Types.hpp"
 #include "privmx/endpoint/event/Events.hpp"
+#include "privmx/endpoint/crypto/Types.hpp"
+#include "privmx/endpoint/crypto/ExtKey.hpp"
 
 namespace privmx {
     namespace wrapper {
@@ -62,6 +64,11 @@ namespace privmx {
 
         jobject verificationRequest2Java(JniContextUtils &ctx,
                                          privmx::endpoint::core::VerificationRequest verificationRequest_c);
+
+        //Crypto
+        jobject extKey2Java(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey extKey_c);
+
+        jobject BIP39_t2Java(JniContextUtils &ctx, privmx::endpoint::crypto::BIP39_t BIP39_t);
 
         //Threads
         jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c);

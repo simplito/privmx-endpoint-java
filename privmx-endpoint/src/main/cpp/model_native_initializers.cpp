@@ -274,6 +274,49 @@ namespace privmx {
                     ctx.long2jLong(verificationRequest_c.date));
         }
 
+        //Crypto
+        jobject extKey2Java(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey extKey_c) {
+            jclass ExtKeyCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/ExtKey");
+            jmethodID initExtKeyMID = ctx->GetMethodID(
+                    ExtKeyCls,
+                    "<init>",
+                    "(J"
+                    ")V"
+            );
+
+            auto *key = new privmx::endpoint::crypto::ExtKey(extKey_c);
+            return ctx->NewObject(
+                    ExtKeyCls,
+                    initExtKeyMID,
+                    ctx.long2jLong((jlong) key));
+        }
+
+        jobject BIP39_t2Java(JniContextUtils &ctx, privmx::endpoint::crypto::BIP39_t BIP39_t) {
+            jclass BIP39_tCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/BIP39_t");
+            jmethodID initBIP39_tMID = ctx->GetMethodID(
+                    BIP39_tCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"                                //mnemonic
+                    "Lcom/simplito/java/privmx_endpoint/model/ExtKey;"  //Ecc Key
+                    "[B"                                                // BIP-39 entropy
+                    ")V"
+            );
+            jbyteArray entropy = ctx->NewByteArray(BIP39_t.entropy.size());
+            ctx->SetByteArrayRegion(entropy, 0, BIP39_t.entropy.size(),
+                                    (jbyte *) BIP39_t.entropy.data());
+
+            return ctx->NewObject(
+                    BIP39_tCls,
+                    initBIP39_tMID,
+                    ctx->NewStringUTF(BIP39_t.mnemonic.c_str()),
+                    extKey2Java(ctx, BIP39_t.ext_key),
+                    entropy
+            );
+        }
+
         //Threads
         jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c) {
             jclass threadCls = ctx->FindClass(
