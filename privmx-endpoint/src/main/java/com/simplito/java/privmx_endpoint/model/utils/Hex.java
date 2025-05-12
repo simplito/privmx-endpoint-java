@@ -1,6 +1,9 @@
 package com.simplito.java.privmx_endpoint.model.utils;
 
 public class Hex {
+    static {
+        System.loadLibrary("privmx-endpoint-java");
+    }
 
     /**
      * Encodes buffer to a string in Hex format.

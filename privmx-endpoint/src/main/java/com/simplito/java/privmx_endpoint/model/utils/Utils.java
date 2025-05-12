@@ -3,6 +3,10 @@ package com.simplito.java.privmx_endpoint.model.utils;
 import java.util.List;
 
 public class Utils {
+    static {
+        System.loadLibrary("privmx-endpoint-java");
+    }
+
     /**
      * Removes all trailing whitespace.
      *

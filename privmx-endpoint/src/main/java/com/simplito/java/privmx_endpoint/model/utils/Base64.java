@@ -1,6 +1,9 @@
 package com.simplito.java.privmx_endpoint.model.utils;
 
 public class Base64 {
+    static {
+        System.loadLibrary("privmx-endpoint-java");
+    }
 
     /**
      * Encodes buffer to string in Base64 format.
