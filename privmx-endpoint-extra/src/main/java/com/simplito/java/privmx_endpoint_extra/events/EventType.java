@@ -302,7 +302,8 @@ public class EventType<T> {
     /**
      * Returns instance to register for custom Context Events.
      *
-     * @param contextId ID of the Context to observe
+     * @param contextId   ID of the Context to observe
+     * @param channelName name of the Channel
      * @return predefined event type to catch emitted custom Context events
      */
     public static EventType<ContextCustomEventData> ContextCustomEvent(String contextId, String channelName) throws NullPointerException {
