@@ -305,10 +305,11 @@ public class EventType<T> {
      * @param contextId ID of the Context to observe
      * @return predefined event type to catch emitted custom Context events
      */
-    public static EventType<ContextCustomEventData> ContextCustomEvent(String contextId) throws NullPointerException {
+    public static EventType<ContextCustomEventData> ContextCustomEvent(String contextId, String channelName) throws NullPointerException {
         if (contextId == null) throw new NullPointerException("Context id cannot be null");
+        if (channelName == null) throw new NullPointerException("Channel name cannot be null");
         return new EventType<>(
-                "context/" + contextId,
+                "context/" + contextId + "/" + channelName,
                 "contextCustom",
                 ContextCustomEventData.class
         );
