@@ -6,18 +6,18 @@ public class Hex {
     }
 
     /**
-     * Encodes buffer to a string in Hex format.
+     * Encodes byte array to a string in Hex format.
      *
-     * @param data buffer to encode
+     * @param data as byte array to encode
      * @return string in Hex format
      */
     public static native String encode(byte[] data);
 
     /**
-     * Decodes string in Hex to buffer.
+     * Decodes string in Hex to byte array.
      *
      * @param hex_data string to decode
-     * @return buffer with decoded data
+     * @return byte array with decoded data
      */
     public static native byte[] decode(String hex_data);
 

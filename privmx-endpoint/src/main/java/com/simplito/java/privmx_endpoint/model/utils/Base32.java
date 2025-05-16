@@ -6,18 +6,18 @@ public class Base32 {
     }
 
     /**
-     * Encodes buffer to string in Base32 format.
+     * Encodes byte array to string in Base32 format.
      *
-     * @param data buffer to encode
+     * @param data as byte array to encode
      * @return string in Base32 format
      */
     public static native String encode(byte[] data);
 
     /**
-     * Decodes string in Base32 to buffer.
+     * Decodes string in Base32 to byte array.
      *
      * @param base32_data string to decode
-     * @return buffer with decoded data
+     * @return byte array with decoded data
      */
     public static native byte[] decode(String base32_data);
 
