@@ -89,8 +89,19 @@ public:
 
     void callVoidEndpointApi(const std::function<void()> &fun);
 
+    /**
+    * Returns class for given name.
+    * This implementation uses class loader (set with setClassLoaderFromObject method)
+    * to find class with given name.
+    * If classLoader is null returns jclass using env->FindClass().
+    */
+    jclass findClass(const char *name);
+
+    void setClassLoaderFromObject(jobject object);
+
 private:
     JNIEnv *_env;
+    jobject jclassLoader;
 };
 
 #endif //PRIVMX_PRIVMXPOCKETLIB_UTILS_HPP

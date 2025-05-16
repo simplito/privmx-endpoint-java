@@ -135,3 +135,29 @@ void JniContextUtils::callVoidEndpointApi(const std::function<void()> &fun) {
         );
     }
 }
+
+jclass JniContextUtils::findClass(const char *name) {
+    if (jclassLoader == nullptr) {
+        return _env->FindClass(name);
+    }
+
+    auto classLoaderClass = _env->FindClass("java/lang/ClassLoader");
+    auto gFindClassMethod = _env->GetMethodID(
+            classLoaderClass,
+            "findClass",
+            "(Ljava/lang/String;)Ljava/lang/Class;");
+    return static_cast<jclass>(_env->CallObjectMethod(
+            jclassLoader,
+            gFindClassMethod,
+            _env->NewStringUTF(name)));
+}
+
+void JniContextUtils::setClassLoaderFromObject(jobject object) {
+    auto objectClass = _env->GetObjectClass(object);
+    jclass classClass = _env->GetObjectClass(objectClass);
+    auto getClassLoaderMethod = _env->GetMethodID(
+            classClass,
+            "getClassLoader",
+            "()Ljava/lang/ClassLoader;");
+    jclassLoader = _env->CallObjectMethod(objectClass, getClassLoaderMethod);
+}
