@@ -130,6 +130,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_unsubscribeFromCu
         jstring channel_name
 ) {
     JniContextUtils ctx(env);
+
+    if (ctx.nullCheck(context_id, "Context ID") ||
+        ctx.nullCheck(channel_name, "Channel name")) {
+        return;
+    }
+
     ctx.callVoidEndpointApi([&ctx, &thiz, &context_id, &channel_name]() {
         getEventApi(ctx, thiz)->unsubscribeFromCustomEvents(
                 ctx.jString2string(context_id),
