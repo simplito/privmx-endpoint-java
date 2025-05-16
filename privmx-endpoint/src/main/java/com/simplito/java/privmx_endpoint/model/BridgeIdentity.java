@@ -20,7 +20,7 @@ public class BridgeIdentity {
     public String instanceId;
 
     /**
-     * Creates instance of {@code PKIVerificationOptions}.
+     * Creates instance of {@code BridgeIdentity}.
      *
      * @param url Bridge URL
      */
@@ -29,7 +29,7 @@ public class BridgeIdentity {
     }
 
     /**
-     * Creates instance of {@code PKIVerificationOptions}.
+     * Creates instance of {@code BridgeIdentity}.
      *
      * @param url        Bridge URL
      * @param pubKey     Bridge public Key
