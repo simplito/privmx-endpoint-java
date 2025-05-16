@@ -15,7 +15,6 @@ import com.simplito.java.privmx_endpoint.model.Context;
 import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserInfo;
-import com.simplito.java.privmx_endpoint.model.UserVerifierInterface;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 

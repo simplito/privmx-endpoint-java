@@ -1,4 +1,6 @@
-package com.simplito.java.privmx_endpoint.model;
+package com.simplito.java.privmx_endpoint.modules.core;
+
+import com.simplito.java.privmx_endpoint.model.VerificationRequest;
 
 import java.util.List;
 
