@@ -3,7 +3,6 @@
 //
 #include <jni.h>
 #include <privmx/endpoint/event/EventApi.hpp>
-#include "EventApi.h"
 #include "../utils.hpp"
 #include "Connection.h"
 #include "../parser.h"
