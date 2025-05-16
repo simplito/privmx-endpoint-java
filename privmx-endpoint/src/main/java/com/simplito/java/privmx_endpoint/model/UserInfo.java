@@ -13,6 +13,9 @@ public class UserInfo {
 
     /**
      * Creates instance of {@code UserInfo}
+     *
+     * @param user     User publicKey and userId
+     * @param isActive is user connected to bridge
      */
     public UserInfo(
             UserWithPubKey user,
