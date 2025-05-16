@@ -33,8 +33,6 @@ import java.util.Objects;
  */
 public class StoreApi implements AutoCloseable {
     static {
-//        System.loadLibrary("crypto");
-//        System.loadLibrary("ssl");
         System.loadLibrary("privmx-endpoint-java");
     }
 

@@ -22,8 +22,6 @@ import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
  */
 public class CryptoApi implements AutoCloseable {
     static {
-        System.loadLibrary("crypto");
-        System.loadLibrary("ssl");
         System.loadLibrary("privmx-endpoint-java");
     }
 

@@ -38,8 +38,6 @@ import java.util.Optional;
  */
 public class InboxApi implements AutoCloseable {
     static {
-//        System.loadLibrary("crypto");
-//        System.loadLibrary("ssl");
         System.loadLibrary("privmx-endpoint-java");
     }
 
