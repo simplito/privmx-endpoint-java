@@ -68,7 +68,7 @@ namespace privmx {
         //Crypto
         jobject extKey2Java(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey extKey_c);
 
-        jobject BIP39_t2Java(JniContextUtils &ctx, privmx::endpoint::crypto::BIP39_t BIP39_t);
+        jobject BIP392Java(JniContextUtils &ctx, privmx::endpoint::crypto::BIP39_t BIP39_c);
 
         //Threads
         jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c);

@@ -11,7 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.crypto;
 
-import com.simplito.java.privmx_endpoint.model.BIP39_t;
+import com.simplito.java.privmx_endpoint.model.BIP39;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 
@@ -137,17 +137,17 @@ public class CryptoApi implements AutoCloseable {
      *
      * @param strength size of BIP-39 entropy, must be a multiple of 32
      * @param password the password used to generate the Key
-     * @return BIP39_t object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
      */
-    public native BIP39_t generateBip39(long strength, String password) throws PrivmxException, NativeException;
+    public native BIP39 generateBip39(long strength, String password) throws PrivmxException, NativeException;
 
     /**
      * Generates ECC key and BIP-39 mnemonic from a password using BIP-39.
      *
      * @param strength size of BIP-39 entropy, must be a multiple of 32
-     * @return BIP39_t object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
      */
-    public BIP39_t generateBip39(long strength) throws PrivmxException, NativeException {
+    public BIP39 generateBip39(long strength) throws PrivmxException, NativeException {
         return generateBip39(strength, null);
     }
 
@@ -156,17 +156,17 @@ public class CryptoApi implements AutoCloseable {
      *
      * @param mnemonic the BIP-39 entropy used to generate the Key
      * @param password the password used to generate the Key
-     * @return BIP39_t object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
      */
-    public native BIP39_t fromMnemonic(String mnemonic, String password) throws PrivmxException, NativeException;
+    public native BIP39 fromMnemonic(String mnemonic, String password) throws PrivmxException, NativeException;
 
     /**
      * Generates ECC key using BIP-39 mnemonic.
      *
      * @param mnemonic the BIP-39 entropy used to generate the Key
-     * @return BIP39_t object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
      */
-    public BIP39_t fromMnemonic(String mnemonic) throws PrivmxException, NativeException {
+    public BIP39 fromMnemonic(String mnemonic) throws PrivmxException, NativeException {
         return fromMnemonic(mnemonic, null);
     }
 
@@ -175,17 +175,17 @@ public class CryptoApi implements AutoCloseable {
      *
      * @param entropy  the BIP-39 entropy used to generate the Key
      * @param password the password used to generate the Key
-     * @return BIP39_t object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
      */
-    public native BIP39_t fromEntropy(byte[] entropy, String password) throws PrivmxException, NativeException;
+    public native BIP39 fromEntropy(byte[] entropy, String password) throws PrivmxException, NativeException;
 
     /**
      * Generates ECC key using BIP-39 entropy.
      *
      * @param entropy the BIP-39 entropy used to generate the Key
-     * @return BIP39_t object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
      */
-    public BIP39_t fromEntropy(byte[] entropy) throws PrivmxException, NativeException {
+    public BIP39 fromEntropy(byte[] entropy) throws PrivmxException, NativeException {
         return fromEntropy(entropy, null);
     }
 

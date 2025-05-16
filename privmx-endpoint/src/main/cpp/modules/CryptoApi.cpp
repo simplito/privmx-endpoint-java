@@ -439,7 +439,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_generateBip39(J
                             ctx.jString2string(password));
                 }
 
-                return privmx::wrapper::BIP39_t2Java(ctx, bip39);
+                return privmx::wrapper::BIP392Java(ctx, bip39);
             }
     );
     if (ctx->ExceptionCheck()) {
@@ -472,7 +472,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_fromMnemonic(JN
                             ctx.jString2string(password));
                 }
 
-                return privmx::wrapper::BIP39_t2Java(ctx, bip39);
+                return privmx::wrapper::BIP392Java(ctx, bip39);
             }
     );
     if (ctx->ExceptionCheck()) {
@@ -505,7 +505,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_fromEntropy(JNI
                             ctx.jString2string(password));
                 }
 
-                return privmx::wrapper::BIP39_t2Java(ctx, bip39);
+                return privmx::wrapper::BIP392Java(ctx, bip39);
             }
     );
     if (ctx->ExceptionCheck()) {

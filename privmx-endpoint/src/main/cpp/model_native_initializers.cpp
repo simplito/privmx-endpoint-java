@@ -292,11 +292,11 @@ namespace privmx {
                     ctx.long2jLong((jlong) key));
         }
 
-        jobject BIP39_t2Java(JniContextUtils &ctx, privmx::endpoint::crypto::BIP39_t BIP39_t) {
-            jclass BIP39_tCls = ctx->FindClass(
-                    "com/simplito/java/privmx_endpoint/model/BIP39_t");
-            jmethodID initBIP39_tMID = ctx->GetMethodID(
-                    BIP39_tCls,
+        jobject BIP392Java(JniContextUtils &ctx, privmx::endpoint::crypto::BIP39_t BIP39_c) {
+            jclass BIP39Cls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/BIP39");
+            jmethodID initBIP39MID = ctx->GetMethodID(
+                    BIP39Cls,
                     "<init>",
                     "("
                     "Ljava/lang/String;"                                //mnemonic
@@ -304,15 +304,15 @@ namespace privmx {
                     "[B"                                                // BIP-39 entropy
                     ")V"
             );
-            jbyteArray entropy = ctx->NewByteArray(BIP39_t.entropy.size());
-            ctx->SetByteArrayRegion(entropy, 0, BIP39_t.entropy.size(),
-                                    (jbyte *) BIP39_t.entropy.data());
+            jbyteArray entropy = ctx->NewByteArray(BIP39_c.entropy.size());
+            ctx->SetByteArrayRegion(entropy, 0, BIP39_c.entropy.size(),
+                                    (jbyte *) BIP39_c.entropy.data());
 
             return ctx->NewObject(
-                    BIP39_tCls,
-                    initBIP39_tMID,
-                    ctx->NewStringUTF(BIP39_t.mnemonic.c_str()),
-                    extKey2Java(ctx, BIP39_t.ext_key),
+                    BIP39Cls,
+                    initBIP39MID,
+                    ctx->NewStringUTF(BIP39_c.mnemonic.c_str()),
+                    extKey2Java(ctx, BIP39_c.ext_key),
                     entropy
             );
         }
