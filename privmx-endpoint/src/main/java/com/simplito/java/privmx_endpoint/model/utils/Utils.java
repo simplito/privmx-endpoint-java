@@ -20,7 +20,7 @@ public class Utils {
      *
      * @param data      string to split
      * @param delimiter string which will be split
-     * @return vector containing all split parts
+     * @return List containing all split parts
      */
     public static native List<String> split(String data, String delimiter);
 
