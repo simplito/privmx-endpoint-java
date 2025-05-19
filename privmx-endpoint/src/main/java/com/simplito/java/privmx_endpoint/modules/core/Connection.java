@@ -27,8 +27,6 @@ import java.util.List;
  */
 public class Connection implements AutoCloseable {
     static {
-        System.loadLibrary("crypto");
-        System.loadLibrary("ssl");
         System.loadLibrary("privmx-endpoint-java");
     }
 
