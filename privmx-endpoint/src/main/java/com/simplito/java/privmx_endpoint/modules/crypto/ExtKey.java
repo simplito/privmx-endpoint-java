@@ -4,15 +4,14 @@ import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 
 public class ExtKey implements AutoCloseable {
+    static {
+        System.loadLibrary("privmx-endpoint-java");
+    }
 
     private final Long key;
 
     private ExtKey(Long key) {
         this.key = key;
-    }
-
-    static {
-        System.loadLibrary("privmx-endpoint-java");
     }
 
     private native void deinit() throws IllegalStateException, PrivmxException, NativeException;
@@ -23,7 +22,7 @@ public class ExtKey implements AutoCloseable {
      * @param seed the seed used to generate Key
      * @return ExtKey object
      */
-    public static native ExtKey fromSeed(byte[] seed) throws IllegalStateException, PrivmxException, NativeException;
+    public static native ExtKey fromSeed(byte[] seed) throws PrivmxException, NativeException;
 
     /**
      * Decodes ExtKey from Base58 format.
@@ -31,14 +30,14 @@ public class ExtKey implements AutoCloseable {
      * @param base58 the ExtKey in Base58
      * @return ExtKey object
      */
-    public static native ExtKey fromBase58(String base58) throws IllegalStateException, PrivmxException, NativeException;
+    public static native ExtKey fromBase58(String base58) throws PrivmxException, NativeException;
 
     /**
      * Generates a new ExtKey.
      *
      * @return ExtKey object
      */
-    public static native ExtKey generateRandom() throws IllegalStateException, PrivmxException, NativeException;
+    public static native ExtKey generateRandom() throws PrivmxException, NativeException;
 
     /**
      * Generates child ExtKey from a current ExtKey using BIP32.
@@ -99,16 +98,18 @@ public class ExtKey implements AutoCloseable {
     public native String getPublicKeyAsBase58Address() throws IllegalStateException, PrivmxException, NativeException;
 
     /**
+     * Gets the chain code of Extended Key.
+     *
      * @return Raw chain code
-     * //     * @brief Gets the chain code of Extended Key.
      */
     public native byte[] getChainCode() throws IllegalStateException, PrivmxException, NativeException;
 
     /**
+     * Validates a signature of a message.
+     *
      * @param message   data used on validation
      * @param signature signature of data to verify
      * @return message validation result
-     * //     * @brief Validates a signature of a message.
      */
     public native boolean verifyCompactSignatureWithHash(byte[] message, byte[] signature) throws IllegalStateException, PrivmxException, NativeException;
 
