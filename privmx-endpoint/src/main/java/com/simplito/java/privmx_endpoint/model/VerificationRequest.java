@@ -37,7 +37,7 @@ public class VerificationRequest {
      * @param senderPubKey Public key of the sender
      * @param date         Creation date of the data
      */
-    public VerificationRequest(String contextId, String senderId, String senderPubKey, Long date) {
+    public VerificationRequest(String contextId, String senderId, String senderPubKey, long date) {
         this.contextId = contextId;
         this.senderId = senderId;
         this.senderPubKey = senderPubKey;
