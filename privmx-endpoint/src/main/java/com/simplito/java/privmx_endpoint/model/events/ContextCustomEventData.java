@@ -8,11 +8,11 @@ package com.simplito.java.privmx_endpoint.model.events;
  */
 public class ContextCustomEventData {
     /**
-     * id of inbox from which it was sent
+     * ID of inbox from which the event was sent
      */
     public final String contextId;
     /**
-     * id of user which sent it
+     * ID of the user who sent it
      */
     public final String userId;
     /**
