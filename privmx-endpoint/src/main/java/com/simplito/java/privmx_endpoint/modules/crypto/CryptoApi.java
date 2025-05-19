@@ -125,9 +125,8 @@ public class CryptoApi implements AutoCloseable {
 
     /**
      * Converts given public key in PGP format to its base58DER format.
-     * <p>
-     * //     * @param pemKey public key to convert
      *
+     * @param pgpKey public key to convert
      * @return private key in base58DER format
      */
     public native String convertPGPAsn1KeyToBase58DERKey(String pgpKey) throws PrivmxException, NativeException;
