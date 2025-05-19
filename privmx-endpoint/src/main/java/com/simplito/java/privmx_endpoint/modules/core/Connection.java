@@ -213,7 +213,7 @@ public class Connection implements AutoCloseable {
      * Gets a list of users of given context.
      *
      * @param contextId ID of the context
-     * @return vector containing a list of users Info
+     * @return list of users Info
      */
     public native List<UserInfo> getContextUsers(String contextId) throws IllegalStateException, PrivmxException, NativeException;
 
