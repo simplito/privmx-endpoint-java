@@ -63,10 +63,10 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
 
     std::vector<bool> result_c;
     for (int i = 0; i < ctx->GetArrayLength(jresult); i++) {
-        jobject arrayElement = ctx->GetObjectArrayElement(jresult, i);
-        bool vectorElement = ctx.getObject(arrayElement).getBooleanValue();
+        jobject jElement = ctx->GetObjectArrayElement(jresult, i);
+        bool element_c = ctx.getObject(jElement).getBooleanValue();
 
-        result_c.push_back(vectorElement);
+        result_c.push_back(element_c);
     }
     return result_c;
 }
