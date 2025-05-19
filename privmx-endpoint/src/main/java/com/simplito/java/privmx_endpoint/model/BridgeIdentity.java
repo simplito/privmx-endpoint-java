@@ -1,7 +1,7 @@
 package com.simplito.java.privmx_endpoint.model;
 
 /**
- * Data send by client to all data informing where was it send
+ * Bridge server identification details.
  */
 public class BridgeIdentity {
     /**
