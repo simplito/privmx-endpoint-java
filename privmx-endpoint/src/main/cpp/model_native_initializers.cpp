@@ -277,7 +277,7 @@ namespace privmx {
         //Crypto
         jobject extKey2Java(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey extKey_c) {
             jclass ExtKeyCls = ctx->FindClass(
-                    "com/simplito/java/privmx_endpoint/model/ExtKey");
+                    "com/simplito/java/privmx_endpoint/modules/crypto/ExtKey");
             jmethodID initExtKeyMID = ctx->GetMethodID(
                     ExtKeyCls,
                     "<init>",
