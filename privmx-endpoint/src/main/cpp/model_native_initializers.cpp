@@ -299,9 +299,9 @@ namespace privmx {
                     BIP39Cls,
                     "<init>",
                     "("
-                    "Ljava/lang/String;"                                //mnemonic
-                    "Lcom/simplito/java/privmx_endpoint/model/ExtKey;"  //Ecc Key
-                    "[B"                                                // BIP-39 entropy
+                    "Ljava/lang/String;"                                            //mnemonic
+                    "Lcom/simplito/java/privmx_endpoint/modules/crypto/ExtKey;"     //Ecc Key
+                    "[B"                                                            // BIP-39 entropy
                     ")V"
             );
             jbyteArray entropy = ctx->NewByteArray(BIP39_c.entropy.size());
