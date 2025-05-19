@@ -59,7 +59,7 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
     }
 
     auto jresult = ctx.jObject2jArray(
-            env->CallObjectMethod(juserVerifierInterface, jmethodId, jverificationRequestArray));
+            env->CallObjectMethod(juserVerifierInterface, jverifyMID, jverificationRequestArray));
 
     std::vector<bool> result_c;
     for (int i = 0; i < ctx->GetArrayLength(jresult); i++) {
