@@ -16,11 +16,11 @@ public class Utils {
     public static native String trim(String data);
 
     /**
-     * Splits string by given delimiter (delimiter is removed).
+     * Splits a string using the provided delimiter.
      *
-     * @param data      string to split
-     * @param delimiter string which will be split
-     * @return List containing all split parts
+     * @param data      the string to be split
+     * @param delimiter
+     * @return split parts
      */
     public static native List<String> split(String data, String delimiter);
 
