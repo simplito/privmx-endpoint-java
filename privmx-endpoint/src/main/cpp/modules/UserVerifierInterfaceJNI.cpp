@@ -31,7 +31,7 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
         const std::vector<privmx::endpoint::core::VerificationRequest> &request) {
     JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
             javaVM,
-            "UserVerifierInterfaceJNI");
+            jni::getPrivmxCallbackThreadName());
     JniContextUtils ctx(env);
     jclass juserVerifierInterfaceClass = env->GetObjectClass(juserVerifierInterface);
     jmethodID jmethodId = env->GetMethodID(
