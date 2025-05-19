@@ -23,7 +23,6 @@ privmx::wrapper::UserVerifierInterfaceJNI::UserVerifierInterfaceJNI(JNIEnv *env,
         return;
     }
     env->GetJavaVM(&this->javaVM);
-    //TODO: Clean this global ref on close()
     this->juserVerifierInterface = env->NewGlobalRef(juserVerifierInterface);
 }
 
@@ -70,4 +69,14 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
         result_c.push_back(vectorElement);
     }
     return result_c;
+}
+
+privmx::wrapper::UserVerifierInterfaceJNI::~UserVerifierInterfaceJNI() {
+    if (javaVM != nullptr && juserVerifierInterface != nullptr) {
+        JNIEnv *env = nullptr;
+        javaVM->GetEnv((void **) &env, JNI_VERSION_1_6);
+
+        if (env != nullptr) env->DeleteGlobalRef(juserVerifierInterface);
+        juserVerifierInterface = nullptr;
+    }
 }

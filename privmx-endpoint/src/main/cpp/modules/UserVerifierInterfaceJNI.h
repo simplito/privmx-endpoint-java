@@ -13,8 +13,10 @@ namespace privmx::wrapper {
     public:
         UserVerifierInterfaceJNI(JNIEnv *env, jobject juserVerifierInterface);
 
+        ~UserVerifierInterfaceJNI() override;
+
         std::vector<bool>
-        verify(const std::vector <endpoint::core::VerificationRequest> &request) override;
+        verify(const std::vector<endpoint::core::VerificationRequest> &request) override;
 
     private:
         jobject juserVerifierInterface;
