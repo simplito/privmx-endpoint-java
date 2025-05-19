@@ -34,7 +34,7 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
             jni::getPrivmxCallbackThreadName());
     JniContextUtils ctx(env);
     jclass juserVerifierInterfaceClass = env->GetObjectClass(juserVerifierInterface);
-    jmethodID jmethodId = env->GetMethodID(
+    jmethodID jverifyMID = env->GetMethodID(
             juserVerifierInterfaceClass,
             "verify",
             "(Ljava/util/List;)Ljava/util/List;");
