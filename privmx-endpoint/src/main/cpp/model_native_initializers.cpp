@@ -907,7 +907,7 @@ namespace privmx {
         ) {
             jclass contextCustomEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/ContextCustomEventData");
-            jmethodID initContextEntryDeletedEventDataMID = ctx->GetMethodID(
+            jmethodID initContextCustomEventDataMID = ctx->GetMethodID(
                     contextCustomEventDataCls,
                     "<init>",
                     "(Ljava/lang/String;Ljava/lang/String;[B)V"
@@ -917,7 +917,7 @@ namespace privmx {
                                     (jbyte *) contextCustomEvent_c.payload.data());
             return ctx->NewObject(
                     contextCustomEventDataCls,
-                    initContextEntryDeletedEventDataMID,
+                    initContextCustomEventDataMID,
                     ctx->NewStringUTF(contextCustomEvent_c.contextId.c_str()),
                     ctx->NewStringUTF(contextCustomEvent_c.userId.c_str()),
                     data
