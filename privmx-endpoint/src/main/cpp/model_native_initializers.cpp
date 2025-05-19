@@ -220,7 +220,6 @@ namespace privmx {
                     initUserMID,
                     ctx->NewStringUTF(userWithPubKey.userId.c_str()),
                     ctx->NewStringUTF(userWithPubKey.pubKey.c_str())
-
             );
         }
 
