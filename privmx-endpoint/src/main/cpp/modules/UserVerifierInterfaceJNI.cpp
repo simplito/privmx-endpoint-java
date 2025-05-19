@@ -14,7 +14,7 @@
 privmx::wrapper::UserVerifierInterfaceJNI::UserVerifierInterfaceJNI(JNIEnv *env,
                                                                     jobject juserVerifierInterface) {
     jclass juserVerifierInterfaceClass = env->FindClass(
-            "com/simplito/java/privmx_endpoint/model/UserVerifierInterface");
+            "com/simplito/java/privmx_endpoint/modules/core/UserVerifierInterface");
     javaVM = nullptr;
     if (!env->IsInstanceOf(juserVerifierInterface, juserVerifierInterfaceClass)) {
         env->ThrowNew(
