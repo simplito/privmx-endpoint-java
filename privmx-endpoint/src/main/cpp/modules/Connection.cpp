@@ -13,7 +13,6 @@
 #include <privmx/endpoint/core/Connection.hpp>
 #include "privmx/endpoint/core/Config.hpp"
 #include <privmx/endpoint/core/Exception.hpp>
-#include <privmx/endpoint/core/UserVerifierInterface.hpp>
 #include "UserVerifierInterfaceJNI.h"
 #include "Connection.h"
 #include "../utils.hpp"
