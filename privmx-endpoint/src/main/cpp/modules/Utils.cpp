@@ -175,11 +175,10 @@ Java_com_simplito_java_privmx_1endpoint_model_utils_Hex_decode(JNIEnv *env,
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_simplito_java_privmx_1endpoint_model_utils_Hex_is(JNIEnv *env,
-                                                           jclass clazz,
+Java_com_simplito_java_privmx_1endpoint_model_utils_Hex_is(JNIEnv *env, jclass clazz,
                                                            jstring data) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(data, "Data")) return JNI_FALSE;;
+    if (ctx.nullCheck(data, "Data")) return JNI_FALSE;
     jboolean result;
 
     ctx.callResultEndpointApi<jboolean>(
