@@ -285,7 +285,6 @@ namespace privmx {
                     "Ljava/lang/String;"
                     "Ljava/lang/String;"
                     "Ljava/lang/String;"
-                    "Ljava/lang/String;"
                     "Ljava/lang/Long;"
                     "Lcom/simplito/java/privmx_endpoint/model/BridgeIdentity"
                     ")V"
