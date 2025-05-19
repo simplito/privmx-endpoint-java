@@ -247,13 +247,38 @@ namespace privmx {
             );
         }
 
+        jobject bridgeIdentity2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::BridgeIdentity bridgeIdentity_c
+        ) {
+            jclass bridgeIdentityCls = ctx.findClass(
+                    "com/simplito/java/privmx_endpoint/model/BridgeIdentity");
+            jmethodID initBridgeIdentityMID = ctx->GetMethodID(
+                    bridgeIdentityCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"
+                    "Ljava/lang/String;"
+                    "Ljava/lang/String;"
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    bridgeIdentityCls,
+                    initBridgeIdentityMID,
+                    ctx->NewStringUTF(bridgeIdentity_c.url.c_str()),
+                    ctx->NewStringUTF(bridgeIdentity_c.pubKey->c_str()),
+                    ctx->NewStringUTF(bridgeIdentity_c.instanceId->c_str())
+            );
+        }
+
         jobject verificationRequest2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::core::VerificationRequest verificationRequest_c
         ) {
             jclass verificationRequestCls = ctx.findClass(
                     "com/simplito/java/privmx_endpoint/model/VerificationRequest");
-            jmethodID initThreadDataMID = ctx->GetMethodID(
+            jmethodID initVerificationRequestMID = ctx->GetMethodID(
                     verificationRequestCls,
                     "<init>",
                     "("
@@ -262,16 +287,19 @@ namespace privmx {
                     "Ljava/lang/String;"
                     "Ljava/lang/String;"
                     "Ljava/lang/Long;"
+                    "Lcom/simplito/java/privmx_endpoint/model/BridgeIdentity"
                     ")V"
             );
 
             return ctx->NewObject(
                     verificationRequestCls,
-                    initThreadDataMID,
+                    initVerificationRequestMID,
                     ctx->NewStringUTF(verificationRequest_c.contextId.c_str()),
                     ctx->NewStringUTF(verificationRequest_c.senderId.c_str()),
                     ctx->NewStringUTF(verificationRequest_c.senderPubKey.c_str()),
-                    ctx.long2jLong(verificationRequest_c.date));
+                    ctx.long2jLong(verificationRequest_c.date),
+                    bridgeIdentity2Java(ctx, verificationRequest_c.bridgeIdentity)
+            );
         }
 
         //Crypto
