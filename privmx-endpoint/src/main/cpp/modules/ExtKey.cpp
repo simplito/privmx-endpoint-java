@@ -9,8 +9,7 @@
 
 using namespace privmx::endpoint;
 
-crypto::ExtKey *getExtKey(JNIEnv *env, jobject thiz) {
-    JniContextUtils ctx(env);
+crypto::ExtKey *getExtKey(JniContextUtils &ctx, jobject thiz) {
     jclass cls = ctx->GetObjectClass(thiz);
     jfieldID keyFID = ctx->GetFieldID(cls, "key", "Ljava/lang/Long;");
     jobject keyLong = ctx->GetObjectField(thiz, keyFID);
@@ -24,7 +23,8 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_deinit(JNIEnv *env, jobject thiz) {
     try {
-        auto key = getExtKey(env, thiz);
+        JniContextUtils ctx(env);
+        auto key = getExtKey(ctx, thiz);
         delete key;
         jclass cls = env->GetObjectClass(thiz);
         jfieldID keyFID = env->GetFieldID(cls, "key", "Ljava/lang/Long;");
@@ -113,7 +113,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_derive(JNIEnv *env
     ctx.callResultEndpointApi<jobject>(
             &result,
             [&ctx, &env, &thiz, &index]() {
-                crypto::ExtKey extKey = getExtKey(env, thiz)->derive(index);
+                crypto::ExtKey extKey = getExtKey(ctx, thiz)->derive(index);
 
                 return privmx::wrapper::extKey2Java(ctx, extKey);
             }
@@ -135,7 +135,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_deriveHardened(JNI
     ctx.callResultEndpointApi<jobject>(
             &result,
             [&ctx, &env, &thiz, &index]() {
-                crypto::ExtKey extKey = getExtKey(env, thiz)->deriveHardened(index);
+                crypto::ExtKey extKey = getExtKey(ctx, thiz)->deriveHardened(index);
 
                 return privmx::wrapper::extKey2Java(ctx, extKey);
             }
@@ -156,7 +156,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivatePartAsBa
     ctx.callResultEndpointApi<jstring>(
             &result,
             [&ctx, &env, &thiz]() {
-                std::string privatePart = getExtKey(env, thiz)->getPrivatePartAsBase58();
+                std::string privatePart = getExtKey(ctx, thiz)->getPrivatePartAsBase58();
 
                 return ctx->NewStringUTF(privatePart.c_str());
             }
@@ -177,7 +177,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicPartAsBas
     ctx.callResultEndpointApi<jstring>(
             &result,
             [&ctx, &env, &thiz]() {
-                std::string publicPart = getExtKey(env, thiz)->getPublicPartAsBase58();
+                std::string publicPart = getExtKey(ctx, thiz)->getPublicPartAsBase58();
 
                 return ctx->NewStringUTF(publicPart.c_str());
             }
@@ -198,7 +198,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivateKey(JNIE
     ctx.callResultEndpointApi<jstring>(
             &result,
             [&ctx, &env, &thiz]() {
-                std::string privateKey = getExtKey(env, thiz)->getPrivateKey();
+                std::string privateKey = getExtKey(ctx, thiz)->getPrivateKey();
 
                 return ctx->NewStringUTF(privateKey.c_str());
             }
@@ -219,7 +219,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicKey(JNIEn
     ctx.callResultEndpointApi<jstring>(
             &result,
             [&ctx, &env, &thiz]() {
-                std::string publicKey = getExtKey(env, thiz)->getPublicKey();
+                std::string publicKey = getExtKey(ctx, thiz)->getPublicKey();
 
                 return ctx->NewStringUTF(publicKey.c_str());
             }
@@ -240,7 +240,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivateEncKey(J
     ctx.callResultEndpointApi<jbyteArray>(
             &result,
             [&ctx, &env, &thiz]() {
-                core::Buffer privateEncKey = getExtKey(env,
+                core::Buffer privateEncKey = getExtKey(ctx,
                                                        thiz)->getPrivateEncKey();
 
                 jbyteArray array = ctx->NewByteArray(privateEncKey.size());
@@ -265,7 +265,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicKeyAsBase
     ctx.callResultEndpointApi<jstring>(
             &result,
             [&ctx, &env, &thiz]() {
-                std::string publicKey = getExtKey(env, thiz)->getPublicKeyAsBase58Address();
+                std::string publicKey = getExtKey(ctx, thiz)->getPublicKeyAsBase58Address();
                 return ctx->NewStringUTF(publicKey.c_str());
             }
     );
@@ -285,7 +285,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getChainCode(JNIEn
     ctx.callResultEndpointApi<jbyteArray>(
             &result,
             [&ctx, &env, &thiz]() {
-                core::Buffer chainCode = getExtKey(env, thiz)->getChainCode();
+                core::Buffer chainCode = getExtKey(ctx, thiz)->getChainCode();
 
                 jbyteArray array = ctx->NewByteArray(chainCode.size());
                 ctx->SetByteArrayRegion(array, 0, chainCode.size(),
@@ -314,7 +314,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_verifyCompactSigna
     ctx.callResultEndpointApi<jboolean>(
             &result,
             [&ctx, &env, &thiz, &message, &signature]() {
-                auto response = getExtKey(env, thiz)->verifyCompactSignatureWithHash(
+                auto response = getExtKey(ctx, thiz)->verifyCompactSignatureWithHash(
                         core::Buffer::from(ctx.jByteArray2String(message)),
                         core::Buffer::from(ctx.jByteArray2String(signature))
                 );
@@ -336,8 +336,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_isPrivate(JNIEnv *
     jboolean result;
     ctx.callResultEndpointApi<jboolean>(
             &result,
-            [&env, &thiz]() {
-                auto response = getExtKey(env, thiz)->isPrivate();
+            [&ctx, &thiz]() {
+                auto response = getExtKey(ctx, thiz)->isPrivate();
                 return response ? JNI_TRUE : JNI_FALSE;
             }
     );
