@@ -10,24 +10,24 @@ public class VerificationRequest {
     /**
      * Id of the Context
      */
-    String contextId;
+    public String contextId;
     /**
      * id of the sender
      */
-    String senderId;
+    public String senderId;
     /**
      * Public key of the sender
      */
-    String senderPubKey;
+    public String senderPubKey;
     /**
      * The data creation date
      */
-    Long date;
+    public Long date;
 
     /**
      * Bridge Identity
      */
-    BridgeIdentity bridgeIdentity;
+    public BridgeIdentity bridgeIdentity;
 
     /**
      * Creates instance of {@code VerificationRequest}.
