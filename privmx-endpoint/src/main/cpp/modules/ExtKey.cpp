@@ -4,7 +4,6 @@
 
 #include "privmx/endpoint/crypto/ExtKey.hpp"
 #include "../utils.hpp"
-#include "../model_native_initializers.h"
 #include <jni.h>
 
 using namespace privmx::endpoint;
@@ -17,6 +16,17 @@ crypto::ExtKey *getExtKey(JniContextUtils &ctx, jobject thiz) {
         throw IllegalStateException("ExtKey");      // todo
     }
     return (crypto::ExtKey *) ctx.getObject(keyLong).getLongValue();
+}
+
+jobject initExtKey(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey extKey_c, jclass clazz) {
+    jmethodID initExtKeyMID = ctx->GetMethodID(
+            clazz, "<init>", "(Ljava/lang/Long;)V");
+
+    auto *key = new privmx::endpoint::crypto::ExtKey(extKey_c);
+    return ctx->NewObject(
+            clazz,
+            initExtKeyMID,
+            ctx.long2jLong((jlong) key));
 }
 
 extern "C"
@@ -51,7 +61,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_fromSeed(JNIEnv *e
                 crypto::ExtKey extKey = crypto::ExtKey::fromSeed(
                         core::Buffer::from(ctx.jByteArray2String(seed)));
 
-                return privmx::wrapper::extKey2Java(ctx, extKey);
+                return initExtKey(ctx, extKey, clazz);
             }
     );
     if (ctx->ExceptionCheck()) {
@@ -73,7 +83,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_fromBase58(JNIEnv 
             [&ctx, &clazz, &base58]() {
                 crypto::ExtKey extKey = crypto::ExtKey::fromBase58(ctx.jString2string(base58));
 
-                return privmx::wrapper::extKey2Java(ctx, extKey);
+                return initExtKey(ctx, extKey, clazz);
             }
     );
     if (ctx->ExceptionCheck()) {
@@ -94,7 +104,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_generateRandom(JNI
             [&ctx, &clazz]() {
                 crypto::ExtKey extKey = crypto::ExtKey::generateRandom();
 
-                return privmx::wrapper::extKey2Java(ctx, extKey);
+                return initExtKey(ctx, extKey, clazz);
             }
     );
     if (ctx->ExceptionCheck()) {
@@ -114,8 +124,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_derive(JNIEnv *env
             &result,
             [&ctx, &env, &thiz, &index]() {
                 crypto::ExtKey extKey = getExtKey(ctx, thiz)->derive(index);
+                jclass cls = env->GetObjectClass(thiz);
 
-                return privmx::wrapper::extKey2Java(ctx, extKey);
+                return initExtKey(ctx, extKey, cls);
             }
     );
     if (ctx->ExceptionCheck()) {
@@ -136,8 +147,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_deriveHardened(JNI
             &result,
             [&ctx, &env, &thiz, &index]() {
                 crypto::ExtKey extKey = getExtKey(ctx, thiz)->deriveHardened(index);
+                jclass cls = env->GetObjectClass(thiz);
 
-                return privmx::wrapper::extKey2Java(ctx, extKey);
+                return initExtKey(ctx, extKey, cls);
             }
     );
     if (ctx->ExceptionCheck()) {
