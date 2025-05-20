@@ -305,9 +305,8 @@ namespace privmx {
             jclass ExtKeyCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/modules/crypto/ExtKey");
             jmethodID initExtKeyMID = ctx->GetMethodID(
-                    ExtKeyCls, "<init>", "(J)V"
-            );
-
+                    ExtKeyCls, "<init>", "(Ljava/lang/Long;)V");
+            
             auto *key = new privmx::endpoint::crypto::ExtKey(extKey_c);
             return ctx->NewObject(
                     ExtKeyCls,

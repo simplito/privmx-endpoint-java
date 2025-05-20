@@ -10,7 +10,7 @@ public class ExtKey implements AutoCloseable {
 
     private final Long key;
 
-    private ExtKey(Long key) {
+    public ExtKey(Long key) {
         this.key = key;
     }
 
