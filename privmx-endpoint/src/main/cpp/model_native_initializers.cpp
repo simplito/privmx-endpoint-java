@@ -514,6 +514,7 @@ namespace privmx {
                     "Lcom/simplito/java/privmx_endpoint/model/ContainerPolicy;" //policy
                     "Ljava/lang/Long;"  //filesCount
                     "Ljava/lang/Long;"
+                    "Ljava/lang/Long;"
                     ")V"
             );
 
@@ -553,7 +554,8 @@ namespace privmx {
                     privateMeta,
                     containerPolicy2Java(ctx, store_c.policy),
                     ctx.long2jLong(store_c.filesCount),
-                    ctx.long2jLong(store_c.statusCode)
+                    ctx.long2jLong(store_c.statusCode),
+                    ctx.long2jLong(store_c.schemaVersion)
             );
         }
 
