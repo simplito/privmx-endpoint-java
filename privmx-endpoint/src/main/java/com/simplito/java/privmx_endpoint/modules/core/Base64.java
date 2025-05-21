@@ -1,4 +1,4 @@
-package com.simplito.java.privmx_endpoint.model.utils;
+package com.simplito.java.privmx_endpoint.modules.core;
 
 public class Base64 {
     static {
