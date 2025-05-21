@@ -85,8 +85,8 @@ public class Connection implements AutoCloseable {
      *
      * @param userPrivKey         user's private key
      * @param solutionId          ID of the Solution
-     * @param bridgeUrl           Bridge's Endpoint URL
-     * @param verificationOptions
+     * @param bridgeUrl           Bridge Server URL
+     * @param verificationOptions PrivMX Bridge server instance verification options using a PKI server
      * @return Connection object
      * @throws PrivmxException thrown when method encounters an exception.
      * @throws NativeException thrown when method encounters an unknown exception.
@@ -133,8 +133,8 @@ public class Connection implements AutoCloseable {
      * Connects to PrivMX Bridge server as a guest user.
      *
      * @param solutionId          ID of the Solution
-     * @param bridgeUrl           Bridge's Endpoint URL
-     * @param verificationOptions
+     * @param bridgeUrl           Bridge Server URL
+     * @param verificationOptions PrivMX Bridge server instance verification options using a PKI server
      * @return Connection object
      * @throws PrivmxException thrown when method encounters an exception.
      * @throws NativeException thrown when method encounters an unknown exception.
@@ -230,7 +230,7 @@ public class Connection implements AutoCloseable {
      * The feature allows the developer to set up a callback for user verification.
      * A developer can implement an interface and pass the implementation to the function.
      * Each time data is read from the container, a callback will be triggered, allowing the developer to validate the sender in an external service,
-     * e.g. Developers Application Server or PKI Server.
+     * e.g. Developer's Application Server or PKI Server.
      *
      * @param userVerifier an implementation of the {@link UserVerifierInterface}
      * @throws IllegalStateException thrown when instance is not connected.

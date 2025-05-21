@@ -2,6 +2,9 @@ package com.simplito.java.privmx_endpoint.model;
 
 /**
  * Bridge server identification details.
+ *
+ * @category core
+ * @group Core
  */
 public class BridgeIdentity {
     /**

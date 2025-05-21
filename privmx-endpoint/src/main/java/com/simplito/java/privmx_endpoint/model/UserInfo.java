@@ -1,5 +1,11 @@
 package com.simplito.java.privmx_endpoint.model;
 
+/**
+ * Contains Information about user.
+ *
+ * @category core
+ * @group Core
+ */
 public class UserInfo {
     /**
      * User publicKey and userId

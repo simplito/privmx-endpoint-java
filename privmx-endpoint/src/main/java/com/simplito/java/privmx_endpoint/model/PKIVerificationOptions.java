@@ -1,7 +1,10 @@
 package com.simplito.java.privmx_endpoint.model;
 
 /**
- * Options used to verify if Bridge on given url is the one you expect.
+ * PrivMX Bridge server instance verification options using a PKI server.
+ *
+ * @category core
+ * @group Core
  */
 public class PKIVerificationOptions {
     /**
