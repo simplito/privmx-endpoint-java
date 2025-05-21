@@ -306,7 +306,7 @@ namespace privmx {
                     "com/simplito/java/privmx_endpoint/modules/crypto/ExtKey");
             jmethodID initExtKeyMID = ctx->GetMethodID(
                     ExtKeyCls, "<init>", "(Ljava/lang/Long;)V");
-            
+
             auto *key = new privmx::endpoint::crypto::ExtKey(extKey_c);
             return ctx->NewObject(
                     ExtKeyCls,
@@ -569,6 +569,7 @@ namespace privmx {
                     "Lcom/simplito/java/privmx_endpoint/model/FilesConfig;" //filesConfig
                     "Lcom/simplito/java/privmx_endpoint/model/ContainerPolicyWithoutItem;" //policy
                     "Ljava/lang/Long;" //statusCode
+                    "Ljava/lang/Long;" //schemaVersion
                     ")V"
             );
             jclass arrayCls = ctx->FindClass("java/util/ArrayList");
@@ -621,7 +622,8 @@ namespace privmx {
                     privateMeta,
                     filesConfig,
                     containerPolicyWithoutItem2Java(ctx, inbox_c.policy),
-                    ctx.long2jLong(inbox_c.statusCode)
+                    ctx.long2jLong(inbox_c.statusCode),
+                    ctx.long2jLong(inbox_c.schemaVersion)
             );
         }
 
@@ -640,6 +642,7 @@ namespace privmx {
                     "Ljava/lang/String;" //authorPubKey
                     "Ljava/lang/Long;" // createDate
                     "Ljava/lang/Long;" // statusCode
+                    "Ljava/lang/Long;" // schemaVersion
                     ")V"
             );
             jclass arrayCls = ctx->FindClass("java/util/ArrayList");
@@ -670,7 +673,8 @@ namespace privmx {
                     files,
                     ctx->NewStringUTF(inboxEntry_c.authorPubKey.c_str()),
                     ctx.long2jLong(inboxEntry_c.createDate),
-                    ctx.long2jLong(inboxEntry_c.statusCode)
+                    ctx.long2jLong(inboxEntry_c.statusCode),
+                    ctx.long2jLong(inboxEntry_c.schemaVersion)
             );
         }
 

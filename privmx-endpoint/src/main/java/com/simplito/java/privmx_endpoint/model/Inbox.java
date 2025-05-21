@@ -93,6 +93,11 @@ public class Inbox {
     public Long statusCode;
 
     /**
+     * Version of the Entry data structure and how it is encoded/encrypted
+     */
+    public Long schemaVersion;
+
+    /**
      * Creates instance of {@code Inbox}.
      *
      * @param inboxId              ID of the Inbox.
@@ -109,6 +114,7 @@ public class Inbox {
      * @param filesConfig          Inbox files configuration.
      * @param policy               Inbox policies.
      * @param statusCode           Status code of retrieval and decryption of the {@code Inbox}.
+     * @param schemaVersion        Version of the Entry data structure and how it is encoded/encrypted
      */
     public Inbox(
             String inboxId,
@@ -124,7 +130,8 @@ public class Inbox {
             byte[] privateMeta,
             FilesConfig filesConfig,
             ContainerPolicyWithoutItem policy,
-            Long statusCode
+            Long statusCode,
+            Long schemaVersion
     ) {
         this.inboxId = inboxId;
         this.contextId = contextId;
@@ -140,8 +147,8 @@ public class Inbox {
         this.filesConfig = filesConfig;
         this.policy = policy;
         this.statusCode = statusCode;
+        this.schemaVersion = schemaVersion;
     }
-
 
     /**
      * Creates instance of {@code Inbox} with null policy value.
@@ -176,6 +183,18 @@ public class Inbox {
             FilesConfig filesConfig,
             Long statusCode
     ) {
-        this(inboxId, contextId, createDate, creator, lastModificationDate, lastModifier, users, managers, version, publicMeta, privateMeta, filesConfig, null, statusCode);
+        this.inboxId = inboxId;
+        this.contextId = contextId;
+        this.createDate = createDate;
+        this.creator = creator;
+        this.lastModificationDate = lastModificationDate;
+        this.lastModifier = lastModifier;
+        this.users = users;
+        this.managers = managers;
+        this.version = version;
+        this.publicMeta = publicMeta;
+        this.privateMeta = privateMeta;
+        this.filesConfig = filesConfig;
+        this.statusCode = statusCode;
     }
 }
