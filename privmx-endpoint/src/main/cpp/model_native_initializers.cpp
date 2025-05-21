@@ -362,6 +362,7 @@ namespace privmx {
                     "Lcom/simplito/java/privmx_endpoint/model/ContainerPolicy;"
                     "Ljava/lang/Long;"
                     "Ljava/lang/Long;"
+                    "Ljava/lang/Long;"
                     ")V"
             );
             jclass arrayCls = ctx->FindClass("java/util/ArrayList");
@@ -413,7 +414,8 @@ namespace privmx {
                     privateMeta,
                     containerPolicy2Java(ctx, thread_c.policy),
                     ctx.long2jLong(thread_c.messagesCount),
-                    ctx.long2jLong(thread_c.statusCode)
+                    ctx.long2jLong(thread_c.statusCode),
+                    ctx.long2jLong(thread_c.schemaVersion)
             );
         }
 
