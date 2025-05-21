@@ -30,6 +30,7 @@ public class InboxEntryDeletedEventData {
 
     /**
      * Creates instance of {@code InboxEntryDeletedEventData}.
+     *
      * @param inboxId ID of the deleted entry's Inbox.
      * @param entryId ID of the deleted entry.
      */

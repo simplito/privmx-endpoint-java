@@ -57,4 +57,4 @@ public class VerificationRequest {
         this(contextId, senderId, senderPubKey, date);
         this.bridgeIdentity = bridgeIdentity;
     }
-};
+}

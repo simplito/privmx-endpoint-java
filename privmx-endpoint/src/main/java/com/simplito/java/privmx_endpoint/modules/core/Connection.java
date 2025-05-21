@@ -36,8 +36,6 @@ public class Connection implements AutoCloseable {
         this.api = api;
     }
 
-    private native void deinit() throws IllegalStateException, PrivmxException, NativeException;
-
     /**
      * Allows to set path to the SSL certificate file.
      *
@@ -145,6 +143,8 @@ public class Connection implements AutoCloseable {
      * payload: {@link Void}
      */
     public static native Connection connectPublic(String solutionId, String bridgeUrl, PKIVerificationOptions verificationOptions) throws PrivmxException, NativeException;
+
+    private native void deinit() throws IllegalStateException, PrivmxException, NativeException;
 
     /**
      * Disconnects from PrivMX Bridge server.

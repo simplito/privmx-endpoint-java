@@ -20,7 +20,11 @@ public class ContextCustomEventData {
      */
     public final byte[] data;
 
-    public ContextCustomEventData(String contextId, String userId, byte[] data) {
+    public ContextCustomEventData(
+            String contextId,
+            String userId,
+            byte[] data
+    ) {
         this.contextId = contextId;
         this.userId = userId;
         this.data = data;

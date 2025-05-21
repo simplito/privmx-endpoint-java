@@ -32,10 +32,12 @@ public class UserWithPubKey {
     /**
      * Creates instance of {@code UserWithPubKey}.
      */
-    public UserWithPubKey() {}
+    public UserWithPubKey() {
+    }
 
     /**
      * Creates instance of {@code UserWithPubKey}.
+     *
      * @param userId ID of the user.
      * @param pubKey User's public key.
      */
@@ -46,5 +48,4 @@ public class UserWithPubKey {
         this.userId = userId;
         this.pubKey = pubKey;
     }
-
 }
