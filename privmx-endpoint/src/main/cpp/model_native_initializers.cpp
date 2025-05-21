@@ -443,7 +443,14 @@ namespace privmx {
             jmethodID initMessageMID = ctx->GetMethodID(
                     messageCls,
                     "<init>",
-                    "(Lcom/simplito/java/privmx_endpoint/model/ServerMessageInfo;[B[B[BLjava/lang/String;Ljava/lang/Long;)V"
+                    "(Lcom/simplito/java/privmx_endpoint/model/ServerMessageInfo;"
+                    "[B"
+                    "[B"
+                    "[B"
+                    "Ljava/lang/String;"
+                    "Ljava/lang/Long;"
+                    "Ljava/lang/Long;"
+                    ")V"
             );
 
             jbyteArray publicMeta = ctx->NewByteArray(message_c.publicMeta.size());
@@ -466,7 +473,8 @@ namespace privmx {
                     privateMeta,
                     data,
                     ctx->NewStringUTF(message_c.authorPubKey.c_str()),
-                    ctx.long2jLong(message_c.statusCode)
+                    ctx.long2jLong(message_c.statusCode),
+                    ctx.long2jLong(message_c.schemaVersion)
             );
         }
 
