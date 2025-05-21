@@ -93,7 +93,7 @@ public class Inbox {
     public Long statusCode;
 
     /**
-     * Version of the Entry data structure and how it is encoded/encrypted
+     * Version of the Inbox data structure and how it is encoded/encrypted.
      */
     public Long schemaVersion;
 
@@ -114,7 +114,7 @@ public class Inbox {
      * @param filesConfig          Inbox files configuration.
      * @param policy               Inbox policies.
      * @param statusCode           Status code of retrieval and decryption of the {@code Inbox}.
-     * @param schemaVersion        Version of the Entry data structure and how it is encoded/encrypted
+     * @param schemaVersion        Version of the Inbox data structure and how it is encoded/encrypted
      */
     public Inbox(
             String inboxId,
