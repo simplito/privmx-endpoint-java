@@ -15,6 +15,7 @@ import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.crypto.CryptoApi;
+import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 import com.simplito.java.privmx_endpoint.modules.inbox.InboxApi;
 import com.simplito.java.privmx_endpoint.modules.store.StoreApi;
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi;
@@ -43,6 +44,11 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
      * Reference to Inbox module.
      */
     public final InboxApi inboxApi;
+
+    /**
+     * Reference to Inbox module.
+     */
+    public final EventApi eventApi;
 
     /**
      * Reference to Connection module.
@@ -78,6 +84,7 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
                 threadApi,
                 storeApi
         ) : null;
+        eventApi = enableModule.contains(Modules.CUSTOM_EVENT) ? new EventApi(connection) : null;
     }
 
     /**
@@ -90,6 +97,7 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
         if (threadApi != null) threadApi.close();
         if (storeApi != null) storeApi.close();
         if (inboxApi != null) inboxApi.close();
+        if (eventApi != null) eventApi.close();
         if (connection != null) connection.close();
     }
 }
