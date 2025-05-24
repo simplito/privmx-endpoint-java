@@ -289,6 +289,12 @@ namespace privmx {
                     ")V"
             );
 
+            jobject bridgeIdentity = nullptr;
+            if (verificationRequest_c.bridgeIdentity.has_value()) {
+                bridgeIdentity = bridgeIdentity2Java(ctx,
+                                                     verificationRequest_c.bridgeIdentity.value());
+            }
+
             return ctx->NewObject(
                     verificationRequestCls,
                     initVerificationRequestMID,
@@ -296,7 +302,7 @@ namespace privmx {
                     ctx->NewStringUTF(verificationRequest_c.senderId.c_str()),
                     ctx->NewStringUTF(verificationRequest_c.senderPubKey.c_str()),
                     ctx.long2jLong(verificationRequest_c.date),
-                    bridgeIdentity2Java(ctx, verificationRequest_c.bridgeIdentity)
+                    bridgeIdentity
             );
         }
 
