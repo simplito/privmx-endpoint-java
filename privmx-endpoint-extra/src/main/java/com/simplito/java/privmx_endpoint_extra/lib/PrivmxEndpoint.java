@@ -149,6 +149,16 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
             }
             inboxApi.subscribeForInboxEvents();
         }
+
+        if (channel.module.startsWith("context") && eventApi != null) {
+            if (channel.type != null) {
+                if (channel.instanceId != null) {
+                    eventApi.subscribeForCustomEvents(channel.instanceId, channel.type);
+                } else {
+                    System.out.println("No contextId to subscribeChannel: " + channelStr);
+                }
+            }
+        }
     }
 
     private void unsubscribeChannel(String channelStr) {
@@ -193,6 +203,16 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                 return;
             }
             inboxApi.unsubscribeFromInboxEvents();
+        }
+
+        if (channel.module.startsWith("context") && eventApi != null) {
+            if (channel.type != null) {
+                if (channel.instanceId != null) {
+                    eventApi.unsubscribeFromCustomEvents(channel.instanceId, channel.type);
+                } else {
+                    System.out.println("No contextId to unsubscribeChannel: " + channelStr);
+                }
+            }
         }
     }
 

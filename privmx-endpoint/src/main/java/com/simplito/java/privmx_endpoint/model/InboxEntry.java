@@ -58,6 +58,43 @@ public class InboxEntry {
     public Long statusCode;
 
     /**
+     * Version of the Entry data structure and how it is encoded/encrypted.
+     */
+    public Long schemaVersion;
+
+    /**
+     * Creates instance of {@code InboxEntry}.
+     *
+     * @param entryId       ID of the entry.
+     * @param inboxId       ID of the Inbox.
+     * @param data          Entry data.
+     * @param files         List of files attached to the entry.
+     * @param authorPubKey  Public key of the author of an entry.
+     * @param createDate    Inbox entry creation timestamp.
+     * @param statusCode    Status code of retrieval and decryption of the {@code Inbox} entry.
+     * @param schemaVersion Version of the Entry data structure and how it is encoded/encrypted
+     */
+    public InboxEntry(
+            String entryId,
+            String inboxId,
+            byte[] data,
+            List<File> files,
+            String authorPubKey,
+            Long createDate,
+            Long statusCode,
+            Long schemaVersion
+    ) {
+        this.entryId = entryId;
+        this.inboxId = inboxId;
+        this.data = data;
+        this.files = files;
+        this.authorPubKey = authorPubKey;
+        this.createDate = createDate;
+        this.statusCode = statusCode;
+        this.schemaVersion = schemaVersion;
+    }
+
+    /**
      * Creates instance of {@code InboxEntry}.
      *
      * @param entryId      ID of the entry.
@@ -68,6 +105,7 @@ public class InboxEntry {
      * @param createDate   Inbox entry creation timestamp.
      * @param statusCode   Status code of retrieval and decryption of the {@code Inbox} entry.
      */
+    @Deprecated
     public InboxEntry(
             String entryId,
             String inboxId,
@@ -77,12 +115,6 @@ public class InboxEntry {
             Long createDate,
             Long statusCode
     ) {
-        this.entryId = entryId;
-        this.inboxId = inboxId;
-        this.data = data;
-        this.files = files;
-        this.authorPubKey = authorPubKey;
-        this.createDate = createDate;
-        this.statusCode = statusCode;
+        this(entryId, inboxId, data, files, authorPubKey, createDate, statusCode, null);
     }
 }
