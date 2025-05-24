@@ -56,7 +56,7 @@ parsePKIVerificationOptions(JniContextUtils &ctx, jobject pkiVerificationOptions
     if ((value = (jstring) ctx->GetObjectField(pkiVerificationOptions, bridgeInstanceId)) != NULL) {
         result.bridgeInstanceId = ctx.jString2string(value);
     }
-    
+
     return result;
 }
 
@@ -305,7 +305,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     privmx::wrapper::message2Java(ctx, event_cast.data)
             );
             return nullptr;
-        } else if (thread::Events::isThreadDeletedMessageEvent(event)) {
+        } else if (thread::Events::isThreadMessageDeletedEvent(event)) {
             privmx::endpoint::thread::ThreadMessageDeletedEvent event_cast = thread::Events::extractThreadMessageDeletedEvent(
                     event);
             return initEvent(
