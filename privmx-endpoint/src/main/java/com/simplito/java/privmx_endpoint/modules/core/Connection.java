@@ -233,9 +233,10 @@ public class Connection implements AutoCloseable {
      * e.g. Developer's Application Server or PKI Server.
      *
      * @param userVerifier an implementation of the {@link UserVerifierInterface}
-     * @throws IllegalStateException thrown when instance is not connected.
+     * @throws PrivmxException thrown when method encounters an exception.
+     * @throws NativeException thrown when method encounters an unknown exception.
      */
-    public native void setUserVerifier(UserVerifierInterface userVerifier);
+    public native void setUserVerifier(UserVerifierInterface userVerifier) throws PrivmxException, NativeException;
 
     /**
      * If there is an active connection then it
