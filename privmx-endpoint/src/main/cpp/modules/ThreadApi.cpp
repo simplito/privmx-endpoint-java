@@ -159,7 +159,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listThreads(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
@@ -169,7 +170,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listThreads(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id]() {
+            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id, &query_as_json]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -189,6 +190,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listThreads(
                 query.sortOrder = ctx.jString2string(sort_order);
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
                 }
                 core::PagingList<thread::Thread>
                         threads_c = getThreadApi(ctx, thiz)->listThreads(
@@ -260,7 +264,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listMessages(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(thread_id, "Thread ID") ||
@@ -270,7 +275,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listMessages(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &thread_id, &skip, &limit, &sort_order, last_id]() {
+            [&ctx, &thiz, &thread_id, &skip, &limit, &sort_order, &last_id, &query_as_json]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -285,6 +290,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_listMessages(
                 query.sortOrder = ctx.jString2string(sort_order);
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
                 }
                 core::PagingList<thread::Message> messages_c = getThreadApi(
                         ctx,

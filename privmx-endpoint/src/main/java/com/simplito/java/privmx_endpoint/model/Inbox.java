@@ -93,6 +93,64 @@ public class Inbox {
     public Long statusCode;
 
     /**
+     * Version of the Inbox data structure and how it is encoded/encrypted.
+     */
+    public Long schemaVersion;
+
+    /**
+     * Creates instance of {@code Inbox}.
+     *
+     * @param inboxId              ID of the Inbox.
+     * @param contextId            ID of the Context.
+     * @param createDate           Inbox creation timestamp.
+     * @param creator              ID of the user who created the Inbox.
+     * @param lastModificationDate Inbox last modification timestamp.
+     * @param lastModifier         ID of the user who last modified the Inbox.
+     * @param users                List of users (their IDs) with access to the Inbox.
+     * @param managers             List of users (their IDs) with management rights.
+     * @param version              Version number (changes on updates).
+     * @param publicMeta           Inbox public metadata.
+     * @param privateMeta          Inbox private metadata.
+     * @param filesConfig          Inbox files configuration.
+     * @param policy               Inbox policies.
+     * @param statusCode           Status code of retrieval and decryption of the {@code Inbox}.
+     * @param schemaVersion        Version of the Inbox data structure and how it is encoded/encrypted.
+     */
+    public Inbox(
+            String inboxId,
+            String contextId,
+            Long createDate,
+            String creator,
+            Long lastModificationDate,
+            String lastModifier,
+            List<String> users,
+            List<String> managers,
+            Long version,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            FilesConfig filesConfig,
+            ContainerPolicyWithoutItem policy,
+            Long statusCode,
+            Long schemaVersion
+    ) {
+        this.inboxId = inboxId;
+        this.contextId = contextId;
+        this.createDate = createDate;
+        this.creator = creator;
+        this.lastModificationDate = lastModificationDate;
+        this.lastModifier = lastModifier;
+        this.users = users;
+        this.managers = managers;
+        this.version = version;
+        this.publicMeta = publicMeta;
+        this.privateMeta = privateMeta;
+        this.filesConfig = filesConfig;
+        this.policy = policy;
+        this.statusCode = statusCode;
+        this.schemaVersion = schemaVersion;
+    }
+
+    /**
      * Creates instance of {@code Inbox}.
      *
      * @param inboxId              ID of the Inbox.
@@ -110,6 +168,7 @@ public class Inbox {
      * @param policy               Inbox policies.
      * @param statusCode           Status code of retrieval and decryption of the {@code Inbox}.
      */
+    @Deprecated
     public Inbox(
             String inboxId,
             String contextId,
@@ -126,22 +185,8 @@ public class Inbox {
             ContainerPolicyWithoutItem policy,
             Long statusCode
     ) {
-        this.inboxId = inboxId;
-        this.contextId = contextId;
-        this.createDate = createDate;
-        this.creator = creator;
-        this.lastModificationDate = lastModificationDate;
-        this.lastModifier = lastModifier;
-        this.users = users;
-        this.managers = managers;
-        this.version = version;
-        this.publicMeta = publicMeta;
-        this.privateMeta = privateMeta;
-        this.filesConfig = filesConfig;
-        this.policy = policy;
-        this.statusCode = statusCode;
+        this(inboxId, contextId, createDate, creator, lastModificationDate, lastModifier, users, managers, version, publicMeta, privateMeta, filesConfig, policy, statusCode, null);
     }
-
 
     /**
      * Creates instance of {@code Inbox} with null policy value.

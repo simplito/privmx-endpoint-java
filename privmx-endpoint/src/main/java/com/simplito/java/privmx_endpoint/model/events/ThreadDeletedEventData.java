@@ -26,11 +26,12 @@ public class ThreadDeletedEventData {
 
     /**
      * Creates instance of {@code ThreadDeletedEventData}.
+     *
      * @param threadId ID of the deleted Thread.
      */
     public ThreadDeletedEventData(
             String threadId
-    ){
+    ) {
         this.threadId = threadId;
     }
 }
