@@ -3,6 +3,11 @@ package com.simplito.java.privmx_endpoint.modules.crypto;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 
+/**
+ * Class representing Extended keys and operations on it.
+ *
+ * @category crypto
+ */
 public class ExtKey implements AutoCloseable {
     static {
         System.loadLibrary("privmx-endpoint-java");
