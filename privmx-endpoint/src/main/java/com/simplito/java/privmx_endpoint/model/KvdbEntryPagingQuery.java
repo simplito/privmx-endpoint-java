@@ -1,23 +1,23 @@
 package com.simplito.java.privmx_endpoint.model;
 
-public class ItemsPagingQuery {
+public class KvdbEntryPagingQuery {
     /**
-     * number of elements to skip from result
+     * Number of elements to skip from result
      */
     long skip;
 
     /**
-     * limit of elements to return for query
+     * Limit of elements to return for query
      */
     long limit;
 
     /**
-     * order of elements in result ("asc" for ascending, "desc" for descending)
+     * Order of elements in result ("asc" for ascending, "desc" for descending)
      */
     String sortOrder;
 
     /**
-     * order of elements are sorted in result ("createDate" for createDate, "itemKey" for itemKey, "lastModificationDate" for itemKey)
+     * Order of elements are sorted in result ("createDate" for createDate, "itemKey" for itemKey, "lastModificationDate" for itemKey)
      */
     String sortBy;
 
@@ -27,22 +27,22 @@ public class ItemsPagingQuery {
     String lastKey;
 
     /**
-     * prefix of the element from which query results should have
+     * Prefix of the element from which query results should have
      */
     String prefix;
 
     /**
-     * extra query parameters in serialized JSON
+     * Extra query parameters in serialized JSON
      */
     String queryAsJson;
 
-    public ItemsPagingQuery(long skip, long limit, String sortOrder) {
+    public KvdbEntryPagingQuery(long skip, long limit, String sortOrder) {
         this.skip = skip;
         this.limit = limit;
         this.sortOrder = sortOrder;
     }
 
-    public ItemsPagingQuery(long skip, long limit, String sortOrder, String sortBy, String lastKey, String prefix, String queryAsJson) {
+    public KvdbEntryPagingQuery(long skip, long limit, String sortOrder, String sortBy, String lastKey, String prefix, String queryAsJson) {
         this.skip = skip;
         this.limit = limit;
         this.sortOrder = sortOrder;
@@ -51,4 +51,4 @@ public class ItemsPagingQuery {
         this.prefix = prefix;
         this.queryAsJson = queryAsJson;
     }
-};
+}

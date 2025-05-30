@@ -346,7 +346,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntries(JNIEnv 
                 auto items_c(
                         getKvdbApi(ctx, thiz)->listEntries(
                                 ctx.jString2string(kvdb_id),
-                                parseKvdbEntriesPagingQuery(ctx, paging_query)
+                                parseKvdbEntryPagingQuery(ctx, paging_query)
                         )
                 );
 

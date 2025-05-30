@@ -38,6 +38,6 @@ privmx::endpoint::kvdb::KvdbKeysPagingQuery
 parseKvdbKeysPagingQuery(JniContextUtils &ctx, jobject kvdbKeysPagingQuery);
 
 privmx::endpoint::kvdb::KvdbEntryPagingQuery
-parseKvdbEntriesPagingQuery(JniContextUtils &ctx, jobject kvdbEntriesPagingQuery);
+parseKvdbEntryPagingQuery(JniContextUtils &ctx, jobject kvdbEntryPagingQuery);
 
 #endif //PRIVMX_POCKET_LIB_PARSER_H

@@ -491,10 +491,10 @@ parseKvdbKeysPagingQuery(JniContextUtils &ctx, jobject keysPagingQuery) {
 }
 
 privmx::endpoint::kvdb::KvdbEntryPagingQuery
-parseKvdbEntriesPagingQuery(JniContextUtils &ctx, jobject kvdbEntriesPagingQuery) {
+ParseKvdbEntryPagingQuery(JniContextUtils &ctx, jobject kvdbEntryPagingQuery) {
     auto result = privmx::endpoint::kvdb::KvdbEntryPagingQuery();
-    if (kvdbEntriesPagingQuery == nullptr) return result;
-    jclass queryClass = ctx->GetObjectClass(kvdbEntriesPagingQuery);
+    if (kvdbEntryPagingQuery == nullptr) return result;
+    jclass queryClass = ctx->GetObjectClass(kvdbEntryPagingQuery);
     jfieldID skipFID = ctx->GetFieldID(queryClass, "skip", "Ljava/lang/Long;");
     jfieldID limitFID = ctx->GetFieldID(queryClass, "limit", "Ljava/lang/Long;");
     jfieldID sortOrderFID = ctx->GetFieldID(queryClass, "sortOrder", "Ljava/lang/String;");
@@ -504,27 +504,27 @@ parseKvdbEntriesPagingQuery(JniContextUtils &ctx, jobject kvdbEntriesPagingQuery
     jfieldID prefixFID = ctx->GetFieldID(queryClass, "prefix", "Ljava/lang/String;");
     jfieldID queryAsJsonFID = ctx->GetFieldID(queryClass, "queryAsJson", "Ljava/lang/String;");
 
-    auto skip = ctx.getObject(ctx->GetObjectField(kvdbEntriesPagingQuery, skipFID)).getLongValue();
+    auto skip = ctx.getObject(ctx->GetObjectField(kvdbEntryPagingQuery, skipFID)).getLongValue();
     auto limit = ctx.getObject(
-            ctx->GetObjectField(kvdbEntriesPagingQuery, limitFID)).getLongValue();
+            ctx->GetObjectField(kvdbEntryPagingQuery, limitFID)).getLongValue();
     auto sortOrder = ctx.jString2string(
-            (jstring) ctx->GetObjectField(kvdbEntriesPagingQuery, sortOrderFID));
+            (jstring) ctx->GetObjectField(kvdbEntryPagingQuery, sortOrderFID));
 
     result.skip = skip;
     result.limit = limit;
     result.sortOrder = sortOrder;
 
     jstring value;
-    if ((value = (jstring) ctx->GetObjectField(kvdbEntriesPagingQuery, sortByFID)) != NULL) {
+    if ((value = (jstring) ctx->GetObjectField(kvdbEntryPagingQuery, sortByFID)) != NULL) {
         result.sortBy = ctx.jString2string(value);
     }
-    if ((value = (jstring) ctx->GetObjectField(kvdbEntriesPagingQuery, lastKeyFID)) != NULL) {
+    if ((value = (jstring) ctx->GetObjectField(kvdbEntryPagingQuery, lastKeyFID)) != NULL) {
         result.lastKey = ctx.jString2string(value);
     }
-    if ((value = (jstring) ctx->GetObjectField(kvdbEntriesPagingQuery, prefixFID)) != NULL) {
+    if ((value = (jstring) ctx->GetObjectField(kvdbEntryPagingQuery, prefixFID)) != NULL) {
         result.prefix = ctx.jString2string(value);
     }
-    if ((value = (jstring) ctx->GetObjectField(kvdbEntriesPagingQuery, queryAsJsonFID)) != NULL) {
+    if ((value = (jstring) ctx->GetObjectField(kvdbEntryPagingQuery, queryAsJsonFID)) != NULL) {
         result.prefix = ctx.jString2string(value);
     }
     return result;

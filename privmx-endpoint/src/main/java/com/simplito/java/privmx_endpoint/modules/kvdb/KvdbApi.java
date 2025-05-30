@@ -1,7 +1,7 @@
 package com.simplito.java.privmx_endpoint.modules.kvdb;
 
 import com.simplito.java.privmx_endpoint.model.KvdbEntry;
-import com.simplito.java.privmx_endpoint.model.ItemsPagingQuery;
+import com.simplito.java.privmx_endpoint.model.KvdbEntryPagingQuery;
 import com.simplito.java.privmx_endpoint.model.KvdbKeysPagingQuery;
 import com.simplito.java.privmx_endpoint.model.PagingQuery;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
@@ -65,7 +65,7 @@ public class KvdbApi implements AutoCloseable {
 
     public native PagingList<String> listEntriesKeys(String kvdbId, KvdbKeysPagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
 
-    public native PagingList<KvdbEntry> listEntries(String kvdbId, ItemsPagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
+    public native PagingList<KvdbEntry> listEntries(String kvdbId, KvdbEntryPagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
 
     public native void setEntry(String kvdbId, String key, byte[] publicMeta, byte[] privateMeta, byte[] data, long version) throws PrivmxException, NativeException, IllegalStateException;
 
