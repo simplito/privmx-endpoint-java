@@ -34,10 +34,10 @@ jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core:
 
 privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery);
 
-privmx::endpoint::kvdb::KeysPagingQuery
-parseKeysPagingQuery(JniContextUtils &ctx, jobject keysPagingQuery);
+privmx::endpoint::kvdb::KvdbKeysPagingQuery
+parseKvdbKeysPagingQuery(JniContextUtils &ctx, jobject kvdbKeysPagingQuery);
 
-privmx::endpoint::kvdb::ItemsPagingQuery
-parseItemsPagingQuery(JniContextUtils &ctx, jobject itemsPagingQuery);
+privmx::endpoint::kvdb::KvdbEntryPagingQuery
+parseKvdbEntriesPagingQuery(JniContextUtils &ctx, jobject kvdbEntriesPagingQuery);
 
 #endif //PRIVMX_POCKET_LIB_PARSER_H

@@ -109,10 +109,10 @@ namespace privmx {
         //Kvdb
         jobject kvdb2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Kvdb kvdb_c);
 
-        jobject serverItemInfo2Java(JniContextUtils &ctx,
-                                    privmx::endpoint::kvdb::ServerItemInfo serverItemInfo_c);
+        jobject serverKvdbEntryInfo2Java(JniContextUtils &ctx,
+                                         privmx::endpoint::kvdb::ServerKvdbEntryInfo serverItemInfo_c);
 
-        jobject item2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Item item_c);
+        jobject kvdbEntry2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::KvdbEntry entry_c);
 
 
     } // wrapper

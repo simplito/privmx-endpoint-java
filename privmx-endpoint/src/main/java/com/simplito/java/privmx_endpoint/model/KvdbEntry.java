@@ -3,11 +3,11 @@ package com.simplito.java.privmx_endpoint.model;
 /**
  * Holds all available information about a Item.
  */
-public class Item {
+public class KvdbEntry {
     /**
      * Item information created by server
      */
-    ServerItemInfo info;
+    ServerKvdbEntryInfo info;
 
     /**
      * Item public metadata
@@ -34,7 +34,7 @@ public class Item {
      */
     long statusCode;
 
-    public Item(ServerItemInfo info, byte[] publicMeta, byte[] privateMeta, byte[] data, String authorPubKey, long statusCode) {
+    public KvdbEntry(ServerKvdbEntryInfo info, byte[] publicMeta, byte[] privateMeta, byte[] data, String authorPubKey, long statusCode) {
         this.info = info;
         this.publicMeta = publicMeta;
         this.privateMeta = privateMeta;

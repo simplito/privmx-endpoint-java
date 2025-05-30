@@ -1,6 +1,6 @@
 package com.simplito.java.privmx_endpoint.modules.kvdb;
 
-import com.simplito.java.privmx_endpoint.model.Item;
+import com.simplito.java.privmx_endpoint.model.KvdbEntry;
 import com.simplito.java.privmx_endpoint.model.ItemsPagingQuery;
 import com.simplito.java.privmx_endpoint.model.KeysPagingQuery;
 import com.simplito.java.privmx_endpoint.model.PagingQuery;
@@ -61,25 +61,25 @@ public class KvdbApi implements AutoCloseable {
 
     public native PagingList<Kvdb> listKvdbs(String contextId, PagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
 
-    public native Item getItem(String kvdbId, String key) throws PrivmxException, NativeException, IllegalStateException;
+    public native KvdbEntry getEntry(String kvdbId, String key) throws PrivmxException, NativeException, IllegalStateException;
 
-    public native PagingList<String> listItemKeys(String kvdbId, KeysPagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
+    public native PagingList<String> listEntriesKeys(String kvdbId, KeysPagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
 
-    public native PagingList<Item> listItem(String kvdbId, ItemsPagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
+    public native PagingList<KvdbEntry> listEntries(String kvdbId, ItemsPagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
 
-    public native void setItem(String kvdbId, String key, byte[] publicMeta, byte[] privateMeta, byte[] data, long version) throws PrivmxException, NativeException, IllegalStateException;
+    public native void setEntry(String kvdbId, String key, byte[] publicMeta, byte[] privateMeta, byte[] data, long version) throws PrivmxException, NativeException, IllegalStateException;
 
-    public native void deleteItem(String kvdbId, String key) throws PrivmxException, NativeException, IllegalStateException;
+    public native void deleteEntry(String kvdbId, String key) throws PrivmxException, NativeException, IllegalStateException;
 
-    public native void deleteItems(String kvdbId, List<String> keys) throws PrivmxException, NativeException, IllegalStateException;
+    public native void deleteEntries(String kvdbId, List<String> keys) throws PrivmxException, NativeException, IllegalStateException;
 
     public native void subscribeForKvdbEvents() throws PrivmxException, NativeException, IllegalStateException;
 
     public native void unsubscribeFromKvdbEvents() throws PrivmxException, NativeException, IllegalStateException;
 
-    public native void subscribeForItemEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
+    public native void subscribeForEntryEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
 
-    public native void unsubscribeFromItemEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
+    public native void unsubscribeFromKvdbEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
 
     @Override
     public void close() throws Exception {

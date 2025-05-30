@@ -856,17 +856,17 @@ namespace privmx {
                     ctx.long2jLong(kvdb_c.version),
                     publicMeta,
                     privateMeta,
-                    ctx.long2jLong(kvdb_c.items),
-                    ctx.long2jLong(kvdb_c.lastItemDate),
+                    ctx.long2jLong(kvdb_c.entries),
+                    ctx.long2jLong(kvdb_c.lastEntryDate),
                     containerPolicy2Java(ctx, kvdb_c.policy),
                     ctx.long2jLong(kvdb_c.statusCode)
             );
         }
 
-        jobject serverItemInfo2Java(JniContextUtils &ctx,
-                                    privmx::endpoint::kvdb::ServerItemInfo serverItemInfo_c) {
+        jobject serverKvdbEntryInfo2Java(JniContextUtils &ctx,
+                                         privmx::endpoint::kvdb::ServerKvdbEntryInfo serverKvdbEntryInfo_c) {
             jclass serverItemInfoCls = ctx->FindClass(
-                    "com/simplito/java/privmx_endpoint/model/ServerItemInfo");
+                    "com/simplito/java/privmx_endpoint/model/ServerKvdbEntryInfo");
             jmethodID initServerItemInfoMID = ctx->GetMethodID(
                     serverItemInfoCls,
                     "<init>",
@@ -879,21 +879,22 @@ namespace privmx {
             return ctx->NewObject(
                     serverItemInfoCls,
                     initServerItemInfoMID,
-                    ctx->NewStringUTF(serverItemInfo_c.kvdbId.c_str()),
-                    ctx->NewStringUTF(serverItemInfo_c.key.c_str()),
-                    ctx.long2jLong(serverItemInfo_c.createDate),
-                    ctx->NewStringUTF(serverItemInfo_c.author.c_str())
+                    ctx->NewStringUTF(serverKvdbEntryInfo_c.kvdbId.c_str()),
+                    ctx->NewStringUTF(serverKvdbEntryInfo_c.key.c_str()),
+                    ctx.long2jLong(serverKvdbEntryInfo_c.createDate),
+                    ctx->NewStringUTF(serverKvdbEntryInfo_c.author.c_str())
             );
         }
 
-        jobject item2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Item item_c) {
+        jobject
+        kvdbEntry2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::KvdbEntry kvdbEntry_c) {
             jclass itemCls = ctx->FindClass(
-                    "com/simplito/java/privmx_endpoint/model/Item");
+                    "com/simplito/java/privmx_endpoint/model/KvdbEntry");
             jmethodID initItemMID = ctx->GetMethodID(
                     itemCls,
                     "<init>",
                     "("
-                    "Lcom/simplito/java/privmx_endpoint/model/ServerItemInfo;"
+                    "Lcom/simplito/java/privmx_endpoint/model/ServerKvdbEntryInfo;"
                     "[B"
                     "[B"
                     "[B"
@@ -902,26 +903,26 @@ namespace privmx {
                     ")V"
             );
 
-            jbyteArray publicMeta = ctx->NewByteArray(item_c.publicMeta.size());
-            jbyteArray privateMeta = ctx->NewByteArray(item_c.privateMeta.size());
-            jbyteArray data = ctx->NewByteArray(item_c.data.size());
+            jbyteArray publicMeta = ctx->NewByteArray(kvdbEntry_c.publicMeta.size());
+            jbyteArray privateMeta = ctx->NewByteArray(kvdbEntry_c.privateMeta.size());
+            jbyteArray data = ctx->NewByteArray(kvdbEntry_c.data.size());
 
-            ctx->SetByteArrayRegion(publicMeta, 0, item_c.publicMeta.size(),
-                                    (jbyte *) item_c.publicMeta.data());
-            ctx->SetByteArrayRegion(privateMeta, 0, item_c.privateMeta.size(),
-                                    (jbyte *) item_c.privateMeta.data());
-            ctx->SetByteArrayRegion(data, 0, item_c.data.size(),
-                                    (jbyte *) item_c.data.data());
+            ctx->SetByteArrayRegion(publicMeta, 0, kvdbEntry_c.publicMeta.size(),
+                                    (jbyte *) kvdbEntry_c.publicMeta.data());
+            ctx->SetByteArrayRegion(privateMeta, 0, kvdbEntry_c.privateMeta.size(),
+                                    (jbyte *) kvdbEntry_c.privateMeta.data());
+            ctx->SetByteArrayRegion(data, 0, kvdbEntry_c.data.size(),
+                                    (jbyte *) kvdbEntry_c.data.data());
 
             return ctx->NewObject(
                     itemCls,
                     initItemMID,
-                    serverItemInfo2Java(ctx, item_c.info),
+                    serverKvdbEntryInfo2Java(ctx, kvdbEntry_c.info),
                     publicMeta,
                     privateMeta,
                     data,
-                    ctx->NewStringUTF(item_c.authorPubKey.c_str()),
-                    ctx.long2jLong(item_c.statusCode)
+                    ctx->NewStringUTF(kvdbEntry_c.authorPubKey.c_str()),
+                    ctx.long2jLong(kvdbEntry_c.statusCode)
             );
         }
 
