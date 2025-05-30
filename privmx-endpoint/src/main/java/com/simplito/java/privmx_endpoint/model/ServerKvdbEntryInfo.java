@@ -1,7 +1,9 @@
 package com.simplito.java.privmx_endpoint.model;
 
 /**
- * Holds message's information created by server.
+ * Holds Kvdb entry's information created by the server.
+ *
+ * @category kvdb
  */
 public class ServerKvdbEntryInfo {
     /**
@@ -10,24 +12,32 @@ public class ServerKvdbEntryInfo {
     String kvdbId;
 
     /**
-     * Key of Item
+     * Kvdb entry's key
      */
     String key;
 
     /**
-     * Item's creation timestamp
+     * Entry's creation timestamp
      */
     long createDate;
 
     /**
-     * ID of the user who created the message
+     * ID of the user who created the entry
      */
     String author;
 
+    /**
+     * Creates instance of {@code ServerKvdbEntryInfo}.
+     *
+     * @param kvdbId     ID of the Kvdb
+     * @param key        Kvdb entry's key
+     * @param createDate Entry's creation timestamp
+     * @param author     ID of the user who created the entry
+     */
     public ServerKvdbEntryInfo(String kvdbId, String key, long createDate, String author) {
         this.kvdbId = kvdbId;
         this.key = key;
         this.createDate = createDate;
         this.author = author;
     }
-};
+}
