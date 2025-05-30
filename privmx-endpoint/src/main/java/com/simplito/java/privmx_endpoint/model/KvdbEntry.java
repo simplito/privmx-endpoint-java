@@ -47,7 +47,7 @@ public class KvdbEntry {
     long schemaVersion;
 
     /**
-     * Creates instance of {@code Kvdb}.
+     * Creates instance of {@code KvdbEntry}.
      *
      * @param info          Entry information created by server
      * @param publicMeta    Entry public metadata
