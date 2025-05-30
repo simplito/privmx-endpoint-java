@@ -19,7 +19,7 @@ public class Utils {
      * Splits a string using the provided delimiter.
      *
      * @param data      the string to be split
-     * @param delimiter
+     * @param delimiter string which will be split
      * @return split parts
      */
     public static native List<String> split(String data, String delimiter);
