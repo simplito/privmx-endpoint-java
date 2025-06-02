@@ -90,6 +90,9 @@ set_target_properties(privmxendpointthread PROPERTIES IMPORTED_LOCATION ${CMAKE_
 add_library(privmxendpointinbox SHARED IMPORTED GLOBAL)
 set_target_properties(privmxendpointinbox PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/libs/${CMAKE_DESTINATION_OS}/${CMAKE_DESTINATION_ARCHITECTURE}/lib/libprivmxendpointinbox.${file_extension})
 
+add_library(privmxendpointkvdb SHARED IMPORTED GLOBAL)
+set_target_properties(privmxendpointkvdb PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/libs/${CMAKE_DESTINATION_OS}/${CMAKE_DESTINATION_ARCHITECTURE}/lib/libprivmxendpointkvdb.${file_extension})
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/include ${JAVA_HOME}/include ${JAVA_HOME}/include/darwin)
 
 add_library(${CMAKE_PROJECT_NAME} SHARED
@@ -113,7 +116,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 target_link_libraries(${CMAKE_PROJECT_NAME} ssl crypto)
 target_link_libraries(${CMAKE_PROJECT_NAME} gmp)
 target_link_libraries(${CMAKE_PROJECT_NAME} PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto)
-target_link_libraries(${CMAKE_PROJECT_NAME} Pson libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointthread privmxendpointinbox)
+target_link_libraries(${CMAKE_PROJECT_NAME} Pson libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointthread privmxendpointinbox privmxendpointkvdb)
 message(DEBUG "Install to ${CMAKE_INSTALL_PREFIX}")
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(IMPORTED_RUNTIME_ARTIFACTS crypto ssl gmp PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto Pson libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointthread privmxendpointinbox DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(IMPORTED_RUNTIME_ARTIFACTS crypto ssl gmp PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto Pson libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointthread privmxendpointinbox privmxendpointkvdb DESTINATION ${CMAKE_INSTALL_PREFIX})
