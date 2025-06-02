@@ -491,7 +491,7 @@ parseKvdbKeysPagingQuery(JniContextUtils &ctx, jobject keysPagingQuery) {
 }
 
 privmx::endpoint::kvdb::KvdbEntryPagingQuery
-ParseKvdbEntryPagingQuery(JniContextUtils &ctx, jobject kvdbEntryPagingQuery) {
+parseKvdbEntryPagingQuery(JniContextUtils &ctx, jobject kvdbEntryPagingQuery) {
     auto result = privmx::endpoint::kvdb::KvdbEntryPagingQuery();
     if (kvdbEntryPagingQuery == nullptr) return result;
     jclass queryClass = ctx->GetObjectClass(kvdbEntryPagingQuery);
