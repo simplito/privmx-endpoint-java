@@ -32,5 +32,12 @@ privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobj
 
 jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event);
 
+privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery);
+
+privmx::endpoint::kvdb::KvdbKeysPagingQuery
+parseKvdbKeysPagingQuery(JniContextUtils &ctx, jobject kvdbKeysPagingQuery);
+
+privmx::endpoint::kvdb::KvdbEntryPagingQuery
+parseKvdbEntryPagingQuery(JniContextUtils &ctx, jobject kvdbEntryPagingQuery);
 
 #endif //PRIVMX_POCKET_LIB_PARSER_H
