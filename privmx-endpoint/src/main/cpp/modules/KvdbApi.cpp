@@ -245,6 +245,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listKvdbs(
                         array
                 );
             });
+    return result;
 }
 
 extern "C" JNIEXPORT jobject JNICALL
