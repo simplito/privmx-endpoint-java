@@ -194,7 +194,7 @@ public class Store {
             Long filesCount,
             Long statusCode
     ) {
-        this(storeId, contextId, createDate, creator, lastModificationDate, lastFileDate, lastModifier, users, managers, version, publicMeta, privateMeta, null, filesCount, statusCode, null);
+        this(storeId, contextId, createDate, creator, lastModificationDate, lastFileDate, lastModifier, users, managers, version, publicMeta, privateMeta, policy, filesCount, statusCode, null);
 
     }
 

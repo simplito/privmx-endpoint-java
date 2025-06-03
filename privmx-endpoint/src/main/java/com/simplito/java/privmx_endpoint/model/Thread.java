@@ -194,7 +194,7 @@ public class Thread {
             Long messagesCount,
             Long statusCode
     ) {
-        this(contextId, threadId, createDate, creator, lastModificationDate, lastModifier, users, managers, version, lastMsgDate, publicMeta, privateMeta, null, messagesCount, statusCode, null);
+        this(contextId, threadId, createDate, creator, lastModificationDate, lastModifier, users, managers, version, lastMsgDate, publicMeta, privateMeta, policy, messagesCount, statusCode, null);
     }
 
     /**
