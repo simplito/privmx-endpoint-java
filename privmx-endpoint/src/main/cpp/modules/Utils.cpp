@@ -9,9 +9,11 @@
 // Utils
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_trim(JNIEnv *env,
-                                                                      jclass clazz,
-                                                                      jstring data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_trim(
+        JNIEnv *env,
+        jclass clazz,
+        jstring data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data, "Data")) return nullptr;
 
@@ -32,10 +34,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_trim(JNIEnv *en
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_split(JNIEnv *env,
-                                                                       jclass clazz,
-                                                                       jstring data,
-                                                                       jstring delimiter) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_split(
+        JNIEnv *env,
+        jclass clazz,
+        jstring data,
+        jstring delimiter
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data, "Data") ||
         ctx.nullCheck(delimiter, "Delimeter"))
@@ -75,9 +79,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_split(JNIEnv *e
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_ltrim(JNIEnv *env,
-                                                                       jclass clazz,
-                                                                       jstring data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_ltrim(
+        JNIEnv *env,
+        jclass clazz,
+        jstring data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data, "Data")) return nullptr;
     jstring result;
@@ -99,9 +105,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_ltrim(JNIEnv *e
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_rtrim(JNIEnv *env,
-                                                                       jclass clazz,
-                                                                       jstring data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_rtrim(
+        JNIEnv *env,
+        jclass clazz,
+        jstring data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data, "Data")) return nullptr;
     jstring result;
@@ -125,9 +133,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Utils_rtrim(JNIEnv *e
 // Hex
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Hex_encode(JNIEnv *env,
-                                                                      jclass clazz,
-                                                                      jbyteArray data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Hex_encode(
+        JNIEnv *env,
+        jclass clazz,
+        jbyteArray data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data, "Data")) return nullptr;
 
@@ -149,9 +159,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Hex_encode(JNIEnv *en
 
 extern "C"
 JNIEXPORT jbyteArray JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Hex_decode(JNIEnv *env,
-                                                                      jclass clazz,
-                                                                      jstring hex_data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Hex_decode(
+        JNIEnv *env,
+        jclass clazz,
+        jstring hex_data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(hex_data, "Data")) return nullptr;
 
@@ -175,8 +187,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Hex_decode(JNIEnv *en
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Hex_is(JNIEnv *env, jclass clazz,
-                                                                  jstring data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Hex_is(
+        JNIEnv *env, jclass clazz,
+        jstring data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data, "Data")) return JNI_FALSE;
     jboolean result;
@@ -199,9 +213,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Hex_is(JNIEnv *env, j
 // Base32
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base32_encode(JNIEnv *env,
-                                                                         jclass clazz,
-                                                                         jbyteArray data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base32_encode(
+        JNIEnv *env,
+        jclass clazz,
+        jbyteArray data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data, "Data")) return nullptr;
 
@@ -223,9 +239,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base32_encode(JNIEnv 
 
 extern "C"
 JNIEXPORT jbyteArray JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base32_decode(JNIEnv *env,
-                                                                         jclass clazz,
-                                                                         jstring base32_data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base32_decode(
+        JNIEnv *env,
+        jclass clazz,
+        jstring base32_data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(base32_data, "Data")) return nullptr;
 
@@ -249,9 +267,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base32_decode(JNIEnv 
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base32_is(JNIEnv *env,
-                                                                     jclass clazz,
-                                                                     jstring data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base32_is(
+        JNIEnv *env,
+        jclass clazz,
+        jstring data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data, "Data")) return JNI_FALSE;
     jboolean result;
@@ -274,9 +294,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base32_is(JNIEnv *env
 // Base64
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base64_encode(JNIEnv *env,
-                                                                         jclass clazz,
-                                                                         jbyteArray data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base64_encode(
+        JNIEnv *env,
+        jclass clazz,
+        jbyteArray data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data, "Data")) return nullptr;
 
@@ -298,9 +320,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base64_encode(JNIEnv 
 
 extern "C"
 JNIEXPORT jbyteArray JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base64_decode(JNIEnv *env,
-                                                                         jclass clazz,
-                                                                         jstring base64_data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base64_decode(
+        JNIEnv *env,
+        jclass clazz,
+        jstring base64_data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(base64_data, "Data")) return nullptr;
 
@@ -324,9 +348,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base64_decode(JNIEnv 
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base64_is(JNIEnv *env,
-                                                                     jclass clazz,
-                                                                     jstring data) {
+Java_com_simplito_java_privmx_1endpoint_modules_core_utils_Base64_is(
+        JNIEnv *env,
+        jclass clazz,
+        jstring data
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data, "Data")) return JNI_FALSE;
     jboolean result;

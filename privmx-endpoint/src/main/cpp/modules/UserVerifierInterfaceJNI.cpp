@@ -11,8 +11,10 @@
 #include <iostream>
 #include <memory>
 
-privmx::wrapper::UserVerifierInterfaceJNI::UserVerifierInterfaceJNI(JNIEnv *env,
-                                                                    jobject juserVerifierInterface) {
+privmx::wrapper::UserVerifierInterfaceJNI::UserVerifierInterfaceJNI(
+        JNIEnv *env,
+        jobject juserVerifierInterface
+) {
     jclass juserVerifierInterfaceClass = env->FindClass(
             "com/simplito/java/privmx_endpoint/modules/core/UserVerifierInterface");
     javaVM = nullptr;
@@ -28,11 +30,13 @@ privmx::wrapper::UserVerifierInterfaceJNI::UserVerifierInterfaceJNI(JNIEnv *env,
 
 std::vector<bool>
 privmx::wrapper::UserVerifierInterfaceJNI::verify(
-        const std::vector<privmx::endpoint::core::VerificationRequest> &request) {
+        const std::vector<privmx::endpoint::core::VerificationRequest> &request
+) {
     JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
             javaVM,
             jni::getPrivmxCallbackThreadName());
     JniContextUtils ctx(env);
+    ctx.setClassLoaderFromObject(juserVerifierInterface);
     jclass juserVerifierInterfaceClass = env->GetObjectClass(juserVerifierInterface);
     jmethodID jverifyMID = env->GetMethodID(
             juserVerifierInterfaceClass,
@@ -50,7 +54,6 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
             "add",
             "(Ljava/lang/Object;)Z");
 
-    ctx.setClassLoaderFromObject(juserVerifierInterface);
 
     for (auto &request_c: request) {
         env->CallBooleanMethod(jverificationRequestArray,

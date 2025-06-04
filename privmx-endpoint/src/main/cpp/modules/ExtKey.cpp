@@ -31,7 +31,10 @@ jobject initExtKey(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey extKey
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_deinit(JNIEnv *env, jobject thiz) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_deinit(
+        JNIEnv *env,
+        jobject thiz
+) {
     try {
         JniContextUtils ctx(env);
         auto key = getExtKey(ctx, thiz);
@@ -49,8 +52,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_deinit(JNIEnv *env
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_fromSeed(JNIEnv *env, jclass clazz,
-                                                                       jbyteArray seed) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_fromSeed(
+        JNIEnv *env,
+        jclass clazz,
+        jbyteArray seed
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(seed, "Seed")) return nullptr;
 
@@ -72,8 +78,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_fromSeed(JNIEnv *e
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_fromBase58(JNIEnv *env, jclass clazz,
-                                                                         jstring base58) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_fromBase58(
+        JNIEnv *env,
+        jclass clazz,
+        jstring base58
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(base58, "Base58")) return nullptr;
 
@@ -94,8 +103,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_fromBase58(JNIEnv 
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_generateRandom(JNIEnv *env,
-                                                                             jclass clazz) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_generateRandom(
+        JNIEnv *env,
+        jclass clazz
+) {
     JniContextUtils ctx(env);
 
     jobject result;
@@ -115,8 +126,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_generateRandom(JNI
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_derive(JNIEnv *env, jobject thiz,
-                                                                     jint index) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_derive(
+        JNIEnv *env,
+        jobject thiz,
+        jint index
+) {
     JniContextUtils ctx(env);
 
     jobject result;
@@ -137,9 +151,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_derive(JNIEnv *env
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_deriveHardened(JNIEnv *env,
-                                                                             jobject thiz,
-                                                                             jint index) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_deriveHardened(
+        JNIEnv *env,
+        jobject thiz,
+        jint index
+) {
     JniContextUtils ctx(env);
 
     jobject result;
@@ -160,8 +176,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_deriveHardened(JNI
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivatePartAsBase58(JNIEnv *env,
-                                                                                     jobject thiz) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivatePartAsBase58(
+        JNIEnv *env,
+        jobject thiz
+) {
     JniContextUtils ctx(env);
 
     jstring result;
@@ -181,8 +199,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivatePartAsBa
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicPartAsBase58(JNIEnv *env,
-                                                                                    jobject thiz) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicPartAsBase58(
+        JNIEnv *env,
+        jobject thiz
+) {
     JniContextUtils ctx(env);
 
     jstring result;
@@ -202,8 +222,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicPartAsBas
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivateKey(JNIEnv *env,
-                                                                            jobject thiz) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivateKey(
+        JNIEnv *env,
+        jobject thiz
+) {
     JniContextUtils ctx(env);
 
     jstring result;
@@ -223,8 +245,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivateKey(JNIE
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicKey(JNIEnv *env,
-                                                                           jobject thiz) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicKey(
+        JNIEnv *env,
+        jobject thiz
+) {
     JniContextUtils ctx(env);
 
     jstring result;
@@ -244,8 +268,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicKey(JNIEn
 
 extern "C"
 JNIEXPORT jbyteArray JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivateEncKey(JNIEnv *env,
-                                                                               jobject thiz) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivateEncKey(
+        JNIEnv *env,
+        jobject thiz
+) {
     JniContextUtils ctx(env);
 
     jbyteArray result;
@@ -270,7 +296,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivateEncKey(J
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicKeyAsBase58Address(
-        JNIEnv *env, jobject thiz) {
+        JNIEnv *env,
+        jobject thiz
+) {
     JniContextUtils ctx(env);
 
     jstring result;
@@ -289,8 +317,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicKeyAsBase
 
 extern "C"
 JNIEXPORT jbyteArray JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getChainCode(JNIEnv *env,
-                                                                           jobject thiz) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getChainCode(
+        JNIEnv *env,
+        jobject thiz
+) {
     JniContextUtils ctx(env);
 
     jbyteArray result;
@@ -314,7 +344,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getChainCode(JNIEn
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_verifyCompactSignatureWithHash(
-        JNIEnv *env, jobject thiz, jbyteArray message, jbyteArray signature) {
+        JNIEnv *env,
+        jobject thiz,
+        jbyteArray message,
+        jbyteArray signature
+) {
 
     JniContextUtils ctx(env);
 
@@ -342,7 +376,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_verifyCompactSigna
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_isPrivate(JNIEnv *env, jobject thiz) {
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_isPrivate(
+        JNIEnv *env,
+        jobject thiz
+) {
     JniContextUtils ctx(env);
 
     jboolean result;
