@@ -37,7 +37,7 @@ public class VerificationRequest {
      * @param senderPubKey Public key of the sender
      * @param date         Creation date of the data
      */
-    public VerificationRequest(String contextId, String senderId, String senderPubKey, long date) {
+    public VerificationRequest(String contextId, String senderId, String senderPubKey, Long date) {
         this.contextId = contextId;
         this.senderId = senderId;
         this.senderPubKey = senderPubKey;
@@ -53,7 +53,7 @@ public class VerificationRequest {
      * @param date           Creation date of the data
      * @param bridgeIdentity Bridge Identity
      */
-    public VerificationRequest(String contextId, String senderId, String senderPubKey, long date, BridgeIdentity bridgeIdentity) {
+    public VerificationRequest(String contextId, String senderId, String senderPubKey, Long date, BridgeIdentity bridgeIdentity) {
         this(contextId, senderId, senderPubKey, date);
         this.bridgeIdentity = bridgeIdentity;
     }
