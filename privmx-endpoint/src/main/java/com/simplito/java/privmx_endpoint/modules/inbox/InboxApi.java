@@ -98,8 +98,8 @@ public class InboxApi implements AutoCloseable {
      * Creates a new Inbox.
      *
      * @param contextId   ID of the Context of the new Inbox
-     * @param users       vector of {@link UserWithPubKey} structs which indicates who will have access to the created Inbox
-     * @param managers    lit of {@link UserWithPubKey} structs which indicates who will have access (and management rights) to
+     * @param users       list of {@link UserWithPubKey} structs which indicates who will have access to the created Inbox
+     * @param managers    list of {@link UserWithPubKey} structs which indicates who will have access (and management rights) to
      *                    the created Inbox
      * @param publicMeta  public (unencrypted) metadata
      * @param privateMeta private (encrypted) metadata
