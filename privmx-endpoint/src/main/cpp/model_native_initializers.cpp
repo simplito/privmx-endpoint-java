@@ -262,12 +262,22 @@ namespace privmx {
                     ")V"
             );
 
+            jstring pubKey_c = nullptr;
+            if (bridgeIdentity_c.pubKey.has_value()) {
+                pubKey_c = ctx->NewStringUTF(bridgeIdentity_c.pubKey.value().c_str());
+            }
+
+            jstring instanceId_c = nullptr;
+            if (bridgeIdentity_c.instanceId.has_value()) {
+                instanceId_c = ctx->NewStringUTF(bridgeIdentity_c.instanceId.value().c_str());
+            }
+
             return ctx->NewObject(
                     bridgeIdentityCls,
                     initBridgeIdentityMID,
                     ctx->NewStringUTF(bridgeIdentity_c.url.c_str()),
-                    ctx->NewStringUTF(bridgeIdentity_c.pubKey->c_str()),
-                    ctx->NewStringUTF(bridgeIdentity_c.instanceId->c_str())
+                    pubKey_c,
+                    instanceId_c
             );
         }
 
@@ -285,7 +295,7 @@ namespace privmx {
                     "Ljava/lang/String;"
                     "Ljava/lang/String;"
                     "Ljava/lang/Long;"
-                    "Lcom/simplito/java/privmx_endpoint/model/BridgeIdentity"
+                    "Lcom/simplito/java/privmx_endpoint/model/BridgeIdentity;"
                     ")V"
             );
 
@@ -519,8 +529,8 @@ namespace privmx {
                     "[B" //privateMeta
                     "Lcom/simplito/java/privmx_endpoint/model/ContainerPolicy;" //policy
                     "Ljava/lang/Long;"  //filesCount
-                    "Ljava/lang/Long;"
-                    "Ljava/lang/Long;"
+                    "Ljava/lang/Long;"  //statusCode
+                    "Ljava/lang/Long;"  //schemaVersion
                     ")V"
             );
 
