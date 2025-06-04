@@ -8,7 +8,7 @@ public class Base64 {
     /**
      * Encodes byte array to string in Base64 format.
      *
-     * @param data as byte array to encode
+     * @param data byte array to encode
      * @return string in Base64 format
      */
     public static native String encode(byte[] data);

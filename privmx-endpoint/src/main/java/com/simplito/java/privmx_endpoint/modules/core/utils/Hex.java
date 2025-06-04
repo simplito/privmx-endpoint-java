@@ -11,7 +11,7 @@ public class Hex {
     /**
      * Encodes byte array to a string in Hex format.
      *
-     * @param data as byte array to encode
+     * @param data byte array to encode
      * @return string in Hex format
      */
     public static native String encode(byte[] data);

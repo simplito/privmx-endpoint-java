@@ -8,7 +8,7 @@ public class Base32 {
     /**
      * Encodes byte array to string in Base32 format.
      *
-     * @param data as byte array to encode
+     * @param data byte array to encode
      * @return string in Base32 format
      */
     public static native String encode(byte[] data);
