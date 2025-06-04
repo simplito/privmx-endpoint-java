@@ -42,8 +42,6 @@ public class ExtKey implements AutoCloseable {
      */
     public static native ExtKey generateRandom() throws PrivmxException, NativeException;
 
-    private native void deinit() throws IllegalStateException, PrivmxException, NativeException;
-
     /**
      * Generates child ExtKey from a current ExtKey using BIP32.
      *
@@ -124,6 +122,8 @@ public class ExtKey implements AutoCloseable {
      * @return returns true if ExtKey is private
      */
     public native boolean isPrivate() throws IllegalStateException, PrivmxException, NativeException;
+    
+    private native void deinit() throws IllegalStateException, PrivmxException, NativeException;
 
     @Override
     public void close() throws Exception {
