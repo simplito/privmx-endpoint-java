@@ -177,6 +177,7 @@ public class Thread {
      * @param messagesCount        Thread's private metadata.
      * @param statusCode           Status code of retrieval and decryption of the {@code Thread}.
      */
+    @Deprecated
     public Thread(
             String contextId,
             String threadId,
