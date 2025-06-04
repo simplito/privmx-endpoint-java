@@ -1,28 +1,31 @@
-package com.simplito.java.privmx_endpoint.modules.utils;
+package com.simplito.java.privmx_endpoint.modules.core.utils;
 
-public class Base32 {
+public class Hex {
     static {
         System.loadLibrary("privmx-endpoint-java");
     }
 
+    public Hex() {
+    }
+
     /**
-     * Encodes byte array to string in Base32 format.
+     * Encodes byte array to a string in Hex format.
      *
      * @param data as byte array to encode
-     * @return string in Base32 format
+     * @return string in Hex format
      */
     public static native String encode(byte[] data);
 
     /**
-     * Decodes string in Base32 to byte array.
+     * Decodes string in Hex to byte array.
      *
-     * @param base32_data string to decode
+     * @param hex_data string to decode
      * @return byte array with decoded data
      */
-    public static native byte[] decode(String base32_data);
+    public static native byte[] decode(String hex_data);
 
     /**
-     * Checks if given string is in Base32 format.
+     * Checks if given string is in Hex format.
      *
      * @param data string to check
      * @return data check result

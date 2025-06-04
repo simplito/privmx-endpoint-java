@@ -1,4 +1,4 @@
-package com.simplito.java.privmx_endpoint.modules.utils;
+package com.simplito.java.privmx_endpoint.modules.core.utils;
 
 import java.util.List;
 
