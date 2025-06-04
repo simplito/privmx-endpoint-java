@@ -11,15 +11,15 @@ public class BIP39 {
     /**
      * BIP-39 mnemonic.
      */
-    String mnemonic;
+    public String mnemonic;
     /**
      * Ecc Key.
      */
-    ExtKey extKey;
+    public ExtKey extKey;
     /**
      * BIP-39 entropy.
      */
-    byte[] entropy;
+    public byte[] entropy;
 
     /**
      * Creates instance of {@code BIP39}.
