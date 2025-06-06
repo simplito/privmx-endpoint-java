@@ -13,6 +13,7 @@
 #include <privmx/endpoint/core/Connection.hpp>
 #include "privmx/endpoint/core/Config.hpp"
 #include <privmx/endpoint/core/Exception.hpp>
+#include "UserVerifierInterfaceJNI.h"
 #include "Connection.h"
 #include "../utils.hpp"
 #include "../parser.h"
@@ -53,7 +54,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContexts(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(sort_order, "Sort Order")) {
@@ -62,13 +64,16 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContexts(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &env, &thiz, &skip, &limit, &sort_order, &last_id]() {
+            [&ctx, &env, &thiz, &skip, &limit, &sort_order, &last_id, &query_as_json]() {
                 auto query = privmx::endpoint::core::PagingQuery();
                 query.skip = skip;
                 query.limit = limit;
                 query.sortOrder = ctx.jString2string(sort_order);
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
                 }
                 privmx::endpoint::core::PagingList<privmx::endpoint::core::Context> infos = getConnection(
                         env, thiz)->listContexts(query);
@@ -134,7 +139,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
         jclass clazz,
         jstring user_priv_key,
         jstring solution_id,
-        jstring bridge_url
+        jstring bridge_url,
+        jobject pki_verification_options
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(user_priv_key, "User Private Key") ||
@@ -143,17 +149,29 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connect(
         return nullptr;
     }
     jobject result;
+
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &clazz, &user_priv_key, &solution_id, &bridge_url]() {
+            [&ctx, &clazz, &user_priv_key, &solution_id, &bridge_url, &pki_verification_options]() {
                 jmethodID initMID = ctx->GetMethodID(
                         clazz,
                         "<init>",
                         "(Ljava/lang/Long;)V");
-                privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connect(
-                        ctx.jString2string(user_priv_key),
-                        ctx.jString2string(solution_id),
-                        ctx.jString2string(bridge_url));
+
+                privmx::endpoint::core::Connection connection;
+                if (pki_verification_options != nullptr) {
+                    connection = privmx::endpoint::core::Connection::connect(
+                            ctx.jString2string(user_priv_key),
+                            ctx.jString2string(solution_id),
+                            ctx.jString2string(bridge_url),
+                            parsePKIVerificationOptions(ctx, pki_verification_options));
+                } else {
+                    connection = privmx::endpoint::core::Connection::connect(
+                            ctx.jString2string(user_priv_key),
+                            ctx.jString2string(solution_id),
+                            ctx.jString2string(bridge_url));
+                }
+
                 auto *api = new privmx::endpoint::core::Connection();
                 *api = connection;
                 jobject result = ctx->NewObject(
@@ -172,7 +190,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
         JNIEnv *env,
         jclass clazz,
         jstring solution_id,
-        jstring bridge_url
+        jstring bridge_url,
+        jobject pki_verification_options
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(solution_id, "Solution ID") ||
@@ -182,14 +201,24 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_connectPublic(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &clazz, &solution_id, &bridge_url]() {
+            [&ctx, &clazz, &solution_id, &bridge_url, &pki_verification_options]() {
                 jmethodID initMID = ctx->GetMethodID(
                         clazz,
                         "<init>",
                         "(Ljava/lang/Long;)V");
-                privmx::endpoint::core::Connection connection = privmx::endpoint::core::Connection::connectPublic(
-                        ctx.jString2string(solution_id),
-                        ctx.jString2string(bridge_url));
+
+                privmx::endpoint::core::Connection connection;
+                if (pki_verification_options != nullptr) {
+                    connection = privmx::endpoint::core::Connection::connectPublic(
+                            ctx.jString2string(solution_id),
+                            ctx.jString2string(bridge_url),
+                            parsePKIVerificationOptions(ctx, pki_verification_options));
+                } else {
+                    connection = privmx::endpoint::core::Connection::connectPublic(
+                            ctx.jString2string(solution_id),
+                            ctx.jString2string(bridge_url));
+                }
+
                 auto *api = new privmx::endpoint::core::Connection();
                 *api = connection;
                 jobject result = ctx->NewObject(
@@ -215,6 +244,68 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_getConnectionId(
     ctx.callResultEndpointApi<jobject>(
             &result, [&ctx, &env, &thiz]() {
                 return ctx.long2jLong((jlong) getConnection(env, thiz)->getConnectionId());
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_setUserVerifier(
+        JNIEnv *env,
+        jobject thiz,
+        jobject userVerifierInterface
+) {
+    JniContextUtils ctx(env);
+    auto userVerifier = std::make_shared<privmx::wrapper::UserVerifierInterfaceJNI>(
+            env, userVerifierInterface
+    );
+
+    ctx.callVoidEndpointApi([&env, &thiz, &userVerifier]() {
+        getConnection(env, thiz)->setUserVerifier(userVerifier);
+    });
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_getContextUsers(
+        JNIEnv *env,
+        jobject thiz,
+        jstring context_id
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(context_id, "Context ID")) {
+        return nullptr;
+    }
+
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &env, &thiz, &context_id]() {
+
+                jclass arrayListCls = env->FindClass("java/util/ArrayList");
+                jmethodID initMID = env->GetMethodID(arrayListCls, "<init>", "()V");
+                jmethodID addToListMID = env->GetMethodID(arrayListCls, "add",
+                                                          "(Ljava/lang/Object;)Z");
+                jobject array = env->NewObject(arrayListCls, initMID);
+
+
+                std::vector<privmx::endpoint::core::UserInfo> users = getConnection(
+                        env,
+                        thiz
+                )->getContextUsers(ctx.jString2string(context_id));
+
+                for (auto &user: users) {
+                    env->CallBooleanMethod(
+                            array,
+                            addToListMID,
+                            privmx::wrapper::userInfo2Java(ctx, user)
+                    );
+                }
+
+                return array;
             });
     if (ctx->ExceptionCheck()) {
         return nullptr;
