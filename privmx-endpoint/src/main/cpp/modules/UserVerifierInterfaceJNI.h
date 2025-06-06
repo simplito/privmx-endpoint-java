@@ -18,6 +18,12 @@ namespace privmx::wrapper {
         std::vector<bool>
         verify(const std::vector<endpoint::core::VerificationRequest> &request) override;
 
+        UserVerifierInterfaceJNI(const UserVerifierInterfaceJNI &) = delete;
+
+        UserVerifierInterfaceJNI &operator=(const UserVerifierInterfaceJNI &) = delete;
+
+        UserVerifierInterfaceJNI() = delete;
+
     private:
         jobject juserVerifierInterface;
         JavaVM *javaVM;

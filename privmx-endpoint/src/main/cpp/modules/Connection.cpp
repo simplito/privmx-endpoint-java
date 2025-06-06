@@ -260,7 +260,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_setUserVerifier(
 ) {
     JniContextUtils ctx(env);
     auto userVerifier = std::make_shared<privmx::wrapper::UserVerifierInterfaceJNI>(
-            privmx::wrapper::UserVerifierInterfaceJNI(env, userVerifierInterface));
+            env, userVerifierInterface
+    );
 
     ctx.callVoidEndpointApi([&env, &thiz, &userVerifier]() {
         getConnection(env, thiz)->setUserVerifier(userVerifier);
