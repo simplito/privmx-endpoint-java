@@ -76,8 +76,10 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
 
 privmx::wrapper::UserVerifierInterfaceJNI::~UserVerifierInterfaceJNI() {
     if (javaVM != nullptr && juserVerifierInterface != nullptr) {
-        JNIEnv *env = nullptr;
-        javaVM->GetEnv((void **) &env, JNI_VERSION_1_6);
+        JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
+                javaVM,
+                jni::getPrivmxCallbackThreadName()
+        );
 
         if (env != nullptr) env->DeleteGlobalRef(juserVerifierInterface);
         juserVerifierInterface = nullptr;
