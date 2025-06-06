@@ -13,7 +13,7 @@ crypto::ExtKey *getExtKey(JniContextUtils &ctx, jobject thiz) {
     jfieldID keyFID = ctx->GetFieldID(cls, "key", "Ljava/lang/Long;");
     jobject keyLong = ctx->GetObjectField(thiz, keyFID);
     if (keyLong == nullptr) {
-        throw IllegalStateException("ExtKey");      // todo
+        throw IllegalStateException("This ExtKey instance cannot be used anymore");
     }
     return (crypto::ExtKey *) ctx.getObject(keyLong).getLongValue();
 }
