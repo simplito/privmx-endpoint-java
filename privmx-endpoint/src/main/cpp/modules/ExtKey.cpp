@@ -18,7 +18,7 @@ crypto::ExtKey *getExtKey(JniContextUtils &ctx, jobject thiz) {
     return (crypto::ExtKey *) ctx.getObject(keyLong).getLongValue();
 }
 
-jobject initExtKey(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey extKey_c, jclass clazz) {
+jobject initExtKey(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey &extKey_c, jclass clazz) {
     jmethodID initExtKeyMID = ctx->GetMethodID(
             clazz, "<init>", "(Ljava/lang/Long;)V");
 
@@ -66,7 +66,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_fromSeed(
             [&ctx, &clazz, &seed]() {
                 crypto::ExtKey extKey = crypto::ExtKey::fromSeed(
                         core::Buffer::from(ctx.jByteArray2String(seed)));
-
                 return initExtKey(ctx, extKey, clazz);
             }
     );
@@ -91,7 +90,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_fromBase58(
             &result,
             [&ctx, &clazz, &base58]() {
                 crypto::ExtKey extKey = crypto::ExtKey::fromBase58(ctx.jString2string(base58));
-
                 return initExtKey(ctx, extKey, clazz);
             }
     );
@@ -114,7 +112,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_generateRandom(
             &result,
             [&ctx, &clazz]() {
                 crypto::ExtKey extKey = crypto::ExtKey::generateRandom();
-
                 return initExtKey(ctx, extKey, clazz);
             }
     );
@@ -139,7 +136,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_derive(
             [&ctx, &env, &thiz, &index]() {
                 crypto::ExtKey extKey = getExtKey(ctx, thiz)->derive(index);
                 jclass cls = env->GetObjectClass(thiz);
-
                 return initExtKey(ctx, extKey, cls);
             }
     );
@@ -164,7 +160,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_deriveHardened(
             [&ctx, &env, &thiz, &index]() {
                 crypto::ExtKey extKey = getExtKey(ctx, thiz)->deriveHardened(index);
                 jclass cls = env->GetObjectClass(thiz);
-
                 return initExtKey(ctx, extKey, cls);
             }
     );
@@ -187,7 +182,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivatePartAsBa
             &result,
             [&ctx, &env, &thiz]() {
                 std::string privatePart = getExtKey(ctx, thiz)->getPrivatePartAsBase58();
-
                 return ctx->NewStringUTF(privatePart.c_str());
             }
     );
@@ -210,7 +204,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicPartAsBas
             &result,
             [&ctx, &env, &thiz]() {
                 std::string publicPart = getExtKey(ctx, thiz)->getPublicPartAsBase58();
-
                 return ctx->NewStringUTF(publicPart.c_str());
             }
     );
@@ -233,7 +226,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivateKey(
             &result,
             [&ctx, &env, &thiz]() {
                 std::string privateKey = getExtKey(ctx, thiz)->getPrivateKey();
-
                 return ctx->NewStringUTF(privateKey.c_str());
             }
     );
@@ -256,7 +248,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPublicKey(
             &result,
             [&ctx, &env, &thiz]() {
                 std::string publicKey = getExtKey(ctx, thiz)->getPublicKey();
-
                 return ctx->NewStringUTF(publicKey.c_str());
             }
     );
@@ -280,7 +271,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_ExtKey_getPrivateEncKey(
             [&ctx, &env, &thiz]() {
                 core::Buffer privateEncKey = getExtKey(ctx,
                                                        thiz)->getPrivateEncKey();
-
                 jbyteArray array = ctx->NewByteArray(privateEncKey.size());
                 ctx->SetByteArrayRegion(array, 0, privateEncKey.size(),
                                         (jbyte *) privateEncKey.data());
