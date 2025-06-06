@@ -18,6 +18,7 @@ privmx::wrapper::UserVerifierInterfaceJNI::UserVerifierInterfaceJNI(
     jclass juserVerifierInterfaceClass = env->FindClass(
             "com/simplito/java/privmx_endpoint/modules/core/UserVerifierInterface");
     javaVM = nullptr;
+    juserVerifierInterface = nullptr;
     if (!env->IsInstanceOf(juserVerifierInterface, juserVerifierInterfaceClass)) {
         env->ThrowNew(
                 env->FindClass("java/lang/IllegalArgumentException"),
@@ -25,7 +26,7 @@ privmx::wrapper::UserVerifierInterfaceJNI::UserVerifierInterfaceJNI(
         return;
     }
     env->GetJavaVM(&this->javaVM);
-    this->juserVerifierInterface = env->NewGlobalRef(juserVerifierInterface);
+    juserVerifierInterface = env->NewGlobalRef(juserVerifierInterface);
 }
 
 std::vector<bool>
@@ -83,5 +84,6 @@ privmx::wrapper::UserVerifierInterfaceJNI::~UserVerifierInterfaceJNI() {
 
         if (env != nullptr) env->DeleteGlobalRef(juserVerifierInterface);
         juserVerifierInterface = nullptr;
+        javaVM = nullptr;
     }
 }
