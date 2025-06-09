@@ -13,8 +13,8 @@ package com.simplito.java.privmx_endpoint.model;
 
 /**
  * Represents a generic event caught by PrivMX Endpoint.
- * @param <T> The type of data associated with the event.
  *
+ * @param <T> The type of data associated with the event.
  * @category core
  * @group Events
  */
@@ -50,10 +50,10 @@ public class Event<T> {
     /**
      * Creates instance of Event model.
      *
-     * @param type type of event as text
-     * @param channel event channel
+     * @param type         type of event as text
+     * @param channel      event channel
      * @param connectionId ID of connection for this event
-     * @param data event data
+     * @param data         event data
      */
     public Event(
             String type,

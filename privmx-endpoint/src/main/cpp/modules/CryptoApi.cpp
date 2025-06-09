@@ -343,3 +343,213 @@ Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_verifySignature
     }
     return result;
 }
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_convertPGPAsn1KeyToBase58DERKey(
+        JNIEnv *env, jobject thiz, jstring pgp_key) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(pgp_key, "PGP Key")) return nullptr;
+
+    jstring result;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &pgp_key]() {
+                std::string key = getCryptoApi(ctx, thiz)->convertPGPAsn1KeyToBase58DERKey(
+                        ctx.jString2string(pgp_key));
+                return ctx->NewStringUTF(key.c_str());
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_entropyToMnemonic(JNIEnv *env,
+                                                                                   jobject thiz,
+                                                                                   jbyteArray entropy) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(entropy, "Entropy")) return nullptr;
+
+    jstring result;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &entropy]() {
+                std::string entropy_n = getCryptoApi(ctx, thiz)->entropyToMnemonic(
+                        core::Buffer::from(ctx.jByteArray2String(entropy)));
+                return ctx->NewStringUTF(entropy_n.c_str());
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT jbyteArray JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_mnemonicToEntropy(JNIEnv *env,
+                                                                                   jobject thiz,
+                                                                                   jstring mnemonic) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(mnemonic, "Mnemonic")) return nullptr;
+
+    jbyteArray result;
+    ctx.callResultEndpointApi<jbyteArray>(
+            &result,
+            [&ctx, &thiz, &mnemonic]() {
+                std::string entropy = getCryptoApi(ctx, thiz)->mnemonicToEntropy(
+                        ctx.jString2string(mnemonic)).stdString();
+                jbyteArray array = ctx->NewByteArray(entropy.length());
+                ctx->SetByteArrayRegion(
+                        array,
+                        0,
+                        entropy.length(),
+                        (jbyte *) entropy.c_str()
+                );
+                return array;
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_generateBip39(JNIEnv *env,
+                                                                               jobject thiz,
+                                                                               jlong strength,
+                                                                               jstring password) {
+    JniContextUtils ctx(env);
+
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &thiz, &strength, &password]() {
+                crypto::BIP39_t bip39;
+
+                if (password == nullptr) {
+                    bip39 = getCryptoApi(ctx, thiz)->generateBip39(strength);
+                } else {
+                    bip39 = getCryptoApi(ctx, thiz)->generateBip39(
+                            strength,
+                            ctx.jString2string(password));
+                }
+
+                return privmx::wrapper::BIP392Java(ctx, bip39);
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_fromMnemonic(JNIEnv *env,
+                                                                              jobject thiz,
+                                                                              jstring mnemonic,
+                                                                              jstring password) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(mnemonic, "Mnemonic")) return nullptr;
+
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &thiz, &mnemonic, &password]() {
+                crypto::BIP39_t bip39;
+
+                if (password == nullptr) {
+                    bip39 = getCryptoApi(ctx, thiz)->fromMnemonic(
+                            ctx.jString2string(mnemonic));
+                } else {
+                    bip39 = getCryptoApi(ctx, thiz)->fromMnemonic(
+                            ctx.jString2string(mnemonic),
+                            ctx.jString2string(password));
+                }
+
+                return privmx::wrapper::BIP392Java(ctx, bip39);
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_fromEntropy(JNIEnv *env,
+                                                                             jobject thiz,
+                                                                             jbyteArray entropy,
+                                                                             jstring password) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(entropy, "Entropy")) return nullptr;
+
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &thiz, &entropy, &password]() {
+                crypto::BIP39_t bip39;
+
+                if (password == nullptr) {
+                    bip39 = getCryptoApi(ctx, thiz)->fromEntropy(
+                            core::Buffer::from(ctx.jByteArray2String(entropy)));
+                } else {
+                    bip39 = getCryptoApi(ctx, thiz)->fromEntropy(
+                            core::Buffer::from(ctx.jByteArray2String(entropy)),
+                            ctx.jString2string(password));
+                }
+
+                return privmx::wrapper::BIP392Java(ctx, bip39);
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT jbyteArray JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_crypto_CryptoApi_mnemonicToSeed(JNIEnv *env,
+                                                                                jobject thiz,
+                                                                                jstring mnemonic,
+                                                                                jstring password) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(mnemonic, "Mnemonic")) return nullptr;
+
+    jbyteArray result;
+    ctx.callResultEndpointApi<jbyteArray>(
+            &result,
+            [&ctx, &thiz, &mnemonic, &password]() {
+                std::string seed;
+
+                if (password == nullptr) {
+                    seed = getCryptoApi(ctx, thiz)->mnemonicToSeed(
+                            ctx.jString2string(mnemonic)).stdString();
+                } else {
+                    seed = getCryptoApi(ctx, thiz)->mnemonicToSeed(
+                            ctx.jString2string(mnemonic),
+                            ctx.jString2string(password)).stdString();
+                }
+
+                jbyteArray array = ctx->NewByteArray(seed.length());
+                ctx->SetByteArrayRegion(
+                        array,
+                        0,
+                        seed.length(),
+                        (jbyte *) seed.c_str()
+                );
+                return array;
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}

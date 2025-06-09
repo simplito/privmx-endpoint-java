@@ -38,8 +38,6 @@ import java.util.Optional;
  */
 public class InboxApi implements AutoCloseable {
     static {
-        System.loadLibrary("crypto");
-        System.loadLibrary("ssl");
         System.loadLibrary("privmx-endpoint-java");
     }
 
@@ -100,8 +98,8 @@ public class InboxApi implements AutoCloseable {
      * Creates a new Inbox.
      *
      * @param contextId   ID of the Context of the new Inbox
-     * @param users       vector of {@link UserWithPubKey} structs which indicates who will have access to the created Inbox
-     * @param managers    vector of {@link UserWithPubKey} structs which indicates who will have access (and management rights) to
+     * @param users       list of {@link UserWithPubKey} structs which indicates who will have access to the created Inbox
+     * @param managers    list of {@link UserWithPubKey} structs which indicates who will have access (and management rights) to
      *                    the created Inbox
      * @param publicMeta  public (unencrypted) metadata
      * @param privateMeta private (encrypted) metadata
@@ -185,8 +183,8 @@ public class InboxApi implements AutoCloseable {
      * Updates an existing Inbox.
      *
      * @param inboxId     ID of the Inbox to update
-     * @param users       vector of UserWithPubKey structs which indicates who will have access to the created Inbox
-     * @param managers    vector of UserWithPubKey structs which indicates who will have access (and have manage rights) to
+     * @param users       list of UserWithPubKey structs which indicates who will have access to the created Inbox
+     * @param managers    list of UserWithPubKey structs which indicates who will have access (and have manage rights) to
      *                    the created Inbox
      * @param publicMeta  public (unencrypted) metadata
      * @param privateMeta private (encrypted) metadata
@@ -310,11 +308,11 @@ public class InboxApi implements AutoCloseable {
             long limit,
             String sortOrder
     ) throws PrivmxException, NativeException, IllegalStateException {
-        return listInboxes(contextId, skip, limit, sortOrder, null);
+        return listInboxes(contextId, skip, limit, sortOrder, null, null);
     }
 
     /**
-     * Gets s list of Inboxes in given Context.
+     * Gets a list of Inboxes in given Context.
      *
      * @param contextId ID of the Context to get Inboxes from
      * @param skip      skip number of elements to skip from result
@@ -326,14 +324,38 @@ public class InboxApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      * @throws IllegalStateException thrown when instance is closed.
      */
-    public native PagingList<Inbox> listInboxes(
+    public PagingList<Inbox> listInboxes(
             String contextId,
             long skip,
             long limit,
             String sortOrder,
             String lastId
-    ) throws PrivmxException, NativeException, IllegalStateException;
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listInboxes(contextId, skip, limit, sortOrder, lastId, null);
+    }
 
+    /**
+     * Gets s list of Inboxes in given Context.
+     *
+     * @param contextId   ID of the Context to get Inboxes from
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @return list of Inboxes
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is closed.
+     */
+    public native PagingList<Inbox> listInboxes(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson
+    ) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Gets public data of given Inbox.
@@ -402,7 +424,11 @@ public class InboxApi implements AutoCloseable {
      * @param inboxId          ID of the Inbox to which the request applies
      * @param data             entry data to send
      * @param inboxFileHandles optional list of file handles that will be sent with the request
-     * @param userPrivKey      optional sender's private key which can be used later to encrypt data for that sender
+     * @param userPrivKey      sender can optionally provide a private key, which will be used: <br>
+     *                         1) to sign the sent data, <br>
+     *                         2) to derivation of the public key, which will then be transferred
+     *                         along with the sent data and can be used in the future for further
+     *                         secure communication with the sender
      * @return Inbox handle
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
@@ -458,7 +484,7 @@ public class InboxApi implements AutoCloseable {
             long limit,
             String sortOrder
     ) throws PrivmxException, NativeException, IllegalStateException {
-        return listEntries(inboxId, skip, limit, sortOrder, null);
+        return listEntries(inboxId, skip, limit, sortOrder, null, null);
     }
 
     /**
@@ -474,12 +500,37 @@ public class InboxApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      * @throws IllegalStateException thrown when instance is closed.
      */
-    public native PagingList<InboxEntry> listEntries(
+    public PagingList<InboxEntry> listEntries(
             String inboxId,
             long skip,
             long limit,
             String sortOrder,
             String lastId
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listEntries(inboxId, skip, limit, sortOrder, lastId, null);
+    }
+
+    /**
+     * Gets list of entries of given Inbox.
+     *
+     * @param inboxId     ID of the Inbox
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @return list of entries
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is closed.
+     */
+    public native PagingList<InboxEntry> listEntries(
+            String inboxId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson
     ) throws PrivmxException, NativeException, IllegalStateException;
 
     /**

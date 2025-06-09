@@ -12,6 +12,8 @@
 namespace privmx {
     namespace wrapper {
         namespace jni {
+            inline std::string getPrivmxCallbackThreadName() { return "privmx-callbacks"; }
+
             /**
              * Attach current native thread to JVM if it is not attached.
              *

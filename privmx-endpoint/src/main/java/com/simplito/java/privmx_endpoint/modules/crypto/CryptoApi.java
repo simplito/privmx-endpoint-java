@@ -11,6 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.crypto;
 
+import com.simplito.java.privmx_endpoint.model.BIP39;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 
@@ -21,8 +22,6 @@ import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
  */
 public class CryptoApi implements AutoCloseable {
     static {
-        System.loadLibrary("crypto");
-        System.loadLibrary("ssl");
         System.loadLibrary("privmx-endpoint-java");
     }
 
@@ -47,7 +46,7 @@ public class CryptoApi implements AutoCloseable {
      * @return Generated ECC key in WIF format
      */
     public native String generatePrivateKey(String randomSeed) throws PrivmxException, NativeException;
-    
+
     /**
      * Generates a new private ECC key from a password using pbkdf2.
      *
@@ -114,7 +113,7 @@ public class CryptoApi implements AutoCloseable {
      * @param publicKey public ECC key in BASE58DER format used to validate data
      * @return data validation result
      */
-    public native boolean verifySignature(byte[] data, byte[] signature, String publicKey);
+    public native boolean verifySignature(byte[] data, byte[] signature, String publicKey) throws PrivmxException, NativeException;
 
     /**
      * Converts given private key in PEM format to its WIF format.
@@ -123,6 +122,106 @@ public class CryptoApi implements AutoCloseable {
      * @return Private key in WIF format
      */
     public native String convertPEMKeyToWIFKey(String pemKey) throws PrivmxException, NativeException;
+
+    /**
+     * Converts given public key in PGP format to its base58DER format.
+     *
+     * @param pgpKey public key to convert
+     * @return private key in base58DER format
+     */
+    public native String convertPGPAsn1KeyToBase58DERKey(String pgpKey) throws PrivmxException, NativeException;
+
+    /**
+     * Generates ECC key and BIP-39 mnemonic from a password using BIP-39.
+     *
+     * @param strength size of BIP-39 entropy, must be a multiple of 32
+     * @param password the password used to generate the Key
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     */
+    public native BIP39 generateBip39(long strength, String password) throws PrivmxException, NativeException;
+
+    /**
+     * Generates ECC key and BIP-39 mnemonic from a password using BIP-39.
+     *
+     * @param strength size of BIP-39 entropy, must be a multiple of 32
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     */
+    public BIP39 generateBip39(long strength) throws PrivmxException, NativeException {
+        return generateBip39(strength, null);
+    }
+
+    /**
+     * Generates ECC key using BIP-39 mnemonic.
+     *
+     * @param mnemonic the BIP-39 entropy used to generate the Key
+     * @param password the password used to generate the Key
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     */
+    public native BIP39 fromMnemonic(String mnemonic, String password) throws PrivmxException, NativeException;
+
+    /**
+     * Generates ECC key using BIP-39 mnemonic.
+     *
+     * @param mnemonic the BIP-39 entropy used to generate the Key
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     */
+    public BIP39 fromMnemonic(String mnemonic) throws PrivmxException, NativeException {
+        return fromMnemonic(mnemonic, null);
+    }
+
+    /**
+     * Generates ECC key using BIP-39 entropy.
+     *
+     * @param entropy  the BIP-39 entropy used to generate the Key
+     * @param password the password used to generate the Key
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     */
+    public native BIP39 fromEntropy(byte[] entropy, String password) throws PrivmxException, NativeException;
+
+    /**
+     * Generates ECC key using BIP-39 entropy.
+     *
+     * @param entropy the BIP-39 entropy used to generate the Key
+     * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+     */
+    public BIP39 fromEntropy(byte[] entropy) throws PrivmxException, NativeException {
+        return fromEntropy(entropy, null);
+    }
+
+    /**
+     * Converts BIP-39 entropy to mnemonic.
+     *
+     * @param entropy BIP-39 entropy
+     * @return BIP-39 mnemonic
+     */
+    public native String entropyToMnemonic(byte[] entropy) throws PrivmxException, NativeException;
+
+    /**
+     * Converts BIP-39 mnemonic to entropy.
+     *
+     * @param mnemonic BIP-39 mnemonic
+     * @return BIP-39 entropy
+     */
+    public native byte[] mnemonicToEntropy(String mnemonic) throws PrivmxException, NativeException;
+
+    /**
+     * Generates a seed used to generate a key using BIP-39 mnemonic with PBKDF2.
+     *
+     * @param mnemonic BIP-39 mnemonic
+     * @param password the password used to generate the seed
+     * @return generated seed
+     */
+    public native byte[] mnemonicToSeed(String mnemonic, String password) throws PrivmxException, NativeException;
+
+    /**
+     * Generates a seed used to generate a key using BIP-39 mnemonic with PBKDF2.
+     *
+     * @param mnemonic BIP-39 mnemonic
+     * @return generated seed
+     */
+    public byte[] mnemonicToSeed(String mnemonic) throws PrivmxException, NativeException {
+        return mnemonicToSeed(mnemonic, null);
+    }
 
     /**
      * Generates a new symmetric key.

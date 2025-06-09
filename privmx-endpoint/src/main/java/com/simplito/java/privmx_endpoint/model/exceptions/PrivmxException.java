@@ -19,24 +19,21 @@ package com.simplito.java.privmx_endpoint.model.exceptions;
 public class PrivmxException extends RuntimeException {
 
     /**
-     * Code of the exception.
-     */
-    private final int code;
-
-    /**
      * Scope of the exception.
      */
     public final String scope;
-
     /**
      * Detailed description of the exception.
      */
     public final String description;
-
     /**
      * Native Exception name.
      */
     public final String name;
+    /**
+     * Code of the exception.
+     */
+    private final int code;
 
     /**
      * Creates instance of {@code PrivmxException}.
