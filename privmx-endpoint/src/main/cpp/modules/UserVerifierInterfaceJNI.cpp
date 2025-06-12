@@ -41,7 +41,7 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
     jclass juserVerifierInterfaceClass = env->GetObjectClass(juserVerifierInterface);
     jmethodID jverifyMID = env->GetMethodID(
             juserVerifierInterfaceClass,
-            "verify",
+            "verifyResultList",
             "(Ljava/util/List;)Ljava/util/List;");
 
     jclass arrayClass = env->FindClass("java/util/ArrayList");
@@ -49,12 +49,12 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
             arrayClass,
             "<init>",
             "()V");
+
     jobject jverificationRequestArray = env->NewObject(arrayClass, initArrayMID);
     jmethodID addToArrayMID = env->GetMethodID(
             arrayClass,
             "add",
             "(Ljava/lang/Object;)Z");
-
 
     for (auto &request_c: request) {
         env->CallBooleanMethod(jverificationRequestArray,
@@ -62,14 +62,18 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
                                privmx::wrapper::verificationRequest2Java(ctx, request_c));
     }
 
-    auto jresult = ctx.jObject2jArray(
-            env->CallObjectMethod(juserVerifierInterface, jverifyMID, jverificationRequestArray));
+    auto object = env->CallNonvirtualObjectMethod(juserVerifierInterface,
+                                                  juserVerifierInterfaceClass,
+                                                  jverifyMID, jverificationRequestArray);
+    if (env->ExceptionCheck()) {
+        return {true};
+    }
 
+    auto jresult = ctx.jObject2jArray(object);
     std::vector<bool> result_c;
     for (int i = 0; i < ctx->GetArrayLength(jresult); i++) {
         jobject jElement = ctx->GetObjectArrayElement(jresult, i);
         bool element_c = ctx.getObject(jElement).getBooleanValue();
-
         result_c.push_back(element_c);
     }
     return result_c;

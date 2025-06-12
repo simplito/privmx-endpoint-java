@@ -17,4 +17,14 @@ public interface UserVerifierInterface {
      * @return List of verification results whose items correspond to the items in the input list
      */
     List<Boolean> verify(List<VerificationRequest> request);
+
+    default List<Boolean> verifyResultList(List<VerificationRequest> request) {
+        List<Boolean> list = verify(request);
+
+        if (list == null) throw new NullPointerException("Result list is null");
+        if (list.contains(null)) throw new NullPointerException("Result list element is null");
+
+        return list;
+    }
+
 }
