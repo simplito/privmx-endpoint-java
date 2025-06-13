@@ -18,7 +18,7 @@ privmx::wrapper::UserVerifierInterfaceJNI::UserVerifierInterfaceJNI(
     jclass juserVerifierInterfaceClass = env->FindClass(
             "com/simplito/java/privmx_endpoint/modules/core/UserVerifierInterface");
     javaVM = nullptr;
-    juserVerifierInterface = nullptr;
+    this->juserVerifierInterface = nullptr;
     if (!env->IsInstanceOf(juserVerifierInterface, juserVerifierInterfaceClass)) {
         env->ThrowNew(
                 env->FindClass("java/lang/IllegalArgumentException"),
@@ -26,7 +26,7 @@ privmx::wrapper::UserVerifierInterfaceJNI::UserVerifierInterfaceJNI(
         return;
     }
     env->GetJavaVM(&this->javaVM);
-    juserVerifierInterface = env->NewGlobalRef(juserVerifierInterface);
+    this->juserVerifierInterface = env->NewGlobalRef(juserVerifierInterface);
 }
 
 std::vector<bool>
@@ -41,7 +41,7 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
     jclass juserVerifierInterfaceClass = env->GetObjectClass(juserVerifierInterface);
     jmethodID jverifyMID = env->GetMethodID(
             juserVerifierInterfaceClass,
-            "verifyResultList",
+            "verify",
             "(Ljava/util/List;)Ljava/util/List;");
 
     jclass arrayClass = env->FindClass("java/util/ArrayList");
@@ -62,17 +62,38 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
                                privmx::wrapper::verificationRequest2Java(ctx, request_c));
     }
 
-    auto object = env->CallNonvirtualObjectMethod(juserVerifierInterface,
-                                                  juserVerifierInterfaceClass,
-                                                  jverifyMID, jverificationRequestArray);
+    auto jResult = env->CallObjectMethod(
+            juserVerifierInterface,
+            jverifyMID,
+            jverificationRequestArray
+    );
+
     if (env->ExceptionCheck()) {
-        return {true};
+        return std::vector<bool>(request.size(), true);
     }
 
-    auto jresult = ctx.jObject2jArray(object);
+    if (jResult == nullptr) {
+        env->ThrowNew(
+                env->FindClass("java/lang/NullPointerException"),
+                "UserVerifierInterface::verify: The method was expected to return a non-null list, "
+                "but returned null instead. Please verify the logic to ensure a valid list is always returned."
+        );
+        return std::vector<bool>(request.size(), true);
+    }
+
+    auto jArray = ctx.jObject2jArray(jResult);
     std::vector<bool> result_c;
-    for (int i = 0; i < ctx->GetArrayLength(jresult); i++) {
-        jobject jElement = ctx->GetObjectArrayElement(jresult, i);
+    for (int i = 0; i < ctx->GetArrayLength(jArray); i++) {
+        jobject jElement = ctx->GetObjectArrayElement(jArray, i);
+        if (jElement == nullptr) {
+            env->ThrowNew(
+                    env->FindClass("java/lang/NullPointerException"),
+                    "UserVerifierInterface::verify: "
+                    "The method was expected to return a list of non-null elements, but at least one element is null"
+                    "Please verify the logic to ensure a valid result is always returned."
+            );
+            return std::vector<bool>(request.size(), true);
+        }
         bool element_c = ctx.getObject(jElement).getBooleanValue();
         result_c.push_back(element_c);
     }
