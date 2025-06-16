@@ -14,11 +14,16 @@ package com.simplito.java.privmx_endpoint_extra.events;
 import com.simplito.java.privmx_endpoint.model.File;
 import com.simplito.java.privmx_endpoint.model.Inbox;
 import com.simplito.java.privmx_endpoint.model.InboxEntry;
+import com.simplito.java.privmx_endpoint.model.Kvdb;
+import com.simplito.java.privmx_endpoint.model.KvdbEntry;
 import com.simplito.java.privmx_endpoint.model.Message;
 import com.simplito.java.privmx_endpoint.model.Store;
 import com.simplito.java.privmx_endpoint.model.Thread;
 import com.simplito.java.privmx_endpoint.model.events.InboxDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.InboxEntryDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.KvdbDeletedEntryEventData;
+import com.simplito.java.privmx_endpoint.model.events.KvdbDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.KvdbStatsEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreFileDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreStatsChangedEventData;
@@ -295,6 +300,54 @@ public class EventType<T> {
                 "inbox/" + inboxId + "/entries",
                 "inboxEntryDeleted",
                 InboxEntryDeletedEventData.class
+        );
+    }
+
+    public static final EventType<Kvdb> KvdbUpdatedEvent = new EventType<>(
+            "kvdb",
+            "kvdbUpdated",
+            Kvdb.class
+    );
+    public static final EventType<KvdbDeletedEventData> KvdbDeletedEvent = new EventType<>(
+            "kvdb",
+            "kvdbDeleted",
+            KvdbDeletedEventData.class
+    );
+    public static final EventType<KvdbStatsEventData> KvdbStatsEvent = new EventType<>(
+            "kvdb",
+            "kvdbStatsChanged",
+            KvdbStatsEventData.class
+    );
+    public static EventType<Kvdb> KvdbCreatedEvent = new EventType<>(
+            "kvdb",
+            "kvdbCreated",
+            Kvdb.class
+    );
+
+    public static EventType<KvdbEntry> kvdbNewEntry(String kvdbId) throws NullPointerException {
+        if (kvdbId == null) throw new NullPointerException("Kvdb id cannot be null");
+        return new EventType<>(
+                "kvdb/" + kvdbId + "/entries",
+                "kvdbNewEntry",
+                KvdbEntry.class
+        );
+    }
+
+    public static EventType<KvdbEntry> KvdbEntryUpdatedEvent(String kvdbId) throws NullPointerException {
+        if (kvdbId == null) throw new NullPointerException("Kvdb id cannot be null");
+        return new EventType<>(
+                "kvdb/" + kvdbId + "/entries",
+                "kvdbEntryUpdated",
+                KvdbEntry.class
+        );
+    }
+
+    public static EventType<KvdbDeletedEntryEventData> KvdbEntryDeletedEvent(String kvdbId) throws NullPointerException {
+        if (kvdbId == null) throw new NullPointerException("Kvdb id cannot be null");
+        return new EventType<>(
+                "kvdb/" + kvdbId + "/entries",
+                "kvdbEntryDeleted",
+                KvdbDeletedEntryEventData.class
         );
     }
 }
