@@ -15,6 +15,9 @@ import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Manages PrivMX Bridge  Kvdbs and their messages.
+ */
 public class KvdbApi implements AutoCloseable {
     private final Long api;
 
@@ -22,6 +25,12 @@ public class KvdbApi implements AutoCloseable {
 
     private native void deinit() throws IllegalStateException;
 
+    /**
+     * Creates an instance of {@code KvdbApi}.
+     *
+     * @param connection instance of 'Connection'
+     * @return KvdbApi object
+     */
     public KvdbApi(Connection connection) throws IllegalStateException {
         Objects.requireNonNull(connection);
         this.api = init(connection);
