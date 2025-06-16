@@ -29,4 +29,8 @@ public enum Modules {
      * Inbox module case.
      */
     INBOX,
+    /**
+     * Kvdb module case.
+     */
+    KVDB,
 }

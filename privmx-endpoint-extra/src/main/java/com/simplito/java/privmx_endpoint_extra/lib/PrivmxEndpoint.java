@@ -149,6 +149,18 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
             }
             inboxApi.subscribeForInboxEvents();
         }
+
+        if (channel.module.startsWith("kvdb") && kvdbApi != null) {
+            if (channel.type != null && channel.type.equals("entries")) {
+                if (channel.instanceId != null) {
+                    kvdbApi.subscribeForEntryEvents(channel.instanceId);
+                } else {
+                    System.out.println("No kvdbId to subscribeChannel: " + channelStr);
+                }
+                return;
+            }
+            kvdbApi.subscribeForKvdbEvents();
+        }
     }
 
     private void unsubscribeChannel(String channelStr) {
@@ -193,6 +205,18 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                 return;
             }
             inboxApi.unsubscribeFromInboxEvents();
+        }
+
+        if (channel.module.startsWith("kvdb") && kvdbApi != null) {
+            if (channel.type != null && channel.type.equals("entries")) {
+                if (channel.instanceId != null) {
+                    kvdbApi.unsubscribeFromKvdbEvents(channel.instanceId);
+                } else {
+                    System.out.println("No kvdbId to unsubscribeChannel: " + channelStr);
+                }
+                return;
+            }
+            kvdbApi.unsubscribeFromKvdbEvents();
         }
     }
 
