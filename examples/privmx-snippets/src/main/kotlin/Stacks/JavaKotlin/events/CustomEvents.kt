@@ -6,7 +6,14 @@ import Stacks.JavaKotlin.user1PublicKey
 import Stacks.JavaKotlin.user2Id
 import Stacks.JavaKotlin.user2PublicKey
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
+import com.simplito.java.privmx_endpoint.modules.event.EventApi
 import com.simplito.java.privmx_endpoint_extra.events.EventType
+
+lateinit var eventApi: EventApi
+
+fun setEventApi() {
+    val eventApi = endpointSession.eventApi
+}
 
 fun emittingCustomEvents() {
     val contextId = "CONTEXT_ID"
