@@ -1,5 +1,6 @@
 package Stacks.JavaKotlin
 
+import Stacks.JavaKotlin.events.eventApi
 import Stacks.JavaKotlin.inboxes.inboxApi
 import Stacks.JavaKotlin.stores.storeApi
 import Stacks.JavaKotlin.threads.threadApi
@@ -41,7 +42,8 @@ fun makeConnection() {
     val initModules = setOf(
         Modules.THREAD, // initializes ThreadApi to working with Threads
         Modules.STORE, // initializes StoreApi to working with Stores
-        Modules.INBOX // initializes InboxApi to working with Inboxes
+        Modules.INBOX, // initializes InboxApi to working with Inboxes
+        Modules.CUSTOM_EVENT // initializes EventApi to working with Custom Events
     ) // set of modules to activate in new connection
 
     val endpointContainer = PrivmxEndpointContainer().also {
@@ -91,4 +93,5 @@ private fun setupConnection(ct: PrivmxEndpointContainer, conn: PrivmxEndpoint) {
     threadApi = endpointSession.threadApi
     storeApi = endpointSession.storeApi
     inboxApi = endpointSession.inboxApi
+    eventApi = endpointSession.eventApi
 }
