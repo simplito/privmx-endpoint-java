@@ -3,6 +3,8 @@ package Stacks.JavaKotlin
 import Stacks.JavaKotlin.inboxes.inboxApi
 import Stacks.JavaKotlin.stores.storeApi
 import Stacks.JavaKotlin.threads.threadApi
+import com.simplito.java.privmx_endpoint.model.VerificationRequest
+import com.simplito.java.privmx_endpoint.modules.core.UserVerifierInterface
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
@@ -33,7 +35,7 @@ val user2PublicKey = "PUBLIC_KEY_2"
 // END: Initial assumption snippet
 
 
-fun makeConnection(){
+fun makeConnection() {
     // START: Make connection snippet
     val pathToCerts = "PATH_TO_CERTS" // Path to .pem ssl certificate to connect with Privmx Bridge
     val initModules = setOf(
@@ -54,27 +56,36 @@ fun makeConnection(){
     )
     // END: Make connection snippet
 
-    setupConnection(endpointContainer,endpointSession)
+    setupConnection(endpointContainer, endpointSession)
 }
 
-fun getEndpoint(){
+fun setUserVerifier() {
+    val userVerifier: UserVerifierInterface = object : UserVerifierInterface {
+        override fun verify(requests: List<VerificationRequest>): List<Boolean> {
+            return requests.map { request -> true }
+        }
+    }
+    endpointSession.connection.setUserVerifier(userVerifier)
+}
+
+fun getEndpoint() {
     endpointContainer.getEndpoint(endpointSession.connection.connectionId)
 }
 
-fun close(){
+fun close() {
     endpointContainer.close()
 }
 
-fun disconnectAll(){
+fun disconnectAll() {
     endpointContainer.disconnectAll()
 }
 
-fun disconnectById(){
+fun disconnectById() {
     endpointContainer.disconnect(endpointSession.connection.connectionId)
 }
 
 //setup global connection variables
-private fun setupConnection(ct: PrivmxEndpointContainer, conn: PrivmxEndpoint){
+private fun setupConnection(ct: PrivmxEndpointContainer, conn: PrivmxEndpoint) {
     endpointContainer = ct
     endpointSession = conn
     threadApi = endpointSession.threadApi
