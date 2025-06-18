@@ -49,12 +49,12 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
             arrayClass,
             "<init>",
             "()V");
+
     jobject jverificationRequestArray = env->NewObject(arrayClass, initArrayMID);
     jmethodID addToArrayMID = env->GetMethodID(
             arrayClass,
             "add",
             "(Ljava/lang/Object;)Z");
-
 
     for (auto &request_c: request) {
         env->CallBooleanMethod(jverificationRequestArray,
@@ -62,14 +62,39 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
                                privmx::wrapper::verificationRequest2Java(ctx, request_c));
     }
 
-    auto jresult = ctx.jObject2jArray(
-            env->CallObjectMethod(juserVerifierInterface, jverifyMID, jverificationRequestArray));
+    auto jResult = env->CallObjectMethod(
+            juserVerifierInterface,
+            jverifyMID,
+            jverificationRequestArray
+    );
 
+    if (env->ExceptionCheck()) {
+        return std::vector<bool>(request.size(), true);
+    }
+
+    if (jResult == nullptr) {
+        env->ThrowNew(
+                env->FindClass("java/lang/NullPointerException"),
+                "UserVerifierInterface::verify: The method was expected to return a non-null list, "
+                "but returned null instead. Please verify the logic to ensure a valid list is always returned."
+        );
+        return std::vector<bool>(request.size(), true);
+    }
+
+    auto jArray = ctx.jObject2jArray(jResult);
     std::vector<bool> result_c;
-    for (int i = 0; i < ctx->GetArrayLength(jresult); i++) {
-        jobject jElement = ctx->GetObjectArrayElement(jresult, i);
+    for (int i = 0; i < ctx->GetArrayLength(jArray); i++) {
+        jobject jElement = ctx->GetObjectArrayElement(jArray, i);
+        if (jElement == nullptr) {
+            env->ThrowNew(
+                    env->FindClass("java/lang/NullPointerException"),
+                    "UserVerifierInterface::verify: "
+                    "The method was expected to return a list of non-null elements, but at least one element is null. "
+                    "Please verify the logic to ensure a valid result is always returned."
+            );
+            return std::vector<bool>(request.size(), true);
+        }
         bool element_c = ctx.getObject(jElement).getBooleanValue();
-
         result_c.push_back(element_c);
     }
     return result_c;
