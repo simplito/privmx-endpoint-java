@@ -89,7 +89,7 @@ privmx::wrapper::UserVerifierInterfaceJNI::verify(
             env->ThrowNew(
                     env->FindClass("java/lang/NullPointerException"),
                     "UserVerifierInterface::verify: "
-                    "The method was expected to return a list of non-null elements, but at least one element is null"
+                    "The method was expected to return a list of non-null elements, but at least one element is null. "
                     "Please verify the logic to ensure a valid result is always returned."
             );
             return std::vector<bool>(request.size(), true);
