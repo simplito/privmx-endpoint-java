@@ -12,6 +12,10 @@ import java.util.Objects;
  * @category event
  */
 public class EventApi implements AutoCloseable {
+    static {
+        System.loadLibrary("privmx-endpoint-java");
+    }
+
     private final Long api;
 
     /**
