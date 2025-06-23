@@ -1,12 +1,12 @@
 package com.simplito.java.privmx_endpoint.modules.kvdb;
 
+import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
+import com.simplito.java.privmx_endpoint.model.Kvdb;
 import com.simplito.java.privmx_endpoint.model.KvdbEntry;
 import com.simplito.java.privmx_endpoint.model.KvdbEntryPagingQuery;
 import com.simplito.java.privmx_endpoint.model.KvdbKeysPagingQuery;
-import com.simplito.java.privmx_endpoint.model.PagingQuery;
-import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
-import com.simplito.java.privmx_endpoint.model.Kvdb;
 import com.simplito.java.privmx_endpoint.model.PagingList;
+import com.simplito.java.privmx_endpoint.model.PagingQuery;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
@@ -21,27 +21,44 @@ import java.util.Objects;
 public class KvdbApi implements AutoCloseable {
     private final Long api;
 
-    private native Long init(Connection connection) throws IllegalStateException;
-
-    private native void deinit() throws IllegalStateException;
-
     /**
      * Creates an instance of {@code KvdbApi}.
      *
      * @param connection instance of 'Connection'
      * @return KvdbApi object
+     * @throws IllegalStateException thrown when instance is closed.
      */
     public KvdbApi(Connection connection) throws IllegalStateException {
         Objects.requireNonNull(connection);
         this.api = init(connection);
     }
 
+    private native Long init(Connection connection) throws IllegalStateException;
+
+    private native void deinit() throws IllegalStateException;
+
     public native String createKvdb(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, ContainerPolicy policies) throws PrivmxException, NativeException, IllegalStateException;
 
-    public String createKvdb(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta) {
+    public String createKvdb(String contextId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta) throws PrivmxException, NativeException, IllegalStateException {
         return createKvdb(contextId, users, managers, publicMeta, privateMeta, null);
     }
 
+    /**
+     * Updates an existing KVDB.
+     *
+     * @param kvdbId              ID of the KVDB to update
+     * @param users               array of UserWithPubKey structs which indicates who will have access to the created KVDB
+     * @param managers            array of UserWithPubKey structs which indicates who will have access (and management rights) to the created KVDB
+     * @param publicMeta          public (unencrypted) metadata
+     * @param privateMeta         private (encrypted) metadata
+     * @param version             current version of the updated KVDB
+     * @param force               force update (without checking version)
+     * @param forceGenerateNewKey force to regenerate a key for the KVDB
+     * @param policies            KVDB's policies
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native void updateKvdb(String kvdbId,
                                   List<UserWithPubKey> users,
                                   List<UserWithPubKey> managers,
@@ -53,6 +70,21 @@ public class KvdbApi implements AutoCloseable {
                                   ContainerPolicy policies
     ) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Updates an existing KVDB.
+     *
+     * @param kvdbId              ID of the KVDB to update
+     * @param users               array of UserWithPubKey structs which indicates who will have access to the created KVDB
+     * @param managers            array of UserWithPubKey structs which indicates who will have access (and management rights) to the created KVDB
+     * @param publicMeta          public (unencrypted) metadata
+     * @param privateMeta         private (encrypted) metadata
+     * @param version             current version of the updated KVDB
+     * @param force               force update (without checking version)
+     * @param forceGenerateNewKey force to regenerate a key for the KVDB
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public void updateKvdb(String kvdbId,
                            List<UserWithPubKey> users,
                            List<UserWithPubKey> managers,
@@ -60,36 +92,161 @@ public class KvdbApi implements AutoCloseable {
                            byte[] privateMeta,
                            long version,
                            boolean force,
-                           boolean forceGenerateNewKey) {
+                           boolean forceGenerateNewKey) throws PrivmxException, NativeException, IllegalStateException {
         updateKvdb(kvdbId, users, managers, publicMeta, privateMeta, version, force, forceGenerateNewKey, null);
     }
 
+    /**
+     * Deletes a KVDB by given KVDB ID.
+     *
+     * @param kvdbId ID of the KVDB to delete
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native void deleteKvdb(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Gets a KVDB by given KVDB ID.
+     *
+     * @param kvdbId ID of KVDB to get
+     * @return struct containing info about the KVDB
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native Kvdb getKvdb(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Gets a list of Kvdbs in given Context.
+     *
+     * @param contextId   ID of the Context to get the Kvdbs from
+     * @param pagingQuery with list query parameters
+     * @return struct containing a list of Kvdbs
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native PagingList<Kvdb> listKvdbs(String contextId, PagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
 
+
+    /**
+     * Gets a KVDB entry by given KVDB entry key and KVDB ID.
+     *
+     * @param kvdbId KVDB ID of the KVDB entry to get
+     * @param key    key of the KVDB entry to get
+     * @return struct containing the KVDB entry
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native KvdbEntry getEntry(String kvdbId, String key) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Gets a list of KVDB entries keys from a KVDB.
+     *
+     * @param kvdbId      ID of the KVDB to list KVDB entries from
+     * @param pagingQuery with list query parameters
+     * @return struct containing a list of KVDB entries
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native PagingList<String> listEntriesKeys(String kvdbId, KvdbKeysPagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Gets a list of KVDB entries from a KVDB.
+     *
+     * @param kvdbId      ID of the KVDB to list KVDB entries from
+     * @param pagingQuery with list query parameters
+     * @return struct containing a list of KVDB entries
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native PagingList<KvdbEntry> listEntries(String kvdbId, KvdbEntryPagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Sets a KVDB entry in the given KVDB.
+     *
+     * @param kvdbId      ID of the KVDB to set the entry to
+     * @param key         KVDB entry key
+     * @param publicMeta  public KVDB entry metadata
+     * @param privateMeta private KVDB entry metadata
+     * @param data        content of the KVDB entry
+     * @return ID of the new KVDB entry
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native void setEntry(String kvdbId, String key, byte[] publicMeta, byte[] privateMeta, byte[] data, long version) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Deletes a KVDB entry by given KVDB entry ID.
+     *
+     * @param kvdbId KVDB ID of the KVDB entry to delete
+     * @param key    key of the KVDB entry to delete
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native void deleteEntry(String kvdbId, String key) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Deletes KVDB entries by given KVDB IDs and the list of entry keys.
+     *
+     * @param kvdbId ID of the KVDB database to delete from
+     * @param keys   vector of the keys of the KVDB entries to delete
+     * @return map with the statuses of deletion for every key
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native void deleteEntries(String kvdbId, List<String> keys) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Subscribes for the KVDB module main events.
+     *
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native void subscribeForKvdbEvents() throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Unsubscribes from the KVDB module main events.
+     *
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native void unsubscribeFromKvdbEvents() throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Subscribes for events in given KVDB.
+     *
+     * @param kvdbId ID of the KVDB to subscribe
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native void subscribeForEntryEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Unsubscribes from events in given KVDB.
+     *
+     * @param kvdbId ID of the KVDB to unsubscribe
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native void unsubscribeFromKvdbEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Frees memory.
+     *
+     * @throws Exception when instance is currently closed.
+     */
     @Override
     public void close() throws Exception {
         deinit();
