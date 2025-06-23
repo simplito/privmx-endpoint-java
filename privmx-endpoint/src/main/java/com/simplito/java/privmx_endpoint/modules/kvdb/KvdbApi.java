@@ -9,7 +9,9 @@ import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -22,7 +24,6 @@ public class KvdbApi implements AutoCloseable {
      * Creates an instance of {@code KvdbApi}.
      *
      * @param connection instance of 'Connection'
-     * @return KvdbApi object
      * @throws IllegalStateException thrown when instance is closed.
      */
     public KvdbApi(Connection connection) throws IllegalStateException {
@@ -434,7 +435,6 @@ public class KvdbApi implements AutoCloseable {
      * @param publicMeta  public KVDB entry metadata
      * @param privateMeta private KVDB entry metadata
      * @param data        content of the KVDB entry
-     * @return ID of the new KVDB entry
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
@@ -472,7 +472,7 @@ public class KvdbApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native void deleteEntries(
+    public native HashMap<String, Boolean> deleteEntries(
             String kvdbId,
             List<String> keys
     ) throws PrivmxException, NativeException, IllegalStateException;

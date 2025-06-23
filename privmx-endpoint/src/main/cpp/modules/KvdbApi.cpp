@@ -505,7 +505,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntry(
                 ctx.jString2string(key));
     });
 }
-extern "C" JNIEXPORT void JNICALL
+extern "C" JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(
         JNIEnv *env,
         jobject thiz,
@@ -515,23 +515,53 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(
     JniContextUtils ctx(env);
     if (ctx.nullCheck(kvdb_id, "Kvdb ID") ||
         ctx.nullCheck(keys, "Keys")) {
-        return;
+        return nullptr;
     }
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &thiz, &kvdb_id, &keys]() {
+                jclass mapCls = ctx->FindClass("java/util/HashMap");
+                jmethodID initMapMID = ctx->GetMethodID(mapCls, "<init>", "()V");
+                jmethodID putInMap = ctx->GetMethodID(
+                        mapCls,
+                        "put",
+                        "("
+                        "Ljava/lang/Object;"    // String
+                        "Ljava/lang/Object;"    // Boolean
+                        ")Z"
+                );
 
-    auto keys_arr = ctx.jObject2jArray(keys);
-    auto keys_c = std::vector<std::string>();
+                auto keys_arr = ctx.jObject2jArray(keys);
+                auto keys_c = std::vector<std::string>();
 
-    for (int i = 0; i < ctx->GetArrayLength(keys_arr); i++) {
-        jobject arrayElement = ctx->GetObjectArrayElement(keys_arr, i);
-        keys_c.push_back(ctx.jString2string((jstring) arrayElement));
+                for (int i = 0; i < ctx->GetArrayLength(keys_arr); i++) {
+                    jobject arrayElement = ctx->GetObjectArrayElement(keys_arr, i);
+                    keys_c.push_back(ctx.jString2string((jstring) arrayElement));
+                }
+                std::map<std::string, bool> statuses_c = getKvdbApi(ctx, thiz)->deleteEntries(
+                        ctx.jString2string(kvdb_id),
+                        keys_c
+                );
+
+                jobject map = ctx->NewObject(mapCls, initMapMID);
+                for (auto &status_c: statuses_c) {
+                    ctx->CallBooleanMethod(
+                            map,
+                            putInMap,
+                            ctx->NewStringUTF(status_c.first.c_str()),
+                            status_c.second ? JNI_TRUE : JNI_FALSE
+                    );
+                }
+                return map;
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
     }
-
-    ctx.callVoidEndpointApi([&ctx, &thiz, &kvdb_id, &keys_c] {
-        getKvdbApi(ctx, thiz)->deleteEntries(
-                ctx.jString2string(kvdb_id),
-                keys_c);
-    });
+    return result;
 }
+
 extern "C" JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_subscribeForKvdbEvents(
         JNIEnv *env,
