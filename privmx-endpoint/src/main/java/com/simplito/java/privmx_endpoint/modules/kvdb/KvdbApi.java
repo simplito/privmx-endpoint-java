@@ -11,7 +11,6 @@ import com.simplito.java.privmx_endpoint.modules.core.Connection;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -35,6 +34,20 @@ public class KvdbApi implements AutoCloseable {
 
     private native void deinit() throws IllegalStateException;
 
+    /**
+     * Creates a new KVDB in given Context.
+     *
+     * @param contextId   ID of the Context to create the KVDB in
+     * @param users       array of UserWithPubKey structs which indicates who will have access to the created KVDB
+     * @param managers    array of UserWithPubKey structs which indicates who will have access (and management rights) to the created KVDB
+     * @param publicMeta  public (unencrypted) metadata
+     * @param privateMeta private (encrypted) metadata
+     * @param policies    KVDB's policies
+     * @return ID of the created KVDB
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public native String createKvdb(
             String contextId,
             List<UserWithPubKey> users,
@@ -44,6 +57,19 @@ public class KvdbApi implements AutoCloseable {
             ContainerPolicy policies
     ) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Creates a new KVDB in given Context.
+     *
+     * @param contextId   ID of the Context to create the KVDB in
+     * @param users       array of UserWithPubKey structs which indicates who will have access to the created KVDB
+     * @param managers    array of UserWithPubKey structs which indicates who will have access (and management rights) to the created KVDB
+     * @param publicMeta  public (unencrypted) metadata
+     * @param privateMeta private (encrypted) metadata
+     * @return ID of the created KVDB
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
     public String createKvdb(
             String contextId,
             List<UserWithPubKey> users,
