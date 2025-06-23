@@ -26,7 +26,8 @@ extern "C" JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_init(
         JNIEnv *env,
         jobject thiz,
-        jobject connection) {
+        jobject connection
+) {
     JniContextUtils ctx(env);
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &connection] {
@@ -44,7 +45,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_init(
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deinit(JNIEnv *env, jobject thiz) {
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deinit(
+        JNIEnv *env,
+        jobject thiz
+) {
     try {
         JniContextUtils ctx(env);
         auto api = getKvdbApi(ctx, thiz);
@@ -64,7 +68,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_createKvdb(
         jobject managers,
         jbyteArray public_meta,
         jbyteArray private_meta,
-        jobject policies) {
+        jobject policies
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") || ctx.nullCheck(users, "Users list") ||
         ctx.nullCheck(managers, "Managers list") || ctx.nullCheck(public_meta, "Public meta") ||
@@ -118,7 +123,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_updateKvdb(
         jlong version,
         jboolean force,
         jboolean force_generate_new_key,
-        jobject policies) {
+        jobject policies
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(kvdb_id, "Kvdb ID") ||
         ctx.nullCheck(users, "Users list") ||
@@ -165,7 +171,8 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteKvdb(
         JNIEnv *env,
         jobject thiz,
-        jstring kvdb_id) {
+        jstring kvdb_id
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(kvdb_id, "Kvdb ID")) {
         return;
@@ -179,8 +186,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteKvdb(
 }
 
 extern "C" JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_getKvdb(JNIEnv *env, jobject thiz,
-                                                                     jstring kvdb_id) {
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_getKvdb(
+        JNIEnv *env,
+        jobject thiz,
+        jstring kvdb_id
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(kvdb_id, "Kvdb ID")) {
         return nullptr;
@@ -269,9 +279,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listKvdbs(
 }
 
 extern "C" JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_getEntry(JNIEnv *env, jobject thiz,
-                                                                      jstring kvdb_id,
-                                                                      jstring key) {
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_getEntry(
+        JNIEnv *env,
+        jobject thiz,
+        jstring kvdb_id,
+        jstring key
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(kvdb_id, "Kvdb ID")) {
         return nullptr;
@@ -435,12 +448,15 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntries(
     return result;
 }
 extern "C" JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_setEntry(JNIEnv *env, jobject thiz,
-                                                                      jstring kvdb_id, jstring key,
-                                                                      jbyteArray public_meta,
-                                                                      jbyteArray private_meta,
-                                                                      jbyteArray data,
-                                                                      jlong version) {
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_setEntry(
+        JNIEnv *env,
+        jobject thiz,
+        jstring kvdb_id, jstring key,
+        jbyteArray public_meta,
+        jbyteArray private_meta,
+        jbyteArray data,
+        jlong version
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(kvdb_id, "Kvdb ID") ||
         ctx.nullCheck(key, "Key") ||
@@ -471,9 +487,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_setEntry(JNIEnv *en
     );
 }
 extern "C" JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntry(JNIEnv *env, jobject thiz,
-                                                                         jstring kvdb_id,
-                                                                         jstring key) {
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntry(
+        JNIEnv *env,
+        jobject thiz,
+        jstring kvdb_id,
+        jstring key
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(kvdb_id, "Kvdb ID") ||
         ctx.nullCheck(key, "Key")) {
@@ -487,10 +506,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntry(JNIEnv 
     });
 }
 extern "C" JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(JNIEnv *env,
-                                                                           jobject thiz,
-                                                                           jstring kvdb_id,
-                                                                           jobject keys) {
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(
+        JNIEnv *env,
+        jobject thiz,
+        jstring kvdb_id,
+        jobject keys
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(kvdb_id, "Kvdb ID") ||
         ctx.nullCheck(keys, "Keys")) {
@@ -512,8 +533,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(JNIEn
     });
 }
 extern "C" JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_subscribeForKvdbEvents(JNIEnv *env,
-                                                                                    jobject thiz) {
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_subscribeForKvdbEvents(
+        JNIEnv *env,
+        jobject thiz
+) {
     JniContextUtils ctx(env);
 
     ctx.callVoidEndpointApi([&ctx, &thiz]() {
@@ -523,7 +546,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_subscribeForKvdbEve
 extern "C" JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_unsubscribeFromKvdbEvents__(
         JNIEnv *env,
-        jobject thiz) {
+        jobject thiz
+) {
     JniContextUtils ctx(env);
 
     ctx.callVoidEndpointApi([&ctx, &thiz]() {
@@ -531,9 +555,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_unsubscribeFromKvdb
     });
 }
 extern "C" JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_subscribeForEntryEvents(JNIEnv *env,
-                                                                                     jobject thiz,
-                                                                                     jstring kvdb_id) {
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_subscribeForEntryEvents(
+        JNIEnv *env,
+        jobject thiz,
+        jstring kvdb_id
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(kvdb_id, "Kvdb ID")) {
         return;
@@ -547,7 +573,8 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_unsubscribeFromKvdbEvents__Ljava_lang_String_2(
         JNIEnv *env,
         jobject thiz,
-        jstring kvdb_id) {
+        jstring kvdb_id
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(kvdb_id, "Kvdb ID")) {
         return;
