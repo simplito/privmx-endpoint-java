@@ -272,10 +272,17 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_getEntry(JNIEnv *en
     return result;
 }
 extern "C" JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntriesKeys(JNIEnv *env,
-                                                                             jobject thiz,
-                                                                             jstring kvdb_id,
-                                                                             jobject paging_query) {
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntriesKeys(
+        JNIEnv *env,
+        jobject thiz,
+        jstring kvdb_id,
+        jlong skip,
+        jlong limit,
+        jstring sort_order,
+        jstring last_id,
+        jstring query_as_json,
+        jstring sort_by
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(kvdb_id, "Kvdb ID")) {
         return nullptr;
@@ -284,7 +291,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntriesKeys(JNI
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &kvdb_id, &paging_query]() {
+            [&ctx, &thiz, &kvdb_id, &skip, &limit, &sort_order, &last_id, &query_as_json, &sort_by]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -294,10 +301,24 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntriesKeys(JNI
                 jmethodID addToArrayMID = ctx->GetMethodID(arrayCls, "add",
                                                            "(Ljava/lang/Object;)Z");
 
+                auto query = core::PagingQuery();
+                query.skip = skip;
+                query.limit = limit;
+                query.sortOrder = ctx.jString2string(sort_order);
+                if (last_id != nullptr) {
+                    query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
+                }
+                if (sort_by != nullptr) {
+                    query.sortBy = ctx.jString2string(sort_by);
+                }
+
                 auto itemKeys_c(
                         getKvdbApi(ctx, thiz)->listEntriesKeys(
                                 ctx.jString2string(kvdb_id),
-                                parseKvdbKeysPagingQuery(ctx, paging_query)
+                                query
                         )
                 );
 
@@ -323,18 +344,26 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntriesKeys(JNI
 }
 
 extern "C" JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntries(JNIEnv *env, jobject thiz,
-                                                                         jstring kvdb_id,
-                                                                         jobject paging_query) {
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntries(
+        JNIEnv *env,
+        jobject thiz,
+        jstring kvdb_id,
+        jlong skip,
+        jlong limit,
+        jstring sort_order,
+        jstring last_id,
+        jstring query_as_json,
+        jstring sort_by
+) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(kvdb_id, "Kvdb ID")) {
+    if (ctx.nullCheck(kvdb_id, "Kvdb ID") ||
+        ctx.nullCheck(sort_order, "Sort order")) {
         return nullptr;
     }
-
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &kvdb_id, &paging_query]() {
+            [&ctx, &thiz, &kvdb_id, &skip, &limit, &sort_order, &last_id, &query_as_json, &sort_by]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -344,10 +373,24 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntries(JNIEnv 
                 jmethodID addToArrayMID = ctx->GetMethodID(arrayCls, "add",
                                                            "(Ljava/lang/Object;)Z");
 
+                auto query = core::PagingQuery();
+                query.skip = skip;
+                query.limit = limit;
+                query.sortOrder = ctx.jString2string(sort_order);
+                if (last_id != nullptr) {
+                    query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
+                }
+                if (sort_by != nullptr) {
+                    query.sortBy = ctx.jString2string(sort_by);
+                }
+
                 auto items_c(
                         getKvdbApi(ctx, thiz)->listEntries(
                                 ctx.jString2string(kvdb_id),
-                                parseKvdbEntryPagingQuery(ctx, paging_query)
+                                query
                         )
                 );
 

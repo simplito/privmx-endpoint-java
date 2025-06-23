@@ -3,8 +3,6 @@ package com.simplito.java.privmx_endpoint.modules.kvdb;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.Kvdb;
 import com.simplito.java.privmx_endpoint.model.KvdbEntry;
-import com.simplito.java.privmx_endpoint.model.KvdbEntryPagingQuery;
-import com.simplito.java.privmx_endpoint.model.KvdbKeysPagingQuery;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.PagingQuery;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
@@ -146,25 +144,189 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of KVDB entries keys from a KVDB.
      *
      * @param kvdbId      ID of the KVDB to list KVDB entries from
-     * @param pagingQuery with list query parameters
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start\
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @param sortBy      field by elements are sorted in result
      * @return struct containing a list of KVDB entries
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native PagingList<String> listEntriesKeys(String kvdbId, KvdbKeysPagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
+    public native PagingList<String> listEntriesKeys(
+            String kvdbId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson,
+            String sortBy
+    ) throws PrivmxException, NativeException, IllegalStateException;
+
+    /**
+     * Gets a list of KVDB entries keys from a KVDB.
+     *
+     * @param kvdbId      ID of the KVDB to list KVDB entries from
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start\
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @return struct containing a list of KVDB entries
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<String> listEntriesKeys(
+            String kvdbId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listEntriesKeys(kvdbId, skip, limit, sortOrder, lastId, queryAsJson, null);
+    }
+
+    /**
+     * Gets a list of KVDB entries keys from a KVDB.
+     *
+     * @param kvdbId    ID of the KVDB to list KVDB entries from
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId    ID of the element from which query results should start\
+     * @return struct containing a list of KVDB entries
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<String> listEntriesKeys(
+            String kvdbId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listEntriesKeys(kvdbId, skip, limit, sortOrder, lastId, null, null);
+    }
+
+    /**
+     * Gets a list of KVDB entries keys from a KVDB.
+     *
+     * @param kvdbId    ID of the KVDB to list KVDB entries from
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @return struct containing a list of KVDB entries
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<String> listEntriesKeys(
+            String kvdbId,
+            long skip,
+            long limit,
+            String sortOrder
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listEntriesKeys(kvdbId, skip, limit, sortOrder, null, null, null);
+    }
 
     /**
      * Gets a list of KVDB entries from a KVDB.
      *
      * @param kvdbId      ID of the KVDB to list KVDB entries from
-     * @param pagingQuery with list query parameters
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start\
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @param sortBy      field by elements are sorted in result
      * @return struct containing a list of KVDB entries
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native PagingList<KvdbEntry> listEntries(String kvdbId, KvdbEntryPagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
+    public native PagingList<KvdbEntry> listEntries(
+            String kvdbId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson,
+            String sortBy
+    ) throws PrivmxException, NativeException, IllegalStateException;
+
+    /**
+     * Gets a list of KVDB entries from a KVDB.
+     *
+     * @param kvdbId      ID of the KVDB to list KVDB entries from
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start\
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @return struct containing a list of KVDB entries
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<KvdbEntry> listEntries(
+            String kvdbId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listEntries(kvdbId, skip, limit, sortOrder, lastId, queryAsJson, null);
+    }
+
+    /**
+     * Gets a list of KVDB entries from a KVDB.
+     *
+     * @param kvdbId    ID of the KVDB to list KVDB entries from
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId    ID of the element from which query results should start\
+     * @return struct containing a list of KVDB entries
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<KvdbEntry> listEntries(
+            String kvdbId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listEntries(kvdbId, skip, limit, sortOrder, lastId, null, null);
+    }
+
+    /**
+     * Gets a list of KVDB entries from a KVDB.
+     *
+     * @param kvdbId    ID of the KVDB to list KVDB entries from
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @return struct containing a list of KVDB entries
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<KvdbEntry> listEntries(
+            String kvdbId,
+            long skip,
+            long limit,
+            String sortOrder
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listEntries(kvdbId, skip, limit, sortOrder, null, null, null);
+    }
 
     /**
      * Sets a KVDB entry in the given KVDB.
