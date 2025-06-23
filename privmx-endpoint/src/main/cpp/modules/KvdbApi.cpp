@@ -205,7 +205,13 @@ extern "C" JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listKvdbs(
         JNIEnv *env, jobject thiz,
         jstring context_id,
-        jobject paging_query) {
+        jlong skip,
+        jlong limit,
+        jstring sort_order,
+        jstring last_id,
+        jstring query_as_json,
+        jstring sort_by
+) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID")) {
         return nullptr;
@@ -214,7 +220,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listKvdbs(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &context_id, &paging_query]() {
+            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id, &query_as_json, &sort_by]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -224,10 +230,24 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listKvdbs(
                 jmethodID addToArrayMID = ctx->GetMethodID(arrayCls, "add",
                                                            "(Ljava/lang/Object;)Z");
 
+                auto query = core::PagingQuery();
+                query.skip = skip;
+                query.limit = limit;
+                query.sortOrder = ctx.jString2string(sort_order);
+                if (last_id != nullptr) {
+                    query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
+                }
+                if (sort_by != nullptr) {
+                    query.sortBy = ctx.jString2string(sort_by);
+                }
+
                 auto kvdbs_c(
                         getKvdbApi(ctx, thiz)->listKvdbs(
                                 ctx.jString2string(context_id),
-                                parsePagingQuery(ctx, paging_query)
+                                query
                         )
                 );
 

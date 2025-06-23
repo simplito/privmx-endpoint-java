@@ -119,14 +119,95 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of Kvdbs in given Context.
      *
      * @param contextId   ID of the Context to get the Kvdbs from
-     * @param pagingQuery with list query parameters
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start\
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @param sortBy      field by elements are sorted in result
      * @return struct containing a list of Kvdbs
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native PagingList<Kvdb> listKvdbs(String contextId, PagingQuery pagingQuery) throws PrivmxException, NativeException, IllegalStateException;
+    public native PagingList<Kvdb> listKvdbs(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson,
+            String sortBy
+    ) throws PrivmxException, NativeException, IllegalStateException;
 
+    /**
+     * Gets a list of Kvdbs in given Context.
+     *
+     * @param contextId   ID of the Context to get the Kvdbs from
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start\
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @return struct containing a list of Kvdbs
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<Kvdb> listKvdbs(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listKvdbs(contextId, skip, limit, sortOrder, lastId, queryAsJson, null);
+    }
+
+    /**
+     * Gets a list of Kvdbs in given Context.
+     *
+     * @param contextId ID of the Context to get the Kvdbs from
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId    ID of the element from which query results should start\
+     * @return struct containing a list of Kvdbs
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<Kvdb> listKvdbs(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listKvdbs(contextId, skip, limit, sortOrder, lastId, null, null);
+    }
+
+    /**
+     * Gets a list of Kvdbs in given Context.
+     *
+     * @param contextId ID of the Context to get the Kvdbs from
+     * @param skip      skip number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @return struct containing a list of Kvdbs
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<Kvdb> listKvdbs(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        return listKvdbs(contextId, skip, limit, sortOrder, null, null, null);
+    }
 
     /**
      * Gets a KVDB entry by given KVDB entry key and KVDB ID.
