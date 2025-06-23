@@ -807,10 +807,11 @@ namespace privmx {
                     "Ljava/lang/Long;" //version
                     "[B" //publicMeta
                     "[B" //privateMeta
-                    "Ljava/lang/Long;" //items
-                    "Ljava/lang/Long;" //lastItemDate
+                    "Ljava/lang/Long;" //entries
+                    "Ljava/lang/Long;" //lastEntryDate
                     "Lcom/simplito/java/privmx_endpoint/model/ContainerPolicy;" //policy
                     "Ljava/lang/Long;" //statusCode
+                    "Ljava/lang/Long;" //schemaVersion
                     ")V"
             );
             jclass arrayCls = ctx->FindClass("java/util/ArrayList");
@@ -859,7 +860,8 @@ namespace privmx {
                     ctx.long2jLong(kvdb_c.entries),
                     ctx.long2jLong(kvdb_c.lastEntryDate),
                     containerPolicy2Java(ctx, kvdb_c.policy),
-                    ctx.long2jLong(kvdb_c.statusCode)
+                    ctx.long2jLong(kvdb_c.statusCode),
+                    ctx.long2jLong(kvdb_c.schemaVersion)
             );
         }
 
@@ -870,10 +872,10 @@ namespace privmx {
             jmethodID initServerItemInfoMID = ctx->GetMethodID(
                     serverItemInfoCls,
                     "<init>",
-                    "(Ljava/lang/String;"
-                    "Ljava/lang/String;"
-                    "Ljava/lang/Long;"
-                    "Ljava/lang/String;"
+                    "(Ljava/lang/String;"   // kvdbId
+                    "Ljava/lang/String;"        // key
+                    "Ljava/lang/Long;"          // createDate
+                    "Ljava/lang/String;"        // author
                     ")V"
             );
             return ctx->NewObject(
@@ -894,12 +896,14 @@ namespace privmx {
                     itemCls,
                     "<init>",
                     "("
-                    "Lcom/simplito/java/privmx_endpoint/model/ServerKvdbEntryInfo;"
-                    "[B"
-                    "[B"
-                    "[B"
-                    "Ljava/lang/String;"
-                    "Ljava/lang/Long;"
+                    "Lcom/simplito/java/privmx_endpoint/model/ServerKvdbEntryInfo;" // info
+                    "[B"                    // publicMeta
+                    "[B"                    // privateMeta
+                    "[B"                    // data
+                    "Ljava/lang/String;"    // authorPubKey
+                    "Ljava/lang/Long;"      // version
+                    "Ljava/lang/Long;"      // statusCode
+                    "Ljava/lang/Long;"      // schemaVersion
                     ")V"
             );
 
@@ -922,7 +926,9 @@ namespace privmx {
                     privateMeta,
                     data,
                     ctx->NewStringUTF(kvdbEntry_c.authorPubKey.c_str()),
-                    ctx.long2jLong(kvdbEntry_c.statusCode)
+                    ctx.long2jLong(kvdbEntry_c.version),
+                    ctx.long2jLong(kvdbEntry_c.statusCode),
+                    ctx.long2jLong(kvdbEntry_c.schemaVersion)
             );
         }
 
