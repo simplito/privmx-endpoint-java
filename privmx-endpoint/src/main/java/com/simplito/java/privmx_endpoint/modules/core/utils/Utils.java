@@ -21,7 +21,7 @@ public class Utils {
     /**
      * Removes all trailing whitespace.
      *
-     * @param data
+     * @param data string to trim
      * @return copy of string with removed trailing whitespace
      */
     public static native String trim(String data);
@@ -46,7 +46,7 @@ public class Utils {
     /**
      * Removes all whitespace from the right of given string.
      *
-     * @param data string to check
+     * @param data reference to string
      * @return copy of string without whitespace at the end
      */
     public static native String rtrim(String data);
