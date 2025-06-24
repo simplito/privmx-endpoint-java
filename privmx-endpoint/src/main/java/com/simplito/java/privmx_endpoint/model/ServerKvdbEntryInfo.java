@@ -9,22 +9,22 @@ public class ServerKvdbEntryInfo {
     /**
      * ID of the Kvdb
      */
-    String kvdbId;
+    public String kvdbId;
 
     /**
      * Kvdb entry's key
      */
-    String key;
+    public String key;
 
     /**
      * Entry's creation timestamp
      */
-    long createDate;
+    public Long createDate;
 
     /**
      * ID of the user who created the entry
      */
-    String author;
+    public String author;
 
     /**
      * Creates instance of {@code ServerKvdbEntryInfo}.
@@ -34,7 +34,7 @@ public class ServerKvdbEntryInfo {
      * @param createDate Entry's creation timestamp
      * @param author     ID of the user who created the entry
      */
-    public ServerKvdbEntryInfo(String kvdbId, String key, long createDate, String author) {
+    public ServerKvdbEntryInfo(String kvdbId, String key, Long createDate, String author) {
         this.kvdbId = kvdbId;
         this.key = key;
         this.createDate = createDate;
