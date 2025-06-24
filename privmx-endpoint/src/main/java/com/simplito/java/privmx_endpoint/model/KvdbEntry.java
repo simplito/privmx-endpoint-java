@@ -9,42 +9,42 @@ public class KvdbEntry {
     /**
      * Entry information created by server
      */
-    ServerKvdbEntryInfo info;
+    public ServerKvdbEntryInfo info;
 
     /**
      * Entry public metadata
      */
-    byte[] publicMeta;
+    public byte[] publicMeta;
 
     /**
      * Entry private metadata
      */
-    byte[] privateMeta;
+    public byte[] privateMeta;
 
     /**
      * Entry data
      */
-    byte[] data;
+    public byte[] data;
 
     /**
      * Public key of an author of the entry
      */
-    String authorPubKey;
+    public String authorPubKey;
 
     /**
      * Version number (changes on every on existing item)
      */
-    long version;
+    public Long version;
 
     /**
      * Retrieval and decryption status code
      */
-    long statusCode;
+    public Long statusCode;
 
     /**
      * Version of the Entry data structure and how it is encoded/encrypted
      */
-    long schemaVersion;
+    public Long schemaVersion;
 
     /**
      * Creates instance of {@code KvdbEntry}.
@@ -58,7 +58,7 @@ public class KvdbEntry {
      * @param statusCode    Retrieval and decryption status code
      * @param schemaVersion Version of the Entry data structure and how it is encoded/encrypted
      */
-    public KvdbEntry(ServerKvdbEntryInfo info, byte[] publicMeta, byte[] privateMeta, byte[] data, String authorPubKey, long version, long statusCode, long schemaVersion) {
+    public KvdbEntry(ServerKvdbEntryInfo info, byte[] publicMeta, byte[] privateMeta, byte[] data, String authorPubKey, Long version, Long statusCode, Long schemaVersion) {
         this.info = info;
         this.publicMeta = publicMeta;
         this.privateMeta = privateMeta;
