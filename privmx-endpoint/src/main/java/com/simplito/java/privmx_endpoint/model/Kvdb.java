@@ -12,17 +12,17 @@ public class Kvdb {
     /**
      * ID of the Context
      */
-    String contextId;
+    public String contextId;
 
     /**
      * ID of the Kvdb
      */
-    String kvdbId;
+    public String kvdbId;
 
     /**
      * Kvdb creation timestamp
      */
-    long createDate;
+    public Long createDate;
 
     /**
      * ID of user who created the Kvdb
@@ -32,62 +32,52 @@ public class Kvdb {
     /**
      * Kvdb last modification timestamp
      */
-    long lastModificationDate;
+    public Long lastModificationDate;
 
     /**
      * ID of the user who last modified the Kvdb
      */
-    String lastModifier;
-
+    public String lastModifier;
     /**
      * List of users (their IDs) with access to the Kvdb
      */
-    List<String> users;
-
+    public List<String> users;
     /**
      * List of users (their IDs) with management rights
      */
-    List<String> managers;
-
+    public List<String> managers;
     /**
      * Version number (changes on updates)
      */
-    long version;
-
+    public Long version;
     /**
      * Kvdb's public metadata
      */
-    byte[] publicMeta;
-
+    public byte[] publicMeta;
     /**
      * Kvdb's private metadata
      */
-    byte[] privateMeta;
-
+    public byte[] privateMeta;
     /**
      * Total number of entries in the Kvdb
      */
-    long entries;
-
+    public Long entries;
     /**
      * Timestamp of the last added entry
      */
-    long lastEntryDate;
-
+    public Long lastEntryDate;
     /**
      * Kvdb's policies
      */
-    ContainerPolicy policy;
-
+    public ContainerPolicy policy;
     /**
      * Retrieval and decryption status code
      */
-    long statusCode;
-
+    public Long statusCode;
     /**
      * Version of the Kvdb data structure and how it is encoded/encrypted
      */
-    long schemaVersion;
+    public Long schemaVersion;
 
     /**
      * Creates instance of {@code Kvdb}.
@@ -109,7 +99,7 @@ public class Kvdb {
      * @param statusCode           Retrieval and decryption status code
      * @param schemaVersion        Version of the Kvdb data structure and how it is encoded/encrypted
      */
-    public Kvdb(String contextId, String kvdbId, long createDate, String creator, long lastModificationDate, String lastModifier, List<String> users, List<String> managers, long version, byte[] publicMeta, byte[] privateMeta, long entries, long lastEntryDate, ContainerPolicy policy, long statusCode, long schemaVersion) {
+    public Kvdb(String contextId, String kvdbId, Long createDate, String creator, Long lastModificationDate, String lastModifier, List<String> users, List<String> managers, Long version, byte[] publicMeta, byte[] privateMeta, Long entries, Long lastEntryDate, ContainerPolicy policy, Long statusCode, Long schemaVersion) {
         this.contextId = contextId;
         this.kvdbId = kvdbId;
         this.createDate = createDate;
