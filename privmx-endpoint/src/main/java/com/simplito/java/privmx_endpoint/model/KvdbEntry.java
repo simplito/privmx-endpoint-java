@@ -58,7 +58,16 @@ public class KvdbEntry {
      * @param statusCode    Retrieval and decryption status code
      * @param schemaVersion Version of the Entry data structure and how it is encoded/encrypted
      */
-    public KvdbEntry(ServerKvdbEntryInfo info, byte[] publicMeta, byte[] privateMeta, byte[] data, String authorPubKey, Long version, Long statusCode, Long schemaVersion) {
+    public KvdbEntry(
+            ServerKvdbEntryInfo info,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            byte[] data,
+            String authorPubKey,
+            Long version,
+            Long statusCode,
+            Long schemaVersion
+    ) {
         this.info = info;
         this.publicMeta = publicMeta;
         this.privateMeta = privateMeta;
