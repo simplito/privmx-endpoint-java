@@ -11,12 +11,12 @@ public class KvdbDeletedEntryEventData {
     /**
      * Kvdb ID
      */
-    String kvdbId;
+    public String kvdbId;
 
     /**
      * Key of deleted Entry
      */
-    String kvdbEntryKey;
+    public String kvdbEntryKey;
 
     public KvdbDeletedEntryEventData(String kvdbId, String kvdbEntryKey) {
         this.kvdbId = kvdbId;
