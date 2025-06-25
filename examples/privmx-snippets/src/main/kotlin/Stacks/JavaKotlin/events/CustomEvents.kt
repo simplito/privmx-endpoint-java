@@ -20,7 +20,8 @@ fun emittingCustomEvents() {
     val channelName = "CHANNEL_NAME"
 
     val users: List<UserWithPubKey> = listOf(
-        UserWithPubKey(user1Id, user1PublicKey), UserWithPubKey(user2Id, user2PublicKey)
+        UserWithPubKey(user1Id, user1PublicKey),
+        UserWithPubKey(user2Id, user2PublicKey)
     )
     val eventData = "Custom Event Data"
 
@@ -35,8 +36,9 @@ fun handlingCustomEvents() {
     val channelName = "CHANNEL_NAME"
 
     endpointSession.registerCallback(
-        callbacksId, EventType.ContextCustomEvent(contextId, channelName)
+        callbacksId,
+        EventType.ContextCustomEvent(contextId, channelName)
     ) { customEventData ->
-        // some actions when custom event arrives
+        // Some actions when custom event arrives
     }
 }
