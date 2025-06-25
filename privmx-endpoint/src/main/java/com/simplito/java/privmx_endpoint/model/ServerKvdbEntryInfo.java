@@ -4,6 +4,7 @@ package com.simplito.java.privmx_endpoint.model;
  * Holds Kvdb entry's information created by the server.
  *
  * @category kvdb
+ * @group Kvdb
  */
 public class ServerKvdbEntryInfo {
     /**
