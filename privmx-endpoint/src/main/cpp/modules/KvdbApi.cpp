@@ -287,7 +287,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_getEntry(
         jstring key
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(kvdb_id, "Kvdb ID")) {
+    if (ctx.nullCheck(kvdb_id, "Kvdb ID") ||
+        ctx.nullCheck(key, "Key")) {
         return nullptr;
     }
 
@@ -463,7 +464,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_setEntry(
     if (ctx.nullCheck(kvdb_id, "Kvdb ID") ||
         ctx.nullCheck(key, "Key") ||
         ctx.nullCheck(public_meta, "Public meta") ||
-        ctx.nullCheck(private_meta, "Private meta")) {
+        ctx.nullCheck(private_meta, "Private meta") ||
+        ctx.nullCheck(data, "Data")) {
         return;
     }
 
@@ -522,7 +524,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &kvdb_id, &keys]() {
+            [&ctx, &env, &thiz, &kvdb_id, &keys]() {
                 jclass mapCls = ctx->FindClass("java/util/HashMap");
                 jmethodID initMapMID = ctx->GetMethodID(mapCls, "<init>", "()V");
                 jmethodID putInMap = ctx->GetMethodID(
@@ -539,6 +541,13 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(
 
                 for (int i = 0; i < ctx->GetArrayLength(keys_arr); i++) {
                     jobject arrayElement = ctx->GetObjectArrayElement(keys_arr, i);
+
+                    if (arrayElement == nullptr) {
+                        env->ThrowNew(
+                                env->FindClass("java/lang/NullPointerException"),
+                                "At least one of the keys has a null value."
+                        );
+                    }
                     keys_c.push_back(ctx.jString2string((jstring) arrayElement));
                 }
                 std::map<std::string, bool> statuses_c = getKvdbApi(ctx, thiz)->deleteEntries(
