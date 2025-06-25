@@ -27,7 +27,7 @@ public class Kvdb {
     /**
      * ID of user who created the Kvdb
      */
-    String creator;
+    public String creator;
 
     /**
      * Kvdb last modification timestamp
