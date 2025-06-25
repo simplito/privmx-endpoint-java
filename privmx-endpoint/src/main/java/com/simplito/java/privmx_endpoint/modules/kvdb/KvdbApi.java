@@ -539,7 +539,7 @@ public class KvdbApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native void unsubscribeFromKvdbEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
+    public native void unsubscribeFromEntryEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Frees memory.

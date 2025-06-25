@@ -574,7 +574,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_subscribeForKvdbEve
     });
 }
 extern "C" JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_unsubscribeFromKvdbEvents__(
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_unsubscribeFromKvdbEvents(
         JNIEnv *env,
         jobject thiz
 ) {
@@ -600,7 +600,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_subscribeForEntryEv
     });
 }
 extern "C" JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_unsubscribeFromKvdbEvents__Ljava_lang_String_2(
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_unsubscribeFromEntryEvents(
         JNIEnv *env,
         jobject thiz,
         jstring kvdb_id
