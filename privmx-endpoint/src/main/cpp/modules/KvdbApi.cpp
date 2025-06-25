@@ -2,7 +2,6 @@
 // Created by Dominika on 09/04/2025.
 //
 
-#include "KvdbApi.h"
 #include "../utils.hpp"
 #include "../parser.h"
 #include "Connection.h"
