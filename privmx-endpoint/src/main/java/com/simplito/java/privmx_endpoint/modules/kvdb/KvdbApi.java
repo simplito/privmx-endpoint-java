@@ -15,6 +15,8 @@ import java.util.Objects;
 
 /**
  * Manages PrivMX Bridge  Kvdbs and their messages.
+ *
+ * @category kvdb
  */
 public class KvdbApi implements AutoCloseable {
     private final Long api;
