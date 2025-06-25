@@ -9,8 +9,8 @@ import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -536,7 +536,7 @@ public class KvdbApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native HashMap<String, Boolean> deleteEntries(
+    public native Map<String, Boolean> deleteEntries(
             String kvdbId,
             List<String> keys
     ) throws PrivmxException, NativeException, IllegalStateException;
