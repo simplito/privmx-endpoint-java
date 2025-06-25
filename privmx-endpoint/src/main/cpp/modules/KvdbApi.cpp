@@ -223,7 +223,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listKvdbs(
         jstring sort_by
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(context_id, "Context ID")) {
+    if (ctx.nullCheck(context_id, "Context ID") ||
+        ctx.nullCheck(sort_order, "Sort order")) {
         return nullptr;
     }
 
@@ -317,7 +318,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntriesKeys(
         jstring sort_by
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(kvdb_id, "Kvdb ID")) {
+    if (ctx.nullCheck(kvdb_id, "Kvdb ID") ||
+        ctx.nullCheck(sort_order, "Sort order")) {
         return nullptr;
     }
 
