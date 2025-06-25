@@ -434,14 +434,11 @@ parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery) {
     jfieldID sortOrderFID = ctx->GetFieldID(queryClass, "sortOrder", "Ljava/lang/String;");
     jfieldID lastIdFID = ctx->GetFieldID(queryClass, "lastId", "Ljava/lang/String;");
     jfieldID queryAsJsonFID = ctx->GetFieldID(queryClass, "queryAsJson", "Ljava/lang/String;");
+    jfieldID sortByFID = ctx->GetFieldID(queryClass, "sortBy", "Ljava/lang/String;");
 
-    auto skip = ctx.getObject(ctx->GetObjectField(pagingQuery, skipFID)).getLongValue();
-    auto limit = ctx.getObject(ctx->GetObjectField(pagingQuery, limitFID)).getLongValue();
-    auto sortOrder = ctx.jString2string((jstring) ctx->GetObjectField(pagingQuery, sortOrderFID));
-
-    result.skip = skip;
-    result.limit = limit;
-    result.sortOrder = sortOrder;
+    result.skip = ctx.getObject(ctx->GetObjectField(pagingQuery, skipFID)).getLongValue();
+    result.limit = ctx.getObject(ctx->GetObjectField(pagingQuery, limitFID)).getLongValue();
+    result.sortOrder = ctx.jString2string((jstring) ctx->GetObjectField(pagingQuery, sortOrderFID));
 
     jstring value;
     if ((value = (jstring) ctx->GetObjectField(pagingQuery, lastIdFID)) != NULL) {
@@ -449,6 +446,9 @@ parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery) {
     }
     if ((value = (jstring) ctx->GetObjectField(pagingQuery, queryAsJsonFID)) != NULL) {
         result.queryAsJson = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(pagingQuery, sortByFID)) != NULL) {
+        result.sortBy = ctx.jString2string(value);
     }
 
     return result;
