@@ -17,6 +17,7 @@ import com.simplito.java.privmx_endpoint.modules.crypto.ExtKey;
  * Class containing ECC generated key using BIP-39.
  *
  * @category crypto
+ * @group Crypto
  */
 public class BIP39 {
     /**
