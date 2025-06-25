@@ -4,6 +4,7 @@ package com.simplito.java.privmx_endpoint.model;
  * Holds all available information about a Entry.
  *
  * @category kvdb
+ * @group Kvdb
  */
 public class KvdbEntry {
     /**
