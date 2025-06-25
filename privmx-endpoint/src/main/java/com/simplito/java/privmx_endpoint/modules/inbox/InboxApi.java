@@ -424,8 +424,8 @@ public class InboxApi implements AutoCloseable {
      * @param inboxId          ID of the Inbox to which the request applies
      * @param data             entry data to send
      * @param inboxFileHandles optional list of file handles that will be sent with the request
-     * @param userPrivKey      sender can optionally provide a private key, which will be used: <br>
-     *                         1) to sign the sent data, <br>
+     * @param userPrivKey      sender can optionally provide a private key, which will be used:
+     *                         1) to sign the sent data,
      *                         2) to derivation of the public key, which will then be transferred
      *                         along with the sent data and can be used in the future for further
      *                         secure communication with the sender
