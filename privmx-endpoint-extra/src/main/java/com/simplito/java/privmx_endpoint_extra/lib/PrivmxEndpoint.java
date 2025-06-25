@@ -210,7 +210,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         if (channel.module.startsWith("kvdb") && kvdbApi != null) {
             if (channel.type != null && channel.type.equals("entries")) {
                 if (channel.instanceId != null) {
-                    kvdbApi.unsubscribeFromKvdbEvents(channel.instanceId);
+                    kvdbApi.unsubscribeFromEntryEvents(channel.instanceId);
                 } else {
                     System.out.println("No kvdbId to unsubscribeChannel: " + channelStr);
                 }
