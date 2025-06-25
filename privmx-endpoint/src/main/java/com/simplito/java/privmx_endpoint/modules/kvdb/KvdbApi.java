@@ -40,8 +40,8 @@ public class KvdbApi implements AutoCloseable {
      * Creates a new KVDB in given Context.
      *
      * @param contextId   ID of the Context to create the KVDB in
-     * @param users       array of UserWithPubKey structs which indicates who will have access to the created KVDB
-     * @param managers    array of UserWithPubKey structs which indicates who will have access (and management rights) to the created KVDB
+     * @param users       list of {@link UserWithPubKey} which indicates who will have access to the created KVDB
+     * @param managers    list of {@link UserWithPubKey} which indicates who will have access (and management rights) to the created KVDB
      * @param publicMeta  public (unencrypted) metadata
      * @param privateMeta private (encrypted) metadata
      * @param policies    KVDB's policies
@@ -63,8 +63,8 @@ public class KvdbApi implements AutoCloseable {
      * Creates a new KVDB in given Context.
      *
      * @param contextId   ID of the Context to create the KVDB in
-     * @param users       array of UserWithPubKey structs which indicates who will have access to the created KVDB
-     * @param managers    array of UserWithPubKey structs which indicates who will have access (and management rights) to the created KVDB
+     * @param users       list of {@link UserWithPubKey} which indicates who will have access to the created KVDB
+     * @param managers    list of {@link UserWithPubKey} which indicates who will have access (and management rights) to the created KVDB
      * @param publicMeta  public (unencrypted) metadata
      * @param privateMeta private (encrypted) metadata
      * @return ID of the created KVDB
@@ -86,8 +86,8 @@ public class KvdbApi implements AutoCloseable {
      * Updates an existing KVDB.
      *
      * @param kvdbId              ID of the KVDB to update
-     * @param users               array of UserWithPubKey structs which indicates who will have access to the created KVDB
-     * @param managers            array of UserWithPubKey structs which indicates who will have access (and management rights) to the created KVDB
+     * @param users               list of {@link UserWithPubKey} which indicates who will have access to the created KVDB
+     * @param managers            list of {@link UserWithPubKey} which indicates who will have access (and management rights) to the created KVDB
      * @param publicMeta          public (unencrypted) metadata
      * @param privateMeta         private (encrypted) metadata
      * @param version             current version of the updated KVDB
@@ -114,8 +114,8 @@ public class KvdbApi implements AutoCloseable {
      * Updates an existing KVDB.
      *
      * @param kvdbId              ID of the KVDB to update
-     * @param users               array of UserWithPubKey structs which indicates who will have access to the created KVDB
-     * @param managers            array of UserWithPubKey structs which indicates who will have access (and management rights) to the created KVDB
+     * @param users               list of {@link UserWithPubKey} which indicates who will have access to the created KVDB
+     * @param managers            list of {@link UserWithPubKey} which indicates who will have access (and management rights) to the created KVDB
      * @param publicMeta          public (unencrypted) metadata
      * @param privateMeta         private (encrypted) metadata
      * @param version             current version of the updated KVDB
