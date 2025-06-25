@@ -187,7 +187,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a KVDB by given KVDB ID.
      *
      * @param kvdbId ID of KVDB to get
-     * @return class containing info about the KVDB
+     * @return object containing info about the KVDB
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
@@ -293,7 +293,7 @@ public class KvdbApi implements AutoCloseable {
      *
      * @param kvdbId KVDB ID of the KVDB entry to get
      * @param key    key of the KVDB entry to get
-     * @return class containing the KVDB entry
+     * @return object containing the KVDB entry
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
