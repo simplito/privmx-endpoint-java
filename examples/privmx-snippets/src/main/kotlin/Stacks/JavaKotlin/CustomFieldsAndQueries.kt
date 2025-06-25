@@ -31,24 +31,33 @@ fun CreatingThreadWithCustomField() {
     )
 }
 
-fun creatinqQueryWithOneSpecifiedValue() {
+fun creatinqQueryWithOneSpecifiedValue(): String {
+    //Start snippet
     val query = """
     {
         "threadType": "special"
     }
     """.trimIndent()
+    //End snippet
+
+    return query
 }
 
-fun creatinqQueryWithTwoSpecifiedValues() {
+fun creatinqQueryWithTwoSpecifiedValues(): String {
+    //Start snippet
     val query = """
     {
         "numberOfMessages": { "${'$'}gt": 10 },
         "tags": "TAG2"
     }
     """.trimIndent()
+    //End snippet
+
+    return query
 }
 
-fun creatinqQueryWithOrCondition() {
+fun creatinqQueryWithOrCondition(): String {
+    //Start snippet
     val query = """
     {
         "${'$'}or": [
@@ -57,13 +66,15 @@ fun creatinqQueryWithOrCondition() {
         ]
     }
     """.trimIndent()
+    //End snippet
+
+    return query
 }
 
-fun ListingThreadsWithCustomQueries() {
+fun ListingThreadsWithCustomQueries(query: String) {
     val startIndex = 0L
     val pageSize = 100L
     val lastId = null
-    val query = "QUERY_AS_JSON"
 
     endpointSession.threadApi.listThreads(
         contextId,
