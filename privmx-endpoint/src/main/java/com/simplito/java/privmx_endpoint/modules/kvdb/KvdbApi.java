@@ -133,8 +133,44 @@ public class KvdbApi implements AutoCloseable {
             byte[] privateMeta,
             long version,
             boolean force,
-            boolean forceGenerateNewKey) throws PrivmxException, NativeException, IllegalStateException {
+            boolean forceGenerateNewKey
+    ) throws PrivmxException, NativeException, IllegalStateException {
         updateKvdb(kvdbId, users, managers, publicMeta, privateMeta, version, force, forceGenerateNewKey, null);
+    }
+
+    /**
+     * Updates an existing KVDB.
+     *
+     * @param kvdbId      ID of the KVDB to update
+     * @param users       list of {@link UserWithPubKey} which indicates who will have access to the created KVDB
+     * @param managers    list of {@link UserWithPubKey} which indicates who will have access (and management rights) to the created KVDB
+     * @param publicMeta  public (unencrypted) metadata
+     * @param privateMeta private (encrypted) metadata
+     * @param version     current version of the updated KVDB
+     * @param force       force update (without checking version)
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public void updateKvdb(String kvdbId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, long version, boolean force) throws PrivmxException, NativeException, IllegalStateException {
+        updateKvdb(kvdbId, users, managers, publicMeta, privateMeta, version, force, false, null);
+    }
+
+    /**
+     * Updates an existing KVDB.
+     *
+     * @param kvdbId      ID of the KVDB to update
+     * @param users       list of {@link UserWithPubKey} which indicates who will have access to the created KVDB
+     * @param managers    list of {@link UserWithPubKey} which indicates who will have access (and management rights) to the created KVDB
+     * @param publicMeta  public (unencrypted) metadata
+     * @param privateMeta private (encrypted) metadata
+     * @param version     current version of the updated KVDB
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public void updateKvdb(String kvdbId, List<UserWithPubKey> users, List<UserWithPubKey> managers, byte[] publicMeta, byte[] privateMeta, long version) throws PrivmxException, NativeException, IllegalStateException {
+        updateKvdb(kvdbId, users, managers, publicMeta, privateMeta, version, false, false, null);
     }
 
     /**
