@@ -11,7 +11,7 @@ public class KvdbDeletedEventData {
     /**
      * Kvdb ID
      */
-    String kvdbId;
+    public String kvdbId;
 
     public KvdbDeletedEventData(String kvdbId) {
         this.kvdbId = kvdbId;
