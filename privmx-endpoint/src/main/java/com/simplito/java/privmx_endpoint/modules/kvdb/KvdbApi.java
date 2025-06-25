@@ -25,7 +25,7 @@ public class KvdbApi implements AutoCloseable {
      * Creates an instance of {@code KvdbApi}.
      *
      * @param connection instance of 'Connection'
-     * @throws IllegalStateException thrown when instance is closed.
+     * @throws IllegalStateException when given {@link Connection} is not connected
      */
     public KvdbApi(Connection connection) throws IllegalStateException {
         Objects.requireNonNull(connection);
