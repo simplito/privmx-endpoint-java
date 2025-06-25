@@ -16,14 +16,14 @@ public class KvdbStatsEventData {
     /**
      * Timestamp of the most recent Kvdb item
      */
-    public long lastEntryDate;
+    public Long lastEntryDate;
 
     /**
      * Updated number of entries in the Kvdb
      */
-    public long entries;
+    public Long entries;
 
-    public KvdbStatsEventData(String kvdbId, long lastEntryDate, long entries) {
+    public KvdbStatsEventData(String kvdbId, Long lastEntryDate, Long entries) {
         this.kvdbId = kvdbId;
         this.lastEntryDate = lastEntryDate;
         this.entries = entries;
