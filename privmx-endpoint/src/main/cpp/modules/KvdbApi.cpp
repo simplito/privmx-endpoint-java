@@ -295,9 +295,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_getEntry(
     ctx.callResultEndpointApi<jobject>(
             &result,
             [&ctx, &thiz, &kvdb_id, &key]() {
-                auto item_c(getKvdbApi(ctx, thiz)->getEntry(ctx.jString2string(kvdb_id),
-                                                            ctx.jString2string(key)));
-                return privmx::wrapper::kvdbEntry2Java(ctx, item_c);
+                auto entry_c(getKvdbApi(ctx, thiz)->getEntry(ctx.jString2string(kvdb_id),
+                                                             ctx.jString2string(key)));
+                return privmx::wrapper::kvdbEntry2Java(ctx, entry_c);
             }
     );
     if (ctx->ExceptionCheck()) {
@@ -350,7 +350,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntriesKeys(
                     query.sortBy = ctx.jString2string(sort_by);
                 }
 
-                auto itemKeys_c(
+                auto entryKeys_c(
                         getKvdbApi(ctx, thiz)->listEntriesKeys(
                                 ctx.jString2string(kvdb_id),
                                 query
@@ -358,16 +358,16 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntriesKeys(
                 );
 
                 jobject array = ctx->NewObject(arrayCls, initArrayMID);
-                for (auto &itemKey_c: itemKeys_c.readItems) {
+                for (auto &entryKey_c: entryKeys_c.readItems) {
                     ctx->CallBooleanMethod(array,
                                            addToArrayMID,
-                                           ctx->NewStringUTF(itemKey_c.c_str())
+                                           ctx->NewStringUTF(entryKey_c.c_str())
                     );
                 }
                 return ctx->NewObject(
                         pagingListCls,
                         pagingListInitMID,
-                        ctx.long2jLong(itemKeys_c.totalAvailable),
+                        ctx.long2jLong(entryKeys_c.totalAvailable),
                         array
                 );
             }
@@ -422,7 +422,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntries(
                     query.sortBy = ctx.jString2string(sort_by);
                 }
 
-                auto items_c(
+                auto entries_c(
                         getKvdbApi(ctx, thiz)->listEntries(
                                 ctx.jString2string(kvdb_id),
                                 query
@@ -430,16 +430,16 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntries(
                 );
 
                 jobject array = ctx->NewObject(arrayCls, initArrayMID);
-                for (auto &item_c: items_c.readItems) {
+                for (auto &entry_c: entries_c.readItems) {
                     ctx->CallBooleanMethod(array,
                                            addToArrayMID,
-                                           privmx::wrapper::kvdbEntry2Java(ctx, item_c)
+                                           privmx::wrapper::kvdbEntry2Java(ctx, entry_c)
                     );
                 }
                 return ctx->NewObject(
                         pagingListCls,
                         pagingListInitMID,
-                        ctx.long2jLong(items_c.totalAvailable),
+                        ctx.long2jLong(entries_c.totalAvailable),
                         array
                 );
             }
