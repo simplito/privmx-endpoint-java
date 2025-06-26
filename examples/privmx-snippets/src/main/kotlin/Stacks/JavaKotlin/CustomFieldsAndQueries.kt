@@ -3,7 +3,7 @@ package Stacks.JavaKotlin
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
 import com.simplito.java.privmx_endpoint_extra.model.SortOrder
 
-fun CreatingThreadWithCustomField() {
+fun creatingThreadWithCustomField() {
     val contextId = "CONTEXT_ID"
     val users: List<UserWithPubKey> = listOf(
         UserWithPubKey(user1Id, user1PublicKey),
@@ -31,7 +31,7 @@ fun CreatingThreadWithCustomField() {
     )
 }
 
-fun creatinqQueryWithOneSpecifiedValue(): String {
+fun creatingQueryWithOneSpecifiedValue(): String {
     //Start snippet
     val query = """
     {
@@ -43,7 +43,7 @@ fun creatinqQueryWithOneSpecifiedValue(): String {
     return query
 }
 
-fun creatinqQueryWithTwoSpecifiedValues(): String {
+fun creatingQueryWithTwoSpecifiedValues(): String {
     //Start snippet
     val query = """
     {
@@ -56,7 +56,7 @@ fun creatinqQueryWithTwoSpecifiedValues(): String {
     return query
 }
 
-fun creatinqQueryWithOrCondition(): String {
+fun creatingQueryWithOrCondition(): String {
     //Start snippet
     val query = """
     {
@@ -71,7 +71,7 @@ fun creatinqQueryWithOrCondition(): String {
     return query
 }
 
-fun ListingThreadsWithCustomQueries(query: String) {
+fun listingThreadsWithCustomQueries(query: String) {
     val startIndex = 0L
     val pageSize = 100L
     val lastId = null
