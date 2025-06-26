@@ -592,7 +592,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(
                             map,
                             putInMap,
                             ctx->NewStringUTF(status_c.first.c_str()),
-                            status_c.second ? JNI_TRUE : JNI_FALSE
+                            ctx.bool2jBoolean(status_c.second && JNI_TRUE)
                     );
                 }
                 return map;
