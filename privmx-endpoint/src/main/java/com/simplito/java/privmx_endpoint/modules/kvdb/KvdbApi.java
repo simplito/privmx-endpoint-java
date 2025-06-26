@@ -511,6 +511,28 @@ public class KvdbApi implements AutoCloseable {
     ) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
+     * Sets a KVDB entry in the given KVDB.
+     *
+     * @param kvdbId      ID of the KVDB to set the entry to
+     * @param key         KVDB entry key
+     * @param publicMeta  public KVDB entry metadata
+     * @param privateMeta private KVDB entry metadata
+     * @param data        content of the KVDB entry
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is closed.
+     */
+    public void setEntry(
+            String kvdbId,
+            String key,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            byte[] data
+    ) throws PrivmxException, NativeException, IllegalStateException {
+        setEntry(kvdbId, key, publicMeta, privateMeta, data, 0L);
+    }
+
+    /**
      * Deletes a KVDB entry by given KVDB entry ID.
      *
      * @param kvdbId KVDB ID of the KVDB entry to delete
