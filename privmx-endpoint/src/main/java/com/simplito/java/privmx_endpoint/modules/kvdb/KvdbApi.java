@@ -234,7 +234,7 @@ public class KvdbApi implements AutoCloseable {
      * @param skip      skip number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
-     * @param lastId    ID of the element from which query results should start\
+     * @param lastId    ID of the element from which query results should start
      * @return list of Kvdbs
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
@@ -343,7 +343,7 @@ public class KvdbApi implements AutoCloseable {
      * @param skip      skip number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
-     * @param lastId    ID of the element from which query results should start\
+     * @param lastId    ID of the element from which query results should start
      * @return list of KVDB entries
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
@@ -437,7 +437,7 @@ public class KvdbApi implements AutoCloseable {
      * @param skip      skip number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
-     * @param lastId    ID of the element from which query results should start\
+     * @param lastId    ID of the element from which query results should start
      * @return list of KVDB entries
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
