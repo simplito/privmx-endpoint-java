@@ -287,6 +287,24 @@ public class KvdbApi implements AutoCloseable {
     ) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
+     * Check whether the KVDB entry exists.
+     *
+     * @param kvdbId KVDB ID of the KVDB entry to check
+     * @param key    key of the KVDB entry to check
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @returns 'true' if the KVDB has an entry with given key, 'false' otherwise
+     */
+    public native Boolean hasEntry(
+            String kvdbId,
+            String key
+    ) throws PrivmxException, NativeException, IllegalStateException;
+
+    /**
      * Gets a list of KVDB entries keys from a KVDB.
      *
      * @param kvdbId      ID of the KVDB to list KVDB entries from

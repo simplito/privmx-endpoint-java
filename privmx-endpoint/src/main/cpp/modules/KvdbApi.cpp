@@ -305,6 +305,38 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_getEntry(
     }
     return result;
 }
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_hasEntry(
+        JNIEnv *env,
+        jobject thiz,
+        jstring kvdb_id,
+        jstring key
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(kvdb_id, "Kvdb ID") ||
+        ctx.nullCheck(key, "Key")) {
+        return nullptr;
+    }
+    jobject result;
+
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &thiz, &kvdb_id, &key]() {
+                bool check_c = getKvdbApi(ctx, thiz)->hasEntry(
+                        ctx.jString2string(kvdb_id),
+                        ctx.jString2string(key)
+                );
+
+                return ctx.bool2jBoolean(check_c && JNI_TRUE);
+            }
+    );
+
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
 extern "C" JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_listEntriesKeys(
         JNIEnv *env,
