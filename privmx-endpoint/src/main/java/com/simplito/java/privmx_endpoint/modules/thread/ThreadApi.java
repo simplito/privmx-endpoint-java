@@ -252,7 +252,7 @@ public class ThreadApi implements AutoCloseable {
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
      * @param queryAsJson stringified JSON object with a custom field to filter result
-     * @param sortBy      field by elements are sorted in result
+     * @param sortBy      field name to sort elements by
      * @return list of Threads
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception
@@ -364,7 +364,7 @@ public class ThreadApi implements AutoCloseable {
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
      * @param queryAsJson stringified JSON object with a custom field to filter result
-     * @param sortBy      field by elements are sorted in result
+     * @param sortBy      field name to sort elements by
      * @return list of messages
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
