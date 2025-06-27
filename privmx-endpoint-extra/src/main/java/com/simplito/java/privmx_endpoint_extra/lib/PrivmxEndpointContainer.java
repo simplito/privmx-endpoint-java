@@ -120,7 +120,7 @@ public class PrivmxEndpointContainer implements AutoCloseable {
      * Creates a new connection.
      *
      * @param enableModule        set of modules to initialize
-     * @param bridgeUrl           Bridge's Endpoint URL
+     * @param bridgeUrl           Bridge Server URL
      * @param solutionId          {@code SolutionId} of the current project
      * @param userPrivateKey      user private key used to authorize; generated from:
      *                            {@link CryptoApi#generatePrivateKey} or

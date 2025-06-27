@@ -45,7 +45,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
      *
      * @param enableModule        set of modules to initialize; should contain {@link Modules#THREAD }
      *                            to enable Thread module or {@link Modules#STORE } to enable Store module
-     * @param bridgeUrl           Bridge's Endpoint URL
+     * @param bridgeUrl           Bridge Server URL
      * @param solutionId          {@code SolutionId} of the current project
      * @param userPrivateKey      user private key used to authorize; generated from:
      *                            {@link CryptoApi#generatePrivateKey} or
