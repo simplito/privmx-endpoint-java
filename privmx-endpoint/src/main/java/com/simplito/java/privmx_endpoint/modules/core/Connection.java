@@ -68,7 +68,7 @@ public class Connection implements AutoCloseable {
      *
      * @param userPrivKey user's private key
      * @param solutionId  ID of the Solution
-     * @param bridgeUrl   Bridge's Endpoint URL
+     * @param bridgeUrl   Bridge Server URL
      * @return Connection object
      * @throws PrivmxException thrown when method encounters an exception.
      * @throws NativeException thrown when method encounters an unknown exception.
@@ -117,7 +117,7 @@ public class Connection implements AutoCloseable {
      * Connects to PrivMX Bridge server as a guest user.
      *
      * @param solutionId ID of the Solution
-     * @param bridgeUrl  Bridge's Endpoint URL
+     * @param bridgeUrl  Bridge Server URL
      * @return Connection object
      * @throws PrivmxException thrown when method encounters an exception.
      * @throws NativeException thrown when method encounters an unknown exception.
