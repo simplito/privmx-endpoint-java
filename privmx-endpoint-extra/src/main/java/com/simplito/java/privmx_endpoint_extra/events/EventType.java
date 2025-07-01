@@ -303,27 +303,47 @@ public class EventType<T> {
         );
     }
 
+    /**
+     * Predefined event type to catch updated Kvdb events.
+     */
     public static final EventType<Kvdb> KvdbUpdatedEvent = new EventType<>(
             "kvdb",
             "kvdbUpdated",
             Kvdb.class
     );
+
+    /**
+     * Predefined event type to catch deleted Kvdb events.
+     */
     public static final EventType<KvdbDeletedEventData> KvdbDeletedEvent = new EventType<>(
             "kvdb",
             "kvdbDeleted",
             KvdbDeletedEventData.class
     );
+
+    /**
+     * Predefined event type to catch updated Kvdb stats events.
+     */
     public static final EventType<KvdbStatsEventData> KvdbStatsEvent = new EventType<>(
             "kvdb",
             "kvdbStatsChanged",
             KvdbStatsEventData.class
     );
+
+    /**
+     * Predefined event type to catch created Kvdb events.
+     */
     public static EventType<Kvdb> KvdbCreatedEvent = new EventType<>(
             "kvdb",
             "kvdbCreated",
             Kvdb.class
     );
 
+    /**
+     * Predefined event type to catch created KvdbEntry events.
+     *
+     * @param kvdbId ID of the Kvdb to observe
+     */
     public static EventType<KvdbEntry> kvdbNewEntry(String kvdbId) throws NullPointerException {
         if (kvdbId == null) throw new NullPointerException("Kvdb id cannot be null");
         return new EventType<>(
@@ -333,6 +353,11 @@ public class EventType<T> {
         );
     }
 
+    /**
+     * Predefined event type to catch updated KvdbEntry events.
+     *
+     * @param kvdbId ID of the Kvdb to observe
+     */
     public static EventType<KvdbEntry> KvdbEntryUpdatedEvent(String kvdbId) throws NullPointerException {
         if (kvdbId == null) throw new NullPointerException("Kvdb id cannot be null");
         return new EventType<>(
@@ -342,6 +367,11 @@ public class EventType<T> {
         );
     }
 
+    /**
+     * Predefined event type to catch deleted KvdbEntry events.
+     *
+     * @param kvdbId ID of the Kvdb to observe
+     */
     public static EventType<KvdbDeletedEntryEventData> KvdbEntryDeletedEvent(String kvdbId) throws NullPointerException {
         if (kvdbId == null) throw new NullPointerException("Kvdb id cannot be null");
         return new EventType<>(
