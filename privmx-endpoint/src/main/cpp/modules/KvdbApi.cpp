@@ -567,7 +567,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(
                         "("
                         "Ljava/lang/Object;"    // String
                         "Ljava/lang/Object;"    // Boolean
-                        ")Z"
+                        ")Ljava/lang/Object;"
                 );
 
                 auto keys_arr = ctx.jObject2jArray(keys);
@@ -591,11 +591,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(
 
                 jobject map = ctx->NewObject(mapCls, initMapMID);
                 for (auto &status_c: statuses_c) {
-                    ctx->CallBooleanMethod(
+                    ctx->CallObjectMethod(
                             map,
                             putInMap,
                             ctx->NewStringUTF(status_c.first.c_str()),
-                            ctx.bool2jBoolean(status_c.second && JNI_TRUE)
+                            ctx.bool2jBoolean(status_c.second == JNI_TRUE)
                     );
                 }
                 return map;
