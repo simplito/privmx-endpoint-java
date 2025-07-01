@@ -966,7 +966,12 @@ namespace privmx {
             jmethodID initContextCustomEventDataMID = ctx->GetMethodID(
                     contextCustomEventDataCls,
                     "<init>",
-                    "(Ljava/lang/String;Ljava/lang/String;[B)V"
+                    "("
+                    "Ljava/lang/String;"    // contextId
+                    "Ljava/lang/String;"    // userId
+                    "[B"                    // payload
+                    "Ljava/lang/Long"       // statusCode
+                    ")V"
             );
             jbyteArray data = ctx->NewByteArray(contextCustomEvent_c.payload.size());
             ctx->SetByteArrayRegion(data, 0, contextCustomEvent_c.payload.size(),
