@@ -558,7 +558,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &env, &thiz, &kvdb_id, &keys]() {
+            [&ctx, &env, &thiz, &kvdb_id, &keys]() -> jobject {
                 jclass mapCls = ctx->FindClass("java/util/HashMap");
                 jmethodID initMapMID = ctx->GetMethodID(mapCls, "<init>", "()V");
                 jmethodID putInMap = ctx->GetMethodID(
@@ -581,6 +581,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_deleteEntries(
                                 env->FindClass("java/lang/NullPointerException"),
                                 "At least one of the keys has a null value."
                         );
+                        return nullptr;
                     }
                     keys_c.push_back(ctx.jString2string((jstring) arrayElement));
                 }
