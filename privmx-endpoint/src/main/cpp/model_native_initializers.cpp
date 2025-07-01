@@ -789,7 +789,10 @@ namespace privmx {
 
 
         //Kvdb
-        jobject kvdb2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Kvdb kvdb_c) {
+        jobject kvdb2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::kvdb::Kvdb kvdb_c
+        ) {
             jclass kvdbCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/Kvdb");
             jmethodID initKvdbMID = ctx->GetMethodID(
@@ -865,8 +868,10 @@ namespace privmx {
             );
         }
 
-        jobject serverKvdbEntryInfo2Java(JniContextUtils &ctx,
-                                         privmx::endpoint::kvdb::ServerKvdbEntryInfo serverKvdbEntryInfo_c) {
+        jobject serverKvdbEntryInfo2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::kvdb::ServerKvdbEntryInfo serverKvdbEntryInfo_c
+        ) {
             jclass serverItemInfoCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/ServerKvdbEntryInfo");
             jmethodID initServerItemInfoMID = ctx->GetMethodID(
@@ -888,8 +893,10 @@ namespace privmx {
             );
         }
 
-        jobject
-        kvdbEntry2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::KvdbEntry kvdbEntry_c) {
+        jobject kvdbEntry2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::kvdb::KvdbEntry kvdbEntry_c
+        ) {
             jclass itemCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/KvdbEntry");
             jmethodID initItemMID = ctx->GetMethodID(
