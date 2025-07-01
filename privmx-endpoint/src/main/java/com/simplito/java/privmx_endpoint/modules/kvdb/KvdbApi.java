@@ -296,7 +296,7 @@ public class KvdbApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      * @throws IllegalStateException thrown when instance is closed.
      */
-    public native Boolean hasEntry(
+    public native boolean hasEntry(
             String kvdbId,
             String key
     ) throws PrivmxException, NativeException, IllegalStateException;
