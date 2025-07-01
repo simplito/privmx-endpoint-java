@@ -13,6 +13,7 @@ package com.simplito.java.privmx_endpoint.model.events;
 
 /**
  * Holds information about a message deleted from a Thread.
+ *
  * @category core
  * @group Events
  */
@@ -30,13 +31,14 @@ public class ThreadDeletedMessageEventData {
 
     /**
      * Creates instance of {@code ThreadDeletedMessageEventData}.
-     * @param threadId ID of the deleted message's Thread.
+     *
+     * @param threadId  ID of the deleted message's Thread.
      * @param messageId ID of the deleted Message.
      */
     ThreadDeletedMessageEventData(
             String threadId,
             String messageId
-    ){
+    ) {
         this.threadId = threadId;
         this.messageId = messageId;
     }

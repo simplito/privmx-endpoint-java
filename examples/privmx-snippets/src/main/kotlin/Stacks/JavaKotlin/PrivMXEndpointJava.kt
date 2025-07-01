@@ -1,8 +1,11 @@
 package Stacks.JavaKotlin
 
+import Stacks.JavaKotlin.events.eventApi
 import Stacks.JavaKotlin.inboxes.inboxApi
 import Stacks.JavaKotlin.stores.storeApi
 import Stacks.JavaKotlin.threads.threadApi
+import com.simplito.java.privmx_endpoint.model.VerificationRequest
+import com.simplito.java.privmx_endpoint.modules.core.UserVerifierInterface
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
@@ -33,13 +36,14 @@ val user2PublicKey = "PUBLIC_KEY_2"
 // END: Initial assumption snippet
 
 
-fun makeConnection(){
+fun makeConnection() {
     // START: Make connection snippet
     val pathToCerts = "PATH_TO_CERTS" // Path to .pem ssl certificate to connect with Privmx Bridge
     val initModules = setOf(
         Modules.THREAD, // initializes ThreadApi to working with Threads
         Modules.STORE, // initializes StoreApi to working with Stores
-        Modules.INBOX // initializes InboxApi to working with Inboxes
+        Modules.INBOX, // initializes InboxApi to working with Inboxes
+        Modules.CUSTOM_EVENT // initializes EventApi to working with Custom Events
     ) // set of modules to activate in new connection
 
     val endpointContainer = PrivmxEndpointContainer().also {
@@ -54,30 +58,44 @@ fun makeConnection(){
     )
     // END: Make connection snippet
 
-    setupConnection(endpointContainer,endpointSession)
+    setupConnection(endpointContainer, endpointSession)
 }
 
-fun getEndpoint(){
+fun setUserVerifier() {
+    val userVerifier: UserVerifierInterface = object : UserVerifierInterface {
+        override fun verify(requests: List<VerificationRequest>): List<Boolean> {
+            return requests.map { request ->
+                // Your verification code for the request
+                true
+            }
+        }
+    }
+
+    endpointSession.connection.setUserVerifier(userVerifier)
+}
+
+fun getEndpoint() {
     endpointContainer.getEndpoint(endpointSession.connection.connectionId)
 }
 
-fun close(){
+fun close() {
     endpointContainer.close()
 }
 
-fun disconnectAll(){
+fun disconnectAll() {
     endpointContainer.disconnectAll()
 }
 
-fun disconnectById(){
+fun disconnectById() {
     endpointContainer.disconnect(endpointSession.connection.connectionId)
 }
 
 //setup global connection variables
-private fun setupConnection(ct: PrivmxEndpointContainer, conn: PrivmxEndpoint){
+private fun setupConnection(ct: PrivmxEndpointContainer, conn: PrivmxEndpoint) {
     endpointContainer = ct
     endpointSession = conn
     threadApi = endpointSession.threadApi
     storeApi = endpointSession.storeApi
     inboxApi = endpointSession.inboxApi
+    eventApi = endpointSession.eventApi
 }

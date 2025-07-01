@@ -26,6 +26,7 @@ public class InboxDeletedEventData {
 
     /**
      * Creates instance of {@code InboxDeletedEventData}.
+     *
      * @param inboxId ID of the deleted Inbox.
      */
     public InboxDeletedEventData(

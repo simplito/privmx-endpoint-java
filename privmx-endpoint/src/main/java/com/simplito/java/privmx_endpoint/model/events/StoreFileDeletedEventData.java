@@ -13,6 +13,7 @@ package com.simplito.java.privmx_endpoint.model.events;
 
 /**
  * Holds information about a file deleted from Store.
+ *
  * @category core
  * @group Events
  */
@@ -34,9 +35,10 @@ public class StoreFileDeletedEventData {
 
     /**
      * Creates instance of {@code StoreFileDeletedEventData}.
-     * @param fileId ID of the deleted file.
+     *
+     * @param fileId    ID of the deleted file.
      * @param contextId ID of the Store's Context.
-     * @param storeId ID of the Store of the deleted file.
+     * @param storeId   ID of the Store of the deleted file.
      */
     public StoreFileDeletedEventData(
             String fileId,

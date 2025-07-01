@@ -14,43 +14,94 @@
 
 #include <string>
 #include <jni.h>
-
+#include <functional>
 #include <privmx/endpoint/core/Exception.hpp>
 #include "privmx/endpoint/core/Exception.hpp"
+#include "exceptions.h"
 
-class JniContextUtils
-{
+class JniContextUtils {
 public:
-    class Object
-    {
+    class Object {
     public:
-        Object(JniContextUtils& env, jobject obj);
+        Object(JniContextUtils &env, jobject obj);
+
         ~Object();
-        std::string getFieldAsString(const std::string& name);
+
+        std::string getFieldAsString(const std::string &name);
+
         jlong getLongValue();
+
         jboolean getBooleanValue();
 
     private:
         jobject _obj;
         jclass _objCls;
-        JniContextUtils& _env;
+        JniContextUtils &_env;
     };
 
-    JniContextUtils(JNIEnv* env) : _env(env) {}
-    JNIEnv* operator->() { return _env; }
+    JniContextUtils(JNIEnv *env) : _env(env) {}
+
+    JNIEnv *operator->() { return _env; }
+
     std::string jString2string(jstring str);
+
     std::string jByteArray2String(jbyteArray arr);
+
     jobjectArray jObject2jArray(jobject obj);
+
     Object getObject(jobject obj);
+
     jthrowable coreException2jthrowable(privmx::endpoint::core::Exception exception_c);
+
     jobject long2jLong(long long value);
+
     jobject bool2jBoolean(bool value);
+
     jobject int2jInteger(int value);
+
     bool nullCheck(void *value, std::string value_name);
 
+    template<typename T>
+    void callResultEndpointApi(T *result, const std::function<T()> &fun) {
+        try {
+            *result = fun();
+        } catch (const privmx::endpoint::core::Exception &e) {
+            _env->Throw(coreException2jthrowable(e));
+        } catch (const IllegalStateException &e) {
+            _env->ThrowNew(
+                    _env->FindClass("java/lang/IllegalStateException"),
+                    e.what()
+            );
+        } catch (const std::exception &e) {
+            _env->ThrowNew(
+                    _env->FindClass(
+                            "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+                    e.what()
+            );
+        } catch (...) {
+            _env->ThrowNew(
+                    _env->FindClass(
+                            "com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+                    "Unknown exception"
+            );
+        }
+    }
+
+    void callVoidEndpointApi(const std::function<void()> &fun);
+
+    /**
+    * Returns class for given name.
+    * This implementation uses class loader (set with setClassLoaderFromObject method)
+    * to find class with given name.
+    * If classLoader is null returns jclass using env->FindClass().
+    */
+    jclass findClass(const char *name);
+
+    void setClassLoaderFromObject(jobject object);
 
 private:
-    JNIEnv* _env;
+    JNIEnv *_env;
+    jobject jclassLoader;
 };
 
 #endif //PRIVMX_PRIVMXPOCKETLIB_UTILS_HPP

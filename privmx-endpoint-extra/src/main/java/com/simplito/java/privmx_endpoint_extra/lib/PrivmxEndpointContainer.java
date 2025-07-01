@@ -12,6 +12,7 @@
 package com.simplito.java.privmx_endpoint_extra.lib;
 
 import com.simplito.java.privmx_endpoint.model.Event;
+import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
@@ -118,8 +119,43 @@ public class PrivmxEndpointContainer implements AutoCloseable {
     /**
      * Creates a new connection.
      *
+     * @param enableModule        set of modules to initialize
+     * @param bridgeUrl           Bridge Server URL
+     * @param solutionId          {@code SolutionId} of the current project
+     * @param userPrivateKey      user private key used to authorize; generated from:
+     *                            {@link CryptoApi#generatePrivateKey} or
+     *                            {@link CryptoApi#derivePrivateKey}
+     * @param verificationOptions PrivMX Bridge server instance verification options using a PKI server
+     * @return Created connection
+     * @throws IllegalStateException when certPath is not set up
+     * @throws PrivmxException       if there is a problem during login
+     * @throws NativeException       if there is an unknown problem during login
+     */
+    public PrivmxEndpoint connect(
+            Set<Modules> enableModule,
+            String userPrivateKey,
+            String solutionId,
+            String bridgeUrl,
+            PKIVerificationOptions verificationOptions
+    ) throws PrivmxException, NativeException {
+        PrivmxEndpoint privmxEndpoint = new PrivmxEndpoint(
+                enableModule,
+                userPrivateKey,
+                solutionId,
+                bridgeUrl,
+                verificationOptions
+        );
+        synchronized (privmxEndpoints) {
+            privmxEndpoints.put(privmxEndpoint.connection.getConnectionId(), privmxEndpoint);
+        }
+        return privmxEndpoint;
+    }
+
+    /**
+     * Creates a new connection.
+     *
      * @param enableModule   set of modules to initialize
-     * @param bridgeUrl      Bridge's Endpoint URL
+     * @param bridgeUrl      Bridge Server URL
      * @param solutionId     {@code SolutionId} of the current project
      * @param userPrivateKey user private key used to authorize; generated from:
      *                       {@link CryptoApi#generatePrivateKey} or
@@ -135,16 +171,7 @@ public class PrivmxEndpointContainer implements AutoCloseable {
             String solutionId,
             String bridgeUrl
     ) throws PrivmxException, NativeException {
-        PrivmxEndpoint privmxEndpoint = new PrivmxEndpoint(
-                enableModule,
-                userPrivateKey,
-                solutionId,
-                bridgeUrl
-        );
-        synchronized (privmxEndpoints) {
-            privmxEndpoints.put(privmxEndpoint.connection.getConnectionId(), privmxEndpoint);
-        }
-        return privmxEndpoint;
+        return connect(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
     }
 
     /**

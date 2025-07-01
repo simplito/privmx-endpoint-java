@@ -12,6 +12,7 @@
 package com.simplito.java.privmx_endpoint_extra.lib;
 
 import com.simplito.java.privmx_endpoint.model.Event;
+import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.crypto.CryptoApi;
@@ -40,11 +41,36 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
     private final EventDispatcher eventDispatcher = new EventDispatcher(onRemoveChannel);
 
     /**
+     * Calls {@link BasicPrivmxEndpoint#BasicPrivmxEndpoint(Set, String, String, String, PKIVerificationOptions)}.
+     *
+     * @param enableModule        set of modules to initialize; should contain {@link Modules#THREAD }
+     *                            to enable Thread module or {@link Modules#STORE } to enable Store module
+     * @param bridgeUrl           Bridge Server URL
+     * @param solutionId          {@code SolutionId} of the current project
+     * @param userPrivateKey      user private key used to authorize; generated from:
+     *                            {@link CryptoApi#generatePrivateKey} or
+     *                            {@link CryptoApi#derivePrivateKey}
+     * @param verificationOptions PrivMX Bridge server instance verification options using a PKI server
+     * @throws IllegalStateException thrown if there is an exception during init modules
+     * @throws PrivmxException       thrown if there is a problem during login
+     * @throws NativeException       thrown if there is an <strong>unknown</strong> problem during login
+     */
+    public PrivmxEndpoint(
+            Set<Modules> enableModule,
+            String userPrivateKey,
+            String solutionId,
+            String bridgeUrl,
+            PKIVerificationOptions verificationOptions
+    ) throws IllegalStateException, PrivmxException, NativeException {
+        super(enableModule, userPrivateKey, solutionId, bridgeUrl, verificationOptions);
+    }
+
+    /**
      * Calls {@link BasicPrivmxEndpoint#BasicPrivmxEndpoint(Set, String, String, String)}.
      *
      * @param enableModule   set of modules to initialize; should contain {@link Modules#THREAD }
      *                       to enable Thread module or {@link Modules#STORE } to enable Store module
-     * @param bridgeUrl      Bridge's Endpoint URL
+     * @param bridgeUrl      Bridge Server URL
      * @param solutionId     {@code SolutionId} of the current project
      * @param userPrivateKey user private key used to authorize; generated from:
      *                       {@link CryptoApi#generatePrivateKey} or
@@ -59,7 +85,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
             String solutionId,
             String bridgeUrl
     ) throws IllegalStateException, PrivmxException, NativeException {
-        super(enableModule, userPrivateKey, solutionId, bridgeUrl);
+        this(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
     }
 
     /**
@@ -149,6 +175,16 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
             }
             inboxApi.subscribeForInboxEvents();
         }
+
+        if (channel.module.startsWith("context") && eventApi != null) {
+            if (channel.type != null) {
+                if (channel.instanceId != null) {
+                    eventApi.subscribeForCustomEvents(channel.instanceId, channel.type);
+                } else {
+                    System.out.println("No contextId to subscribeChannel: " + channelStr);
+                }
+            }
+        }
     }
 
     private void unsubscribeChannel(String channelStr) {
@@ -193,6 +229,16 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                 return;
             }
             inboxApi.unsubscribeFromInboxEvents();
+        }
+
+        if (channel.module.startsWith("context") && eventApi != null) {
+            if (channel.type != null) {
+                if (channel.instanceId != null) {
+                    eventApi.unsubscribeFromCustomEvents(channel.instanceId, channel.type);
+                } else {
+                    System.out.println("No contextId to unsubscribeChannel: " + channelStr);
+                }
+            }
         }
     }
 

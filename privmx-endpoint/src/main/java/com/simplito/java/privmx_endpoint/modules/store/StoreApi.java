@@ -33,8 +33,6 @@ import java.util.Objects;
  */
 public class StoreApi implements AutoCloseable {
     static {
-        System.loadLibrary("crypto");
-        System.loadLibrary("ssl");
         System.loadLibrary("privmx-endpoint-java");
     }
 
@@ -188,7 +186,7 @@ public class StoreApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public PagingList<Store> listStores(String contextId, long skip, long limit, String sortOrder) throws PrivmxException, NativeException, IllegalStateException {
-        return listStores(contextId, skip, limit, sortOrder, null);
+        return listStores(contextId, skip, limit, sortOrder, null, null);
     }
 
     /**
@@ -204,7 +202,25 @@ public class StoreApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native PagingList<Store> listStores(String contextId, long skip, long limit, String sortOrder, String lastId) throws PrivmxException, NativeException, IllegalStateException;
+    public PagingList<Store> listStores(String contextId, long skip, long limit, String sortOrder, String lastId) throws PrivmxException, NativeException, IllegalStateException {
+        return listStores(contextId, skip, limit, sortOrder, lastId, null);
+    }
+
+    /**
+     * Gets a list of Stores in given Context.
+     *
+     * @param contextId   ID of the Context to get the Stores from
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @return list of Stores
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public native PagingList<Store> listStores(String contextId, long skip, long limit, String sortOrder, String lastId, String queryAsJson) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Deletes a Store by given Store ID.
@@ -311,7 +327,7 @@ public class StoreApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public PagingList<File> listFiles(String storeId, long skip, long limit, String sortOrder) throws PrivmxException, NativeException, IllegalStateException {
-        return listFiles(storeId, skip, limit, sortOrder, null);
+        return listFiles(storeId, skip, limit, sortOrder, null, null);
     }
 
     /**
@@ -327,7 +343,25 @@ public class StoreApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native PagingList<File> listFiles(String storeId, long skip, long limit, String sortOrder, String lastId) throws PrivmxException, NativeException, IllegalStateException;
+    public PagingList<File> listFiles(String storeId, long skip, long limit, String sortOrder, String lastId) throws PrivmxException, NativeException, IllegalStateException {
+        return listFiles(storeId, skip, limit, sortOrder, lastId, null);
+    }
+
+    /**
+     * Gets a list of files in given Store.
+     *
+     * @param storeId     ID of the Store to get files from
+     * @param skip        skip number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @return list of files
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public native PagingList<File> listFiles(String storeId, long skip, long limit, String sortOrder, String lastId, String queryAsJson) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Opens a file to read.
