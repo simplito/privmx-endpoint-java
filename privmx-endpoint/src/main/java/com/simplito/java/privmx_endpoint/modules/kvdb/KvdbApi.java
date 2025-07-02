@@ -181,7 +181,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of Kvdbs in given Context.
      *
      * @param contextId   ID of the Context to get the Kvdbs from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -206,7 +206,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of Kvdbs in given Context.
      *
      * @param contextId   ID of the Context to get the Kvdbs from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -231,7 +231,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of Kvdbs in given Context.
      *
      * @param contextId ID of the Context to get the Kvdbs from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -254,7 +254,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of Kvdbs in given Context.
      *
      * @param contextId ID of the Context to get the Kvdbs from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of Kvdbs
@@ -305,7 +305,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of KVDB entries keys from a KVDB.
      *
      * @param kvdbId      ID of the KVDB to list KVDB entries from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -330,7 +330,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of KVDB entries keys from a KVDB.
      *
      * @param kvdbId      ID of the KVDB to list KVDB entries from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -355,7 +355,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of KVDB entries keys from a KVDB.
      *
      * @param kvdbId    ID of the KVDB to list KVDB entries from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -378,7 +378,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of KVDB entries keys from a KVDB.
      *
      * @param kvdbId    ID of the KVDB to list KVDB entries from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of KVDB entries
@@ -399,7 +399,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of KVDB entries from a KVDB.
      *
      * @param kvdbId      ID of the KVDB to list KVDB entries from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -424,7 +424,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of KVDB entries from a KVDB.
      *
      * @param kvdbId      ID of the KVDB to list KVDB entries from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -449,7 +449,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of KVDB entries from a KVDB.
      *
      * @param kvdbId    ID of the KVDB to list KVDB entries from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -472,7 +472,7 @@ public class KvdbApi implements AutoCloseable {
      * Gets a list of KVDB entries from a KVDB.
      *
      * @param kvdbId    ID of the KVDB to list KVDB entries from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of KVDB entries
