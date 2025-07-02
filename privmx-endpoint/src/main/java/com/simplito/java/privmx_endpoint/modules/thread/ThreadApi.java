@@ -196,7 +196,7 @@ public class ThreadApi implements AutoCloseable {
      * Gets a list of Threads in given Context.
      *
      * @param contextId ID of the Context to get the Threads from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of Threads
@@ -212,7 +212,7 @@ public class ThreadApi implements AutoCloseable {
      * Gets a list of Threads in given Context.
      *
      * @param contextId ID of the Context to get the Threads from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -229,7 +229,7 @@ public class ThreadApi implements AutoCloseable {
      * Gets a list of Threads in given Context.
      *
      * @param contextId   ID of the Context to get the Threads from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -247,7 +247,7 @@ public class ThreadApi implements AutoCloseable {
      * Gets a list of Threads in given Context.
      *
      * @param contextId   ID of the Context to get the Threads from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -308,7 +308,7 @@ public class ThreadApi implements AutoCloseable {
      * Gets a list of messages from a Thread.
      *
      * @param threadId  ID of the Thread to list messages from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of messages
@@ -324,7 +324,7 @@ public class ThreadApi implements AutoCloseable {
      * Gets a list of messages from a Thread.
      *
      * @param threadId  ID of the Thread to list messages from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -341,7 +341,7 @@ public class ThreadApi implements AutoCloseable {
      * Gets a list of messages from a Thread.
      *
      * @param threadId    ID of the Thread to list messages from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -359,7 +359,7 @@ public class ThreadApi implements AutoCloseable {
      * Gets a list of messages from a Thread.
      *
      * @param threadId    ID of the Thread to list messages from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start

@@ -164,7 +164,7 @@ public class Connection implements AutoCloseable {
     /**
      * Gets a list of Contexts available for the user.
      *
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of Contexts
@@ -179,7 +179,7 @@ public class Connection implements AutoCloseable {
     /**
      * Gets a list of Contexts available for the user.
      *
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -195,7 +195,7 @@ public class Connection implements AutoCloseable {
     /**
      * Gets a list of Contexts available for the user.
      *
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -212,7 +212,7 @@ public class Connection implements AutoCloseable {
     /**
      * Gets a list of Contexts available for the user.
      *
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
