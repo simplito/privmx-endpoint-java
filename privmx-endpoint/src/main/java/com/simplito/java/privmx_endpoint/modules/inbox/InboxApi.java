@@ -294,7 +294,7 @@ public class InboxApi implements AutoCloseable {
      * Gets a list of Inboxes in given Context.
      *
      * @param contextId ID of the Context to get Inboxes from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of Inboxes
@@ -315,7 +315,7 @@ public class InboxApi implements AutoCloseable {
      * Gets a list of Inboxes in given Context.
      *
      * @param contextId ID of the Context to get Inboxes from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -338,7 +338,7 @@ public class InboxApi implements AutoCloseable {
      * Gets a list of Inboxes in given Context.
      *
      * @param contextId   ID of the Context to get Inboxes from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -363,7 +363,7 @@ public class InboxApi implements AutoCloseable {
      * Gets s list of Inboxes in given Context.
      *
      * @param contextId   ID of the Context to get Inboxes from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -497,7 +497,7 @@ public class InboxApi implements AutoCloseable {
      * Gets list of entries in given Inbox.
      *
      * @param inboxId   ID of the Inbox
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of entries
@@ -518,7 +518,7 @@ public class InboxApi implements AutoCloseable {
      * Gets list of entries of given Inbox.
      *
      * @param inboxId   ID of the Inbox
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -541,7 +541,7 @@ public class InboxApi implements AutoCloseable {
      * Gets list of entries of given Inbox.
      *
      * @param inboxId     ID of the Inbox
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -567,7 +567,7 @@ public class InboxApi implements AutoCloseable {
      * Gets list of entries of given Inbox.
      *
      * @param inboxId     ID of the Inbox
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start

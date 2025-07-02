@@ -177,7 +177,7 @@ public class StoreApi implements AutoCloseable {
      * Gets a list of Stores in given Context.
      *
      * @param contextId ID of the Context to get the Stores from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of Stores
@@ -193,7 +193,7 @@ public class StoreApi implements AutoCloseable {
      * Gets a list of Stores in given Context.
      *
      * @param contextId ID of the Context to get the Stores from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -210,7 +210,7 @@ public class StoreApi implements AutoCloseable {
      * Gets a list of Stores in given Context.
      *
      * @param contextId   ID of the Context to get the Stores from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -228,7 +228,7 @@ public class StoreApi implements AutoCloseable {
      * Gets a list of Stores in given Context.
      *
      * @param contextId   ID of the Context to get the Stores from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -337,7 +337,7 @@ public class StoreApi implements AutoCloseable {
      * Gets a list of files in given Store.
      *
      * @param storeId   ID of the Store to get files from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of files
@@ -353,7 +353,7 @@ public class StoreApi implements AutoCloseable {
      * Gets a list of files in given Store.
      *
      * @param storeId   ID of the Store to get files from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -370,7 +370,7 @@ public class StoreApi implements AutoCloseable {
      * Gets a list of files in given Store.
      *
      * @param storeId     ID of the Store to get files from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -388,7 +388,7 @@ public class StoreApi implements AutoCloseable {
      * Gets a list of files in given Store.
      *
      * @param storeId     ID of the Store to get files from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
