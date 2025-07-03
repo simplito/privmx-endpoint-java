@@ -14,7 +14,7 @@ if (file("build-publish-maven.gradle").exists()) {
     apply from: "build-publish-maven.gradle"
 }
 
-version = '2.3.0'
+version = '2.5.0-rc1'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
