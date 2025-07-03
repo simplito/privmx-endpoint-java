@@ -13,14 +13,16 @@ package com.simplito.java.privmx_endpoint.model.exceptions;
 
 /**
  * Thrown when a PrivMX Endpoint method encounters an unknown exception.
+ *
  * @category errors
  */
-public class NativeException extends RuntimeException{
+public class NativeException extends RuntimeException {
     /**
      * Initialize exception with passed message.
+     *
      * @param message information about the exception
      */
-    NativeException(String message){
+    NativeException(String message) {
         super(message);
     }
 }

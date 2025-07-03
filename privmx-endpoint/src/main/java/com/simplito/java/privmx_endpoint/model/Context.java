@@ -12,8 +12,8 @@
 package com.simplito.java.privmx_endpoint.model;
 
 /**
- *
  * Contains base Context information.
+ *
  * @category core
  * @group Core
  */
@@ -24,16 +24,17 @@ public class Context {
     public final String userId;
 
     /**
-     *  ID of the Context.
+     * ID of the Context.
      */
     public final String contextId;
 
     /**
      * Creates instance of {@code Context}
-     * @param userId ID of the user requesting information.
+     *
+     * @param userId    ID of the user requesting information.
      * @param contextId ID of Context.
      */
-    public Context(String userId, String contextId){
+    public Context(String userId, String contextId) {
         this.userId = userId;
         this.contextId = contextId;
     }

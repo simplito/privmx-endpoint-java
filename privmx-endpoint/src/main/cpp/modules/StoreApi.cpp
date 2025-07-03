@@ -85,7 +85,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listStores(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json,
+        jstring sort_by
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(sort_order, "Sort order") ||
@@ -95,7 +97,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listStores(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id]() {
+            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id, &query_as_json, &sort_by]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -111,6 +113,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listStores(
                 query.sortOrder = ctx.jString2string(sort_order);
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
+                }
+                if (sort_by != nullptr) {
+                    query.sortBy = ctx.jString2string(sort_by);
                 }
                 auto stores_c(
                         getStoreApi(ctx, thiz)->listStores(
@@ -252,7 +260,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listFiles(
         jlong skip,
         jlong limit,
         jstring sort_order,
-        jstring last_id
+        jstring last_id,
+        jstring query_as_json,
+        jstring sort_by
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(store_id, "Store ID") ||
@@ -262,7 +272,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listFiles(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &store_id, &skip, &limit, &sort_order, last_id]() {
+            [&ctx, &thiz, &store_id, &skip, &limit, &sort_order, &last_id, &query_as_json, &sort_by]() {
                 jclass pagingListCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
                 jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
@@ -277,6 +287,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_listFiles(
                 query.sortOrder = ctx.jString2string(sort_order);
                 if (last_id != nullptr) {
                     query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
+                }
+                if (sort_by != nullptr) {
+                    query.sortBy = ctx.jString2string(sort_by);
                 }
                 auto files_c(
                         getStoreApi(ctx, thiz)->listFiles(

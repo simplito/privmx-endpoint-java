@@ -30,6 +30,10 @@ public enum Modules {
      */
     INBOX,
     /**
+     * Custom Event module case.
+     */
+    CUSTOM_EVENT,
+    /**
      * KVDB module case.
      */
     KVDB,

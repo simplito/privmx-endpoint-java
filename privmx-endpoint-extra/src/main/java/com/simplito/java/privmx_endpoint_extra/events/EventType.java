@@ -19,6 +19,7 @@ import com.simplito.java.privmx_endpoint.model.KvdbEntry;
 import com.simplito.java.privmx_endpoint.model.Message;
 import com.simplito.java.privmx_endpoint.model.Store;
 import com.simplito.java.privmx_endpoint.model.Thread;
+import com.simplito.java.privmx_endpoint.model.events.ContextCustomEventData;
 import com.simplito.java.privmx_endpoint.model.events.InboxDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.InboxEntryDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.KvdbDeletedEntryEventData;
@@ -300,6 +301,23 @@ public class EventType<T> {
                 "inbox/" + inboxId + "/entries",
                 "inboxEntryDeleted",
                 InboxEntryDeletedEventData.class
+        );
+    }
+
+    /**
+     * Returns instance to register for custom Context Events.
+     *
+     * @param contextId   ID of the Context to observe
+     * @param channelName name of the Channel
+     * @return predefined event type to catch emitted custom Context events
+     */
+    public static EventType<ContextCustomEventData> ContextCustomEvent(String contextId, String channelName) throws NullPointerException {
+        if (contextId == null) throw new NullPointerException("Context id cannot be null");
+        if (channelName == null) throw new NullPointerException("Channel name cannot be null");
+        return new EventType<>(
+                "context/" + contextId + "/" + channelName,
+                "contextCustom",
+                ContextCustomEventData.class
         );
     }
 

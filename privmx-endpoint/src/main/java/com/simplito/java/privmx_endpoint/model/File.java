@@ -51,6 +51,40 @@ public class File {
     public Long statusCode;
 
     /**
+     * Version of the file data structure and how it is encoded/encrypted.
+     */
+    public Long schemaVersion;
+
+    /**
+     * Creates instance of {@code File}.
+     *
+     * @param info          File's information created by server.
+     * @param publicMeta    File's public metadata.
+     * @param privateMeta   File's private metadata.
+     * @param size          File's size.
+     * @param authorPubKey  Public key of the author of the file.
+     * @param statusCode    Status code of retrieval and decryption of the file.
+     * @param schemaVersion Version of the file data structure and how it is encoded/encrypted.
+     */
+    public File(
+            ServerFileInfo info,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            Long size,
+            String authorPubKey,
+            Long statusCode,
+            Long schemaVersion
+    ) {
+        this.info = info;
+        this.publicMeta = publicMeta;
+        this.privateMeta = privateMeta;
+        this.size = size;
+        this.authorPubKey = authorPubKey;
+        this.statusCode = statusCode;
+        this.schemaVersion = schemaVersion;
+    }
+
+    /**
      * Creates instance of {@code File}.
      *
      * @param info         File's information created by server.
@@ -60,6 +94,7 @@ public class File {
      * @param authorPubKey Public key of the author of the file.
      * @param statusCode   Status code of retrieval and decryption of the file.
      */
+    @Deprecated
     public File(
             ServerFileInfo info,
             byte[] publicMeta,
@@ -68,11 +103,6 @@ public class File {
             String authorPubKey,
             Long statusCode
     ) {
-        this.info = info;
-        this.publicMeta = publicMeta;
-        this.privateMeta = privateMeta;
-        this.size = size;
-        this.authorPubKey = authorPubKey;
-        this.statusCode = statusCode;
+        this(info, publicMeta, privateMeta, size, authorPubKey, statusCode, null);
     }
 }
