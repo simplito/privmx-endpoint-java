@@ -30,7 +30,7 @@ public enum Modules {
      */
     INBOX,
     /**
-     * Kvdb module case.
+     * KVDB module case.
      */
     KVDB,
 }
