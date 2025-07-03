@@ -304,7 +304,7 @@ public class EventType<T> {
     }
 
     /**
-     * Predefined event type to catch updated Kvdb events.
+     * Predefined event type to catch updated KVDB events.
      */
     public static final EventType<Kvdb> KvdbUpdatedEvent = new EventType<>(
             "kvdb",
@@ -313,7 +313,7 @@ public class EventType<T> {
     );
 
     /**
-     * Predefined event type to catch deleted Kvdb events.
+     * Predefined event type to catch deleted KVDB events.
      */
     public static final EventType<KvdbDeletedEventData> KvdbDeletedEvent = new EventType<>(
             "kvdb",
@@ -322,7 +322,7 @@ public class EventType<T> {
     );
 
     /**
-     * Predefined event type to catch updated Kvdb stats events.
+     * Predefined event type to catch updated KVDB stats events.
      */
     public static final EventType<KvdbStatsEventData> KvdbStatsEvent = new EventType<>(
             "kvdb",
@@ -331,7 +331,7 @@ public class EventType<T> {
     );
 
     /**
-     * Predefined event type to catch created Kvdb events.
+     * Predefined event type to catch created KVDB events.
      */
     public static EventType<Kvdb> KvdbCreatedEvent = new EventType<>(
             "kvdb",
@@ -340,9 +340,9 @@ public class EventType<T> {
     );
 
     /**
-     * Predefined event type to catch created KvdbEntry events.
+     * Predefined event type to catch created KVDB entries events.
      *
-     * @param kvdbId ID of the Kvdb to observe
+     * @param kvdbId ID of the KVDB to observe
      */
     public static EventType<KvdbEntry> kvdbNewEntry(String kvdbId) throws NullPointerException {
         if (kvdbId == null) throw new NullPointerException("KVDB id cannot be null");
@@ -354,7 +354,7 @@ public class EventType<T> {
     }
 
     /**
-     * Predefined event type to catch updated KvdbEntry events.
+     * Predefined event type to catch updated KVDB entries events.
      *
      * @param kvdbId ID of the Kvdb to observe
      */
@@ -368,7 +368,7 @@ public class EventType<T> {
     }
 
     /**
-     * Predefined event type to catch deleted KvdbEntry events.
+     * Predefined event type to catch deleted KVDB entries events.
      *
      * @param kvdbId ID of the Kvdb to observe
      */
