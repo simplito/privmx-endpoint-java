@@ -12,7 +12,7 @@
 package com.simplito.java.privmx_endpoint.model.events;
 
 /**
- * Holds information of `KvdbDeletedEntryEvent`.
+ * Holds data of event that arrives when KVDB entry is deleted.
  *
  * @category core
  * @group Events

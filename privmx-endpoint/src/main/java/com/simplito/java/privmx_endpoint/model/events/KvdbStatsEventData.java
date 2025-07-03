@@ -12,7 +12,7 @@
 package com.simplito.java.privmx_endpoint.model.events;
 
 /**
- * Holds KVDB statistical data.
+ * Holds data of event that arrives when KVDB stats change.
  *
  * @category core
  * @group Events
