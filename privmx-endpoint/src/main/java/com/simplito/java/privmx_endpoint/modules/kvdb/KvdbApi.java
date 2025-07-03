@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Manages PrivMX Bridge  Kvdbs and their messages.
+ * Manages PrivMX Bridge KVDBs and their messages.
  *
  * @category kvdb
  */
@@ -178,16 +178,16 @@ public class KvdbApi implements AutoCloseable {
     public native Kvdb getKvdb(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Gets a list of Kvdbs in given Context.
+     * Gets a list of KVDBs in given Context.
      *
-     * @param contextId   ID of the Context to get the Kvdbs from
+     * @param contextId   ID of the Context to get the KVDBs from
      * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
      * @param queryAsJson stringified JSON object with a custom field to filter result
      * @param sortBy      field by elements are sorted in result
-     * @return list of Kvdbs
+     * @return list of KVDBs
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      * @throws IllegalStateException thrown when instance is closed.
@@ -203,15 +203,15 @@ public class KvdbApi implements AutoCloseable {
     ) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Gets a list of Kvdbs in given Context.
+     * Gets a list of KVDBs in given Context.
      *
-     * @param contextId   ID of the Context to get the Kvdbs from
+     * @param contextId   ID of the Context to get the KVDBs from
      * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
      * @param queryAsJson stringified JSON object with a custom field to filter result
-     * @return list of Kvdbs
+     * @return list of KVDBs
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      * @throws IllegalStateException thrown when instance is closed.
@@ -228,14 +228,14 @@ public class KvdbApi implements AutoCloseable {
     }
 
     /**
-     * Gets a list of Kvdbs in given Context.
+     * Gets a list of KVDBs in given Context.
      *
-     * @param contextId ID of the Context to get the Kvdbs from
+     * @param contextId ID of the Context to get the KVDBs from
      * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
-     * @return list of Kvdbs
+     * @return list of KVDBs
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      * @throws IllegalStateException thrown when instance is closed.
@@ -251,13 +251,13 @@ public class KvdbApi implements AutoCloseable {
     }
 
     /**
-     * Gets a list of Kvdbs in given Context.
+     * Gets a list of KVDBs in given Context.
      *
-     * @param contextId ID of the Context to get the Kvdbs from
+     * @param contextId ID of the Context to get the KVDBs from
      * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
-     * @return list of Kvdbs
+     * @return list of KVDBs
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      * @throws IllegalStateException thrown when instance is closed.

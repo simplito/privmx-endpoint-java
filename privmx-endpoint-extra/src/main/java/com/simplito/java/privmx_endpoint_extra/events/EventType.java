@@ -325,7 +325,7 @@ public class EventType<T> {
     );
 
     public static EventType<KvdbEntry> kvdbNewEntry(String kvdbId) throws NullPointerException {
-        if (kvdbId == null) throw new NullPointerException("Kvdb id cannot be null");
+        if (kvdbId == null) throw new NullPointerException("KVDB id cannot be null");
         return new EventType<>(
                 "kvdb/" + kvdbId + "/entries",
                 "kvdbNewEntry",
@@ -334,7 +334,7 @@ public class EventType<T> {
     }
 
     public static EventType<KvdbEntry> KvdbEntryUpdatedEvent(String kvdbId) throws NullPointerException {
-        if (kvdbId == null) throw new NullPointerException("Kvdb id cannot be null");
+        if (kvdbId == null) throw new NullPointerException("KVDB id cannot be null");
         return new EventType<>(
                 "kvdb/" + kvdbId + "/entries",
                 "kvdbEntryUpdated",

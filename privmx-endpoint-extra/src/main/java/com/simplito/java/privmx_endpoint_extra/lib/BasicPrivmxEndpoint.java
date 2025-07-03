@@ -46,7 +46,7 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
     public final InboxApi inboxApi;
 
     /**
-     * Reference to Kvdb module.
+     * Reference to KVDB module.
      */
     public final KvdbApi kvdbApi;
 
