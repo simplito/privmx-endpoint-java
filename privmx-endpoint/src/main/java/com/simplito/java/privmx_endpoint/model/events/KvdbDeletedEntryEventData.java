@@ -9,7 +9,7 @@ package com.simplito.java.privmx_endpoint.model.events;
 public class KvdbDeletedEntryEventData {
 
     /**
-     * Kvdb ID
+     * KVDB ID
      */
     public String kvdbId;
 

@@ -1,7 +1,7 @@
 package com.simplito.java.privmx_endpoint.model.events;
 
 /**
- * Holds Kvdb statistical data.
+ * Holds KVDB statistical data.
  *
  * @category core
  * @group Events
@@ -9,17 +9,17 @@ package com.simplito.java.privmx_endpoint.model.events;
 public class KvdbStatsEventData {
 
     /**
-     * Kvdb ID
+     * KVDB ID
      */
     public String kvdbId;
 
     /**
-     * Timestamp of the most recent Kvdb item
+     * Timestamp of the most recent KVDB item
      */
     public Long lastEntryDate;
 
     /**
-     * Updated number of entries in the Kvdb
+     * Updated number of entries in the KVDB
      */
     public Long entries;
 
