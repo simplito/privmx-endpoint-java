@@ -35,5 +35,6 @@ privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobj
 
 jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event);
 
+privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery);
 
 #endif //PRIVMX_POCKET_LIB_PARSER_H

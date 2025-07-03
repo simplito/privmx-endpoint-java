@@ -32,6 +32,8 @@
 #include "privmx/endpoint/event/Events.hpp"
 #include "privmx/endpoint/crypto/Types.hpp"
 #include "privmx/endpoint/crypto/ExtKey.hpp"
+#include "privmx/endpoint/kvdb/KvdbApi.hpp"
+#include "privmx/endpoint/kvdb/Types.hpp"
 
 namespace privmx {
     namespace wrapper {
@@ -131,6 +133,15 @@ namespace privmx {
         jobject contextCustomEventData2Java(JniContextUtils &ctx,
                                             privmx::endpoint::event::ContextCustomEventData contextCustomEvent_c
         );
+        //Kvdb
+        jobject kvdb2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Kvdb kvdb_c);
+
+        jobject serverKvdbEntryInfo2Java(JniContextUtils &ctx,
+                                         privmx::endpoint::kvdb::ServerKvdbEntryInfo serverItemInfo_c);
+
+        jobject kvdbEntry2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::KvdbEntry entry_c);
+
+
     } // wrapper
 } // privmx
 

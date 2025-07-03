@@ -18,6 +18,7 @@ import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.crypto.CryptoApi;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 import com.simplito.java.privmx_endpoint.modules.inbox.InboxApi;
+import com.simplito.java.privmx_endpoint.modules.kvdb.KvdbApi;
 import com.simplito.java.privmx_endpoint.modules.store.StoreApi;
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi;
 import com.simplito.java.privmx_endpoint_extra.model.Modules;
@@ -50,6 +51,11 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
      * Reference to Inbox module.
      */
     public final EventApi eventApi;
+
+    /**
+     * Reference to KVDB module.
+     */
+    public final KvdbApi kvdbApi;
 
     /**
      * Reference to Connection module.
@@ -88,6 +94,7 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
                 storeApi
         ) : null;
         eventApi = enableModule.contains(Modules.CUSTOM_EVENT) ? new EventApi(connection) : null;
+        kvdbApi = enableModule.contains(Modules.KVDB) ? new KvdbApi(connection) : null;
     }
 
     /**
@@ -124,6 +131,7 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
         if (storeApi != null) storeApi.close();
         if (inboxApi != null) inboxApi.close();
         if (eventApi != null) eventApi.close();
+        if (kvdbApi != null) kvdbApi.close();
         if (connection != null) connection.close();
     }
 }
