@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Manages PrivMX Bridge KVDBs and their messages.
+ * Manages PrivMX Bridge KVDBs and their entries.
  *
  * @category kvdb
  */
