@@ -146,8 +146,8 @@ fun getKvdbById() {
 
 // START: Managing KVDB snippets
 fun renamingKvdb() {
-    val kvdbID = "KVDB_ID"
-    val kvdb: Kvdb = kvdbApi.getKvdb(kvdbID)
+    val kvdbId = "KVDB_ID"
+    val kvdb: Kvdb = kvdbApi.getKvdb(kvdbId)
     val users = kvdb
         .users
         .map { userId ->
@@ -182,8 +182,8 @@ fun renamingKvdb() {
 }
 
 fun removingUser() {
-    val kvdbID = "KVDB_ID"
-    val kvdb: Kvdb = kvdbApi.getKvdb(kvdbID)
+    val kvdbId = "KVDB_ID"
+    val kvdb: Kvdb = kvdbApi.getKvdb(kvdbId)
     val userToRemove = "USER_ID_TO_REMOVE"
     val newUsers = kvdb
         .users
