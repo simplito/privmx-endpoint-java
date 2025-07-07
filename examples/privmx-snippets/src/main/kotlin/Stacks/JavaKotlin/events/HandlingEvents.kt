@@ -191,3 +191,50 @@ fun handlingEntriesEvents(){
     }
 }
 // END: Inboxes events snippets
+
+
+// START: KVDBs events snippets
+fun handlingKvdbsEvents() {
+    val callbacksId = "CALLBACKS_ID"
+
+    endpointSession.registerCallback(
+        callbacksId,
+        EventType.InboxCreatedEvent
+    ) { newInboxData ->
+        // some actions when new KVDB created
+    }
+
+    endpointSession.registerCallback(
+        callbacksId,
+        EventType.KvdbCreatedEvent
+    ) { inboxUpdateData ->
+        // some actions when KVDB updated
+    }
+
+    endpointSession.registerCallback(
+        callbacksId,
+        EventType.KvdbDeletedEvent
+    ) { deletedInboxData ->
+        // some actions when KVDB deleted
+    }
+}
+
+fun handlingKvdbEntriesEvents() {
+    val callbacksId = "CALLBACKS_ID"
+    val kvdbID = "KVDB_ID"
+
+    endpointSession.registerCallback(
+        callbacksId,
+        EventType.kvdbNewEntry(kvdbID)
+    ) { newEntryData ->
+        // some actions on new KVDB entry
+    }
+
+    endpointSession.registerCallback(
+        callbacksId,
+        EventType.KvdbEntryDeletedEvent(kvdbID)
+    ) { deletedEntryData ->
+        // some actions when KVDB entry deleted
+    }
+}
+// END: KVDBs events snippets
