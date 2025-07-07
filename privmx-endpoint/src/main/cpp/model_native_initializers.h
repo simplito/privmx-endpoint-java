@@ -131,8 +131,9 @@ namespace privmx {
                                                 privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
 
         jobject contextCustomEventData2Java(JniContextUtils &ctx,
-                                            privmx::endpoint::event::ContextCustomEventData contextCustomEvent_c
+                                            privmx::endpoint::event::ContextCustomEventData contextCustomEventData_c
         );
+
         //Kvdb
         jobject kvdb2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Kvdb kvdb_c);
 

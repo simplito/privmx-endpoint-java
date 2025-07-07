@@ -959,7 +959,7 @@ namespace privmx {
 
         jobject contextCustomEventData2Java(
                 JniContextUtils &ctx,
-                privmx::endpoint::event::ContextCustomEventData contextCustomEvent_c
+                privmx::endpoint::event::ContextCustomEventData contextCustomEventData_c
         ) {
             jclass contextCustomEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/ContextCustomEventData");
@@ -973,15 +973,16 @@ namespace privmx {
                     "Ljava/lang/Long"       // statusCode
                     ")V"
             );
-            jbyteArray data = ctx->NewByteArray(contextCustomEvent_c.payload.size());
-            ctx->SetByteArrayRegion(data, 0, contextCustomEvent_c.payload.size(),
-                                    (jbyte *) contextCustomEvent_c.payload.data());
+            jbyteArray payload = ctx->NewByteArray(contextCustomEventData_c.payload.size());
+            ctx->SetByteArrayRegion(payload, 0, contextCustomEventData_c.payload.size(),
+                                    (jbyte *) contextCustomEventData_c.payload.data());
             return ctx->NewObject(
                     contextCustomEventDataCls,
                     initContextCustomEventDataMID,
-                    ctx->NewStringUTF(contextCustomEvent_c.contextId.c_str()),
-                    ctx->NewStringUTF(contextCustomEvent_c.userId.c_str()),
-                    data
+                    ctx->NewStringUTF(contextCustomEventData_c.contextId.c_str()),
+                    ctx->NewStringUTF(contextCustomEventData_c.userId.c_str()),
+                    payload,
+                    ctx.long2jLong(contextCustomEventData_c.statusCode)
             );
         }
 
