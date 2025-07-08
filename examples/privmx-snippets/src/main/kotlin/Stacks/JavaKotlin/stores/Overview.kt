@@ -136,6 +136,30 @@ fun getOldestStores(){
     }
 }
 
+fun getLastModifiedStore() {
+    val startIndex = 0L
+    val pageSize = 100L
+    val sortBy = "lastModificationDate"
+
+    val storesPagingList = storeApi.listStores(
+        contextId,
+        startIndex,
+        pageSize,
+        SortOrder.DESC,
+        null,
+        null,
+        sortBy
+    )
+
+    val storeItem = storesPagingList.readItems.get(0).let {
+        StoreItem(
+            it,
+            it.privateMeta.decodeToString(),
+            Json.decodeFromString(it.publicMeta.decodeToString())
+        )
+    }
+}
+
 fun getStoreById(){
     val storeId = "STORE_ID"
 

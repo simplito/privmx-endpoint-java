@@ -166,7 +166,31 @@ fun getOldestInboxes(){
     }
 }
 
-fun getInboxById(){
+fun getLastModifiedInbox() {
+    val startIndex = 0L
+    val pageSize = 1L
+    val sortBy = "lastModificationDate"
+
+    val inboxesPagingList = inboxApi.listInboxes(
+        contextId,
+        startIndex,
+        pageSize,
+        SortOrder.DESC,
+        null,
+        null,
+        sortBy
+    )
+
+    val inboxItem = inboxesPagingList.readItems.get(0).let {
+        InboxItem(
+            it,
+            it.privateMeta.decodeToString(),
+            Json.decodeFromString(it.publicMeta.decodeToString())
+        )
+    }
+}
+
+fun getInboxById() {
     val inboxID = "INBOX_ID"
 
     val inboxItem = inboxApi.getInbox(inboxID).let {
