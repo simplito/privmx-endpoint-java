@@ -159,4 +159,13 @@ fun deletingKvdbEntry() {
     val kvdbEntryKey = "KVDB_ENTRY_KEY"
     kvdbApi.deleteEntry(kvdbId, kvdbEntryKey)
 }
+
+fun deletingKvdbEntries() {
+    val kvdbId = "KVDB_ID"
+    val keys = setOf<String>(
+        "KVDB_ENTRY_KEY_1",
+        "KVDB_ENTRY_KEY_2"
+    )
+    kvdbApi.deleteEntries(kvdbId, keys)
+}
 // END: Deleting Entries snippets
