@@ -129,6 +129,19 @@ fun getKvdbEntryById() {
         )
     }
 }
+
+fun listEntriesKeys() {
+    val kvdbId = "KVDB_ID"
+    val startIndex = 0L
+    val pageSize = 100L
+
+    val entriesKeys = kvdbApi.listEntriesKeys(
+        kvdbId,
+        startIndex,
+        pageSize,
+        SortOrder.ASC
+    )
+}
 // END: Getting Entries snippets
 
 // START: Checking if KVDB entry exists
