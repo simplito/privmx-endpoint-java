@@ -30,7 +30,8 @@ std::string JniContextUtils::jByteArray2String(jbyteArray arr) {
 
 jobjectArray JniContextUtils::jObject2jArray(jobject obj) {
     jclass objClass = _env->GetObjectClass(obj);
-    if (_env->IsInstanceOf(obj, _env->FindClass("java/util/List"))) {
+    if (_env->IsInstanceOf(obj, _env->FindClass("java/util/List")) ||
+            _env->IsInstanceOf(obj, _env->FindClass("java/util/Set"))) {
         jmethodID mToArray = _env->GetMethodID(objClass, "toArray", "()[Ljava/lang/Object;");
 
         if (mToArray == nullptr) return nullptr;
@@ -65,7 +66,7 @@ JniContextUtils::coreException2jthrowable(privmx::endpoint::core::Exception exce
     jclass exceptionCls = _env->FindClass(
             "com/simplito/java/privmx_endpoint/model/exceptions/PrivmxException");
     jmethodID initExceptionMID = _env->GetMethodID(exceptionCls, "<init>",
-                                                   "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V");
+            "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V");
     return (jthrowable) _env->NewObject(
             exceptionCls,
             initExceptionMID,
@@ -86,7 +87,7 @@ JniContextUtils::Object::~Object() {
 
 std::string JniContextUtils::Object::getFieldAsString(const std::string &name) {
     jstring jValue = (jstring) _env->GetObjectField(_obj, _env->GetFieldID(_objCls, name.c_str(),
-                                                                           "Ljava/lang/String;"));
+            "Ljava/lang/String;"));
     std::string value = _env.jString2string(jValue);
     _env->DeleteLocalRef(jValue);
     return value;
