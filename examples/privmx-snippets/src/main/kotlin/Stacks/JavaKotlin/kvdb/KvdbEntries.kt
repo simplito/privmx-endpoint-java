@@ -131,6 +131,15 @@ fun getKvdbEntryById() {
 }
 // END: Getting Entries snippets
 
+// START: Checking if KVDB entry exists
+fun checkingIfHasEntry() {
+    val kvdbId = "KVDB_ID"
+    val kvdbEntryKey = "KVDB_ENTRY_KEY"
+
+    val hasEntry: Boolean = kvdbApi.hasEntry(kvdbId, kvdbEntryKey)
+}
+// END: Checking if KVDB entry exists
+
 // START: Deleting Entries snippets
 fun deletingKvdbEntry() {
     val kvdbId = "KVDB_ID"
