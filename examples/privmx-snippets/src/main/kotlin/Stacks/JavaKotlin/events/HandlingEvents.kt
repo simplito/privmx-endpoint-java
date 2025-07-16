@@ -4,20 +4,20 @@ import com.simplito.java.privmx_endpoint_extra.events.EventType
 import Stacks.JavaKotlin.endpointSession
 
 // START: Connection events snippets
-fun handlingConnectionEvents(){
+fun handlingConnectionEvents() {
     val callbacksId = "CALLBACKS_ID"
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.ConnectedEvent
-    ){
+    ) {
         // some actions when lib was connected
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.DisconnectedEvent
-    ){
+    ) {
         // some actions when lib was disconnected
     }
 }
@@ -25,60 +25,60 @@ fun handlingConnectionEvents(){
 
 
 // START: Threads events snippets
-fun handlingThreadEvents(){
+fun handlingThreadEvents() {
     val callbacksId = "CALLBACKS_ID"
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.ThreadCreatedEvent
-    ){ newThreadData ->
+    ) { newThreadData ->
         // some actions when new thread created
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.ThreadUpdatedEvent
-    ){ threadUpdateData ->
+    ) { threadUpdateData ->
         // some actions when thread updated
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.ThreadStatsChangedEvent
-    ){ threadStatsUpdateData ->
+    ) { threadStatsUpdateData ->
         // some actions when thread stats changed
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.ThreadDeletedEvent
-    ){ deletedThreadData ->
+    ) { deletedThreadData ->
         // some actions when thread deleted
     }
 }
 
-fun handlingMessageEvents(){
+fun handlingMessageEvents() {
     val callbacksId = "CALLBACKS_ID"
     val threadID = "THREAD_ID"
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.ThreadNewMessageEvent(threadID)
-    ){ newMessageData ->
+    ) { newMessageData ->
         // some actions on new message
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.ThreadMessageUpdatedEvent(threadID)
-    ){ updatedMessageData ->
+    ) { updatedMessageData ->
         // some actions when message updated
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.ThreadMessageDeletedEvent(threadID)
-    ){ deletedMessageData ->
+    ) { deletedMessageData ->
         // some actions when message deleted
     }
 }
@@ -86,60 +86,60 @@ fun handlingMessageEvents(){
 
 
 // START: Stores events snippets
-fun handlingStoreEvents(){
+fun handlingStoreEvents() {
     val callbacksId = "CALLBACKS_ID"
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.StoreCreatedEvent
-    ){ newStoreData ->
+    ) { newStoreData ->
         // some actions when new store created
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.StoreUpdatedEvent
-    ){ storeUpdateData ->
+    ) { storeUpdateData ->
         // some actions when store updated
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.StoreStatsChangedEvent
-    ){ storeStatsUpdateData ->
+    ) { storeStatsUpdateData ->
         // some actions when store stats changed
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.StoreDeletedEvent
-    ){ deletedStoreData ->
+    ) { deletedStoreData ->
         // some actions when store deleted
     }
 }
 
-fun handlingFileEvents(){
+fun handlingFileEvents() {
     val callbacksId = "CALLBACKS_ID"
     val storeID = "STORE_ID"
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.StoreFileCreatedEvent(storeID)
-    ){ newFileData ->
+    ) { newFileData ->
         // some actions on new file
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.StoreFileUpdatedEvent(storeID)
-    ){ updatedFileData ->
+    ) { updatedFileData ->
         // some actions when file updated
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.StoreFileDeletedEvent(storeID)
-    ){ deletedFileData ->
+    ) { deletedFileData ->
         // some actions when file deleted
     }
 }
@@ -147,46 +147,46 @@ fun handlingFileEvents(){
 
 
 // START: Inboxes events snippets
-fun handlingInboxEvents(){
+fun handlingInboxEvents() {
     val callbacksId = "CALLBACKS_ID"
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.InboxCreatedEvent
-    ){ newInboxData ->
+    ) { newInboxData ->
         // some actions when new inbox created
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.InboxUpdatedEvent
-    ){ inboxUpdateData ->
+    ) { inboxUpdateData ->
         // some actions when inbox updated
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.InboxDeletedEvent
-    ){ deletedInboxData ->
+    ) { deletedInboxData ->
         // some actions when inbox deleted
     }
 }
 
-fun handlingEntriesEvents(){
+fun handlingEntriesEvents() {
     val callbacksId = "CALLBACKS_ID"
     val inboxID = "INBOX_ID"
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.InboxEntryCreatedEvent(inboxID)
-    ){ newEntryData ->
+    ) { newEntryData ->
         // some actions on new entry
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.InboxEntryDeletedEvent(inboxID)
-    ){ deletedEntryData ->
+    ) { deletedEntryData ->
         // some actions when entry deleted
     }
 }
@@ -199,22 +199,22 @@ fun handlingKvdbsEvents() {
 
     endpointSession.registerCallback(
         callbacksId,
-        EventType.InboxCreatedEvent
-    ) { newInboxData ->
+        EventType.KvdbCreatedEvent
+    ) { kvdbCreatedData ->
         // some actions when new KVDB created
     }
 
     endpointSession.registerCallback(
         callbacksId,
-        EventType.KvdbCreatedEvent
-    ) { inboxUpdateData ->
+        EventType.KvdbUpdatedEvent
+    ) { kvdbUpdatedData ->
         // some actions when KVDB updated
     }
 
     endpointSession.registerCallback(
         callbacksId,
         EventType.KvdbDeletedEvent
-    ) { deletedInboxData ->
+    ) { kvdbDeletedData ->
         // some actions when KVDB deleted
     }
 }
