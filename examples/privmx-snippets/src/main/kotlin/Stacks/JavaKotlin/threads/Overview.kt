@@ -136,30 +136,7 @@ fun getOldestThreads(){
     }
 }
 
-fun getLastModifiedThread() {
-    val startIndex = 0L
-    val pageSize = 100L
-    val sortBy = "lastModificationDate"
-
-    val threadsPagingList = threadApi.listThreads(
-        contextId,
-        startIndex,
-        pageSize,
-        SortOrder.DESC,
-        null,
-        null,
-        sortBy
-    )
-    val threads = threadsPagingList.readItems.get(0).let {
-        ThreadItem(
-            it,
-            it.privateMeta.decodeToString(),
-            Json.decodeFromString(it.publicMeta.decodeToString())
-        )
-    }
-}
-
-fun getThreadById() {
+fun getThreadById(){
     val threadId = "THREAD_ID"
     val threadItem = threadApi.getThread(threadId).let {
         ThreadItem(
