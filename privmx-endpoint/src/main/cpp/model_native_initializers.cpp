@@ -302,7 +302,7 @@ namespace privmx {
             jobject bridgeIdentity = nullptr;
             if (verificationRequest_c.bridgeIdentity.has_value()) {
                 bridgeIdentity = bridgeIdentity2Java(ctx,
-                                                     verificationRequest_c.bridgeIdentity.value());
+                        verificationRequest_c.bridgeIdentity.value());
             }
 
             return ctx->NewObject(
@@ -344,7 +344,7 @@ namespace privmx {
             );
             jbyteArray entropy = ctx->NewByteArray(BIP39_c.entropy.size());
             ctx->SetByteArrayRegion(entropy, 0, BIP39_c.entropy.size(),
-                                    (jbyte *) BIP39_c.entropy.data());
+                    (jbyte *) BIP39_c.entropy.data());
 
             return ctx->NewObject(
                     BIP39Cls,
@@ -400,18 +400,18 @@ namespace privmx {
             jbyteArray publicMeta = ctx->NewByteArray(thread_c.publicMeta.size());
             jbyteArray privateMeta = ctx->NewByteArray(thread_c.privateMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, thread_c.publicMeta.size(),
-                                    (jbyte *) thread_c.publicMeta.data());
+                    (jbyte *) thread_c.publicMeta.data());
             ctx->SetByteArrayRegion(privateMeta, 0, thread_c.privateMeta.size(),
-                                    (jbyte *) thread_c.privateMeta.data());
+                    (jbyte *) thread_c.privateMeta.data());
             for (auto &user: thread_c.users) {
                 ctx->CallBooleanMethod(users,
-                                       addToArrayMID,
-                                       ctx->NewStringUTF(user.c_str()));
+                        addToArrayMID,
+                        ctx->NewStringUTF(user.c_str()));
             }
             for (auto &manager: thread_c.managers) {
                 ctx->CallBooleanMethod(managers,
-                                       addToArrayMID,
-                                       ctx->NewStringUTF(manager.c_str()));
+                        addToArrayMID,
+                        ctx->NewStringUTF(manager.c_str()));
             }
             return ctx->NewObject(
                     threadCls,
@@ -437,7 +437,7 @@ namespace privmx {
 
         //Messages
         jobject serverMessageInfo2Java(JniContextUtils &ctx,
-                                       privmx::endpoint::thread::ServerMessageInfo serverMessageInfo_c) {
+                privmx::endpoint::thread::ServerMessageInfo serverMessageInfo_c) {
             jclass messageCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/ServerMessageInfo");
             jmethodID initMessageMID = ctx->GetMethodID(
@@ -475,13 +475,13 @@ namespace privmx {
             jbyteArray privateMeta = ctx->NewByteArray(message_c.privateMeta.size());
             jbyteArray data = ctx->NewByteArray(message_c.data.size());
             ctx->SetByteArrayRegion(publicMeta, 0, message_c.publicMeta.size(),
-                                    (jbyte *) message_c.publicMeta.data());
+                    (jbyte *) message_c.publicMeta.data());
 
             ctx->SetByteArrayRegion(privateMeta, 0, message_c.privateMeta.size(),
-                                    (jbyte *) message_c.privateMeta.data());
+                    (jbyte *) message_c.privateMeta.data());
 
             ctx->SetByteArrayRegion(data, 0, message_c.data.size(),
-                                    (jbyte *) message_c.data.data());
+                    (jbyte *) message_c.data.data());
 
             return ctx->NewObject(
                     messageCls,
@@ -539,18 +539,18 @@ namespace privmx {
             jbyteArray publicMeta = ctx->NewByteArray(store_c.publicMeta.size());
             jbyteArray privateMeta = ctx->NewByteArray(store_c.privateMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, store_c.publicMeta.size(),
-                                    (jbyte *) store_c.publicMeta.data());
+                    (jbyte *) store_c.publicMeta.data());
             ctx->SetByteArrayRegion(privateMeta, 0, store_c.privateMeta.size(),
-                                    (jbyte *) store_c.privateMeta.data());
+                    (jbyte *) store_c.privateMeta.data());
             for (auto &user: store_c.users) {
                 ctx->CallBooleanMethod(users,
-                                       addToArrayMID,
-                                       ctx->NewStringUTF(user.c_str()));
+                        addToArrayMID,
+                        ctx->NewStringUTF(user.c_str()));
             }
             for (auto &manager: store_c.managers) {
                 ctx->CallBooleanMethod(managers,
-                                       addToArrayMID,
-                                       ctx->NewStringUTF(manager.c_str()));
+                        addToArrayMID,
+                        ctx->NewStringUTF(manager.c_str()));
             }
 
             return ctx->NewObject(
@@ -615,18 +615,18 @@ namespace privmx {
             jbyteArray publicMeta = ctx->NewByteArray(inbox_c.publicMeta.size());
             jbyteArray privateMeta = ctx->NewByteArray(inbox_c.privateMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, inbox_c.publicMeta.size(),
-                                    (jbyte *) inbox_c.publicMeta.data());
+                    (jbyte *) inbox_c.publicMeta.data());
             ctx->SetByteArrayRegion(privateMeta, 0, inbox_c.privateMeta.size(),
-                                    (jbyte *) inbox_c.privateMeta.data());
+                    (jbyte *) inbox_c.privateMeta.data());
             for (auto &user: inbox_c.users) {
                 ctx->CallBooleanMethod(users,
-                                       addToArrayMID,
-                                       ctx->NewStringUTF(user.c_str()));
+                        addToArrayMID,
+                        ctx->NewStringUTF(user.c_str()));
             }
             for (auto &manager: inbox_c.managers) {
                 ctx->CallBooleanMethod(managers,
-                                       addToArrayMID,
-                                       ctx->NewStringUTF(manager.c_str()));
+                        addToArrayMID,
+                        ctx->NewStringUTF(manager.c_str()));
             }
 
             jobject filesConfig = nullptr;
@@ -685,12 +685,12 @@ namespace privmx {
             );
             jbyteArray data = ctx->NewByteArray(inboxEntry_c.data.size());
             ctx->SetByteArrayRegion(data, 0, inboxEntry_c.data.size(),
-                                    (jbyte *) inboxEntry_c.data.data());
+                    (jbyte *) inboxEntry_c.data.data());
             jobject files = ctx->NewObject(arrayCls, initArrayMID);
             for (auto &file: inboxEntry_c.files) {
                 ctx->CallBooleanMethod(files,
-                                       addToArrayMID,
-                                       file2Java(ctx, file));
+                        addToArrayMID,
+                        file2Java(ctx, file));
             }
             return ctx->NewObject(
                     inboxEntryCls,
@@ -707,7 +707,7 @@ namespace privmx {
         }
 
         jobject inboxPublicView2Java(JniContextUtils &ctx,
-                                     privmx::endpoint::inbox::InboxPublicView inboxPublicView_c) {
+                privmx::endpoint::inbox::InboxPublicView inboxPublicView_c) {
             jclass inboxPublicViewCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/InboxPublicView");
             jmethodID initInboxPublicViewMID = ctx->GetMethodID(
@@ -721,7 +721,7 @@ namespace privmx {
             );
             jbyteArray publicMeta = ctx->NewByteArray(inboxPublicView_c.publicMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, inboxPublicView_c.publicMeta.size(),
-                                    (jbyte *) inboxPublicView_c.publicMeta.data());
+                    (jbyte *) inboxPublicView_c.publicMeta.data());
             return ctx->NewObject(
                     inboxPublicViewCls,
                     initInboxPublicViewMID,
@@ -757,7 +757,7 @@ namespace privmx {
 
         //Files
         jobject serverFileInfo2Java(JniContextUtils &ctx,
-                                    privmx::endpoint::store::ServerFileInfo serverFileInfo_c) {
+                privmx::endpoint::store::ServerFileInfo serverFileInfo_c) {
             jclass serverFileInfoCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/ServerFileInfo");
             jmethodID initServerFileInfoMID = ctx->GetMethodID(
@@ -795,10 +795,10 @@ namespace privmx {
             jbyteArray publicMeta = ctx->NewByteArray(file_c.publicMeta.size());
             jbyteArray privateMeta = ctx->NewByteArray(file_c.privateMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, file_c.publicMeta.size(),
-                                    (jbyte *) file_c.publicMeta.data());
+                    (jbyte *) file_c.publicMeta.data());
 
             ctx->SetByteArrayRegion(privateMeta, 0, file_c.privateMeta.size(),
-                                    (jbyte *) file_c.privateMeta.data());
+                    (jbyte *) file_c.privateMeta.data());
 
             return ctx->NewObject(
                     fileCls,
@@ -815,7 +815,7 @@ namespace privmx {
 
         //Event
         jobject storeFileDeletedEventData2Java(JniContextUtils &ctx,
-                                               privmx::endpoint::store::StoreFileDeletedEventData storeFileDeletedEventData_c) {
+                privmx::endpoint::store::StoreFileDeletedEventData storeFileDeletedEventData_c) {
             jclass storeFileDeletedEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/StoreFileDeletedEventData");
             jmethodID initStoreFileDeletedEventDataMID = ctx->GetMethodID(
@@ -833,7 +833,7 @@ namespace privmx {
         }
 
         jobject storeStatsChangedEventData2Java(JniContextUtils &ctx,
-                                                privmx::endpoint::store::StoreStatsChangedEventData storeStatsChangedEventData_c) {
+                privmx::endpoint::store::StoreStatsChangedEventData storeStatsChangedEventData_c) {
             jclass storeStatsChangedEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/StoreStatsChangedEventData");
             jmethodID initStoreStatsChangedEventDataMID = ctx->GetMethodID(
@@ -852,7 +852,7 @@ namespace privmx {
         }
 
         jobject threadDeletedEventData2Java(JniContextUtils &ctx,
-                                            privmx::endpoint::thread::ThreadDeletedEventData threadDeletedEventData_c) {
+                privmx::endpoint::thread::ThreadDeletedEventData threadDeletedEventData_c) {
             jclass threadDeletedEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/ThreadDeletedEventData");
             jmethodID initThreadDeletedEventDataMID = ctx->GetMethodID(
@@ -868,7 +868,7 @@ namespace privmx {
         }
 
         jobject threadDeletedMessageEventData2Java(JniContextUtils &ctx,
-                                                   privmx::endpoint::thread::ThreadDeletedMessageEventData threadDeletedMessageEventData) {
+                privmx::endpoint::thread::ThreadDeletedMessageEventData threadDeletedMessageEventData) {
             jclass threadDeletedMessageEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/ThreadDeletedMessageEventData");
             jmethodID initThreadDeletedMessageEventDataMID = ctx->GetMethodID(
@@ -885,7 +885,7 @@ namespace privmx {
         }
 
         jobject storeDeletedEventData2Java(JniContextUtils &ctx,
-                                           privmx::endpoint::store::StoreDeletedEventData storeDeletedEventData_c) {
+                privmx::endpoint::store::StoreDeletedEventData storeDeletedEventData_c) {
             jclass storeDeletedEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/StoreDeletedEventData");
             jmethodID initStoreDeletedEventDataMID = ctx->GetMethodID(
@@ -970,12 +970,12 @@ namespace privmx {
                     "Ljava/lang/String;"    // contextId
                     "Ljava/lang/String;"    // userId
                     "[B"                    // payload
-                    "Ljava/lang/Long"       // statusCode
+                    "Ljava/lang/Long;"       // statusCode
                     ")V"
             );
             jbyteArray payload = ctx->NewByteArray(contextCustomEventData_c.payload.size());
             ctx->SetByteArrayRegion(payload, 0, contextCustomEventData_c.payload.size(),
-                                    (jbyte *) contextCustomEventData_c.payload.data());
+                    (jbyte *) contextCustomEventData_c.payload.data());
             return ctx->NewObject(
                     contextCustomEventDataCls,
                     initContextCustomEventDataMID,
@@ -985,7 +985,6 @@ namespace privmx {
                     ctx.long2jLong(contextCustomEventData_c.statusCode)
             );
         }
-
 
 
         //Kvdb
@@ -1032,18 +1031,18 @@ namespace privmx {
             jbyteArray publicMeta = ctx->NewByteArray(kvdb_c.publicMeta.size());
             jbyteArray privateMeta = ctx->NewByteArray(kvdb_c.privateMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, kvdb_c.publicMeta.size(),
-                                    (jbyte *) kvdb_c.publicMeta.data());
+                    (jbyte *) kvdb_c.publicMeta.data());
             ctx->SetByteArrayRegion(privateMeta, 0, kvdb_c.privateMeta.size(),
-                                    (jbyte *) kvdb_c.privateMeta.data());
+                    (jbyte *) kvdb_c.privateMeta.data());
             for (auto &user: kvdb_c.users) {
                 ctx->CallBooleanMethod(users,
-                                       addToArrayMID,
-                                       ctx->NewStringUTF(user.c_str()));
+                        addToArrayMID,
+                        ctx->NewStringUTF(user.c_str()));
             }
             for (auto &manager: kvdb_c.managers) {
                 ctx->CallBooleanMethod(managers,
-                                       addToArrayMID,
-                                       ctx->NewStringUTF(manager.c_str()));
+                        addToArrayMID,
+                        ctx->NewStringUTF(manager.c_str()));
             }
 
             return ctx->NewObject(
@@ -1119,11 +1118,11 @@ namespace privmx {
             jbyteArray data = ctx->NewByteArray(kvdbEntry_c.data.size());
 
             ctx->SetByteArrayRegion(publicMeta, 0, kvdbEntry_c.publicMeta.size(),
-                                    (jbyte *) kvdbEntry_c.publicMeta.data());
+                    (jbyte *) kvdbEntry_c.publicMeta.data());
             ctx->SetByteArrayRegion(privateMeta, 0, kvdbEntry_c.privateMeta.size(),
-                                    (jbyte *) kvdbEntry_c.privateMeta.data());
+                    (jbyte *) kvdbEntry_c.privateMeta.data());
             ctx->SetByteArrayRegion(data, 0, kvdbEntry_c.data.size(),
-                                    (jbyte *) kvdbEntry_c.data.data());
+                    (jbyte *) kvdbEntry_c.data.data());
 
             return ctx->NewObject(
                     itemCls,
