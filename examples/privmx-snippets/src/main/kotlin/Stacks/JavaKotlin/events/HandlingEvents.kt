@@ -225,9 +225,16 @@ fun handlingKvdbEntriesEvents() {
 
     endpointSession.registerCallback(
         callbacksId,
-        EventType.kvdbNewEntry(kvdbID)
+        EventType.KvdbNewEntryEvent(kvdbID)
     ) { newEntryData ->
         // some actions on new KVDB entry
+    }
+
+    endpointSession.registerCallback(
+        callbacksId,
+        EventType.KvdbEntryUpdatedEvent(kvdbID)
+    ) { updatedEntryData ->
+        // some actions when KVDB entry updated
     }
 
     endpointSession.registerCallback(
