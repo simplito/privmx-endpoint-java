@@ -61,14 +61,14 @@ fun updatingKvdbEntry() {
     val kvdbId = "KVDB_ID"
     val kvdbEntryKey = "KVDB_ENTRY_KEY"
     val kvdbEntry: KvdbEntry = kvdbApi.getEntry(kvdbId, kvdbEntryKey)
-    val kvdbEntryData = "New data"
+    val newKvdbEntryData = "New data"
 
     kvdbApi.setEntry(
         kvdbId,
         kvdbEntryKey,
         kvdbEntry.publicMeta,
         kvdbEntry.privateMeta,
-        kvdbEntryData.encodeToByteArray(),
+        newKvdbEntryData.encodeToByteArray(),
         kvdbEntry.version + 1
     )
 }
