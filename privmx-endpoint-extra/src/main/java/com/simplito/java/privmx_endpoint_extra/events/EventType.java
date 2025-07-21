@@ -362,7 +362,7 @@ public class EventType<T> {
      *
      * @param kvdbId ID of the KVDB to observe
      */
-    public static EventType<KvdbEntry> kvdbNewEntry(String kvdbId) throws NullPointerException {
+    public static EventType<KvdbEntry> KvdbNewEntryEvent(String kvdbId) throws NullPointerException {
         if (kvdbId == null) throw new NullPointerException("KVDB id cannot be null");
         return new EventType<>(
                 "kvdb/" + kvdbId + "/entries",
