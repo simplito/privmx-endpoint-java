@@ -10,6 +10,7 @@ import kotlinx.serialization.json.Json
 @Serializable
 data class KvdbEntryPublicMeta(
     val schemaVersion: Long,
+    val dataType: String,
     val mimeType: String
 )
 
@@ -39,9 +40,14 @@ fun settingKvdbEntryPlainData() {
 fun settingKvdbEntryWithPublicMeta() {
     val kvdbId = "KVDB_ID"
     val kvdbEntryKey = "KVDB_ENTRY_KEY"
-    val kvdbEntryData = "Entry Data"
+    val kvdbEntryData = listOf(
+        "THREAD_ID_1",
+        "THREAD_ID_2",
+        "THREAD_ID_3"
+    )
     val publicMeta = KvdbEntryPublicMeta(
         schemaVersion = 1,
+        dataType = "favourite-threads",
         mimeType = "application/json"
     )
     val privateMeta = ByteArray(0)
@@ -51,7 +57,7 @@ fun settingKvdbEntryWithPublicMeta() {
         kvdbEntryKey,
         Json.encodeToString(publicMeta).encodeToByteArray(),
         privateMeta,
-        kvdbEntryData.encodeToByteArray()
+        Json.encodeToString(kvdbEntryData).encodeToByteArray()
     )
 }
 // END: Setting Entries snippets
