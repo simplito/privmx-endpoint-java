@@ -41,8 +41,8 @@ public class LibLoader {
     private static String getPlatformLibsResourceDirPath() throws UnsatisfiedLinkError {
         String os = System.getProperty("os.name");
         String arch = System.getProperty("os.arch");
-        if (os == null) throw new NoSuchFieldError("Cannot found os name");
-        if (arch == null) throw new NoSuchFieldError("Cannot found arch name");
+        if (os == null) throw new NoSuchFieldError("Cannot find os name");
+        if (arch == null) throw new NoSuchFieldError("Cannot find arch name");
         os = os.toLowerCase();
         if (os.startsWith("mac os")) {
             if (arch.equalsIgnoreCase("aarch64")) return "/lib/Darwin/arm64";
@@ -54,7 +54,7 @@ public class LibLoader {
     private static void extractResource(String resourcePath) throws UnsatisfiedLinkError {
         File localLibFile = new File(libsDir, resourcePath.substring(resourcePath.lastIndexOf("/")));
         try (InputStream is = LibLoader.class.getResourceAsStream(resourcePath)) {
-            if (is == null) throw new UnsatisfiedLinkError("Cannot found resource " + resourcePath);
+            if (is == null) throw new UnsatisfiedLinkError("Cannot find resource " + resourcePath);
             if (localLibFile.exists()) localLibFile.delete();
             if (localLibFile.createNewFile()) {
                 byte[] data = new byte[1024];
