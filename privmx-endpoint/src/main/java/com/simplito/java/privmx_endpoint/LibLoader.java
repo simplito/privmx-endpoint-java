@@ -91,8 +91,8 @@ public class LibLoader {
         );
     }
 
-    static private boolean extractLibraries() {
-        if (libsDir != null) return true;
+    static private void extractLibraries() {
+        if (libsDir != null) return;
         String librariesDirectoryPath = System.getProperty("java.library.path");
         if (Pattern.compile(":?\\.(?::?|$)").matcher(librariesDirectoryPath).find()) {
             librariesDirectoryPath = System.getProperty("user.dir");
@@ -102,20 +102,17 @@ public class LibLoader {
         File librariesDirectory = new File(librariesDirectoryPath);
 
         if (!librariesDirectory.exists() && !librariesDirectory.mkdirs()) {
-            return false;
-        } else {
-            libsDir = librariesDirectory;
-            libsDir.deleteOnExit();
-            try {
-                getBinaryResourcePaths(
-                        getPlatformLibsResourceDirPath()
-                ).forEach(LibLoader::extractResource);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+            return;
         }
 
-        return true;
+        libsDir = librariesDirectory;
+        try {
+            getBinaryResourcePaths(
+                    getPlatformLibsResourceDirPath()
+            ).forEach(LibLoader::extractResource);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
 
