@@ -91,7 +91,7 @@ public class LibLoader {
         );
     }
 
-    static private boolean extractLibraries() throws UnsatisfiedLinkError {
+    static private boolean extractLibraries() {
         if (libsDir != null) return true;
         String librariesDirectoryPath = System.getProperty("java.library.path");
         if (Pattern.compile(":?\\.(?::?|$)").matcher(librariesDirectoryPath).find()) {
@@ -110,8 +110,8 @@ public class LibLoader {
                 getBinaryResourcePaths(
                         getPlatformLibsResourceDirPath()
                 ).forEach(LibLoader::extractResource);
-            } catch (IOException e) {
-                throw new UnsatisfiedLinkError("Cannot read binary resources");
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
 
