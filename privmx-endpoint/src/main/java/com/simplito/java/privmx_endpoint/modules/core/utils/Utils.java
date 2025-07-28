@@ -11,11 +11,13 @@
 
 package com.simplito.java.privmx_endpoint.modules.core.utils;
 
+import com.simplito.java.privmx_endpoint.LibLoader;
+
 import java.util.List;
 
 public class Utils {
     static {
-        System.loadLibrary("privmx-endpoint-java");
+        LibLoader.loadPrivmxLibraries();
     }
 
     /**
