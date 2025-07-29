@@ -7,6 +7,7 @@
 #include "../utils.hpp"
 #include "../exceptions.h"
 #include "Connection.h"
+#include "EventApi.h"
 #include "../parser.h"
 #include <privmx/endpoint/stream/WebRTCInterface.hpp>
 #include <privmx/endpoint/stream/StreamApiLow.hpp>
@@ -29,7 +30,8 @@ JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_create(
         JNIEnv *env,
         jclass clazz,
-        jobject connection
+        jobject connection,
+        jobject eventApi
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(connection, "Connection")) {
@@ -39,7 +41,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_create(
         jmethodID initMID = ctx->GetMethodID(clazz, "<init>",
                                              "(Ljava/lang/Long;)V");
         auto connection_c = getConnection(env, connection);
-        auto streamApiLow = StreamApiLow::create(*connection_c);
+        auto eventApi_c = getEventApi(ctx,eventApi);
+        auto streamApiLow = StreamApiLow::create(*connection_c, *eventApi_c);
         auto *api = new StreamApiLow();
         *api = streamApiLow;
         jobject result = ctx->NewObject(
@@ -476,7 +479,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_joinStream(
                 getStreamApi(ctx, thiz)->joinStream(
                         ctx.jString2string(stream_room_id),
                         streams_id_c,
-                        streamJoinSettings(),
+                        Settings(),
                         local_stream_id,
                         webrtc));
     } catch (const core::Exception &e) {
@@ -613,4 +616,298 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_leaveStream(
                 "Unknown exception"
         );
     }
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getTurnCredentials(
+        JNIEnv *env,
+        jobject thiz
+){
+JniContextUtils ctx(env);
+try {
+jclass arrayCls = env->FindClass("java/util/ArrayList");
+jmethodID initArrayMID = env->GetMethodID(arrayCls, "<init>", "()V");
+jmethodID addToArrayMID = env->GetMethodID(arrayCls, "add", "(Ljava/lang/Object;)Z");
+
+auto turnCredentialsVector = getStreamApi(ctx, thiz)->getTurnCredentials();
+jobject array = env->NewObject(arrayCls, initArrayMID);
+for(
+auto &turnCredentials_c
+: turnCredentialsVector){
+env->
+CallBooleanMethod(
+        array,
+        addToArrayMID,
+        privmx::wrapper::turnCredentials2Java(ctx, turnCredentials_c)
+);
+}
+
+return
+array;
+} catch (
+const core::Exception &e
+) {
+env->
+Throw(ctx
+.
+coreException2jthrowable(e)
+);
+} catch (
+const IllegalStateException &e
+) {
+ctx->
+ThrowNew(
+        ctx
+->FindClass("java/lang/IllegalStateException"),
+e.
+
+what()
+
+);
+} catch (
+const std::exception &e
+) {
+env->
+ThrowNew(
+        env
+->FindClass(
+"com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+e.
+
+what()
+
+);
+} catch (...) {
+env->
+ThrowNew(
+        env
+->FindClass(
+"com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+"Unknown exception"
+);
+}
+return nullptr;
+}
+
+
+extern "C"
+JNIEXPORT void JNICALL
+        Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeForStreamEvents(
+        JNIEnv *env,
+        jobject thiz
+){
+JniContextUtils ctx(env);
+try {
+    getStreamApi(ctx, thiz)->subscribeForStreamEvents();
+} catch (
+const core::Exception &e
+) {
+env->
+Throw(ctx
+.
+coreException2jthrowable(e)
+);
+} catch (
+const IllegalStateException &e
+) {
+ctx->
+ThrowNew(
+        ctx
+->FindClass("java/lang/IllegalStateException"),
+e.
+
+what()
+
+);
+} catch (
+const std::exception &e
+) {
+env->
+ThrowNew(
+        env
+->FindClass(
+"com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+e.
+
+what()
+
+);
+} catch (...) {
+env->
+ThrowNew(
+        env
+->FindClass(
+"com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+"Unknown exception"
+);
+}
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeFromStreamEvents(
+        JNIEnv *env,
+jobject thiz
+){
+//TODO: Add nullchecks
+JniContextUtils ctx(env);
+try {
+getStreamApi(ctx, thiz)->unsubscribeFromStreamEvents();
+} catch (
+const core::Exception &e
+) {
+env->
+Throw(ctx
+.
+coreException2jthrowable(e)
+);
+} catch (
+const IllegalStateException &e
+) {
+ctx->
+ThrowNew(
+        ctx
+->FindClass("java/lang/IllegalStateException"),
+e.
+
+what()
+
+);
+} catch (
+const std::exception &e
+) {
+env->
+ThrowNew(
+        env
+->FindClass(
+"com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+e.
+
+what()
+
+);
+} catch (...) {
+env->
+ThrowNew(
+        env
+->FindClass(
+"com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+"Unknown exception"
+);
+}
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_keyManagement(
+        JNIEnv *env,
+jobject thiz,
+jboolean disable
+){
+//TODO: Add nullchecks
+JniContextUtils ctx(env);
+try {
+getStreamApi(ctx, thiz)->keyManagement(disable);
+} catch (
+const core::Exception &e
+) {
+env->
+Throw(ctx
+.
+coreException2jthrowable(e)
+);
+} catch (
+const IllegalStateException &e
+) {
+ctx->
+ThrowNew(
+        ctx
+->FindClass("java/lang/IllegalStateException"),
+e.
+
+what()
+
+);
+} catch (
+const std::exception &e
+) {
+env->
+ThrowNew(
+        env
+->FindClass(
+"com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+e.
+
+what()
+
+);
+} catch (...) {
+env->
+ThrowNew(
+        env
+->FindClass(
+"com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+"Unknown exception"
+);
+}
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_reconfigureStream(
+        JNIEnv *env,
+jobject thiz,
+jlong localStreamId,
+jstring optionsJSON
+){
+    //TODO: Add nullchecks
+JniContextUtils ctx(env);
+try {
+getStreamApi(ctx, thiz)->reconfigureStream(
+        localStreamId,
+        ctx.jString2string(optionsJSON)
+        );
+} catch (
+const core::Exception &e
+) {
+env->
+Throw(ctx
+.
+coreException2jthrowable(e)
+);
+} catch (
+const IllegalStateException &e
+) {
+ctx->
+ThrowNew(
+        ctx
+->FindClass("java/lang/IllegalStateException"),
+e.
+
+what()
+
+);
+} catch (
+const std::exception &e
+) {
+env->
+ThrowNew(
+        env
+->FindClass(
+"com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+e.
+
+what()
+
+);
+} catch (...) {
+env->
+ThrowNew(
+        env
+->FindClass(
+"com/simplito/java/privmx_endpoint/model/exceptions/NativeException"),
+"Unknown exception"
+);
+}
 }

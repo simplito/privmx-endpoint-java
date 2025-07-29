@@ -1,6 +1,6 @@
 //
 // PrivMX Endpoint Java.
-// Copyright © 2024 Simplito sp. z o.o.
+// Copyright © 2025 Simplito sp. z o.o.
 //
 // This file is part of the PrivMX Platform (https://privmx.dev).
 // This software is Licensed under the MIT License.
@@ -15,8 +15,10 @@ import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.Stream;
 import com.simplito.java.privmx_endpoint.model.StreamRoom;
+import com.simplito.java.privmx_endpoint.model.TurnCredentials;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
+import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 
 import java.util.List;
 
@@ -34,7 +36,9 @@ public class StreamApiLow implements AutoCloseable {
         this.api = api;
     }
 
-    public static native StreamApiLow create(Connection connection);
+    public static native StreamApiLow create(Connection connection, EventApi eventApi);
+
+    public native List<TurnCredentials> getTurnCredentials();
 
     public String createStreamRoom(
             String contextId,
@@ -109,6 +113,11 @@ public class StreamApiLow implements AutoCloseable {
     public native void unpublishStream(long localStreamId);
 
     public native void leaveStream(long localStreamId);
+
+    public native void subscribeForStreamEvents();
+    public native void unsubscribeFromStreamEvents();
+    public native void keyManagement(boolean disable);
+    public native void reconfigureStream(long localStreamId, String optionsJSON);
 
     private native void deinit() throws IllegalStateException;
 
