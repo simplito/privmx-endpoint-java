@@ -26,6 +26,10 @@ import java.util.stream.Stream;
 public class LibLoader {
     static private File libsDir = null;
 
+    private LibLoader() {
+        
+    }
+
     static {
         try {
             Class.forName("android.os.Bundle");
