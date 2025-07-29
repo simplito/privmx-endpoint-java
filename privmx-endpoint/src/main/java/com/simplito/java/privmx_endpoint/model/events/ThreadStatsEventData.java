@@ -13,6 +13,7 @@ package com.simplito.java.privmx_endpoint.model.events;
 
 /**
  * Holds information about changes in a Thread's statistics.
+ *
  * @category core
  * @group Events
  */
@@ -35,8 +36,9 @@ public class ThreadStatsEventData {
 
     /**
      * Creates instance of {@code ThreadStatsEventData}.
-     * @param threadId ID of the changed Thread.
-     * @param lastMsgDate Timestamp of the most recent Thread message.
+     *
+     * @param threadId      ID of the changed Thread.
+     * @param lastMsgDate   Timestamp of the most recent Thread message.
      * @param messagesCount Updated number of messages in the Thread.
      */
     public ThreadStatsEventData(

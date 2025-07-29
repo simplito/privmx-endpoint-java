@@ -13,6 +13,7 @@ package com.simplito.java.privmx_endpoint.model.events;
 
 /**
  * Holds information about deleted Store.
+ *
  * @category core
  * @group Events
  */
@@ -24,11 +25,12 @@ public class StoreDeletedEventData {
 
     /**
      * Creates instance of {@code StoreDeletedEventData}.
+     *
      * @param storeId ID of the deleted Store.
      */
     public StoreDeletedEventData(
             String storeId
-    ){
+    ) {
         this.storeId = storeId;
     }
 }

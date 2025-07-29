@@ -18,12 +18,15 @@ import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
  * Defines methods sending requests to PrivMX Bridge API.
  */
 public class BackendRequester {
+    private BackendRequester() {
+    }
+
     /**
      * Sends a request to PrivMX Bridge API using access token for authorization.
      *
-     * @param serverUrl PrivMX Bridge server URL
-     * @param accessToken token for authorization (see PrivMX Bridge API for more details)
-     * @param method API method to call
+     * @param serverUrl    PrivMX Bridge server URL
+     * @param accessToken  token for authorization (see PrivMX Bridge API for more details)
+     * @param method       API method to call
      * @param paramsAsJson API method's parameters in JSON format
      * @return JSON string representing raw server response
      * @throws PrivmxException thrown when method encounters an exception.
@@ -35,7 +38,6 @@ public class BackendRequester {
             String method,
             String paramsAsJson
     ) throws PrivmxException, NativeException;
-
 
     /**
      * Sends request to PrivMX Bridge API.
@@ -70,7 +72,4 @@ public class BackendRequester {
             String method,
             String paramsAsJson
     );
-
-    private BackendRequester() {
-    }
 }

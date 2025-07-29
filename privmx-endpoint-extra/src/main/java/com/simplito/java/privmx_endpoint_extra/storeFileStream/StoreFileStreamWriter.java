@@ -238,9 +238,6 @@ public class StoreFileStreamWriter extends StoreFileStream {
      * @throws NativeException       if there is an unknown error while writing chunk
      * @throws IllegalStateException when storeApi is not initialized or there's no connection
      * @throws IOException           when {@code this} is closed
-     * @throws PrivmxException       when method encounters an exception
-     * @throws NativeException       when method encounters an unknown exception
-     * @throws IllegalStateException when {@link #storeApi} is closed
      */
     public void write(byte[] data) throws PrivmxException, NativeException, IllegalStateException, IOException {
         if (isClosed()) throw new IOException("File handle is closed");

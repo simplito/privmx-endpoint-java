@@ -19,6 +19,9 @@ import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
  * Defines methods to working with Events queue.
  */
 public class EventQueue {
+    private EventQueue() {
+    }
+
     /**
      * Puts the break event on the events queue.
      * You can use it to break the {@link #waitEvent()}.
@@ -45,7 +48,4 @@ public class EventQueue {
      * @throws NativeException thrown when method encounters an unknown exception.
      */
     public static native Event<?> getEvent() throws PrivmxException, NativeException;
-
-    private EventQueue() {
-    }
 }

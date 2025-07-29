@@ -12,6 +12,7 @@
 package com.simplito.java.privmx_endpoint_extra.lib;
 
 import com.simplito.java.privmx_endpoint.model.Event;
+import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
@@ -38,8 +39,8 @@ import java.util.concurrent.Future;
 public class PrivmxEndpointContainer implements AutoCloseable {
     private static final String TAG = "[PrivmxEndpointContainer]";
     private final Map<Long, PrivmxEndpoint> privmxEndpoints = new HashMap<>();
+    @Deprecated
     private boolean isInitialized = false;
-
     /**
      * Instance of {@link CryptoApi}.
      */
@@ -58,7 +59,9 @@ public class PrivmxEndpointContainer implements AutoCloseable {
      * Returns initialization state.
      *
      * @return {@code true} if path to certificate is set successfully
+     * @deprecated Setting path to certs is not required.
      */
+    @Deprecated
     public boolean initialized() {
         return isInitialized;
     }
@@ -79,10 +82,7 @@ public class PrivmxEndpointContainer implements AutoCloseable {
      * @return Active connection
      * @throws IllegalStateException if certificate is not set successfully
      */
-    public PrivmxEndpoint getEndpoint(Long connectionId) throws IllegalStateException {
-        if (!isInitialized) {
-            throw new IllegalStateException();
-        }
+    public PrivmxEndpoint getEndpoint(Long connectionId) {
         return privmxEndpoints.get(connectionId);
     }
 
@@ -92,25 +92,26 @@ public class PrivmxEndpointContainer implements AutoCloseable {
      * @return set of all active connection's IDs
      * @throws IllegalStateException if certificate is not set successfully
      */
-    public Set<Long> getEndpointIDs() throws IllegalStateException {
-        if (!isInitialized) {
-            throw new IllegalStateException();
-        }
+    public Set<Long> getEndpointIDs() {
         return privmxEndpoints.keySet();
     }
 
     /**
      * Sets path to the certificate used to create a secure connection to PrivMX Bridge.
      * It checks whether a .pem file with certificate exists in {@code certsPath} and uses it if it does.
-     * If it does not, it installs the default PrivMX certificate.
      *
      * @param certsPath path to file with .pem certificate
      * @throws PrivmxException if there is an error while setting {@code certsPath}
      * @throws NativeException if there is an unknown error during set {@code certsPath}
      */
     public void setCertsPath(String certsPath) throws IllegalArgumentException, PrivmxException, NativeException {
-        if (!new java.io.File(certsPath).exists())
+        java.io.File certFile = new java.io.File(certsPath);
+        if (!certFile.exists()) {
             throw new IllegalArgumentException("Certs file does not exists");
+        } else if (certFile.isDirectory()) {
+            throw new IllegalArgumentException("Invalid file path");
+        }
+
         Connection.setCertsPath(certsPath);
         isInitialized = true;
     }
@@ -118,8 +119,43 @@ public class PrivmxEndpointContainer implements AutoCloseable {
     /**
      * Creates a new connection.
      *
+     * @param enableModule        set of modules to initialize
+     * @param bridgeUrl           Bridge Server URL
+     * @param solutionId          {@code SolutionId} of the current project
+     * @param userPrivateKey      user private key used to authorize; generated from:
+     *                            {@link CryptoApi#generatePrivateKey} or
+     *                            {@link CryptoApi#derivePrivateKey}
+     * @param verificationOptions PrivMX Bridge server instance verification options using a PKI server
+     * @return Created connection
+     * @throws IllegalStateException when certPath is not set up
+     * @throws PrivmxException       if there is a problem during login
+     * @throws NativeException       if there is an unknown problem during login
+     */
+    public PrivmxEndpoint connect(
+            Set<Modules> enableModule,
+            String userPrivateKey,
+            String solutionId,
+            String bridgeUrl,
+            PKIVerificationOptions verificationOptions
+    ) throws PrivmxException, NativeException {
+        PrivmxEndpoint privmxEndpoint = new PrivmxEndpoint(
+                enableModule,
+                userPrivateKey,
+                solutionId,
+                bridgeUrl,
+                verificationOptions
+        );
+        synchronized (privmxEndpoints) {
+            privmxEndpoints.put(privmxEndpoint.connection.getConnectionId(), privmxEndpoint);
+        }
+        return privmxEndpoint;
+    }
+
+    /**
+     * Creates a new connection.
+     *
      * @param enableModule   set of modules to initialize
-     * @param bridgeUrl      Bridge's Endpoint URL
+     * @param bridgeUrl      Bridge Server URL
      * @param solutionId     {@code SolutionId} of the current project
      * @param userPrivateKey user private key used to authorize; generated from:
      *                       {@link CryptoApi#generatePrivateKey} or
@@ -134,18 +170,8 @@ public class PrivmxEndpointContainer implements AutoCloseable {
             String userPrivateKey,
             String solutionId,
             String bridgeUrl
-    ) throws IllegalStateException, PrivmxException, NativeException {
-        if (!isInitialized) throw new IllegalStateException("Certs path is not set");
-        PrivmxEndpoint privmxEndpoint = new PrivmxEndpoint(
-                enableModule,
-                userPrivateKey,
-                solutionId,
-                bridgeUrl
-        );
-        synchronized (privmxEndpoints) {
-            privmxEndpoints.put(privmxEndpoint.connection.getConnectionId(), privmxEndpoint);
-        }
-        return privmxEndpoint;
+    ) throws PrivmxException, NativeException {
+        return connect(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
     }
 
     /**
@@ -155,7 +181,6 @@ public class PrivmxEndpointContainer implements AutoCloseable {
      * @param connectionId ID of the connection
      */
     public void disconnect(Long connectionId) {
-        if (!isInitialized) throw new IllegalStateException("Certs path is not set");
         PrivmxEndpoint endpoint = privmxEndpoints.get(connectionId);
         if (endpoint == null) throw new IllegalStateException("No connection with specified id");
         try {
@@ -168,7 +193,6 @@ public class PrivmxEndpointContainer implements AutoCloseable {
      * Disconnects all connections and removes them from the container.
      */
     public void disconnectAll() {
-        if (!isInitialized) throw new IllegalStateException("Certs path is not set");
         synchronized (privmxEndpoints) {
             privmxEndpoints.values().forEach(endpoint -> {
                 try {

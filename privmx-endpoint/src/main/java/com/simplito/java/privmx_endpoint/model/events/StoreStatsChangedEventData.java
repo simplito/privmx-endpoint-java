@@ -13,6 +13,7 @@ package com.simplito.java.privmx_endpoint.model.events;
 
 /**
  * Holds information about changes in a Store's statistics.
+ *
  * @category core
  * @group Events
  */
@@ -39,17 +40,18 @@ public class StoreStatsChangedEventData {
 
     /**
      * Creates instance of {@code StoreStatsChangedEventData}.
-     * @param storeId ID of the changed Store's Context.
-     * @param contextId ID of the changed Store.
+     *
+     * @param storeId      ID of the changed Store's Context.
+     * @param contextId    ID of the changed Store.
      * @param lastFileDate Updated date of the last file in the Store.
-     * @param filesCount Updated number of files in the Store.
+     * @param filesCount   Updated number of files in the Store.
      */
     public StoreStatsChangedEventData(
             String storeId,
             String contextId,
             Long lastFileDate,
             Long filesCount
-    ){
+    ) {
         this.storeId = storeId;
         this.contextId = contextId;
         this.lastFileDate = lastFileDate;

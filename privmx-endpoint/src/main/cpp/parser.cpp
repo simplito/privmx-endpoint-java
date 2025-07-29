@@ -34,6 +34,32 @@ usersToVector(JniContextUtils &ctx, jobjectArray users) {
     return users_c;
 }
 
+privmx::endpoint::core::PKIVerificationOptions
+parsePKIVerificationOptions(JniContextUtils &ctx, jobject pkiVerificationOptions) {
+    auto result = privmx::endpoint::core::PKIVerificationOptions();
+    if (pkiVerificationOptions == nullptr) return result;
+
+    jclass pkiVerificationOptionsClass = ctx->GetObjectClass(pkiVerificationOptions);
+    jfieldID bridgePubKey = ctx->GetFieldID(
+            pkiVerificationOptionsClass,
+            "bridgePubKey",
+            "Ljava/lang/String;");
+    jfieldID bridgeInstanceId = ctx->GetFieldID(
+            pkiVerificationOptionsClass,
+            "bridgeInstanceId",
+            "Ljava/lang/String;");
+
+    jstring value;
+    if ((value = (jstring) ctx->GetObjectField(pkiVerificationOptions, bridgePubKey)) != NULL) {
+        result.bridgePubKey = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(pkiVerificationOptions, bridgeInstanceId)) != NULL) {
+        result.bridgeInstanceId = ctx.jString2string(value);
+    }
+
+    return result;
+}
+
 privmx::endpoint::core::ContainerPolicyWithoutItem
 parseContainerPolicyWithoutItem(JniContextUtils &ctx, jobject containerPolicyWithoutItem) {
     auto result = privmx::endpoint::core::ContainerPolicyWithoutItem();
@@ -207,7 +233,17 @@ jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, i
 jobject
 parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event) {
     try {
-        if (thread::Events::isThreadCreatedEvent(event)) {
+        if (event::Events::isContextCustomEvent(event)) {
+            privmx::endpoint::event::ContextCustomEvent event_cast = event::Events::extractContextCustomEvent(
+                    event);
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    privmx::wrapper::contextCustomEventData2Java(ctx, event_cast.data)
+            );
+        } else if (thread::Events::isThreadCreatedEvent(event)) {
             privmx::endpoint::thread::ThreadCreatedEvent event_cast = thread::Events::extractThreadCreatedEvent(
                     event);
             return initEvent(
@@ -269,7 +305,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     privmx::wrapper::message2Java(ctx, event_cast.data)
             );
             return nullptr;
-        } else if (thread::Events::isThreadDeletedMessageEvent(event)) {
+        } else if (thread::Events::isThreadMessageDeletedEvent(event)) {
             privmx::endpoint::thread::ThreadMessageDeletedEvent event_cast = thread::Events::extractThreadMessageDeletedEvent(
                     event);
             return initEvent(
@@ -422,4 +458,34 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
         throw e;
     }
     return nullptr;
+}
+
+privmx::endpoint::core::PagingQuery
+parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery) {
+    auto result = privmx::endpoint::core::PagingQuery();
+    if (pagingQuery == nullptr) return result;
+    jclass queryClass = ctx->GetObjectClass(pagingQuery);
+    jfieldID skipFID = ctx->GetFieldID(queryClass, "skip", "Ljava/lang/Long;");
+    jfieldID limitFID = ctx->GetFieldID(queryClass, "limit", "Ljava/lang/Long;");
+    jfieldID sortOrderFID = ctx->GetFieldID(queryClass, "sortOrder", "Ljava/lang/String;");
+    jfieldID lastIdFID = ctx->GetFieldID(queryClass, "lastId", "Ljava/lang/String;");
+    jfieldID queryAsJsonFID = ctx->GetFieldID(queryClass, "queryAsJson", "Ljava/lang/String;");
+    jfieldID sortByFID = ctx->GetFieldID(queryClass, "sortBy", "Ljava/lang/String;");
+
+    result.skip = ctx.getObject(ctx->GetObjectField(pagingQuery, skipFID)).getLongValue();
+    result.limit = ctx.getObject(ctx->GetObjectField(pagingQuery, limitFID)).getLongValue();
+    result.sortOrder = ctx.jString2string((jstring) ctx->GetObjectField(pagingQuery, sortOrderFID));
+
+    jstring value;
+    if ((value = (jstring) ctx->GetObjectField(pagingQuery, lastIdFID)) != NULL) {
+        result.lastId = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(pagingQuery, queryAsJsonFID)) != NULL) {
+        result.queryAsJson = ctx.jString2string(value);
+    }
+    if ((value = (jstring) ctx->GetObjectField(pagingQuery, sortByFID)) != NULL) {
+        result.sortBy = ctx.jString2string(value);
+    }
+
+    return result;
 }

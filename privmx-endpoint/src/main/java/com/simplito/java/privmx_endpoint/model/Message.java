@@ -51,6 +51,40 @@ public class Message {
     public Long statusCode;
 
     /**
+     * Version of the Message data structure and how it is encoded/encrypted.
+     */
+    public Long schemaVersion;
+
+    /**
+     * Creates instance of {@code Message}.
+     *
+     * @param info          Message's information created by server.
+     * @param publicMeta    Message's public metadata.
+     * @param privateMeta   Message's private metadata.
+     * @param data          Message's data.
+     * @param authorPubKey  Public key of the author of the message.
+     * @param statusCode    Status code of retrieval and decryption of the {@code Message}.
+     * @param schemaVersion Version of the Message data structure and how it is encoded/encrypted.
+     */
+    public Message(
+            ServerMessageInfo info,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            byte[] data,
+            String authorPubKey,
+            Long statusCode,
+            Long schemaVersion
+    ) {
+        this.info = info;
+        this.publicMeta = publicMeta;
+        this.privateMeta = privateMeta;
+        this.authorPubKey = authorPubKey;
+        this.data = data;
+        this.statusCode = statusCode;
+        this.schemaVersion = schemaVersion;
+    }
+
+    /**
      * Creates instance of {@code Message}.
      *
      * @param info         Message's information created by server.
@@ -60,6 +94,7 @@ public class Message {
      * @param authorPubKey Public key of the author of the message.
      * @param statusCode   Status code of retrieval and decryption of the {@code Message}.
      */
+    @Deprecated
     public Message(
             ServerMessageInfo info,
             byte[] publicMeta,
@@ -68,11 +103,6 @@ public class Message {
             String authorPubKey,
             Long statusCode
     ) {
-        this.info = info;
-        this.publicMeta = publicMeta;
-        this.privateMeta = privateMeta;
-        this.authorPubKey = authorPubKey;
-        this.data = data;
-        this.statusCode = statusCode;
+        this(info, publicMeta, privateMeta, data, authorPubKey, statusCode, null);
     }
 }

@@ -15,6 +15,7 @@
 #include <jni.h>
 #include "utils.hpp"
 #include "privmx/endpoint/core/Connection.hpp"
+#include "privmx/endpoint/core/UserVerifierInterface.hpp"
 #include "privmx/endpoint/core/Types.hpp"
 #include "privmx/endpoint/core/Events.hpp"
 #include "privmx/endpoint/thread/ThreadApi.hpp"
@@ -26,6 +27,13 @@
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
+#include "privmx/endpoint/event/EventApi.hpp"
+#include "privmx/endpoint/event/Types.hpp"
+#include "privmx/endpoint/event/Events.hpp"
+#include "privmx/endpoint/crypto/Types.hpp"
+#include "privmx/endpoint/crypto/ExtKey.hpp"
+#include "privmx/endpoint/kvdb/KvdbApi.hpp"
+#include "privmx/endpoint/kvdb/Types.hpp"
 #include "privmx/endpoint/stream/StreamApiLow.hpp"
 #include "privmx/endpoint/stream/WebRTCInterface.hpp"
 
@@ -50,6 +58,24 @@ namespace privmx {
 
         //Context
         jobject context2Java(JniContextUtils &ctx, privmx::endpoint::core::Context context_c);
+
+        // UserWithPubKey
+        jobject userWithPubKey2Java(JniContextUtils &ctx,
+                                    privmx::endpoint::core::UserWithPubKey userWithPubKey);
+
+        //UserInfo
+        jobject userInfo2Java(JniContextUtils &ctx, privmx::endpoint::core::UserInfo userInfo);
+
+        jobject bridgeIdentity2Java(JniContextUtils &ctx,
+                                    privmx::endpoint::core::BridgeIdentity bridgeIdentity_c);
+
+        jobject verificationRequest2Java(JniContextUtils &ctx,
+                                         privmx::endpoint::core::VerificationRequest verificationRequest_c);
+
+        //Crypto
+        jobject extKey2Java(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey extKey_c);
+
+        jobject BIP392Java(JniContextUtils &ctx, privmx::endpoint::crypto::BIP39_t BIP39_c);
 
         //Threads
         jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c);
@@ -105,6 +131,18 @@ namespace privmx {
 
         jobject inboxEntryDeletedEventData2Java(JniContextUtils &ctx,
                                                 privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
+
+        jobject contextCustomEventData2Java(JniContextUtils &ctx,
+                                            privmx::endpoint::event::ContextCustomEventData contextCustomEvent_c
+        );
+        //Kvdb
+        jobject kvdb2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Kvdb kvdb_c);
+
+        jobject serverKvdbEntryInfo2Java(JniContextUtils &ctx,
+                                         privmx::endpoint::kvdb::ServerKvdbEntryInfo serverItemInfo_c);
+
+        jobject kvdbEntry2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::KvdbEntry entry_c);
+
 
         //Streams
         jobject keyType2Java(JniContextUtils &ctx, privmx::endpoint::stream::KeyType keyType_c);

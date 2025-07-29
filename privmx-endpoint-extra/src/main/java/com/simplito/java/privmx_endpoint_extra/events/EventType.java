@@ -14,11 +14,17 @@ package com.simplito.java.privmx_endpoint_extra.events;
 import com.simplito.java.privmx_endpoint.model.File;
 import com.simplito.java.privmx_endpoint.model.Inbox;
 import com.simplito.java.privmx_endpoint.model.InboxEntry;
+import com.simplito.java.privmx_endpoint.model.Kvdb;
+import com.simplito.java.privmx_endpoint.model.KvdbEntry;
 import com.simplito.java.privmx_endpoint.model.Message;
 import com.simplito.java.privmx_endpoint.model.Store;
 import com.simplito.java.privmx_endpoint.model.Thread;
+import com.simplito.java.privmx_endpoint.model.events.ContextCustomEventData;
 import com.simplito.java.privmx_endpoint.model.events.InboxDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.InboxEntryDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.KvdbDeletedEntryEventData;
+import com.simplito.java.privmx_endpoint.model.events.KvdbDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.KvdbStatsEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreFileDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreStatsChangedEventData;
@@ -295,6 +301,101 @@ public class EventType<T> {
                 "inbox/" + inboxId + "/entries",
                 "inboxEntryDeleted",
                 InboxEntryDeletedEventData.class
+        );
+    }
+
+    /**
+     * Returns instance to register for custom Context Events.
+     *
+     * @param contextId   ID of the Context to observe
+     * @param channelName name of the Channel
+     * @return predefined event type to catch emitted custom Context events
+     */
+    public static EventType<ContextCustomEventData> ContextCustomEvent(String contextId, String channelName) throws NullPointerException {
+        if (contextId == null) throw new NullPointerException("Context id cannot be null");
+        if (channelName == null) throw new NullPointerException("Channel name cannot be null");
+        return new EventType<>(
+                "context/" + contextId + "/" + channelName,
+                "contextCustom",
+                ContextCustomEventData.class
+        );
+    }
+
+    /**
+     * Predefined event type to catch updated KVDB events.
+     */
+    public static final EventType<Kvdb> KvdbUpdatedEvent = new EventType<>(
+            "kvdb",
+            "kvdbUpdated",
+            Kvdb.class
+    );
+
+    /**
+     * Predefined event type to catch deleted KVDB events.
+     */
+    public static final EventType<KvdbDeletedEventData> KvdbDeletedEvent = new EventType<>(
+            "kvdb",
+            "kvdbDeleted",
+            KvdbDeletedEventData.class
+    );
+
+    /**
+     * Predefined event type to catch updated KVDB stats events.
+     */
+    public static final EventType<KvdbStatsEventData> KvdbStatsEvent = new EventType<>(
+            "kvdb",
+            "kvdbStatsChanged",
+            KvdbStatsEventData.class
+    );
+
+    /**
+     * Predefined event type to catch created KVDB events.
+     */
+    public static EventType<Kvdb> KvdbCreatedEvent = new EventType<>(
+            "kvdb",
+            "kvdbCreated",
+            Kvdb.class
+    );
+
+    /**
+     * Predefined event type to catch created KVDB entries events.
+     *
+     * @param kvdbId ID of the KVDB to observe
+     */
+    public static EventType<KvdbEntry> kvdbNewEntry(String kvdbId) throws NullPointerException {
+        if (kvdbId == null) throw new NullPointerException("KVDB id cannot be null");
+        return new EventType<>(
+                "kvdb/" + kvdbId + "/entries",
+                "kvdbNewEntry",
+                KvdbEntry.class
+        );
+    }
+
+    /**
+     * Predefined event type to catch updated KVDB entries events.
+     *
+     * @param kvdbId ID of the Kvdb to observe
+     */
+    public static EventType<KvdbEntry> KvdbEntryUpdatedEvent(String kvdbId) throws NullPointerException {
+        if (kvdbId == null) throw new NullPointerException("KVDB id cannot be null");
+        return new EventType<>(
+                "kvdb/" + kvdbId + "/entries",
+                "kvdbEntryUpdated",
+                KvdbEntry.class
+        );
+    }
+
+    /**
+     * Predefined event type to catch deleted KVDB entries events.
+     *
+     * @param kvdbId ID of the Kvdb to observe
+     */
+    public static EventType<KvdbDeletedEntryEventData> KvdbEntryDeletedEvent(String kvdbId) throws NullPointerException {
+        if (kvdbId == null) throw new NullPointerException("Kvdb id cannot be null");
+        return new EventType<>(
+                "kvdb/" + kvdbId + "/entries",
+                "kvdbEntryDeleted",
+                KvdbDeletedEntryEventData.class
         );
     }
 }

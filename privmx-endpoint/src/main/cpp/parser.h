@@ -20,6 +20,9 @@
 std::vector<privmx::endpoint::core::UserWithPubKey>
 usersToVector(JniContextUtils &ctx, jobjectArray users);
 
+privmx::endpoint::core::PKIVerificationOptions
+parsePKIVerificationOptions(JniContextUtils &ctx, jobject pkiVerificationOptions);
+
 privmx::endpoint::core::ContainerPolicyWithoutItem
 parseContainerPolicyWithoutItem(JniContextUtils &ctx, jobject containerPolicyWithoutItem);
 
@@ -32,5 +35,6 @@ privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobj
 
 jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event);
 
+privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery);
 
 #endif //PRIVMX_POCKET_LIB_PARSER_H
