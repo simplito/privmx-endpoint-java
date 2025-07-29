@@ -61,16 +61,16 @@ namespace privmx {
 
         // UserWithPubKey
         jobject userWithPubKey2Java(JniContextUtils &ctx,
-                                    privmx::endpoint::core::UserWithPubKey userWithPubKey);
+                privmx::endpoint::core::UserWithPubKey userWithPubKey);
 
         //UserInfo
         jobject userInfo2Java(JniContextUtils &ctx, privmx::endpoint::core::UserInfo userInfo);
 
         jobject bridgeIdentity2Java(JniContextUtils &ctx,
-                                    privmx::endpoint::core::BridgeIdentity bridgeIdentity_c);
+                privmx::endpoint::core::BridgeIdentity bridgeIdentity_c);
 
         jobject verificationRequest2Java(JniContextUtils &ctx,
-                                         privmx::endpoint::core::VerificationRequest verificationRequest_c);
+                privmx::endpoint::core::VerificationRequest verificationRequest_c);
 
         //Crypto
         jobject extKey2Java(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey extKey_c);
@@ -82,7 +82,7 @@ namespace privmx {
 
         //Messages
         jobject serverMessageInfo2Java(JniContextUtils &ctx,
-                                       privmx::endpoint::thread::ServerMessageInfo serverMessageInfo_c);
+                privmx::endpoint::thread::ServerMessageInfo serverMessageInfo_c);
 
         jobject message2Java(JniContextUtils &ctx, privmx::endpoint::thread::Message message_c);
 
@@ -99,47 +99,48 @@ namespace privmx {
         inboxEntry2Java(JniContextUtils &ctx, privmx::endpoint::inbox::InboxEntry inboxEntry_c);
 
         jobject inboxPublicView2Java(JniContextUtils &ctx,
-                                     privmx::endpoint::inbox::InboxPublicView inboxPublicView_c);
+                privmx::endpoint::inbox::InboxPublicView inboxPublicView_c);
 
         //Files
         jobject serverFileInfo2Java(JniContextUtils &ctx,
-                                    privmx::endpoint::store::ServerFileInfo serverFileInfo_c);
+                privmx::endpoint::store::ServerFileInfo serverFileInfo_c);
 
         jobject file2Java(JniContextUtils &ctx, privmx::endpoint::store::File file_c);
 
         //Event
         jobject storeDeletedEventData2Java(JniContextUtils &ctx,
-                                           privmx::endpoint::store::StoreDeletedEventData storeDeletedEventData_c);
+                privmx::endpoint::store::StoreDeletedEventData storeDeletedEventData_c);
 
         jobject storeFileDeletedEventData2Java(JniContextUtils &ctx,
-                                               privmx::endpoint::store::StoreFileDeletedEventData storeFileDeletedEventData_c);
+                privmx::endpoint::store::StoreFileDeletedEventData storeFileDeletedEventData_c);
 
         jobject storeStatsChangedEventData2Java(JniContextUtils &ctx,
-                                                privmx::endpoint::store::StoreStatsChangedEventData storeStatsChangedEventData_c);
+                privmx::endpoint::store::StoreStatsChangedEventData storeStatsChangedEventData_c);
 
         jobject threadDeletedEventData2Java(JniContextUtils &ctx,
-                                            privmx::endpoint::thread::ThreadDeletedEventData threadDeletedEventData_c);
+                privmx::endpoint::thread::ThreadDeletedEventData threadDeletedEventData_c);
 
         jobject threadDeletedMessageEventData2Java(JniContextUtils &ctx,
-                                                   privmx::endpoint::thread::ThreadDeletedMessageEventData threadDeletedMessageEventData_c);
+                privmx::endpoint::thread::ThreadDeletedMessageEventData threadDeletedMessageEventData_c);
 
         jobject threadStatsEventData2Java(JniContextUtils &ctx,
-                                          privmx::endpoint::thread::ThreadStatsEventData threadStatsEventData_c);
+                privmx::endpoint::thread::ThreadStatsEventData threadStatsEventData_c);
 
         jobject inboxDeletedEventData2Java(JniContextUtils &ctx,
-                                           privmx::endpoint::inbox::InboxDeletedEventData inboxDeletedEventData_c);
+                privmx::endpoint::inbox::InboxDeletedEventData inboxDeletedEventData_c);
 
         jobject inboxEntryDeletedEventData2Java(JniContextUtils &ctx,
-                                                privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
+                privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
 
         jobject contextCustomEventData2Java(JniContextUtils &ctx,
-                                            privmx::endpoint::event::ContextCustomEventData contextCustomEvent_c
+                privmx::endpoint::event::ContextCustomEventData contextCustomEvent_c
         );
+
         //Kvdb
         jobject kvdb2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Kvdb kvdb_c);
 
         jobject serverKvdbEntryInfo2Java(JniContextUtils &ctx,
-                                         privmx::endpoint::kvdb::ServerKvdbEntryInfo serverItemInfo_c);
+                privmx::endpoint::kvdb::ServerKvdbEntryInfo serverItemInfo_c);
 
         jobject kvdbEntry2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::KvdbEntry entry_c);
 
@@ -154,6 +155,12 @@ namespace privmx {
 
         jobject
         stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
+
+        jobject
+        turnCredentials2Java(JniContextUtils &ctx, privmx::endpoint::stream::TurnCredentials turnCredentials_c);
+
+        jobject
+        sdpWithTypeModel2Java(JniContextUtils &ctx, privmx::endpoint::stream::SdpWithTypeModel sdpWithTypeModel_c);
 
     } // wrapper
 } // privmx
