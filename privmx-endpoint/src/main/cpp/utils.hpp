@@ -101,7 +101,7 @@ public:
 
 private:
     JNIEnv *_env;
-    jobject jclassLoader;
+    jobject jclassLoader = nullptr;
 };
 
 #endif //PRIVMX_PRIVMXPOCKETLIB_UTILS_HPP
