@@ -38,6 +38,9 @@ public class LibLoader {
         }
     }
 
+    /**
+     * Loads PrivMX native libraries.
+     */
     public static void loadPrivmxLibraries() {
         System.loadLibrary("privmx-endpoint-java");
     }
