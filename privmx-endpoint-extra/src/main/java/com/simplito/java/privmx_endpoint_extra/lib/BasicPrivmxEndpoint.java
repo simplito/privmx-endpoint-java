@@ -18,6 +18,7 @@ import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.crypto.CryptoApi;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 import com.simplito.java.privmx_endpoint.modules.inbox.InboxApi;
+import com.simplito.java.privmx_endpoint.modules.kvdb.KvdbApi;
 import com.simplito.java.privmx_endpoint.modules.store.StoreApi;
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi;
 import com.simplito.java.privmx_endpoint_extra.model.Modules;
@@ -50,6 +51,11 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
      * Reference to Inbox module.
      */
     public final EventApi eventApi;
+
+    /**
+     * Reference to KVDB module.
+     */
+    public final KvdbApi kvdbApi;
 
     /**
      * Reference to Connection module.
@@ -88,6 +94,30 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
                 storeApi
         ) : null;
         eventApi = enableModule.contains(Modules.CUSTOM_EVENT) ? new EventApi(connection) : null;
+        kvdbApi = enableModule.contains(Modules.KVDB) ? new KvdbApi(connection) : null;
+    }
+
+    /**
+     * Initializes modules and connects to PrivMX Bridge server using given parameters.
+     *
+     * @param enableModule   set of modules to initialize; should contain {@link Modules#THREAD }
+     *                       to enable Thread module or {@link Modules#STORE } to enable Store module
+     * @param bridgeUrl      Bridge Server URL
+     * @param solutionId     {@code SolutionId} of the current project
+     * @param userPrivateKey user private key used to authorize; generated from:
+     *                       {@link CryptoApi#generatePrivateKey} or
+     *                       {@link CryptoApi#derivePrivateKey}
+     * @throws IllegalStateException thrown if there is an exception during init modules
+     * @throws PrivmxException       thrown if there is a problem during login
+     * @throws NativeException       thrown if there is an <strong>unknown</strong> problem during login
+     */
+    public BasicPrivmxEndpoint(
+            Set<Modules> enableModule,
+            String userPrivateKey,
+            String solutionId,
+            String bridgeUrl
+    ) throws IllegalStateException, PrivmxException, NativeException {
+        this(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
     }
 
     /**
@@ -124,6 +154,7 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
         if (storeApi != null) storeApi.close();
         if (inboxApi != null) inboxApi.close();
         if (eventApi != null) eventApi.close();
+        if (kvdbApi != null) kvdbApi.close();
         if (connection != null) connection.close();
     }
 }

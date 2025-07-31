@@ -1,6 +1,6 @@
 //
 // PrivMX Endpoint Java.
-// Copyright © 2024 Simplito sp. z o.o.
+// Copyright © 2025 Simplito sp. z o.o.
 //
 // This file is part of the PrivMX Platform (https://privmx.dev).
 // This software is Licensed under the MIT License.
@@ -11,6 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.thread;
 
+import com.simplito.java.privmx_endpoint.LibLoader;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.Message;
 import com.simplito.java.privmx_endpoint.model.PagingList;
@@ -33,7 +34,7 @@ import java.util.Objects;
  */
 public class ThreadApi implements AutoCloseable {
     static {
-        System.loadLibrary("privmx-endpoint-java");
+        LibLoader.loadPrivmxLibraries();
     }
 
     @SuppressWarnings("FieldCanBeLocal")
@@ -196,7 +197,7 @@ public class ThreadApi implements AutoCloseable {
      * Gets a list of Threads in given Context.
      *
      * @param contextId ID of the Context to get the Threads from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of Threads
@@ -205,14 +206,14 @@ public class ThreadApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception
      */
     public PagingList<Thread> listThreads(String contextId, long skip, long limit, String sortOrder) throws PrivmxException, NativeException, IllegalStateException {
-        return listThreads(contextId, skip, limit, sortOrder, null, null);
+        return listThreads(contextId, skip, limit, sortOrder, null, null, null);
     }
 
     /**
      * Gets a list of Threads in given Context.
      *
      * @param contextId ID of the Context to get the Threads from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -222,14 +223,14 @@ public class ThreadApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception
      */
     public PagingList<Thread> listThreads(String contextId, long skip, long limit, String sortOrder, String lastId) throws PrivmxException, NativeException, IllegalStateException {
-        return listThreads(contextId, skip, limit, sortOrder, lastId, null);
+        return listThreads(contextId, skip, limit, sortOrder, lastId, null, null);
     }
 
     /**
      * Gets a list of Threads in given Context.
      *
      * @param contextId   ID of the Context to get the Threads from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -239,7 +240,26 @@ public class ThreadApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception
      * @throws NativeException       thrown when method encounters an unknown exception
      */
-    public native PagingList<Thread> listThreads(String contextId, long skip, long limit, String sortOrder, String lastId, String queryAsJson) throws PrivmxException, NativeException, IllegalStateException;
+    public PagingList<Thread> listThreads(String contextId, long skip, long limit, String sortOrder, String lastId, String queryAsJson) throws PrivmxException, NativeException, IllegalStateException {
+        return listThreads(contextId, skip, limit, sortOrder, lastId, queryAsJson, null);
+    }
+
+    /**
+     * Gets a list of Threads in given Context.
+     *
+     * @param contextId   ID of the Context to get the Threads from
+     * @param skip        number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @param sortBy      field name to sort elements by
+     * @return list of Threads
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception
+     * @throws NativeException       thrown when method encounters an unknown exception
+     */
+    public native PagingList<Thread> listThreads(String contextId, long skip, long limit, String sortOrder, String lastId, String queryAsJson, String sortBy) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Deletes a Thread by given Thread ID.
@@ -289,7 +309,7 @@ public class ThreadApi implements AutoCloseable {
      * Gets a list of messages from a Thread.
      *
      * @param threadId  ID of the Thread to list messages from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of messages
@@ -298,14 +318,14 @@ public class ThreadApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public PagingList<Message> listMessages(String threadId, long skip, long limit, String sortOrder) throws PrivmxException, NativeException, IllegalStateException {
-        return listMessages(threadId, skip, limit, sortOrder, null, null);
+        return listMessages(threadId, skip, limit, sortOrder, null, null, null);
     }
 
     /**
      * Gets a list of messages from a Thread.
      *
      * @param threadId  ID of the Thread to list messages from
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -315,14 +335,14 @@ public class ThreadApi implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public PagingList<Message> listMessages(String threadId, long skip, long limit, String sortOrder, String lastId) throws PrivmxException, NativeException, IllegalStateException {
-        return listMessages(threadId, skip, limit, sortOrder, lastId, null);
+        return listMessages(threadId, skip, limit, sortOrder, lastId, null, null);
     }
 
     /**
      * Gets a list of messages from a Thread.
      *
      * @param threadId    ID of the Thread to list messages from
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -332,7 +352,26 @@ public class ThreadApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native PagingList<Message> listMessages(String threadId, long skip, long limit, String sortOrder, String lastId, String queryAsJson) throws PrivmxException, NativeException, IllegalStateException;
+    public PagingList<Message> listMessages(String threadId, long skip, long limit, String sortOrder, String lastId, String queryAsJson) throws PrivmxException, NativeException, IllegalStateException {
+        return listMessages(threadId, skip, limit, sortOrder, lastId, queryAsJson, null);
+    }
+
+    /**
+     * Gets a list of messages from a Thread.
+     *
+     * @param threadId    ID of the Thread to list messages from
+     * @param skip        number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @param sortBy      field name to sort elements by
+     * @return list of messages
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public native PagingList<Message> listMessages(String threadId, long skip, long limit, String sortOrder, String lastId, String queryAsJson, String sortBy) throws PrivmxException, NativeException, IllegalStateException;
 
 
     /**

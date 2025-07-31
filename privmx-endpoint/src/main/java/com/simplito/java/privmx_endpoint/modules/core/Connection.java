@@ -1,6 +1,6 @@
 //
 // PrivMX Endpoint Java.
-// Copyright © 2024 Simplito sp. z o.o.
+// Copyright © 2025 Simplito sp. z o.o.
 //
 // This file is part of the PrivMX Platform (https://privmx.dev).
 // This software is Licensed under the MIT License.
@@ -11,6 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.core;
 
+import com.simplito.java.privmx_endpoint.LibLoader;
 import com.simplito.java.privmx_endpoint.model.Context;
 import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
 import com.simplito.java.privmx_endpoint.model.PagingList;
@@ -27,7 +28,7 @@ import java.util.List;
  */
 public class Connection implements AutoCloseable {
     static {
-        System.loadLibrary("privmx-endpoint-java");
+        LibLoader.loadPrivmxLibraries();
     }
 
     private final Long api;
@@ -164,7 +165,7 @@ public class Connection implements AutoCloseable {
     /**
      * Gets a list of Contexts available for the user.
      *
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @return list of Contexts
@@ -173,13 +174,13 @@ public class Connection implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public PagingList<Context> listContexts(long skip, long limit, String sortOrder) throws IllegalStateException, PrivmxException, NativeException {
-        return listContexts(skip, limit, sortOrder, null, null);
+        return listContexts(skip, limit, sortOrder, null, null, null);
     }
 
     /**
      * Gets a list of Contexts available for the user.
      *
-     * @param skip      skip number of elements to skip from result
+     * @param skip      number of elements to skip from result
      * @param limit     limit of elements to return for query
      * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId    ID of the element from which query results should start
@@ -189,13 +190,13 @@ public class Connection implements AutoCloseable {
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public PagingList<Context> listContexts(long skip, long limit, String sortOrder, String lastId) throws IllegalStateException, PrivmxException, NativeException {
-        return listContexts(skip, limit, sortOrder, lastId, null);
+        return listContexts(skip, limit, sortOrder, lastId, null, null);
     }
 
     /**
      * Gets a list of Contexts available for the user.
      *
-     * @param skip        skip number of elements to skip from result
+     * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
      * @param lastId      ID of the element from which query results should start
@@ -205,7 +206,25 @@ public class Connection implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native PagingList<Context> listContexts(long skip, long limit, String sortOrder, String lastId, String queryAsJson) throws IllegalStateException, PrivmxException, NativeException;
+    public PagingList<Context> listContexts(long skip, long limit, String sortOrder, String lastId, String queryAsJson) throws IllegalStateException, PrivmxException, NativeException {
+        return listContexts(skip, limit, sortOrder, lastId, queryAsJson, null);
+    }
+
+    /**
+     * Gets a list of Contexts available for the user.
+     *
+     * @param skip        number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @param sortBy      field name to sort elements by
+     * @return list of Contexts
+     * @throws IllegalStateException thrown when instance is not connected.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public native PagingList<Context> listContexts(long skip, long limit, String sortOrder, String lastId, String queryAsJson, String sortBy) throws IllegalStateException, PrivmxException, NativeException;
 
     /**
      * Gets a list of users of given context.
