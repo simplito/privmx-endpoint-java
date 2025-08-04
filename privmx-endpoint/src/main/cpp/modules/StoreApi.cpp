@@ -455,17 +455,19 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_writeToFile(
         JNIEnv *env,
         jobject thiz,
         jlong file_handle,
-        jbyteArray data_chunk
+        jbyteArray data_chunk,
+        jboolean truncate
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data_chunk, "Data chunk")) {
         return;
     }
-    ctx.callVoidEndpointApi([&ctx, &thiz, &data_chunk, &file_handle]() {
+    ctx.callVoidEndpointApi([&ctx, &thiz, &data_chunk, &file_handle, &truncate]() {
         auto data_chunk_c = ctx.jByteArray2String(data_chunk);
         getStoreApi(ctx, thiz)->writeToFile(
                 file_handle,
-                core::Buffer::from(data_chunk_c)
+                core::Buffer::from(data_chunk_c),
+                truncate == JNI_TRUE
         );
     });
 }

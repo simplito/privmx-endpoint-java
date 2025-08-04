@@ -323,7 +323,21 @@ public class StoreApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native void writeToFile(long fileHandle, byte[] dataChunk) throws PrivmxException, NativeException, IllegalStateException;
+    public void writeToFile(long fileHandle, byte[] dataChunk) throws PrivmxException, NativeException, IllegalStateException {
+        writeToFile(fileHandle, dataChunk, false);
+    }
+
+    /**
+     * Writes a file data.
+     *
+     * @param fileHandle handle to write file data
+     * @param dataChunk  file data chunk
+     * @param truncate   truncate the file from: current pos + dataChunk size
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public native void writeToFile(long fileHandle, byte[] dataChunk, boolean truncate) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Deletes a file by given ID.
