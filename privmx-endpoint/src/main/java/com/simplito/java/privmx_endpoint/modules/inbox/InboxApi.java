@@ -15,6 +15,8 @@ import com.simplito.java.privmx_endpoint.model.ContainerPolicyWithoutItem;
 import com.simplito.java.privmx_endpoint.model.FilesConfig;
 import com.simplito.java.privmx_endpoint.model.Inbox;
 import com.simplito.java.privmx_endpoint.model.InboxEntry;
+import com.simplito.java.privmx_endpoint.model.InboxEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.InboxPublicView;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
@@ -678,6 +680,31 @@ public class InboxApi implements AutoCloseable {
      * @throws IllegalStateException thrown when instance is closed.
      */
     public native String closeFile(long fileHandle) throws PrivmxException, NativeException, IllegalStateException;
+
+    /**
+     * Subscribe for the Inbox events on the given subscription query.
+     *
+     * @param subscriptionQueries list of queries
+     * @return list of subscriptionIds in maching order to subscriptionQueries
+     */
+    public native List<String> subscribeFor(List<String> subscriptionQueries);
+
+    /**
+     * Unsubscribe from events for the given subscriptionId.
+     *
+     * @param subscriptionIds list of subscriptionId
+     */
+    public native void unsubscribeFrom(List<String> subscriptionIds);
+
+    /**
+     * Generate subscription Query for the Inbox events.
+     *
+     * @param eventType    type of event which you listen for
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     *                     // todo - add return description
+     */
+    public native String buildSubscriptionQuery(InboxEventType eventType, InboxEventSelectorType selectorType, String selectorId);
 
     /**
      * Frees memory.
