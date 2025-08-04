@@ -722,7 +722,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_buildSubscriptionQu
             }
     );
 
-    if (ctx.ExceptionCheck()) {
+    if (ctx->ExceptionCheck()) {
         return nullptr;
     }
     return result;
