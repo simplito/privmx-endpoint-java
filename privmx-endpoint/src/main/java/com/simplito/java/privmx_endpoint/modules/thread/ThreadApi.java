@@ -403,44 +403,6 @@ public class ThreadApi implements AutoCloseable {
     public native void updateMessage(String messageId, byte[] publicMeta, byte[] privateMeta, byte[] data) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribes for the Thread module main events.
-     *
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void subscribeForThreadEvents() throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribes from the Thread module main events.
-     *
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void unsubscribeFromThreadEvents() throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Subscribes for events in given Thread.
-     *
-     * @param threadId ID of the Thread to subscribe
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void subscribeForMessageEvents(String threadId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribes from events in given Thread.
-     *
-     * @param threadId ID of the Thread to unsubscribe
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void unsubscribeFromMessageEvents(String threadId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
      * Frees memory.
      *
      * @throws Exception when instance is currently closed.
