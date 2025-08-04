@@ -196,6 +196,34 @@ privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobj
     return result;
 }
 
+privmx::endpoint::store::EventType parseStoreEventType(JniContextUtils &ctx, jobject eventType) {
+    jclass eventTypeCls = ctx->FindClass(
+            "com/simplito/java/privmx_endpoint/model/StoreEventType");
+
+    jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
+    auto ordinal = ctx->CallIntMethod(eventType, ordinalMID);
+    int ordinal_c = (int)ordinal;
+
+    switch (ordinal_c) {
+        case privmx::endpoint::store::EventType::STORE_CREATE:
+            return privmx::endpoint::store::EventType::STORE_CREATE;
+        case privmx::endpoint::store::EventType::STORE_UPDATE:
+            return privmx::endpoint::store::EventType::STORE_UPDATE;
+        case privmx::endpoint::store::EventType::STORE_DELETE:
+            return privmx::endpoint::store::EventType::STORE_DELETE;
+        case privmx::endpoint::store::EventType::STORE_STATS:
+            return privmx::endpoint::store::EventType::STORE_STATS;
+        case privmx::endpoint::store::EventType::FILE_CREATE:
+            return privmx::endpoint::store::EventType::FILE_CREATE;
+        case privmx::endpoint::store::EventType::FILE_UPDATE:
+            return privmx::endpoint::store::EventType::FILE_UPDATE;
+        case privmx::endpoint::store::EventType::FILE_DELETE:
+            return privmx::endpoint::store::EventType::FILE_DELETE;
+        default:
+            return {};  // todo - throw exception?
+    }
+}
+
 privmx::endpoint::thread::EventType parseThreadEventType(JniContextUtils &ctx, jobject eventType) {
     jclass eventTypeCls = ctx->FindClass(
             "com/simplito/java/privmx_endpoint/model/ThreadEventType");
