@@ -60,28 +60,6 @@ public class EventApi implements AutoCloseable {
     public native void emitEvent(String contextId, List<UserWithPubKey> users, String channelName, byte[] eventData) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribe for the custom events on the given channel.
-     *
-     * @param contextId   ID of the Context
-     * @param channelName name of the Channel
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void subscribeForCustomEvents(String contextId, String channelName) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribe from the custom events on the given channel.
-     *
-     * @param contextId   ID of the Context
-     * @param channelName name of the Channel
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void unsubscribeFromCustomEvents(String contextId, String channelName) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
      * Frees memory.
      *
      * @throws Exception when instance is currently closed.
