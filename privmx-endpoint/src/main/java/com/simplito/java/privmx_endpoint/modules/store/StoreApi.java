@@ -455,45 +455,6 @@ public class StoreApi implements AutoCloseable {
      */
     public native String closeFile(long fileHandle) throws PrivmxException, NativeException, IllegalStateException;
 
-
-    /**
-     * Subscribes for the Store module main events.
-     *
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void subscribeForStoreEvents() throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribes from the Store module main events.
-     *
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void unsubscribeFromStoreEvents() throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Subscribes for events in given Store.
-     *
-     * @param storeId ID of the Store to subscribe
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void subscribeForFileEvents(String storeId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribes from events in given Store.
-     *
-     * @param storeId ID of the {@code Store} to unsubscribe
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void unsubscribeFromFileEvents(String storeId) throws PrivmxException, NativeException, IllegalStateException;
-
     /**
      * Frees memory.
      *
