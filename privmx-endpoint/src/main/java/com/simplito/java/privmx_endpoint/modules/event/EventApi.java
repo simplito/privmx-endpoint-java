@@ -11,8 +11,8 @@
 
 package com.simplito.java.privmx_endpoint.modules.event;
 
-import com.simplito.java.privmx_endpoint.model.EventSelectorType;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.EventEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
@@ -81,6 +81,8 @@ public class EventApi implements AutoCloseable {
      */
     public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
 
+    private native String buildSubscriptionQuery(String channelName, long selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+
     /**
      * Generate subscription Query for the custom events.
      *
@@ -92,7 +94,9 @@ public class EventApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native String buildSubscriptionQuery(String channelName, EventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+    public String buildSubscriptionQuery(String channelName, EventEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException {
+        return buildSubscriptionQuery(channelName, (long) selectorType.ordinal(), selectorId);
+    }
 
     /**
      * Frees memory.

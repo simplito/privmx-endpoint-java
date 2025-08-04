@@ -186,12 +186,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_buildSubscription
         JNIEnv *env,
         jobject thiz,
         jstring channelName,
-        jobject selectorType,
+        jlong selectorType,
         jstring selectorId
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(channelName, "ChannelName") ||
-        ctx.nullCheck(selectorType, "EventSelectorType") ||
         ctx.nullCheck(selectorId, "SelectorID")) {
         return nullptr;
     }
@@ -201,7 +200,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_buildSubscription
             &result,
             [&ctx, &env, &thiz, &channelName, &selectorType, &selectorId]() {
                 std::string c_channelName = ctx.jString2string(channelName);
-                auto c_selectorType = parseEventSelectorType(ctx, selectorType);
+                auto c_selectorType = parseEventSelectorType(ctx, (long) selectorType);
                 std::string c_selectorId = ctx.jString2string(selectorId);
 
                 // Wywołanie metody C++ API dla Custom
