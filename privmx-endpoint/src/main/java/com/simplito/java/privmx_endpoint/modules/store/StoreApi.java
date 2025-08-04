@@ -15,6 +15,8 @@ import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.File;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.Store;
+import com.simplito.java.privmx_endpoint.model.StoreEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.events.StoreDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreFileDeletedEventData;
@@ -454,6 +456,37 @@ public class StoreApi implements AutoCloseable {
      * payload: {@link File}
      */
     public native String closeFile(long fileHandle) throws PrivmxException, NativeException, IllegalStateException;
+
+    /**
+     * Subscribe for the Store events on the given subscription query.
+     *
+     * @param subscriptionQueries list of queries
+     * @return list of subscriptionIds in maching order to subscriptionQueries
+     */
+    public native List<String> subscribeFor(List<String> subscriptionQueries);
+
+    /**
+     * Unsubscribe from events for the given subscriptionId.
+     *
+     * @param subscriptionIds list of subscriptionId
+     */
+    public native void unsubscribeFrom(List<String> subscriptionIds);
+
+    /**
+     * Generate subscription Query for the Store events.
+     *
+     * @param eventType    type of event which you listen for
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     */
+    public native String buildSubscriptionQuery(StoreEventType eventType, StoreEventSelectorType selectorType, String selectorId);
+
+    /**
+     * Synchronize file handle data with newset data on serwer
+     *
+     * @param handle handle to read/write file data
+     */
+    public native void syncFile(long handle);
 
     /**
      * Frees memory.

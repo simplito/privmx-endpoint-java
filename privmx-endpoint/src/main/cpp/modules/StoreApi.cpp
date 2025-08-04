@@ -611,3 +611,125 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_closeFile(
     }
     return result;
 }
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_subscribeFor(
+        JNIEnv *env,
+        jobject thiz,
+        jobject subscription_queries
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(subscription_queries, "Subscription queries for StoreApi")) {
+        return nullptr;
+    }
+
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &env, &thiz, &subscription_queries]() {
+                jclass arrayListCls = env->FindClass("java/util/ArrayList");
+                jmethodID initMID = env->GetMethodID(arrayListCls, "<init>", "()V");
+                jmethodID addToListMID = env->GetMethodID(arrayListCls, "add",
+                                                          "(Ljava/lang/Object;)Z");
+
+                auto subscription_queries_arr = ctx.jObject2jArray(subscription_queries);
+                auto subscription_queries_c = std::vector<std::string>();
+
+                for (int i = 0; i < ctx->GetArrayLength(subscription_queries_arr); i++) {
+                    jobject arrayElement = ctx->GetObjectArrayElement(subscription_queries_arr, i);
+                    subscription_queries_c.push_back(ctx.jString2string((jstring) arrayElement));
+                }
+
+                auto subscription_ids_c = getStoreApi(ctx, thiz)->subscribeFor(
+                        subscription_queries_c);
+
+                jobject array = env->NewObject(arrayListCls, initMID);
+                for (auto &id: subscription_ids_c) {
+                    ctx->CallObjectMethod(
+                            array,
+                            addToListMID,
+                            ctx->NewStringUTF(id.c_str())
+                    );
+                }
+                return array;
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_unsubscribeFrom(
+        JNIEnv *env,
+        jobject thiz,
+        jobject subscription_ids
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(subscription_ids, "Subscription IDs")) {
+        return;
+    }
+
+    ctx.callVoidEndpointApi([&ctx, &thiz, &subscription_ids]() {
+        auto subscription_ids_arr = ctx.jObject2jArray(subscription_ids);
+        auto subscription_ids_c = std::vector<std::string>();
+
+        for (int i = 0; i < ctx->GetArrayLength(subscription_ids_arr); i++) {
+            jobject arrayElement = ctx->GetObjectArrayElement(subscription_ids_arr, i);
+            subscription_ids_c.push_back(ctx.jString2string((jstring) arrayElement));
+        }
+
+        getStoreApi(ctx, thiz)->unsubscribeFrom(subscription_ids_c);
+    });
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_buildSubscriptionQuery(
+        JNIEnv *env,
+        jobject thiz,
+        jobject eventType,
+        jobject selectorType,
+        jstring selectorId
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(eventType, "StoreEventType") ||
+        ctx.nullCheck(selectorType, "StoreEventSelectorType") ||
+        ctx.nullCheck(selectorId, "SelectorID")) {
+        return nullptr;
+    }
+
+    jstring result;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &eventType, &selectorType, &selectorId]() {
+
+                auto result = getStoreApi(ctx, thiz)->buildSubscriptionQuery(
+                        parseStoreEventType(ctx, eventType),
+                        parseStoreEventSelectorType(ctx, selectorType),
+                        ctx.jString2string(selectorId)
+                );
+                return ctx->NewStringUTF(result.c_str());
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_syncFile(
+        JNIEnv *env,
+        jobject thiz,
+        jlong handle
+) {
+    JniContextUtils ctx(env);
+
+    ctx.callVoidEndpointApi([&ctx, &thiz, &handle]() {
+        getStoreApi(ctx, thiz)->syncFile(handle);
+    });
+}
