@@ -229,7 +229,7 @@ privmx::endpoint::thread::EventType parseThreadEventType(JniContextUtils &ctx, j
             "com/simplito/java/privmx_endpoint/model/ThreadEventType");
 
     jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
-    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    auto ordinal = ctx->CallIntMethod(eventType, ordinalMID);
     int ordinal_c = (int)ordinal;
 
     switch (ordinal_c) {
@@ -253,12 +253,11 @@ privmx::endpoint::thread::EventType parseThreadEventType(JniContextUtils &ctx, j
 }
 
 privmx::endpoint::inbox::EventType parseInboxEventType(JniContextUtils &ctx, jobject eventType) {
-    auto result = privmx::endpoint::inbox::FilesConfig();
     jclass eventTypeCls = ctx->FindClass(
             "com/simplito/java/privmx_endpoint/model/InboxEventType");
 
     jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
-    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    auto ordinal = ctx->CallIntMethod(eventType, ordinalMID);
     int ordinal_c = (int)ordinal;
 
     switch (ordinal_c) {
@@ -278,12 +277,11 @@ privmx::endpoint::inbox::EventType parseInboxEventType(JniContextUtils &ctx, job
 }
 
 privmx::endpoint::kvdb::EventType parseKvdbEventType(JniContextUtils &ctx, jobject eventType) {
-    auto result = privmx::endpoint::inbox::FilesConfig();
     jclass eventTypeCls = ctx->FindClass(
             "com/simplito/java/privmx_endpoint/model/KvdbEventType");
 
     jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
-    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    auto ordinal = ctx->CallIntMethod(eventType, ordinalMID);
     int ordinal_c = (int)ordinal;
 
     switch (ordinal_c) {
@@ -311,7 +309,7 @@ privmx::endpoint::store::EventSelectorType parseStoreEventSelectorType(JniContex
             "com/simplito/java/privmx_endpoint/model/StoreEventSelectorType");
 
     jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
-    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    auto ordinal = ctx->CallIntMethod(eventSelectorType, ordinalMID);
     int ordinal_c = (int)ordinal;
 
     switch (ordinal_c) {
@@ -331,7 +329,7 @@ privmx::endpoint::thread::EventSelectorType parseThreadEventSelectorType(JniCont
             "com/simplito/java/privmx_endpoint/model/ThreadEventSelectorType");
 
     jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
-    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    auto ordinal = ctx->CallIntMethod(eventSelectorType, ordinalMID);
     int ordinal_c = (int)ordinal;
 
     switch (ordinal_c) {
@@ -351,7 +349,7 @@ privmx::endpoint::inbox::EventSelectorType parseInboxEventSelectorType(JniContex
             "com/simplito/java/privmx_endpoint/model/InboxEventSelectorType");
 
     jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
-    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    auto ordinal = ctx->CallIntMethod(eventSelectorType, ordinalMID);
     int ordinal_c = (int)ordinal;
 
     switch (ordinal_c) {
@@ -371,7 +369,7 @@ privmx::endpoint::kvdb::EventSelectorType parseKvdbEventSelectorType(JniContextU
             "com/simplito/java/privmx_endpoint/model/KvdbeEventSelectorType");
 
     jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
-    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    auto ordinal = ctx->CallIntMethod(eventSelectorType, ordinalMID);
     int ordinal_c = (int)ordinal;
 
     switch (ordinal_c) {
