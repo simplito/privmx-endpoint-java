@@ -409,6 +409,9 @@ public class ThreadApi implements AutoCloseable {
      *
      * @param subscriptionQueries list of queries
      * @return list of subscriptionIds in matching order to subscriptionQueries
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public native List<String> subscribeFor(List<String> subscriptionQueries) throws PrivmxException, NativeException, IllegalStateException;
 
@@ -416,6 +419,9 @@ public class ThreadApi implements AutoCloseable {
      * Unsubscribe from events for the given subscriptionId.
      *
      * @param subscriptionIds list of subscriptionId
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
 
@@ -425,7 +431,10 @@ public class ThreadApi implements AutoCloseable {
      * @param eventType    type of event which you listen for
      * @param selectorType scope on which you listen for events
      * @param selectorId   ID of the selector
-     * @return a subscription query string      // todo - check if its true
+     * @return // todo - add return description
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public native String buildSubscriptionQuery(ThreadEventType eventType, ThreadEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
 

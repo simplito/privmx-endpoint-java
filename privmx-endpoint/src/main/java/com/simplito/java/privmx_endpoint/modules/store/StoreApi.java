@@ -461,7 +461,10 @@ public class StoreApi implements AutoCloseable {
      * Subscribe for the Store events on the given subscription query.
      *
      * @param subscriptionQueries list of queries
-     * @return list of subscriptionIds in maching order to subscriptionQueries
+     * @return list of subscriptionIds in matching order to subscriptionQueries
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public native List<String> subscribeFor(List<String> subscriptionQueries) throws PrivmxException, NativeException, IllegalStateException;
 
@@ -469,6 +472,9 @@ public class StoreApi implements AutoCloseable {
      * Unsubscribe from events for the given subscriptionId.
      *
      * @param subscriptionIds list of subscriptionId
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
 
@@ -478,13 +484,20 @@ public class StoreApi implements AutoCloseable {
      * @param eventType    type of event which you listen for
      * @param selectorType scope on which you listen for events
      * @param selectorId   ID of the selector
+     * @return // todo - add return description
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public native String buildSubscriptionQuery(StoreEventType eventType, StoreEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Synchronize file handle data with newset data on serwer
+     * Synchronize file handle data with newest data on server
      *
      * @param handle handle to read/write file data
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
      */
     public native void syncFile(long handle) throws PrivmxException, NativeException, IllegalStateException;
 
