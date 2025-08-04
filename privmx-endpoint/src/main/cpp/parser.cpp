@@ -327,7 +327,6 @@ privmx::endpoint::store::EventSelectorType parseStoreEventSelectorType(JniContex
 }
 
 privmx::endpoint::thread::EventSelectorType parseThreadEventSelectorType(JniContextUtils &ctx, jobject eventSelectorType) {
-    auto result = privmx::endpoint::inbox::FilesConfig();
     jclass eventTypeCls = ctx->FindClass(
             "com/simplito/java/privmx_endpoint/model/ThreadEventSelectorType");
 
@@ -342,6 +341,26 @@ privmx::endpoint::thread::EventSelectorType parseThreadEventSelectorType(JniCont
             return privmx::endpoint::thread::EventSelectorType::THREAD_ID;
         case (privmx::endpoint::thread::EventSelectorType::MESSAGE_ID):
             return privmx::endpoint::thread::EventSelectorType::MESSAGE_ID;
+        default:
+            return {};  // todo - throw exception?
+    }
+}
+
+privmx::endpoint::inbox::EventSelectorType parseInboxEventSelectorType(JniContextUtils &ctx, jobject eventSelectorType) {
+    jclass eventTypeCls = ctx->FindClass(
+            "com/simplito/java/privmx_endpoint/model/InboxEventSelectorType");
+
+    jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
+    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    int ordinal_c = (int)ordinal;
+
+    switch (ordinal_c) {
+        case (privmx::endpoint::inbox::EventSelectorType::CONTEXT_ID):
+            return privmx::endpoint::inbox::EventSelectorType::CONTEXT_ID;
+        case (privmx::endpoint::inbox::EventSelectorType::INBOX_ID):
+            return privmx::endpoint::inbox::EventSelectorType::INBOX_ID;
+        case (privmx::endpoint::inbox::EventSelectorType::ENTRY_ID):
+            return privmx::endpoint::inbox::EventSelectorType::ENTRY_ID;
         default:
             return {};  // todo - throw exception?
     }
