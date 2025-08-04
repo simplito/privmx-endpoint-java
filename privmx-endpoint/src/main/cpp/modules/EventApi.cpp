@@ -104,3 +104,119 @@ Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_emitEvent(
         );
     });
 }
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_subscribeFor(
+        JNIEnv *env,
+        jobject thiz,
+        jobject subscription_queries
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(subscription_queries, "Subscription queries for CustomApi")) {
+        return nullptr;
+    }
+
+    jobject result = nullptr;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &env, &thiz, &subscription_queries]() {
+                jclass arrayListCls = env->FindClass("java/util/ArrayList");
+                jmethodID initMID = env->GetMethodID(arrayListCls, "<init>", "()V");
+                jmethodID addToListMID = env->GetMethodID(arrayListCls, "add", "(Ljava/lang/Object;)Z");
+
+                auto subscription_queries_arr = ctx.jObject2jArray(subscription_queries);
+                auto subscription_queries_c = std::vector<std::string>();
+
+                int length = ctx->GetArrayLength(subscription_queries_arr);
+                for (int i = 0; i < length; i++) {
+                    jobject arrayElement = ctx->GetObjectArrayElement(subscription_queries_arr, i);
+                    subscription_queries_c.push_back(ctx.jString2string((jstring) arrayElement));
+                }
+
+                auto subscription_ids_c = getEventApi(ctx, thiz)->subscribeFor(
+                        subscription_queries_c);
+
+                jobject javaArrayList = env->NewObject(arrayListCls, initMID);
+                for (auto &id_str : subscription_ids_c) {
+                    jstring java_id_str = ctx->NewStringUTF(id_str.c_str());
+                    env->CallBooleanMethod(javaArrayList, addToListMID, java_id_str);
+                }
+                return javaArrayList;
+            }
+    );
+
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_unsubscribeFrom(
+        JNIEnv *env,
+        jobject thiz,
+        jobject subscription_ids
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(subscription_ids, "Subscription IDs for CustomApi")) {
+        return;
+    }
+
+    ctx.callVoidEndpointApi([&ctx, &env, &thiz, &subscription_ids]() {
+        auto subscription_ids_arr = ctx.jObject2jArray(subscription_ids);
+        auto subscription_ids_c = std::vector<std::string>();
+
+        int length = ctx->GetArrayLength(subscription_ids_arr);
+        for (int i = 0; i < length; i++) {
+            jobject arrayElement = ctx->GetObjectArrayElement(subscription_ids_arr, i);
+            subscription_ids_c.push_back(ctx.jString2string((jstring) arrayElement));
+        }
+
+        getEventApi(ctx, thiz)->unsubscribeFrom(subscription_ids_c);
+    });
+}
+
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_buildSubscriptionQuery(
+        JNIEnv *env,
+        jobject thiz,
+        jstring channelName,
+        jobject selectorType,
+        jstring selectorId
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(channelName, "ChannelName") ||
+        ctx.nullCheck(selectorType, "EventSelectorType") ||
+        ctx.nullCheck(selectorId, "SelectorID")) {
+        return nullptr;
+    }
+
+    jstring result = nullptr;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &env, &thiz, &channelName, &selectorType, &selectorId]() {
+                std::string c_channelName = ctx.jString2string(channelName);
+                auto c_selectorType = parseEventSelectorType(ctx, selectorType);
+                std::string c_selectorId = ctx.jString2string(selectorId);
+
+                // Wywołanie metody C++ API dla Custom
+                std::string query_result_c = getEventApi(ctx, thiz)->buildSubscriptionQuery(
+                        c_channelName,
+                        c_selectorType,
+                        c_selectorId
+                );
+
+                return ctx->NewStringUTF(query_result_c.c_str());
+            }
+    );
+
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
