@@ -15,13 +15,11 @@ import com.simplito.java.privmx_endpoint.model.ContainerPolicyWithoutItem;
 import com.simplito.java.privmx_endpoint.model.FilesConfig;
 import com.simplito.java.privmx_endpoint.model.Inbox;
 import com.simplito.java.privmx_endpoint.model.InboxEntry;
-import com.simplito.java.privmx_endpoint.model.InboxEventSelectorType;
-import com.simplito.java.privmx_endpoint.model.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.InboxPublicView;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
-import com.simplito.java.privmx_endpoint.model.events.InboxDeletedEventData;
-import com.simplito.java.privmx_endpoint.model.events.InboxEntryDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.InboxEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
@@ -702,6 +700,8 @@ public class InboxApi implements AutoCloseable {
      */
     public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
 
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+
     /**
      * Generate subscription Query for the Inbox events.
      *
@@ -713,7 +713,9 @@ public class InboxApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native String buildSubscriptionQuery(InboxEventType eventType, InboxEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+    public String buildSubscriptionQuery(InboxEventType eventType, InboxEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException {
+        return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
+    }
 
     /**
      * Frees memory.

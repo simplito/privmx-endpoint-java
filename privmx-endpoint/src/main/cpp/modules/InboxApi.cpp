@@ -744,14 +744,12 @@ JNIEXPORT jstring JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_buildSubscriptionQuery(
         JNIEnv *env,
         jobject thiz,
-        jobject eventType,
-        jobject selectorType,
+        jlong eventType,
+        jlong selectorType,
         jstring selectorId
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(eventType, "InboxEventType") ||
-        ctx.nullCheck(selectorType, "InboxEventSelectorType") ||
-        ctx.nullCheck(selectorId, "SelectorID")) {
+    if (ctx.nullCheck(selectorId, "SelectorID")) {
         return nullptr;
     }
 
@@ -759,8 +757,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_buildSubscription
     ctx.callResultEndpointApi<jstring>(
             &result,
             [&ctx, &env, &thiz, &eventType, &selectorType, &selectorId]() {
-                auto c_eventType = parseInboxEventType(ctx, eventType);
-                auto c_selectorType = parseInboxEventSelectorType(ctx, selectorType);
+                auto c_eventType = parseInboxEventType(ctx, (long) eventType);
+                auto c_selectorType = parseInboxEventSelectorType(ctx, (long) selectorType);
                 std::string c_selectorId = ctx.jString2string(selectorId);
 
                 std::string query_result_c = getInboxApi(ctx, thiz)->buildSubscriptionQuery(
