@@ -463,14 +463,14 @@ public class StoreApi implements AutoCloseable {
      * @param subscriptionQueries list of queries
      * @return list of subscriptionIds in maching order to subscriptionQueries
      */
-    public native List<String> subscribeFor(List<String> subscriptionQueries);
+    public native List<String> subscribeFor(List<String> subscriptionQueries) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Unsubscribe from events for the given subscriptionId.
      *
      * @param subscriptionIds list of subscriptionId
      */
-    public native void unsubscribeFrom(List<String> subscriptionIds);
+    public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Generate subscription Query for the Store events.
@@ -479,14 +479,14 @@ public class StoreApi implements AutoCloseable {
      * @param selectorType scope on which you listen for events
      * @param selectorId   ID of the selector
      */
-    public native String buildSubscriptionQuery(StoreEventType eventType, StoreEventSelectorType selectorType, String selectorId);
+    public native String buildSubscriptionQuery(StoreEventType eventType, StoreEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Synchronize file handle data with newset data on serwer
      *
      * @param handle handle to read/write file data
      */
-    public native void syncFile(long handle);
+    public native void syncFile(long handle) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Frees memory.
