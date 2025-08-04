@@ -266,7 +266,24 @@ public class StoreApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native Long createFile(String storeId, byte[] publicMeta, byte[] privateMeta, long size) throws PrivmxException, NativeException, IllegalStateException;
+    public Long createFile(String storeId, byte[] publicMeta, byte[] privateMeta, long size) throws PrivmxException, NativeException, IllegalStateException {
+        return createFile(storeId, publicMeta, privateMeta, size, false);
+    }
+
+    /**
+     * Creates a new file in a Store.
+     *
+     * @param storeId            ID of the Store to create the file in
+     * @param publicMeta         public file metadata
+     * @param privateMeta        private file metadata
+     * @param size               size of the file
+     * @param randomWriteSupport enable random write support for file
+     * @return Handle to write data
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public native Long createFile(String storeId, byte[] publicMeta, byte[] privateMeta, long size, boolean randomWriteSupport) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
      * Updates an existing file in a Store.
