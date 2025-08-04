@@ -42,6 +42,7 @@ privmx::endpoint::store::EventSelectorType parseStoreEventSelectorType(JniContex
 privmx::endpoint::thread::EventSelectorType parseThreadEventSelectorType(JniContextUtils &ctx, jobject eventSelectorType);
 privmx::endpoint::inbox::EventSelectorType parseInboxEventSelectorType(JniContextUtils &ctx, jobject eventSelectorType);
 privmx::endpoint::kvdb::EventSelectorType parseKvdbEventSelectorType(JniContextUtils &ctx, jobject eventSelectorType);
+privmx::endpoint::event::EventSelectorType parseEventSelectorType(JniContextUtils &ctx, jobject eventSelectorType);
 
 jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event);
 
