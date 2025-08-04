@@ -15,6 +15,8 @@ import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.Message;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.Thread;
+import com.simplito.java.privmx_endpoint.model.ThreadEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.ThreadEventType;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.events.ThreadDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.ThreadDeletedMessageEventData;
@@ -401,6 +403,31 @@ public class ThreadApi implements AutoCloseable {
      * payload: {@link Message}
      */
     public native void updateMessage(String messageId, byte[] publicMeta, byte[] privateMeta, byte[] data) throws PrivmxException, NativeException, IllegalStateException;
+
+    /**
+     * Subscribe for the Thread events on the given subscription query.
+     *
+     * @param subscriptionQueries list of queries
+     * @return list of subscriptionIds in matching order to subscriptionQueries
+     */
+    public native List<String> subscribeFor(List<String> subscriptionQueries);
+
+    /**
+     * Unsubscribe from events for the given subscriptionId.
+     *
+     * @param subscriptionIds list of subscriptionId
+     */
+    public native void unsubscribeFrom(List<String> subscriptionIds);
+
+    /**
+     * Generate subscription Query for the Thread events.
+     *
+     * @param eventType    type of event which you listen for
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return a subscription query string      // todo - check if its true
+     */
+    public native String buildSubscriptionQuery(ThreadEventType eventType, ThreadEventSelectorType selectorType, String selectorId);
 
     /**
      * Frees memory.
