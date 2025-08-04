@@ -573,44 +573,6 @@ public class KvdbApi implements AutoCloseable {
     ) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribes for the KVDB module main events.
-     *
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
-     */
-    public native void subscribeForKvdbEvents() throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribes from the KVDB module main events.
-     *
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
-     */
-    public native void unsubscribeFromKvdbEvents() throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Subscribes for events in given KVDB.
-     *
-     * @param kvdbId ID of the KVDB to subscribe
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
-     */
-    public native void subscribeForEntryEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribes from events in given KVDB.
-     *
-     * @param kvdbId ID of the KVDB to unsubscribe
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
-     */
-    public native void unsubscribeFromEntryEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
      * Frees memory.
      *
      * @throws Exception when instance is currently closed.
