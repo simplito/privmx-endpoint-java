@@ -326,6 +326,27 @@ privmx::endpoint::store::EventSelectorType parseStoreEventSelectorType(JniContex
     }
 }
 
+privmx::endpoint::thread::EventSelectorType parseThreadEventSelectorType(JniContextUtils &ctx, jobject eventSelectorType) {
+    auto result = privmx::endpoint::inbox::FilesConfig();
+    jclass eventTypeCls = ctx->FindClass(
+            "com/simplito/java/privmx_endpoint/model/ThreadEventSelectorType");
+
+    jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
+    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    int ordinal_c = (int)ordinal;
+
+    switch (ordinal_c) {
+        case (privmx::endpoint::thread::EventSelectorType::CONTEXT_ID):
+            return privmx::endpoint::thread::EventSelectorType::CONTEXT_ID;
+        case (privmx::endpoint::thread::EventSelectorType::THREAD_ID):
+            return privmx::endpoint::thread::EventSelectorType::THREAD_ID;
+        case (privmx::endpoint::thread::EventSelectorType::MESSAGE_ID):
+            return privmx::endpoint::thread::EventSelectorType::MESSAGE_ID;
+        default:
+            return {};  // todo - throw exception?
+    }
+}
+
 jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, int64_t connectionId,
                   jobject data_j) {
     if (type.empty()) return nullptr;
