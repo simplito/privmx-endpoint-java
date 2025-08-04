@@ -680,44 +680,6 @@ public class InboxApi implements AutoCloseable {
     public native String closeFile(long fileHandle) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribes for the Inbox module main events.
-     *
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
-     */
-    public native void subscribeForInboxEvents() throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Subscribes for the Inbox module main events.
-     *
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
-     */
-    public native void unsubscribeFromInboxEvents() throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Subscribes for events in given Inbox.
-     *
-     * @param inboxId ID of the Inbox to subscribe
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
-     */
-    public native void subscribeForEntryEvents(String inboxId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribes from events in given Inbox.
-     *
-     * @param inboxId ID of the Inbox to unsubscribe
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
-     */
-    public native void unsubscribeFromEntryEvents(String inboxId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
      * Frees memory.
      *
      * @throws Exception when instance is currently closed.
