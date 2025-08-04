@@ -15,12 +15,12 @@ import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.Message;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.Thread;
-import com.simplito.java.privmx_endpoint.model.ThreadEventSelectorType;
-import com.simplito.java.privmx_endpoint.model.ThreadEventType;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.events.ThreadDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.ThreadDeletedMessageEventData;
 import com.simplito.java.privmx_endpoint.model.events.ThreadStatsEventData;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.ThreadEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
@@ -425,6 +425,8 @@ public class ThreadApi implements AutoCloseable {
      */
     public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
 
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+
     /**
      * Generate subscription Query for the Thread events.
      *
@@ -436,7 +438,9 @@ public class ThreadApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native String buildSubscriptionQuery(ThreadEventType eventType, ThreadEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+    public String buildSubscriptionQuery(ThreadEventType eventType, ThreadEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException {
+        return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
+    }
 
     /**
      * Frees memory.
