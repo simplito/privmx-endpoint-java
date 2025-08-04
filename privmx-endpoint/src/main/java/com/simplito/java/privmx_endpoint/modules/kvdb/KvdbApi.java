@@ -14,10 +14,10 @@ package com.simplito.java.privmx_endpoint.modules.kvdb;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.Kvdb;
 import com.simplito.java.privmx_endpoint.model.KvdbEntry;
-import com.simplito.java.privmx_endpoint.model.KvdbEventSelectorType;
-import com.simplito.java.privmx_endpoint.model.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.KvdbEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
@@ -595,6 +595,9 @@ public class KvdbApi implements AutoCloseable {
      */
     public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
 
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+
+
     /**
      * Generate subscription Query for the KVDB events.
      *
@@ -606,7 +609,9 @@ public class KvdbApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native String buildSubscriptionQuery(KvdbEventType eventType, KvdbEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+    public String buildSubscriptionQuery(KvdbEventType eventType, KvdbEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException {
+        return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
+    }
 
     /**
      * Frees memory.
