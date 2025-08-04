@@ -35,6 +35,7 @@ privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobj
 
 privmx::endpoint::store::EventType parseStoreEventType(JniContextUtils &ctx, jobject eventType);
 privmx::endpoint::thread::EventType parseThreadEventType(JniContextUtils &ctx, jobject eventType);
+privmx::endpoint::inbox::EventType parseInboxEventType(JniContextUtils &ctx, jobject eventType);
 
 jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event);
 

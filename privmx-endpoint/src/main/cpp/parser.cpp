@@ -252,6 +252,31 @@ privmx::endpoint::thread::EventType parseThreadEventType(JniContextUtils &ctx, j
     }
 }
 
+privmx::endpoint::inbox::EventType parseInboxEventType(JniContextUtils &ctx, jobject eventType) {
+    auto result = privmx::endpoint::inbox::FilesConfig();
+    jclass eventTypeCls = ctx->FindClass(
+            "com/simplito/java/privmx_endpoint/model/InboxEventType");
+
+    jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
+    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    int ordinal_c = (int)ordinal;
+
+    switch (ordinal_c) {
+        case privmx::endpoint::inbox::INBOX_CREATE:
+            return privmx::endpoint::inbox::EventType::INBOX_CREATE;
+        case privmx::endpoint::inbox::INBOX_UPDATE:
+            return privmx::endpoint::inbox::EventType::INBOX_UPDATE;
+        case privmx::endpoint::inbox::INBOX_DELETE:
+            return privmx::endpoint::inbox::EventType::INBOX_DELETE;
+        case privmx::endpoint::inbox::ENTRY_CREATE:
+            return privmx::endpoint::inbox::EventType::ENTRY_CREATE;
+        case privmx::endpoint::inbox::ENTRY_DELETE:
+            return privmx::endpoint::inbox::EventType::ENTRY_DELETE;
+        default:
+            return {};  // todo - throw exception?
+    }
+}
+
 jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, int64_t connectionId,
                   jobject data_j) {
     if (type.empty()) return nullptr;
