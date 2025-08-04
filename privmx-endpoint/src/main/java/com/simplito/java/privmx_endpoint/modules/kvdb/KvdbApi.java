@@ -14,6 +14,8 @@ package com.simplito.java.privmx_endpoint.modules.kvdb;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.Kvdb;
 import com.simplito.java.privmx_endpoint.model.KvdbEntry;
+import com.simplito.java.privmx_endpoint.model.KvdbEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
@@ -571,6 +573,31 @@ public class KvdbApi implements AutoCloseable {
             String kvdbId,
             List<String> keys
     ) throws PrivmxException, NativeException, IllegalStateException;
+
+    /**
+     * Subscribe for the KVDB events on the given subscription query.
+     *
+     * @param subscriptionQueries list of queries
+     * @return list of subscriptionIds in matching order to subscriptionQueries
+     */
+    public native List<String> subscribeFor(List<String> subscriptionQueries);
+
+    /**
+     * Unsubscribe from events for the given subscriptionId.
+     *
+     * @param subscriptionIds list of subscriptionId
+     */
+    public native void unsubscribeFrom(List<String> subscriptionIds);
+
+    /**
+     * Generate subscription Query for the KVDB events.
+     *
+     * @param eventType    type of event which you listen for
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     *                     // todo - add return description
+     */
+    public native String buildSubscriptionQuery(KvdbEventType eventType, KvdbEventSelectorType selectorType, String selectorId);
 
     /**
      * Frees memory.
