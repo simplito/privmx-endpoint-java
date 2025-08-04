@@ -366,6 +366,26 @@ privmx::endpoint::inbox::EventSelectorType parseInboxEventSelectorType(JniContex
     }
 }
 
+privmx::endpoint::kvdb::EventSelectorType parseKvdbEventSelectorType(JniContextUtils &ctx, jobject eventSelectorType) {
+    jclass eventTypeCls = ctx->FindClass(
+            "com/simplito/java/privmx_endpoint/model/KvdbeEventSelectorType");
+
+    jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
+    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    int ordinal_c = (int)ordinal;
+
+    switch (ordinal_c) {
+        case (privmx::endpoint::kvdb::EventSelectorType::CONTEXT_ID):
+            return privmx::endpoint::kvdb::EventSelectorType::CONTEXT_ID;
+        case (privmx::endpoint::kvdb::EventSelectorType::KVDB_ID):
+            return privmx::endpoint::kvdb::EventSelectorType::KVDB_ID;
+        case (privmx::endpoint::kvdb::EventSelectorType::ENTRY_ID):
+            return privmx::endpoint::kvdb::EventSelectorType::ENTRY_ID;
+        default:
+            return {};  // todo - throw exception?
+    }
+}
+
 jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, int64_t connectionId,
                   jobject data_j) {
     if (type.empty()) return nullptr;
