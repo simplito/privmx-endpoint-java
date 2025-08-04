@@ -691,14 +691,12 @@ JNIEXPORT jstring JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_buildSubscriptionQuery(
         JNIEnv *env,
         jobject thiz,
-        jobject eventType,
-        jobject selectorType,
+        jlong eventType,
+        jlong selectorType,
         jstring selectorId
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(eventType, "StoreEventType") ||
-        ctx.nullCheck(selectorType, "StoreEventSelectorType") ||
-        ctx.nullCheck(selectorId, "SelectorID")) {
+    if (ctx.nullCheck(selectorId, "SelectorID")) {
         return nullptr;
     }
 
@@ -708,8 +706,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_buildSubscription
             [&ctx, &thiz, &eventType, &selectorType, &selectorId]() {
 
                 auto result = getStoreApi(ctx, thiz)->buildSubscriptionQuery(
-                        parseStoreEventType(ctx, eventType),
-                        parseStoreEventSelectorType(ctx, selectorType),
+                        parseStoreEventType(ctx, (long) eventType),
+                        parseStoreEventSelectorType(ctx, (long) selectorType),
                         ctx.jString2string(selectorId)
                 );
                 return ctx->NewStringUTF(result.c_str());

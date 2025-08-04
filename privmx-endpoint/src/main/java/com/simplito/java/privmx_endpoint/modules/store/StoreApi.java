@@ -15,10 +15,10 @@ import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.File;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.Store;
-import com.simplito.java.privmx_endpoint.model.StoreEventSelectorType;
-import com.simplito.java.privmx_endpoint.model.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.events.StoreDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StoreEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.StoreFileDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreStatsChangedEventData;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
@@ -478,6 +478,8 @@ public class StoreApi implements AutoCloseable {
      */
     public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
 
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+
     /**
      * Generate subscription Query for the Store events.
      *
@@ -489,7 +491,9 @@ public class StoreApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native String buildSubscriptionQuery(StoreEventType eventType, StoreEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+    public String buildSubscriptionQuery(StoreEventType eventType, StoreEventSelectorType selectorType, String selectorId)  throws PrivmxException, NativeException, IllegalStateException {
+        return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
+    }
 
     /**
      * Synchronize file handle data with newest data on server
