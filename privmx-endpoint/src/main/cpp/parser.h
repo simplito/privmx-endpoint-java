@@ -38,6 +38,8 @@ privmx::endpoint::thread::EventType parseThreadEventType(JniContextUtils &ctx, j
 privmx::endpoint::inbox::EventType parseInboxEventType(JniContextUtils &ctx, jobject eventType);
 privmx::endpoint::kvdb::EventType parseKvdbEventType(JniContextUtils &ctx, jobject eventType);
 
+privmx::endpoint::store::EventSelectorType parseStoreEventSelectorType(JniContextUtils &ctx, jobject eventSelectorType);
+
 jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event);
 
 privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery);

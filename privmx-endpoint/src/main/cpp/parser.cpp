@@ -306,6 +306,26 @@ privmx::endpoint::kvdb::EventType parseKvdbEventType(JniContextUtils &ctx, jobje
     }
 }
 
+privmx::endpoint::store::EventSelectorType parseStoreEventSelectorType(JniContextUtils &ctx, jobject eventSelectorType) {
+    jclass eventTypeCls = ctx->FindClass(
+            "com/simplito/java/privmx_endpoint/model/StoreEventSelectorType");
+
+    jmethodID ordinalMID = ctx->GetMethodID(eventTypeCls, "ordinal", "()I");
+    auto ordinal = ctx->CallIntMethod(eventTypeCls, ordinalMID);
+    int ordinal_c = (int)ordinal;
+
+    switch (ordinal_c) {
+        case (privmx::endpoint::store::EventSelectorType::CONTEXT_ID):
+            return privmx::endpoint::store::EventSelectorType::CONTEXT_ID;
+        case (privmx::endpoint::store::EventSelectorType::STORE_ID):
+            return privmx::endpoint::store::EventSelectorType::STORE_ID;
+        case (privmx::endpoint::store::EventSelectorType::FILE_ID):
+            return privmx::endpoint::store::EventSelectorType::FILE_ID;
+        default:
+            return {};  // todo - throw exception?
+    }
+}
+
 jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, int64_t connectionId,
                   jobject data_j) {
     if (type.empty()) return nullptr;
