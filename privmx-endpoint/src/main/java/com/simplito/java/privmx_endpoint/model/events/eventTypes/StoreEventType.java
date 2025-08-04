@@ -1,6 +1,6 @@
-package com.simplito.java.privmx_endpoint.model;
+package com.simplito.java.privmx_endpoint.model.events.eventTypes;
 
-public enum StoreEventType {
+public enum StoreEventType implements EventType {
     STORE_CREATE,
     STORE_UPDATE,
     STORE_DELETE,

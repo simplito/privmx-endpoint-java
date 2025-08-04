@@ -1,6 +1,6 @@
-package com.simplito.java.privmx_endpoint.model;
+package com.simplito.java.privmx_endpoint.model.events.eventTypes;
 
-public enum ThreadEventType {
+public enum ThreadEventType implements EventType {
     THREAD_CREATE,
     THREAD_UPDATE,
     THREAD_DELETE,
