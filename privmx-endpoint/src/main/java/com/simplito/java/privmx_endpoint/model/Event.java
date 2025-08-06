@@ -44,7 +44,7 @@ public class Event<T> {
     /**
      * List of subscriptions Id for witch it is.
      */
-    List<String> subscriptions;
+    public List<String> subscriptions;
 
     /**
      * Creates instance of Event model.
