@@ -13,8 +13,9 @@ package com.simplito.java.privmx_endpoint_extra.events;
 
 
 import com.simplito.java.privmx_endpoint.model.Event;
+import com.simplito.java.privmx_endpoint.model.EventSelector;
 
-import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,8 @@ import java.util.stream.Collectors;
 public class EventDispatcher {
 
     private final Map<String, List<Pair>> map = new HashMap<>();
-    private final EventCallback<String> onRemoveEntryKey;
+    private final Map<EventSelector, List<Pair>> map2 = new HashMap<>();
+    private final EventCallback<List<EventSelector>> onRemoveEntryKey;
 
     /**
      * Creates instance of {@code EventDispatcher}.
@@ -38,27 +40,25 @@ public class EventDispatcher {
      *                         from channel entry have been removed
      *                         (it can also unsubscribe from the channel)
      */
-    public EventDispatcher(EventCallback<String> onRemoveEntryKey) {
+    public EventDispatcher(EventCallback<List<EventSelector>> onRemoveEntryKey) {
         this.onRemoveEntryKey = onRemoveEntryKey;
     }
 
-    private String getFormattedType(String channel, String type) {
-        return channel + "_" + type;
+    public String registerCallback(EventSelector eventSelector, Object callbackId, EventCallback<?> callback) {
+        boolean needSubscribe = eventHasNoCallbacks(eventSelector);
+        getCallbacks(eventSelector).add(new Pair(callbackId, callback));
+
+        if (!needSubscribe) return null;
+        return getSubscriptionId(eventSelector);
     }
 
-    /**
-     * Registers new event callback.
-     *
-     * @param channel  channel of registered event
-     * @param type     type of registered event
-     * @param context  ID of registered callback
-     * @param callback block of code to call when the specified event has been caught
-     * @return {@code true} if the channel is not already subscribed
-     */
-    public boolean register(String channel, String type, Object context, EventCallback<?> callback) {
-        boolean needSubscribe = channelHasNoCallbacks(channel);
-        getCallbacks(getFormattedType(channel, type)).add(new Pair(context, callback));
-        return needSubscribe;
+    private String getSubscriptionId(EventSelector eventSelector) {
+        for (EventSelector key : map2.keySet()) {
+            if (key.equals(eventSelector)) {
+                return key.subscriptionId;
+            }
+        }
+        return null;
     }
 
     /**
@@ -68,7 +68,7 @@ public class EventDispatcher {
      * @param event event data to emit
      */
     public <T> void emit(Event<T> event) {
-        List<Pair> callbacks = getCallbacks(getFormattedType(event.channel, event.type));
+        List<Pair> callbacks = getCallbacks(event.subscriptions);
         for (Pair p : callbacks) {
             try {
                 EventCallback<T> e = (EventCallback<T>) p.callback;
@@ -82,37 +82,45 @@ public class EventDispatcher {
         }
     }
 
-    private boolean channelHasNoCallbacks(String channel) {
-        synchronized (map) {
-            return map
-                    .entrySet()
-                    .stream()
-                    .filter(it -> it.getKey().split("_")[0].equals(channel))
-                    .mapToLong(it -> it.getValue().size())
-                    .sum() == 0;
+    private boolean eventHasNoCallbacks(EventSelector eventSelector) {
+        synchronized (map2) {
+            List<Pair> callbacks = map2.get(eventSelector);
+            return callbacks == null || callbacks.isEmpty();
         }
     }
 
     /**
-     * Removes all callbacks registered by {@link #register(String, String, Object, EventCallback)}. It's identified by given Context.
+     * Removes all callbacks registered by {@link #(String, String, Object, EventCallback)}. It's identified by given Context.
      *
      * @param context callback identifier
      */
     public void unbind(Object context) {
         synchronized (map) {
-            map.entrySet()
-                    .stream()
-                    .map(entry ->
-                            new AbstractMap.SimpleImmutableEntry<>(entry.getKey().split("_")[0], entry.getValue())
-                    )
-                    .filter(entry -> !entry.getValue().isEmpty())
-                    .forEach(entry -> {
-                        List<Pair> list = entry.getValue();
-                        list.removeIf(pair -> pair.context == context);
-                        if (channelHasNoCallbacks(entry.getKey())) {
-                            onRemoveEntryKey.call(entry.getKey());
-                        }
-                    });
+            List<EventSelector> selectorsToUnsubscribe = new ArrayList<>();
+
+            map2.forEach((selector, pairs) -> {
+                pairs.removeIf(it -> it.context == context);
+                if (pairs.isEmpty()) {
+                    selectorsToUnsubscribe.add(selector);
+                    map2.remove(selector);
+                }
+            });
+
+            if (!selectorsToUnsubscribe.isEmpty()) onRemoveEntryKey.call(selectorsToUnsubscribe);
+        }
+    }
+
+    public void unbind(List<String> subscriptionIds) {
+        synchronized (map) {
+            List<EventSelector> selectorsToUnsubscribe = new ArrayList<>();
+
+            map2.forEach((key, value) -> {
+                if (subscriptionIds.contains(key.subscriptionId)) {
+                    selectorsToUnsubscribe.add(key);
+                    map2.remove(key);
+                }
+            });
+            onRemoveEntryKey.call(selectorsToUnsubscribe);
         }
     }
 
@@ -120,21 +128,37 @@ public class EventDispatcher {
      * Removes all callbacks.
      */
     public void unbindAll() {
-        map.keySet()
-                .stream()
-                .map(it -> it.split("_")[0])
-                .collect(Collectors.toSet())
-                .forEach(onRemoveEntryKey::call);
-        map.clear();
+        List<String> subscriptionIds = map2.keySet().stream().map(pairs -> pairs.subscriptionId).collect(Collectors.toList());
+        unbind(subscriptionIds);
     }
 
-    private List<Pair> getCallbacks(String type) {
-        synchronized (map) {
-            if (!map.containsKey(type)) {
-                map.put(type, new Vector<>());
+    private List<Pair> getCallbacks(EventSelector eventSelector) {
+        synchronized (map2) {
+            if (!map2.containsKey(eventSelector)) {
+                map2.put(eventSelector, new Vector<>());
             }
-            return map.get(type);
+            return map2.get(eventSelector);
         }
+    }
+
+    private List<Pair> getCallbacks(List<String> subscriptionIds) {
+        synchronized (map2) {
+            List<Pair> pairs = new ArrayList<>();
+
+            for (Map.Entry<EventSelector, List<Pair>> entry : map2.entrySet()) {
+                String subId = entry.getKey().subscriptionId;
+                if (subId != null && subscriptionIds.contains(subId)) {
+                    pairs.addAll(entry.getValue());
+                }
+            }
+            return pairs;
+        }
+    }
+
+    public void assignSelector(EventSelector eventSelector) {
+        List<Pair> callbacks = map2.get(eventSelector);
+        map2.remove(eventSelector);
+        map2.put(eventSelector, callbacks);
     }
 
     private static class Pair {

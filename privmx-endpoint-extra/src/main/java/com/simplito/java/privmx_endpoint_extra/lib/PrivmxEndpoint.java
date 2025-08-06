@@ -12,18 +12,31 @@
 package com.simplito.java.privmx_endpoint_extra.lib;
 
 import com.simplito.java.privmx_endpoint.model.Event;
+import com.simplito.java.privmx_endpoint.model.EventSelector;
 import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.EventEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.EventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.InboxEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.KvdbEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StoreEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.ThreadEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.EventType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.crypto.CryptoApi;
 import com.simplito.java.privmx_endpoint_extra.events.EventCallback;
 import com.simplito.java.privmx_endpoint_extra.events.EventDispatcher;
-import com.simplito.java.privmx_endpoint_extra.events.EventType;
+import com.simplito.java.privmx_endpoint_extra.events.EventSelectorExtra;
 import com.simplito.java.privmx_endpoint_extra.model.Modules;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Extends {@link BasicPrivmxEndpoint} with event callbacks dispatcher.
@@ -31,14 +44,14 @@ import java.util.regex.Pattern;
  * @category core
  */
 public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable {
-    private final EventCallback<String> onRemoveChannel = (channel) -> {
+    private final EventCallback<List<EventSelector>> onRemove = (selectors) -> {
         try {
-            unsubscribeChannel(channel);
+            unsubscribeMany(selectors);
         } catch (Exception e) {
-            System.out.println("Cannot unsubscribe channel");
+            System.out.println("todo");
         }
     };
-    private final EventDispatcher eventDispatcher = new EventDispatcher(onRemoveChannel);
+    private final EventDispatcher eventDispatcher = new EventDispatcher(onRemove);
 
     /**
      * Calls {@link BasicPrivmxEndpoint#BasicPrivmxEndpoint(Set, String, String, String, PKIVerificationOptions)}.
@@ -55,13 +68,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
      * @throws PrivmxException       thrown if there is a problem during login
      * @throws NativeException       thrown if there is an <strong>unknown</strong> problem during login
      */
-    public PrivmxEndpoint(
-            Set<Modules> enableModule,
-            String userPrivateKey,
-            String solutionId,
-            String bridgeUrl,
-            PKIVerificationOptions verificationOptions
-    ) throws IllegalStateException, PrivmxException, NativeException {
+    public PrivmxEndpoint(Set<Modules> enableModule, String userPrivateKey, String solutionId, String bridgeUrl, PKIVerificationOptions verificationOptions) throws IllegalStateException, PrivmxException, NativeException {
         super(enableModule, userPrivateKey, solutionId, bridgeUrl, verificationOptions);
     }
 
@@ -79,223 +86,151 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
      * @throws PrivmxException       thrown if there is a problem during login
      * @throws NativeException       thrown if there is an <strong>unknown</strong> problem during login
      */
-    public PrivmxEndpoint(
-            Set<Modules> enableModule,
-            String userPrivateKey,
-            String solutionId,
-            String bridgeUrl
-    ) throws IllegalStateException, PrivmxException, NativeException {
+    public PrivmxEndpoint(Set<Modules> enableModule, String userPrivateKey, String solutionId, String bridgeUrl) throws IllegalStateException, PrivmxException, NativeException {
         this(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
     }
 
-    /**
-     * Registers callbacks with the specified type.
-     *
-     * @param context   an object that identifies callbacks in the list
-     * @param eventType type of event to listen to
-     * @param callback  a block of code to execute when event was handled
-     * @param <T>       type of data passed to callback
-     * @throws RuntimeException thrown when method encounters an exception during subscribing on channel.
-     */
-    public final <T> void registerCallback(Object context, EventType<T> eventType, EventCallback<T> callback) throws RuntimeException {
-        if (eventDispatcher.register(eventType.channel, eventType.eventType, context, callback)) {
-            try {
-                subscribeChannel(eventType.channel);
-            } catch (Exception e) {
-                throw new RuntimeException("Cannot subscribe event channel for this event (detail message: " + e.getMessage() + ")");
-            }
-        }
-    }
-
-    /**
-     * Unregisters all callbacks registered by {@link #registerCallback(Object, EventType, EventCallback)} and identified with given Context.
-     *
-     * @param context an object that identifies callbacks in the list.
-     */
     public void unregisterCallbacks(Object context) {
         eventDispatcher.unbind(context);
     }
 
-    /**
-     * Unregisters all callbacks registered by {@link #registerCallback(Object, EventType, EventCallback)}.
-     */
+    public void unregisterCallbacks(List<String> subscriptionIds) {
+        eventDispatcher.unbind(subscriptionIds);
+    }
+
     public void unregisterAll() {
         eventDispatcher.unbindAll();
     }
 
-    /**
-     * Handles event and invokes all related callbacks. It should only be called by event loops.
-     *
-     * @param event event to handle
-     */
     public void handleEvent(Event<?> event) {
         eventDispatcher.emit(event);
     }
 
-    private void subscribeChannel(String channelStr) {
-        Channel channel = Channel.fromString(channelStr);
-        if (channel == null) {
-            System.out.println("Cannot subscribe on events channel (pattern not found)");
-            return;
-        }
-        if (channel.module.startsWith("thread") && threadApi != null) {
-            if (channel.type != null && channel.type.equals("messages")) {
-                if (channel.instanceId != null) {
-                    threadApi.subscribeForMessageEvents(channel.instanceId);
-                } else {
-                    System.out.println("No threadId to subscribeChannel: " + channelStr);
-                }
-                return;
-            }
-            threadApi.subscribeForThreadEvents();
-            return;
-        }
-
-        if (channel.module.startsWith("store") && storeApi != null) {
-            if (channel.type != null && channel.type.equals("files")) {
-                if (channel.instanceId != null) {
-                    storeApi.subscribeForFileEvents(channel.instanceId);
-                } else {
-                    System.out.println("No storeId to subscribeChannel: " + channelStr);
-                }
-                return;
-            }
-            storeApi.subscribeForStoreEvents();
-            return;
-        }
-
-        if (channel.module.startsWith("inbox") && inboxApi != null) {
-            if (channel.type != null && channel.type.equals("entries")) {
-                if (channel.instanceId != null) {
-                    inboxApi.subscribeForEntryEvents(channel.instanceId);
-                } else {
-                    System.out.println("No inboxId to subscribeChannel: " + channelStr);
-                }
-                return;
-            }
-            inboxApi.subscribeForInboxEvents();
-        }
-
-        if (channel.module.startsWith("context") && eventApi != null) {
-            if (channel.type != null) {
-                if (channel.instanceId != null) {
-                    eventApi.subscribeForCustomEvents(channel.instanceId, channel.type);
-                } else {
-                    System.out.println("No contextId to subscribeChannel: " + channelStr);
-                }
-            }
-        }
-
-        if (channel.module.startsWith("kvdb") && kvdbApi != null) {
-            if (channel.type != null && channel.type.equals("entries")) {
-                if (channel.instanceId != null) {
-                    kvdbApi.subscribeForEntryEvents(channel.instanceId);
-                } else {
-                    System.out.println("No kvdbId to subscribeChannel: " + channelStr);
-                }
-                return;
-            }
-            kvdbApi.subscribeForKvdbEvents();
-        }
+    public List<String> registerMany(ScopeCallback registerScope) throws InstantiationException, IllegalAccessException {
+        ManyScope manyScope = new ManyScope();
+        registerScope.execute(manyScope);
+        return manyScope.subscribeAll();
     }
 
-    private void unsubscribeChannel(String channelStr) {
-        Channel channel = Channel.fromString(channelStr);
-        if (channel == null) {
-            System.out.println("Cannot unsubscribe on events channel (pattern not found)");
-            return;
-        }
-        if (channel.module.startsWith("thread") && threadApi != null) {
-            if (channel.type != null && channel.type.equals("messages")) {
-                if (channel.instanceId != null) {
-                    threadApi.unsubscribeFromMessageEvents(channel.instanceId);
-                } else {
-                    System.out.println("No threadId to unsubscribeChannel: " + channelStr);
-                }
-                return;
-            }
-            threadApi.unsubscribeFromThreadEvents();
-            return;
-        }
-
-        if (channel.module.startsWith("store") && storeApi != null) {
-            if (channel.type != null && channel.type.equals("files")) {
-                if (channel.instanceId != null) {
-                    storeApi.unsubscribeFromFileEvents(channel.instanceId);
-                } else {
-                    System.out.println("No storeId to unsubscribeChannel: " + channelStr);
-                }
-                return;
-            }
-            storeApi.unsubscribeFromStoreEvents();
-            return;
-        }
-
-        if (channel.module.startsWith("inbox") && inboxApi != null) {
-            if (channel.type != null && channel.type.equals("entries")) {
-                if (channel.instanceId != null) {
-                    inboxApi.unsubscribeFromEntryEvents(channel.instanceId);
-                } else {
-                    System.out.println("No inboxId to unsubscribeChannel: " + channelStr);
-                }
-                return;
-            }
-            inboxApi.unsubscribeFromInboxEvents();
-        }
-
-        if (channel.module.startsWith("context") && eventApi != null) {
-            if (channel.type != null) {
-                if (channel.instanceId != null) {
-                    eventApi.unsubscribeFromCustomEvents(channel.instanceId, channel.type);
-                } else {
-                    System.out.println("No contextId to unsubscribeChannel: " + channelStr);
-                }
-            }
-        }
-
-        if (channel.module.startsWith("kvdb") && kvdbApi != null) {
-            if (channel.type != null && channel.type.equals("entries")) {
-                if (channel.instanceId != null) {
-                    kvdbApi.unsubscribeFromEntryEvents(channel.instanceId);
-                } else {
-                    System.out.println("No kvdbId to unsubscribeChannel: " + channelStr);
-                }
-                return;
-            }
-            kvdbApi.unsubscribeFromKvdbEvents();
-        }
+    public interface ScopeCallback {
+        void execute(Scope scope) throws InstantiationException, IllegalAccessException;
     }
 
-    private static class Channel {
-        private final String module;
-        private final String instanceId;
-        private final String type;
+    private void unsubscribeMany(List<EventSelector> selectors) {
+        // EventEventSelectorType
+        eventApi.unsubscribeFrom(selectors.stream().filter(it -> it.eventSelectorType instanceof EventEventSelectorType).map(it -> it.subscriptionId).collect(Collectors.toList()));
+        // ThreadEventType
+        threadApi.unsubscribeFrom(selectors.stream().filter(it -> it.eventType instanceof ThreadEventType).map(it -> it.subscriptionId).collect(Collectors.toList()));
+        // StoreEventType
+        storeApi.unsubscribeFrom(selectors.stream().filter(it -> it.eventType instanceof StoreEventType).map(it -> it.subscriptionId).collect(Collectors.toList()));
+        // InboxEventType
+        inboxApi.unsubscribeFrom(selectors.stream().filter(it -> it.eventType instanceof InboxEventType).map(it -> it.subscriptionId).collect(Collectors.toList()));
+        // KvdbEventType
+        kvdbApi.unsubscribeFrom(selectors.stream().filter(it -> it.eventType instanceof KvdbEventType).map(it -> it.subscriptionId).collect(Collectors.toList()));
+    }
+    public interface Scope {
+        <T> void registerCallback(Object callbackId, EventSelector eventSelector, EventCallback<T> callback);
 
-        private Channel(
-                String module,
-                String instanceID,
-                String type
-        ) {
-            this.module = module;
-            this.instanceId = instanceID;
-            this.type = type;
+        <T> void registerCallback(Object callbackId, EventType eventType, EventSelectorType eventSelectorType, String selectorId, EventCallback<T> callback);
+
+        <T> void registerCustomCallback(Object callbackId, EventEventSelectorType eventSelectorType, String selectorId, String channelName, EventCallback<T> callback);
+    }
+
+    private class ManyScope implements Scope {
+        private final ArrayList<EventSelectorExtra<?>> AllSelectors = new ArrayList<>();
+
+        @Override
+        public <T> void registerCallback(Object callbackId, EventSelector eventSelector, EventCallback<T> callback) {
+            EventSelectorExtra<?> eventSelectorExtra = new EventSelectorExtra<T>(callbackId, eventSelector, callback);
+
+            String alreadyRegistered = eventDispatcher.registerCallback(eventSelector, callbackId, callback);
+            if (alreadyRegistered == null) {
+                if (eventSelector.eventType instanceof ThreadEventType) {
+                    eventSelectorExtra.query = threadApi.buildSubscriptionQuery(
+                            (ThreadEventType) eventSelectorExtra.eventSelector.eventType,
+                            (ThreadEventSelectorType) eventSelectorExtra.eventSelector.eventSelectorType,
+                            eventSelectorExtra.eventSelector.eventSelectorId
+                    );
+                } else if (eventSelector.eventType instanceof StoreEventType) {
+                    eventSelectorExtra.query = storeApi.buildSubscriptionQuery(
+                            (StoreEventType) eventSelectorExtra.eventSelector.eventType,
+                            (StoreEventSelectorType) eventSelectorExtra.eventSelector.eventSelectorType,
+                            eventSelectorExtra.eventSelector.eventSelectorId
+                    );
+                } else if (eventSelector.eventType instanceof InboxEventType) {
+                    eventSelectorExtra.query = inboxApi.buildSubscriptionQuery(
+                            (InboxEventType) eventSelectorExtra.eventSelector.eventType,
+                            (InboxEventSelectorType) eventSelectorExtra.eventSelector.eventSelectorType,
+                            eventSelectorExtra.eventSelector.eventSelectorId
+                    );
+                } else if (eventSelector.eventType instanceof KvdbEventType) {
+                    eventSelectorExtra.query = kvdbApi.buildSubscriptionQuery(
+                            (KvdbEventType) eventSelectorExtra.eventSelector.eventType,
+                            (KvdbEventSelectorType) eventSelectorExtra.eventSelector.eventSelectorType,
+                            eventSelectorExtra.eventSelector.eventSelectorId
+                    );
+                } else {
+                    // todo
+                }
+            } else {
+                eventSelectorExtra.query = alreadyRegistered;
+                System.out.println("Already subscribed");
+            }
+
+            AllSelectors.add(eventSelectorExtra);
         }
 
-        private static Channel fromString(String channel) {
-            Matcher matcher = Pattern
-                    .compile("(?<module>(?:(?!/).)*)(/(?<instanceId>(?:(?!/).)*)/(?<type>(?:(?!/).)*))?")
-                    .matcher(channel);
-            if (!matcher.find()) {
-                return null;
+        @Override
+        public <T> void registerCallback(Object callbackId, EventType eventType, EventSelectorType eventSelectorType, String selectorId, EventCallback<T> callback) {
+            registerCallback(callbackId, new EventSelector(eventType, eventSelectorType, selectorId), callback);
+        }
+
+        @Override
+        public <T> void registerCustomCallback(Object callbackId, EventEventSelectorType eventSelectorType, String selectorId, String channelName, EventCallback<T> callback) {
+            EventSelectorExtra<?> eventSelectorExtra = new EventSelectorExtra<T>(callbackId, new EventSelector(null, eventSelectorType, selectorId), channelName, callback);
+            AllSelectors.add(eventSelectorExtra);
+        }
+
+        private void subscribeFor(List<EventSelectorExtra<?>> list) {
+            EventType eventType = list.get(0).eventSelector.eventType;
+            EventSelectorType eventSelectorType = list.get(0).eventSelector.eventSelectorType;
+            List<String> queries = list.stream().map((eventSelectorExtra) -> eventSelectorExtra.query).collect(Collectors.toList());
+            List<String> ids = new ArrayList<>();
+
+            if (eventSelectorType instanceof EventEventSelectorType) {
+                ids = eventApi.subscribeFor(queries);
+            } else if (eventType instanceof ThreadEventType) {
+                ids = threadApi.subscribeFor(queries);
+            } else if (eventType instanceof StoreEventType) {
+                ids = threadApi.subscribeFor(queries);
+            } else if (eventType instanceof InboxEventType) {
+                ids = inboxApi.subscribeFor(queries);
+            } else if (eventType instanceof KvdbEventType) {
+                ids = kvdbApi.subscribeFor(queries);
             }
-            String module = matcher.group("module");
-            String instanceId = matcher.group("instanceId");
-            String type = matcher.group("type");
-            return new Channel(
-                    module,
-                    instanceId,
-                    type
-            );
+
+            if (ids.size() == list.size()) {
+                for (int i = 0; i < ids.size(); i++) {
+                    list.get(i).eventSelector.subscriptionId = ids.get(i);
+                    eventDispatcher.assignSelector(list.get(i).eventSelector);
+                }
+            }
+
+            int index = 0;
+            for (EventSelectorExtra<?> eventSelectorExtra : AllSelectors) {
+                if (eventType.getClass().isInstance(eventSelectorExtra.eventSelector.eventType)) {
+                    eventSelectorExtra.eventSelector.subscriptionId = ids.get(index++);
+                }
+            }
+        }
+
+        private List<String> subscribeAll() {
+            subscribeFor(AllSelectors.stream().filter(it -> it.eventSelector.eventType instanceof ThreadEventType).collect(Collectors.toList()));
+            subscribeFor(AllSelectors.stream().filter(it -> it.eventSelector.eventType instanceof StoreEventType).collect(Collectors.toList()));
+            subscribeFor(AllSelectors.stream().filter(it -> it.eventSelector.eventType instanceof InboxEventType).collect(Collectors.toList()));
+            subscribeFor(AllSelectors.stream().filter(it -> it.eventSelector.eventType instanceof KvdbEventType).collect(Collectors.toList()));
+
+            return AllSelectors.stream().map(eventSelectorExtra -> eventSelectorExtra.eventSelector.subscriptionId).collect(Collectors.toList());
         }
     }
 }
