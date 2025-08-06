@@ -812,7 +812,7 @@ namespace privmx {
                     ctx.long2jLong(file_c.statusCode),
                     ctx.long2jLong(file_c.schemaVersion)
                     ctx.long2jLong(file_c.schemaVersion),
-                    ctx.bool2jBoolean(file_c.randomWrite == JNI_TRUE)
+                    (jboolean) file_c.randomWrite
             );
         }
 
