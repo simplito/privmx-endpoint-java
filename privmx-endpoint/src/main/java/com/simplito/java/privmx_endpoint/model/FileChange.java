@@ -12,7 +12,7 @@ public class FileChange {
     /**
      * Remove all data
      */
-    public Boolean truncate;
+    public boolean truncate;
 
     /**
      * Creates instance of {@code FileChange}.
@@ -21,7 +21,7 @@ public class FileChange {
      * @param length   Length of file change.
      * @param truncate Remove all data.
      */
-    public FileChange(Long pos, Long length, Boolean truncate) {
+    public FileChange(Long pos, Long length, boolean truncate) {
         this.pos = pos;
         this.length = length;
         this.truncate = truncate;
