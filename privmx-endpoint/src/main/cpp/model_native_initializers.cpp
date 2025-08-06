@@ -782,14 +782,13 @@ namespace privmx {
                     fileCls,
                     "<init>",
                     "("
-                    "Lcom/simplito/java/privmx_endpoint/model/ServerFileInfo;"  // info
-                    "[B"                    // publicMeta
-                    "[B"                    // privateMeta
-                    "Ljava/lang/Long;"      // size
-                    "Ljava/lang/String;"    // authorPubKey
-                    "Ljava/lang/Long;"      // statusCode
-                    "Ljava/lang/Long;"      // schemaVersion
-                    "Z"                     // randomWrite
+                    "Lcom/simplito/java/privmx_endpoint/model/ServerFileInfo;"
+                    "[B"
+                    "[B"
+                    "Ljava/lang/Long;"
+                    "Ljava/lang/String;"
+                    "Ljava/lang/Long;"
+                    "Ljava/lang/Long;"
                     ")V"
             );
 
@@ -810,8 +809,7 @@ namespace privmx {
                     ctx.long2jLong(file_c.size),
                     ctx->NewStringUTF(file_c.authorPubKey.c_str()),
                     ctx.long2jLong(file_c.statusCode),
-                    ctx.long2jLong(file_c.schemaVersion),
-                    ctx.bool2jBoolean(file_c.randomWrite == JNI_TRUE)
+                    ctx.long2jLong(file_c.schemaVersion)
             );
         }
 
