@@ -1,5 +1,11 @@
 package com.simplito.java.privmx_endpoint.model;
 
+/**
+ * Holds information about the file change.
+ *
+ * @category store
+ * @group Store
+ */
 public class FileChange {
     /**
      * Position of file change
