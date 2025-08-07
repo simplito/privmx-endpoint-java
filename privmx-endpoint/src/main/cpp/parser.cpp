@@ -328,7 +328,7 @@ privmx::endpoint::kvdb::EventSelectorType parseKvdbEventSelectorType(JniContextU
     }
 }
 
-privmx::endpoint::event::EventSelectorType parseEventSelectorType(JniContextUtils &ctx, long ordinal) {
+privmx::endpoint::event::EventSelectorType parseCustomEventSelectorType(JniContextUtils &ctx, long ordinal) {
     switch (ordinal) {
         case (privmx::endpoint::event::EventSelectorType::CONTEXT_ID):
             return privmx::endpoint::event::EventSelectorType::CONTEXT_ID;
