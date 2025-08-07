@@ -942,15 +942,14 @@ namespace privmx {
             );
 
             jclass arrayListCls = ctx->FindClass("java/util/ArrayList");
-            jmethodID arrayListInitMID = ctx->GetMethodID(arrayListCls, "<init>", "(I)V");
+            jmethodID arrayListInitMID = ctx->GetMethodID(arrayListCls, "<init>", "()V");
             jmethodID arrayListAddMID = ctx->GetMethodID(arrayListCls, "add",
                                                          "(Ljava/lang/Object;)Z");
 
             jobject changesList = ctx->NewObject(
                     arrayListCls,
-                    arrayListInitMID,
-                    ctx.int2jInteger(storeFileUpdatedEventData_c.changes.size())
-            );
+                    arrayListInitMID
+                );
 
             for (const auto &change: storeFileUpdatedEventData_c.changes) {
                 jobject javaFileChange = fileChange2Java(ctx, change);
