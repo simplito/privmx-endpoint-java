@@ -12,7 +12,8 @@
 package com.simplito.java.privmx_endpoint.modules.event;
 
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
-import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.EventEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.ContextCustomEventData;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.CustomEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
@@ -94,7 +95,7 @@ public class EventApi implements AutoCloseable {
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public String buildSubscriptionQuery(String channelName, EventEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException {
+    public String buildSubscriptionQuery(String channelName, CustomEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException {
         return buildSubscriptionQuery(channelName, (long) selectorType.ordinal(), selectorId);
     }
 
