@@ -208,7 +208,7 @@ jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, i
     jfieldID eventChannelFieldID = ctx->GetFieldID(eventCls, "channel", "Ljava/lang/String;");
 
     jfieldID eventSubscriptionsFieldID = ctx->GetFieldID(eventCls, "subscriptions",
-                                                         "Ljava/util/List;);");
+                                                         "Ljava/util/List;");
 
     jclass arrayListCls = ctx->FindClass("java/util/ArrayList");
     jmethodID arrayListInit = ctx->GetMethodID(arrayListCls, "<init>", "()V");
