@@ -644,19 +644,17 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_subscribeFor(
                     subscription_queries_c.push_back(ctx.jString2string((jstring) arrayElement));
                 }
 
+                jobject arrayList = env->NewObject(arrayListCls, initMID);
                 auto subscription_ids_c = getKvdbApi(ctx, thiz)->subscribeFor(
                         subscription_queries_c);
 
-                jobject javaArrayList = env->NewObject(arrayListCls, initMID);
                 for (auto &id_str : subscription_ids_c) {
                     jstring java_id_str = ctx->NewStringUTF(id_str.c_str());
-                    env->CallBooleanMethod(javaArrayList, addToListMID, java_id_str);
+                    env->CallBooleanMethod(arrayList, addToListMID, java_id_str);
                 }
-
-                return javaArrayList;
+                return arrayList;
             }
     );
-
     if (ctx->ExceptionCheck()) {
         return nullptr;
     }
@@ -695,28 +693,27 @@ JNIEXPORT jstring JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_buildSubscriptionQuery(
         JNIEnv *env,
         jobject thiz,
-        jlong eventType,
-        jlong selectorType,
-        jstring selectorId
+        jlong event_type,
+        jlong selector_type,
+        jstring selector_id
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(selectorId, "SelectorID")) {
+    if (ctx.nullCheck(selector_id, "SelectorID")) {
         return nullptr;
     }
 
     jstring result = nullptr;
     ctx.callResultEndpointApi<jstring>(
             &result,
-            [&ctx, &env, &thiz, &eventType, &selectorType, &selectorId]() {
+            [&ctx, &env, &thiz, &event_type, &selector_type, &selector_id]() {
                 std::string query_result_c = getKvdbApi(ctx, thiz)->buildSubscriptionQuery(
-                        static_cast<kvdb::EventType>(eventType),
-                        static_cast<kvdb::EventSelectorType>(selectorType),
-                        ctx.jString2string(selectorId)
+                        static_cast<kvdb::EventType>(event_type),
+                        static_cast<kvdb::EventSelectorType>(selector_type),
+                        ctx.jString2string(selector_id)
                 );
                 return ctx->NewStringUTF(query_result_c.c_str());
             }
     );
-
     if (ctx->ExceptionCheck()) {
         return nullptr;
     }

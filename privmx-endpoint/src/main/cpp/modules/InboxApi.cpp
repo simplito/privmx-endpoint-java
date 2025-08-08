@@ -652,8 +652,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_closeFile(
             &result,
             [&ctx, &thiz, &file_handle]() {
                 return ctx->NewStringUTF(
-                        getInboxApi(ctx, thiz)->closeFile(file_handle)
-                                .c_str()
+                        getInboxApi(ctx, thiz)->
+                        closeFile(file_handle).c_str()
                 );
             });
     if (ctx->ExceptionCheck()) {
@@ -693,19 +693,15 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_subscribeFor(
 
                 auto subscription_ids_c = getInboxApi(ctx, thiz)->subscribeFor(
                         subscription_queries_c);
+                jobject arrayList = env->NewObject(arrayListCls, initMID);
 
-                jobject javaArrayList = env->NewObject(arrayListCls, initMID);
                 for (auto &id_str : subscription_ids_c) {
                     jstring java_id_str = ctx->NewStringUTF(id_str.c_str());
-                    env->CallBooleanMethod(javaArrayList, addToListMID, java_id_str);
-                    env->DeleteLocalRef(java_id_str);
+                    env->CallBooleanMethod(arrayList, addToListMID, java_id_str);
                 }
-                env->DeleteLocalRef(arrayListCls);
-
-                return javaArrayList;
+                return arrayList;
             }
     );
-
     if (ctx->ExceptionCheck()) {
         return nullptr;
     }
@@ -744,28 +740,27 @@ JNIEXPORT jstring JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_buildSubscriptionQuery(
         JNIEnv *env,
         jobject thiz,
-        jlong eventType,
-        jlong selectorType,
-        jstring selectorId
+        jlong event_type,
+        jlong selector_type,
+        jstring selector_id
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(selectorId, "Selector ID")) {
+    if (ctx.nullCheck(selector_id, "Selector ID")) {
         return nullptr;
     }
 
     jstring result = nullptr;
     ctx.callResultEndpointApi<jstring>(
             &result,
-            [&ctx, &env, &thiz, &eventType, &selectorType, &selectorId]() {
+            [&ctx, &env, &thiz, &event_type, &selector_type, &selector_id]() {
                 std::string query_result_c = getInboxApi(ctx, thiz)->buildSubscriptionQuery(
-                        static_cast<inbox::EventType>(eventType),
-                        static_cast<inbox::EventSelectorType>(selectorType),
-                        ctx.jString2string(selectorId)
+                        static_cast<inbox::EventType>(event_type),
+                        static_cast<inbox::EventSelectorType>(selector_type),
+                        ctx.jString2string(selector_id)
                 );
                 return ctx->NewStringUTF(query_result_c.c_str());
             }
     );
-
     if (ctx->ExceptionCheck()) {
         return nullptr;
     }
