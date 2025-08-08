@@ -56,7 +56,7 @@ public class File {
     public Long schemaVersion;
 
     /**
-     * Have random write feature enabled.
+     * randomWrite is enabled.
      */
     public boolean randomWrite;
 
@@ -70,7 +70,7 @@ public class File {
      * @param authorPubKey  Public key of the author of the file.
      * @param statusCode    Status code of retrieval and decryption of the file.
      * @param schemaVersion Version of the file data structure and how it is encoded/encrypted.
-     * @param randomWrite   Have random write feature enabled.
+     * @param randomWrite   randomWrite is enabled.
      */
     public File(
             ServerFileInfo info,
