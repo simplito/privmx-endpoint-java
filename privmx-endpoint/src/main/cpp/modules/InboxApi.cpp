@@ -749,7 +749,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_buildSubscription
         jstring selectorId
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(selectorId, "SelectorID")) {
+    if (ctx.nullCheck(selectorId, "Selector ID")) {
         return nullptr;
     }
 
