@@ -757,16 +757,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_buildSubscription
     ctx.callResultEndpointApi<jstring>(
             &result,
             [&ctx, &env, &thiz, &eventType, &selectorType, &selectorId]() {
-                auto c_eventType = parseInboxEventType(ctx, (long) eventType);
-                auto c_selectorType = parseInboxEventSelectorType(ctx, (long) selectorType);
-                std::string c_selectorId = ctx.jString2string(selectorId);
-
                 std::string query_result_c = getInboxApi(ctx, thiz)->buildSubscriptionQuery(
-                        c_eventType,
-                        c_selectorType,
-                        c_selectorId
+                        static_cast<inbox::EventType>(eventType),
+                        static_cast<inbox::EventSelectorType>(selectorType),
+                        ctx.jString2string(selectorId)
                 );
-
                 return ctx->NewStringUTF(query_result_c.c_str());
             }
     );

@@ -566,16 +566,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_thread_ThreadApi_buildSubscripti
     ctx.callResultEndpointApi<jstring>(
             &result,
             [&ctx, &env, &thiz, &eventType, &selectorType, &selectorId]() {
-                auto c_eventType = parseThreadEventType(ctx, (long) eventType);
-                auto c_selectorType = parseThreadEventSelectorType(ctx, (long) selectorType);
-                std::string c_selectorId = ctx.jString2string(selectorId);
-
                 std::string query_result_c = getThreadApi(ctx, thiz)->buildSubscriptionQuery(
-                        c_eventType,
-                        c_selectorType,
-                        c_selectorId
+                        static_cast<thread::EventType>(eventType),
+                        static_cast<thread::EventSelectorType>(selectorType),
+                        ctx.jString2string(selectorId)
                 );
-
                 return ctx->NewStringUTF(query_result_c.c_str());
             }
     );

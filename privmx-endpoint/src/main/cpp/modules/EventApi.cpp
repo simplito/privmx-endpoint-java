@@ -199,17 +199,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_buildSubscription
     ctx.callResultEndpointApi<jstring>(
             &result,
             [&ctx, &env, &thiz, &channelName, &selectorType, &selectorId]() {
-                std::string c_channelName = ctx.jString2string(channelName);
-                auto c_selectorType = parseEventSelectorType(ctx, (long) selectorType);
-                std::string c_selectorId = ctx.jString2string(selectorId);
-
-                // Wywołanie metody C++ API dla Custom
                 std::string query_result_c = getEventApi(ctx, thiz)->buildSubscriptionQuery(
-                        c_channelName,
-                        c_selectorType,
-                        c_selectorId
+                        ctx.jString2string(channelName),
+                        static_cast<event::EventSelectorType>(selectorType),
+                        ctx.jString2string(selectorId)
                 );
-
                 return ctx->NewStringUTF(query_result_c.c_str());
             }
     );

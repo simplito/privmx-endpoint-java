@@ -708,16 +708,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_buildSubscriptionQu
     ctx.callResultEndpointApi<jstring>(
             &result,
             [&ctx, &env, &thiz, &eventType, &selectorType, &selectorId]() {
-                auto c_eventType = parseKvdbEventType(ctx, (long) eventType);
-                auto c_selectorType = parseKvdbEventSelectorType(ctx, (long) selectorType);
-                std::string c_selectorId = ctx.jString2string(selectorId);
-
                 std::string query_result_c = getKvdbApi(ctx, thiz)->buildSubscriptionQuery(
-                        c_eventType,
-                        c_selectorType,
-                        c_selectorId
+                        static_cast<kvdb::EventType>(eventType),
+                        static_cast<kvdb::EventSelectorType>(selectorType),
+                        ctx.jString2string(selectorId)
                 );
-
                 return ctx->NewStringUTF(query_result_c.c_str());
             }
     );

@@ -704,10 +704,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_buildSubscription
     ctx.callResultEndpointApi<jstring>(
             &result,
             [&ctx, &thiz, &eventType, &selectorType, &selectorId]() {
-
                 auto result = getStoreApi(ctx, thiz)->buildSubscriptionQuery(
-                        parseStoreEventType(ctx, (long) eventType),
-                        parseStoreEventSelectorType(ctx, (long) selectorType),
+                        static_cast<store::EventType>(eventType),
+                        static_cast<store::EventSelectorType>(selectorType),
                         ctx.jString2string(selectorId)
                 );
                 return ctx->NewStringUTF(result.c_str());
