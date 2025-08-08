@@ -928,8 +928,10 @@ namespace privmx {
             );
         }
 
-        jobject storeFileUpdatedEventData2Java(JniContextUtils &ctx,
-                                               privmx::endpoint::store::StoreFileUpdatedEventData storeFileUpdatedEventData_c) {
+        jobject storeFileUpdatedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::store::StoreFileUpdatedEventData storeFileUpdatedEventData_c
+        ) {
             jclass storeFileUpdatedEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/StoreFileUpdatedEventData");
             jmethodID initStoreFileUpdatedEventDataMID = ctx->GetMethodID(
