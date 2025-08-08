@@ -646,7 +646,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_subscribeFor(
 
                 jobject array = env->NewObject(arrayListCls, initMID);
                 for (auto &id: subscription_ids_c) {
-                    ctx->CallObjectMethod(
+                    ctx->CallBooleanMethod(
                             array,
                             addToListMID,
                             ctx->NewStringUTF(id.c_str())
