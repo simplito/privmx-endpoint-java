@@ -623,7 +623,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_subscribeFor(
         jobject subscription_queries
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(subscription_queries, "Subscription queries for KvdbApi")) {
+    if (ctx.nullCheck(subscription_queries, "Subscription queries")) {
         return nullptr;
     }
 

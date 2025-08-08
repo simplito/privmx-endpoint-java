@@ -620,7 +620,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_subscribeFor(
         jobject subscription_queries
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(subscription_queries, "Subscription queries for StoreApi")) {
+    if (ctx.nullCheck(subscription_queries, "Subscription queries")) {
         return nullptr;
     }
 
@@ -696,7 +696,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_buildSubscription
         jstring selectorId
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(selectorId, "SelectorID")) {
+    if (ctx.nullCheck(selectorId, "Selector ID")) {
         return nullptr;
     }
 

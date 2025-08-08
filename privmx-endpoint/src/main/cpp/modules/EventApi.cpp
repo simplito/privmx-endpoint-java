@@ -113,7 +113,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_subscribeFor(
         jobject subscription_queries
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(subscription_queries, "Subscription queries for CustomApi")) {
+    if (ctx.nullCheck(subscription_queries, "Subscription queries")) {
         return nullptr;
     }
 
@@ -161,7 +161,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_unsubscribeFrom(
         jobject subscription_ids
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(subscription_ids, "Subscription IDs for CustomApi")) {
+    if (ctx.nullCheck(subscription_ids, "Subscription IDs")) {
         return;
     }
 

@@ -670,7 +670,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_subscribeFor(
         jobject subscription_queries
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(subscription_queries, "Subscription queries for InboxApi")) {
+    if (ctx.nullCheck(subscription_queries, "Subscription queries")) {
         return nullptr;
     }
 
@@ -720,7 +720,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_inbox_InboxApi_unsubscribeFrom(
         jobject subscription_ids
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(subscription_ids, "Subscription IDs for InboxApi")) {
+    if (ctx.nullCheck(subscription_ids, "Subscription IDs")) {
         return;
     }
 
