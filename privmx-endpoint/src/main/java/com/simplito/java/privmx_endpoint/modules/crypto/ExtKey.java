@@ -11,6 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.crypto;
 
+import com.simplito.java.privmx_endpoint.LibLoader;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 
@@ -21,7 +22,7 @@ import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
  */
 public class ExtKey implements AutoCloseable {
     static {
-        System.loadLibrary("privmx-endpoint-java");
+        LibLoader.loadPrivmxLibraries();
     }
 
     private final Long key;

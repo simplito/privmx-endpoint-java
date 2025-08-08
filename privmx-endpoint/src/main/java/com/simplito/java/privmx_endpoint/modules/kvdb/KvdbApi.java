@@ -23,6 +23,7 @@ import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Manages PrivMX Bridge KVDBs and their entries.
@@ -558,10 +559,10 @@ public class KvdbApi implements AutoCloseable {
     ) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Deletes KVDB entries by given KVDB IDs and the list of entry keys.
+     * Deletes KVDB entries by given KVDB IDs and the set of entry keys.
      *
      * @param kvdbId ID of the KVDB database to delete from
-     * @param keys   vector of the keys of the KVDB entries to delete
+     * @param keys   set of the keys of the KVDB entries to delete
      * @return map with the statuses of deletion for every key
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
@@ -569,7 +570,7 @@ public class KvdbApi implements AutoCloseable {
      */
     public native Map<String, Boolean> deleteEntries(
             String kvdbId,
-            List<String> keys
+            Set<String> keys
     ) throws PrivmxException, NativeException, IllegalStateException;
 
     /**

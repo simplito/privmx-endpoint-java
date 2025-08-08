@@ -75,6 +75,12 @@ This library implements models, exception catching, and the following modules:
 1. Add `mavenCentral()` repository to your `settings.gradle`:
 
 ```groovy
+pluginManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
@@ -90,6 +96,14 @@ dependencies {
     implementation("com.simplito.java:privmx-endpoint-extra:$privmxLibVersion")
     //implementation("com.simplito.java:privmx-endpoint:$privmxLibVersion")  //for base Java library 
     //implementation("com.simplito.java:privmx-endpoint-android:$privmxLibVersion") //for Android Java library 
+}
+```
+
+3. Add PrivMX plugin to `build.gradle`:
+
+```groovy
+plugins {
+    id "com.simplito.privmx-endpoint-install-native" version "2.0.0"
 }
 ```
 

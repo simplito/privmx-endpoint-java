@@ -121,6 +121,29 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
     }
 
     /**
+     * Initializes modules and connects to PrivMX Bridge server using given parameters.
+     *
+     * @param enableModule   set of modules to initialize; should contain {@link Modules#THREAD }
+     *                       to enable Thread module or {@link Modules#STORE } to enable Store module
+     * @param bridgeUrl      Bridge Server URL
+     * @param solutionId     {@code SolutionId} of the current project
+     * @param userPrivateKey user private key used to authorize; generated from:
+     *                       {@link CryptoApi#generatePrivateKey} or
+     *                       {@link CryptoApi#derivePrivateKey}
+     * @throws IllegalStateException thrown if there is an exception during init modules
+     * @throws PrivmxException       thrown if there is a problem during login
+     * @throws NativeException       thrown if there is an <strong>unknown</strong> problem during login
+     */
+    public BasicPrivmxEndpoint(
+            Set<Modules> enableModule,
+            String userPrivateKey,
+            String solutionId,
+            String bridgeUrl
+    ) throws IllegalStateException, PrivmxException, NativeException {
+        this(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
+    }
+
+    /**
      * Disconnects from PrivMX Bridge and frees memory.
      *
      * @throws Exception when instance is currently closed
