@@ -33,17 +33,6 @@ privmx::endpoint::core::ItemPolicy parseItemPolicy(JniContextUtils &ctx, jobject
 
 privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobject filesConfig);
 
-privmx::endpoint::store::EventType parseStoreEventType(JniContextUtils &ctx, long ordinal);
-privmx::endpoint::thread::EventType parseThreadEventType(JniContextUtils &ctx, long ordinal);
-privmx::endpoint::inbox::EventType parseInboxEventType(JniContextUtils &ctx, long ordinal);
-privmx::endpoint::kvdb::EventType parseKvdbEventType(JniContextUtils &ctx, long ordinal);
-
-privmx::endpoint::store::EventSelectorType parseStoreEventSelectorType(JniContextUtils &ctx, long ordinal);
-privmx::endpoint::thread::EventSelectorType parseThreadEventSelectorType(JniContextUtils &ctx, long ordinal);
-privmx::endpoint::inbox::EventSelectorType parseInboxEventSelectorType(JniContextUtils &ctx, long ordinal);
-privmx::endpoint::kvdb::EventSelectorType parseKvdbEventSelectorType(JniContextUtils &ctx, long ordinal);
-privmx::endpoint::event::EventSelectorType parseCustomEventSelectorType(JniContextUtils &ctx, long ordinal);
-
 jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event);
 
 privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery);
