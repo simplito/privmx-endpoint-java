@@ -813,8 +813,10 @@ namespace privmx {
             );
         }
 
-        jobject fileChange2Java(JniContextUtils &ctx,
-                                privmx::endpoint::store::FileChange file_change_c) {
+        jobject fileChange2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::store::FileChange file_change_c
+        ) {
             jclass fileChangeCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/FileChange");
 
