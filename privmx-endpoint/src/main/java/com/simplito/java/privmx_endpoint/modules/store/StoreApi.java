@@ -495,6 +495,16 @@ public class StoreApi implements AutoCloseable {
     public native void unsubscribeFromFileEvents(String storeId) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
+     * Synchronize file handle data with newest data on server
+     *
+     * @param handle handle to read/write file data
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public native void syncFile(long handle) throws PrivmxException, NativeException, IllegalStateException;
+
+    /**
      * Frees memory.
      *
      * @throws Exception when instance is currently closed.
