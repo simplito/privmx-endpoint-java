@@ -668,3 +668,17 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_unsubscribeFromFi
         );
     });
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_syncFile(
+        JNIEnv *env,
+        jobject thiz,
+        jlong handle
+) {
+    JniContextUtils ctx(env);
+
+    ctx.callVoidEndpointApi([&ctx, &thiz, &handle]() {
+            getStoreApi(ctx, thiz)->syncFile(handle);
+    });
+}
