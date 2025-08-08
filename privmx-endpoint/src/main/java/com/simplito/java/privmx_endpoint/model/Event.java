@@ -11,7 +11,6 @@
 
 package com.simplito.java.privmx_endpoint.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,7 +50,6 @@ public class Event<T> {
      */
     Event() {
     }
-
 
     /**
      * Creates instance of Event model.
@@ -94,7 +92,7 @@ public class Event<T> {
         this.type = type;
         this.channel = channel;
         this.connectionId = connectionId;
-        this.subscriptions = new ArrayList<>();
+        this.subscriptions = List.of();
         this.data = data;
     }
 }
