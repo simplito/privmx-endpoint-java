@@ -810,12 +810,8 @@ namespace privmx {
                     ctx.long2jLong(file_c.size),
                     ctx->NewStringUTF(file_c.authorPubKey.c_str()),
                     ctx.long2jLong(file_c.statusCode),
-                    ctx.long2jLong(file_c.schemaVersion)
                     ctx.long2jLong(file_c.schemaVersion),
                     (jboolean) file_c.randomWrite
-            );
-        }
-
             );
         }
 
