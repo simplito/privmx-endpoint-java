@@ -832,7 +832,7 @@ namespace privmx {
 
             jobject javaPos = ctx.long2jLong(file_change_c.pos);
             jobject javaLength = ctx.long2jLong(file_change_c.length);
-            jobject javaTruncate = ctx.bool2jBoolean(file_change_c.truncate ? JNI_TRUE : JNI_FALSE);
+            jboolean javaTruncate = (jboolean) file_change_c.truncate;
 
             return ctx->NewObject(
                     fileChangeCls,
