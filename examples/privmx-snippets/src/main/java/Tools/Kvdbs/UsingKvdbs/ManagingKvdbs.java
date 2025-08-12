@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ManagingKvdbs {
+    // START: Initial Assumptions Snippets
     /*
         All the values below like BRIDGE_URL, SOLUTION_ID, CONTEXT_ID
         should be replaced by the ones corresponding to your Bridge Server instance.
