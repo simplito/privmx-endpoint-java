@@ -19,6 +19,8 @@ import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.events.ThreadDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.ThreadDeletedMessageEventData;
 import com.simplito.java.privmx_endpoint.model.events.ThreadStatsEventData;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.ThreadEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
@@ -403,42 +405,42 @@ public class ThreadApi implements AutoCloseable {
     public native void updateMessage(String messageId, byte[] publicMeta, byte[] privateMeta, byte[] data) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribes for the Thread module main events.
+     * Subscribe for the Thread events on the given subscription query.
      *
+     * @param subscriptionQueries list of queries
+     * @return list of subscriptionIds in matching order to subscriptionQueries
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native void subscribeForThreadEvents() throws PrivmxException, NativeException, IllegalStateException;
+    public native List<String> subscribeFor(List<String> subscriptionQueries) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Unsubscribes from the Thread module main events.
+     * Unsubscribe from events for the given subscriptionId.
      *
+     * @param subscriptionIds list of subscriptionId
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native void unsubscribeFromThreadEvents() throws PrivmxException, NativeException, IllegalStateException;
+    public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
+
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribes for events in given Thread.
+     * Generate subscription Query for the Thread events.
      *
-     * @param threadId ID of the Thread to subscribe
+     * @param eventType    type of event which you listen for
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return // todo - add return description
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native void subscribeForMessageEvents(String threadId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribes from events in given Thread.
-     *
-     * @param threadId ID of the Thread to unsubscribe
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void unsubscribeFromMessageEvents(String threadId) throws PrivmxException, NativeException, IllegalStateException;
+    public String buildSubscriptionQuery(ThreadEventType eventType, ThreadEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException {
+        return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
+    }
 
     /**
      * Frees memory.

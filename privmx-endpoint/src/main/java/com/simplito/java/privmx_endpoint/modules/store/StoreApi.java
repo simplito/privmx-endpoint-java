@@ -17,6 +17,8 @@ import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.Store;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.events.StoreDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StoreEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.StoreFileDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreStatsChangedEventData;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
@@ -455,44 +457,43 @@ public class StoreApi implements AutoCloseable {
      */
     public native String closeFile(long fileHandle) throws PrivmxException, NativeException, IllegalStateException;
 
-
     /**
-     * Subscribes for the Store module main events.
+     * Subscribe for the Store events on the given subscription query.
      *
+     * @param subscriptionQueries list of queries
+     * @return list of subscriptionIds in matching order to subscriptionQueries
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native void subscribeForStoreEvents() throws PrivmxException, NativeException, IllegalStateException;
+    public native List<String> subscribeFor(List<String> subscriptionQueries) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Unsubscribes from the Store module main events.
+     * Unsubscribe from events for the given subscriptionId.
      *
+     * @param subscriptionIds list of subscriptionId
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native void unsubscribeFromStoreEvents() throws PrivmxException, NativeException, IllegalStateException;
+    public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
+
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribes for events in given Store.
+     * Generate subscription Query for the Store events.
      *
-     * @param storeId ID of the Store to subscribe
+     * @param eventType    type of event which you listen for
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return // todo - add return description
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native void subscribeForFileEvents(String storeId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribes from events in given Store.
-     *
-     * @param storeId ID of the {@code Store} to unsubscribe
-     * @throws IllegalStateException thrown when instance is closed.
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     */
-    public native void unsubscribeFromFileEvents(String storeId) throws PrivmxException, NativeException, IllegalStateException;
+    public String buildSubscriptionQuery(StoreEventType eventType, StoreEventSelectorType selectorType, String selectorId)  throws PrivmxException, NativeException, IllegalStateException {
+        return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
+    }
 
     /**
      * Frees memory.
