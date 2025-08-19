@@ -360,7 +360,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_createFile(
         jstring store_id,
         jbyteArray public_meta,
         jbyteArray private_meta,
-        jlong size
+        jlong size,
+        jboolean random_write_support
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(store_id, "Store ID") ||
@@ -371,7 +372,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_createFile(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &thiz, &store_id, &public_meta, &private_meta, &size]() {
+            [&ctx, &thiz, &store_id, &public_meta, &private_meta, &size, &random_write_support]() {
                 return ctx.long2jLong(
                         (jlong) getStoreApi(ctx, thiz)->createFile(
                                 ctx.jString2string(store_id),
@@ -379,8 +380,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_createFile(
                                         ctx.jByteArray2String(public_meta)),
                                 core::Buffer::from(
                                         ctx.jByteArray2String(private_meta)),
-                                size));
-            });
+                                size,
+                                random_write_support == JNI_TRUE
+                        )
+                );
+            }
+    );
     if (ctx->ExceptionCheck()) {
         return nullptr;
     }
@@ -450,17 +455,19 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_writeToFile(
         JNIEnv *env,
         jobject thiz,
         jlong file_handle,
-        jbyteArray data_chunk
+        jbyteArray data_chunk,
+        jboolean truncate
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(data_chunk, "Data chunk")) {
         return;
     }
-    ctx.callVoidEndpointApi([&ctx, &thiz, &data_chunk, &file_handle]() {
+    ctx.callVoidEndpointApi([&ctx, &thiz, &data_chunk, &file_handle, &truncate]() {
         auto data_chunk_c = ctx.jByteArray2String(data_chunk);
         getStoreApi(ctx, thiz)->writeToFile(
                 file_handle,
-                core::Buffer::from(data_chunk_c)
+                core::Buffer::from(data_chunk_c),
+                truncate == JNI_TRUE
         );
     });
 }
