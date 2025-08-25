@@ -6,7 +6,7 @@ import com.simplito.java.privmx_endpoint.model.FileChange;
 import java.util.List;
 
 /**
- * Holds information about the file change.
+ * Holds information about file updates.
  *
  * @category core
  * @group Events
