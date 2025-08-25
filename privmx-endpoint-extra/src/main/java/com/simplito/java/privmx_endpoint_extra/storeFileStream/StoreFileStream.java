@@ -84,6 +84,18 @@ public abstract class StoreFileStream {
     }
 
     /**
+     * Moves read/write cursor.
+     *
+     * @param position new cursor position
+     * @throws IllegalStateException if {@code storeApi} is not initialized or connected
+     * @throws PrivmxException       if there is an error while seeking
+     * @throws NativeException       if there is an unknown error while seeking
+     */
+    public void seek(long position) throws IllegalStateException, PrivmxException, NativeException {
+        storeApi.seekInFile(handle, position);
+    }
+
+    /**
      * Returns information whether the instance is closed.
      *
      * @return {@code true} if file handle is closed

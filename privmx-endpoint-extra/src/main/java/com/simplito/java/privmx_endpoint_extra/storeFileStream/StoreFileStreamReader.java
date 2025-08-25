@@ -125,16 +125,4 @@ public class StoreFileStreamReader extends StoreFileStream {
         callChunkProcessed((long) result.length);
         return result;
     }
-
-    /**
-     * Moves read cursor.
-     *
-     * @param position new cursor position
-     * @throws IllegalStateException if {@code storeApi} is not initialized or connected
-     * @throws PrivmxException       if there is an error while seeking
-     * @throws NativeException       if there is an unknown error while seeking
-     */
-    public void seek(long position) throws IllegalStateException, PrivmxException, NativeException {
-        storeApi.seekInFile(handle, position);
-    }
 }
