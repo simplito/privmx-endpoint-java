@@ -41,7 +41,7 @@ public class Event<T> {
      */
     public T data;
     /**
-     * List of subscriptions Id for witch it is.
+     * List of subscription IDs to which the event is related.
      */
     public List<String> subscriptions;
 
@@ -57,7 +57,7 @@ public class Event<T> {
      * @param type          type of event as text
      * @param channel       event channel
      * @param connectionId  ID of connection for this event
-     * @param subscriptions List of subscriptions Id for witch it is.
+     * @param subscriptions List of subscription IDs to which the event is related
      * @param data          event data
      */
     public Event(
