@@ -110,6 +110,25 @@ public class StoreFileStreamReader extends StoreFileStream {
     }
 
     /**
+     * Synchronizes file data with newest data on server
+     *
+     * @param api    reference to Store API
+     * @return Instance ready to read from the Store file
+     * @throws IllegalStateException when {@code storeApi} is not initialized or there's no connection
+     * @throws PrivmxException       if there is an error while opening Store file
+     * @throws NativeException       if there is an unknown error while opening Store file
+     */
+    public StoreFileStreamReader syncFile(
+            StoreApi api
+    ) throws IllegalStateException, PrivmxException, NativeException {
+        api.syncFile(handle);
+        return new StoreFileStreamReader(
+                handle,
+                api
+        );
+    }
+
+    /**
      * Reads file data and moves the cursor. If read data size is less than length, then EOF.
      *
      * @param size size of data to read (the recommended size is {@link  StoreFileStream#OPTIMAL_SEND_SIZE})
