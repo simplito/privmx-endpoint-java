@@ -171,6 +171,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_event_EventApi_unsubscribeFrom(
         int length = ctx->GetArrayLength(subscription_ids_arr);
         for (int i = 0; i < length; i++) {
             jobject arrayElement = ctx->GetObjectArrayElement(subscription_ids_arr, i);
+        if (ctx.nullCheck(arrayElement, "Subscription ids array elements")) {
+            return;
+        }
             subscription_ids_c.push_back(ctx.jString2string((jstring) arrayElement));
         }
 
