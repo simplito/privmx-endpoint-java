@@ -19,15 +19,15 @@ package com.simplito.java.privmx_endpoint.model.events;
  */
 public class ContextCustomEventData {
     /**
-     * ID of inbox from which the event was sent
+     *  Context ID
      */
     public final String contextId;
     /**
-     * ID of the user who sent it
+     * User ID (event's sender)
      */
     public final String userId;
     /**
-     * event data
+     * Event's actual payload
      */
     public final byte[] data;
     /**
@@ -35,6 +35,44 @@ public class ContextCustomEventData {
      */
     public Long statusCode;
 
+    /**
+     * Version of the event data structure and how it is encoded/encrypted
+     */
+    public Long schemaVersion;
+
+
+    /**
+     * Creates instance of {@code ContextCustomEventData}.
+     *
+     * @param contextId     Context ID
+     * @param userId        User ID (event's sender)
+     * @param data          Event's actual payload
+     * @param statusCode    Payload decryption status
+     * @param schemaVersion Version of the event data structure and how it is encoded/encrypted
+     */
+    public ContextCustomEventData(
+            String contextId,
+            String userId,
+            byte[] data,
+            Long statusCode,
+            Long schemaVersion
+    ) {
+        this.contextId = contextId;
+        this.userId = userId;
+        this.data = data;
+        this.statusCode = statusCode;
+        this.schemaVersion = schemaVersion;
+    }
+
+    /**
+     * Creates instance of {@code ContextCustomEventData}.
+     *
+     * @param contextId     Context ID
+     * @param userId        User ID (event's sender)
+     * @param data          Event's actual payload
+     * @param statusCode    Payload decryption status
+     */
+    @Deprecated
     public ContextCustomEventData(
             String contextId,
             String userId,
@@ -45,6 +83,7 @@ public class ContextCustomEventData {
         this.userId = userId;
         this.data = data;
         this.statusCode = statusCode;
+        this.schemaVersion = 0L;
     }
 
     @Deprecated
@@ -57,5 +96,6 @@ public class ContextCustomEventData {
         this.userId = userId;
         this.data = data;
         this.statusCode = null;
+        this.schemaVersion = 0L;
     }
 }

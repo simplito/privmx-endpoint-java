@@ -1038,18 +1038,21 @@ namespace privmx {
                     "Ljava/lang/String;"    // contextId
                     "Ljava/lang/String;"    // userId
                     "[B"                    // payload
-                    "Ljava/lang/Long"       // statusCode
+                    "Ljava/lang/Long;"       // statusCode
+                    "Ljava/lang/Long;"       // schemaVersion
                     ")V"
             );
-            jbyteArray data = ctx->NewByteArray(contextCustomEvent_c.payload.size());
-            ctx->SetByteArrayRegion(data, 0, contextCustomEvent_c.payload.size(),
+            jbyteArray payload = ctx->NewByteArray(contextCustomEvent_c.payload.size());
+            ctx->SetByteArrayRegion(payload, 0, contextCustomEvent_c.payload.size(),
                                     (jbyte *) contextCustomEvent_c.payload.data());
             return ctx->NewObject(
                     contextCustomEventDataCls,
                     initContextCustomEventDataMID,
                     ctx->NewStringUTF(contextCustomEvent_c.contextId.c_str()),
                     ctx->NewStringUTF(contextCustomEvent_c.userId.c_str()),
-                    data
+                    payload,
+                    ctx.long2jLong(contextCustomEvent_c.statusCode),
+                    ctx.long2jLong(contextCustomEvent_c.schemaVersion)
             );
         }
 
