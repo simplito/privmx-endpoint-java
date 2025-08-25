@@ -33,11 +33,12 @@ public class StoreFileStreamWriter extends StoreFileStream {
     /**
      * Creates a new file in given Store.
      *
-     * @param api         reference to Store API
-     * @param storeId     ID of the Store
-     * @param publicMeta  byte array of any arbitrary metadata that can be read by anyone
-     * @param privateMeta byte array of any arbitrary metadata that will be encrypted before sending
-     * @param size        size of data to write
+     * @param api                reference to Store API
+     * @param storeId            ID of the Store
+     * @param publicMeta         byte array of any arbitrary metadata that can be read by anyone
+     * @param privateMeta        byte array of any arbitrary metadata that will be encrypted before sending
+     * @param size               size of data to write
+     * @param randomWriteSupport enable random write support for file
      * @return Instance ready to write to the created Store file
      * @throws IllegalStateException when storeApi is not initialized or there's no connection
      * @throws PrivmxException       if there is an error while creating Store file metadata
@@ -48,11 +49,12 @@ public class StoreFileStreamWriter extends StoreFileStream {
             String storeId,
             byte[] publicMeta,
             byte[] privateMeta,
-            long size
+            long size,
+            boolean randomWriteSupport
     ) throws PrivmxException, NativeException, IllegalStateException {
         if (api == null) throw new NullPointerException("api could not be null");
         return new StoreFileStreamWriter(
-                api.createFile(storeId, publicMeta, privateMeta, size),
+                api.createFile(storeId, publicMeta, privateMeta, size, randomWriteSupport),
                 api
         );
     }
@@ -142,7 +144,8 @@ public class StoreFileStreamWriter extends StoreFileStream {
                 storeId,
                 publicMeta,
                 privateMeta,
-                size
+                size,
+                false
         );
 
         if (streamController != null) {
