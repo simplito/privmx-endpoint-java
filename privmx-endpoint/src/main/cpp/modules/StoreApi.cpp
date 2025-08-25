@@ -679,6 +679,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_store_StoreApi_unsubscribeFrom(
 
         for (int i = 0; i < ctx->GetArrayLength(subscription_ids_arr); i++) {
             jobject arrayElement = ctx->GetObjectArrayElement(subscription_ids_arr, i);
+            if (ctx.nullCheck(arrayElement, "Subscription ids array elements")) {
+              return;
+            }
+
             subscription_ids_c.push_back(ctx.jString2string((jstring) arrayElement));
         }
 
