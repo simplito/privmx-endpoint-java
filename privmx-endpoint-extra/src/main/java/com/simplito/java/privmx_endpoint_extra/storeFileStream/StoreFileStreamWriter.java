@@ -243,8 +243,25 @@ public class StoreFileStreamWriter extends StoreFileStream {
      * @throws IOException           when {@code this} is closed
      */
     public void write(byte[] data) throws PrivmxException, NativeException, IllegalStateException, IOException {
+        write(data, false);
+    }
+
+    /**
+     * Writes data to Store file.
+     *
+     * @param data     data to write (the recommended size of data chunk is {@link StoreFileStream#OPTIMAL_SEND_SIZE})
+     * @param truncate truncate the file from: current pos + data size
+     * @throws PrivmxException       if there is an error while writing chunk
+     * @throws NativeException       if there is an unknown error while writing chunk
+     * @throws IllegalStateException when storeApi is not initialized or there's no connection
+     * @throws IOException           when {@code this} is closed
+     */
+    public void write(byte[] data, boolean truncate) throws PrivmxException, NativeException, IllegalStateException, IOException {
         if (isClosed()) throw new IOException("File handle is closed");
-        storeApi.writeToFile(handle, data);
+        // todo - remember the fact truncate works only
+        //  when you write to file after opening (not updating or creating) file and
+        //  when randomWriteSupport is turned on
+        storeApi.writeToFile(handle, data, truncate);
         callChunkProcessed((long) data.length);
     }
 }
