@@ -129,15 +129,12 @@ public class StoreFileStreamReader extends StoreFileStream {
     /**
      * Synchronizes file data with newest data on server
      *
-     * @param api    reference to Store API
      * @throws IllegalStateException when {@code storeApi} is not initialized or there's no connection
      * @throws PrivmxException       if there is an error while opening Store file
      * @throws NativeException       if there is an unknown error while opening Store file
      */
-    public void syncFile(
-            StoreApi api
-    ) throws IllegalStateException, PrivmxException, NativeException {
-       api.syncFile(handle);
+    public void syncFile() throws IllegalStateException, PrivmxException, NativeException {
+       storeApi.syncFile(handle);
     }
 
     /**
