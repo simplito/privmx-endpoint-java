@@ -14,11 +14,17 @@ package com.simplito.java.privmx_endpoint_extra.events;
 
 import com.simplito.java.privmx_endpoint.model.Event;
 import com.simplito.java.privmx_endpoint.model.EventSelector;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.CustomEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -31,7 +37,8 @@ public class EventDispatcher {
 
     private final Map<String, List<Pair>> map = new HashMap<>();
     private final Map<EventSelector, List<Pair>> map2 = new HashMap<>();
-    private final EventCallback<List<EventSelector>> onRemoveEntryKey;
+    private final Map<EventSelector, List<Pair>> map3 = new HashMap<>();
+    private final EventCallback <Map<String, List<String>>> onRemoveEntryKey;
 
     /**
      * Creates instance of {@code EventDispatcher}.
@@ -40,7 +47,7 @@ public class EventDispatcher {
      *                         from channel entry have been removed
      *                         (it can also unsubscribe from the channel)
      */
-    public EventDispatcher(EventCallback<List<EventSelector>> onRemoveEntryKey) {
+    public EventDispatcher(EventCallback<Map<String, List<String>>> onRemoveEntryKey) {
         this.onRemoveEntryKey = onRemoveEntryKey;
     }
 
@@ -91,35 +98,52 @@ public class EventDispatcher {
 
     /**
      * Removes all callbacks registered by {@link #(String, String, Object, EventCallback)}. It's identified by given Context.
-     *
-     * @param context callback identifier
      */
-    public void unbind(Object context) {
-        synchronized (map) {
-            List<EventSelector> selectorsToUnsubscribe = new ArrayList<>();
+//    public void unbind(Object context) {
+//        synchronized (map) {
+//            List<EventSelector> selectorsToUnsubscribe = new ArrayList<>();
+//
+//            map2.forEach((selector, pairs) -> {
+//                pairs.removeIf(it -> it.context == context);
+//                if (pairs.isEmpty()) {
+//                    selectorsToUnsubscribe.add(selector);
+//                    map2.remove(selector);
+//                }
+//            });
+//
+//            if (!selectorsToUnsubscribe.isEmpty()) onRemoveEntryKey.call(selectorsToUnsubscribe);
+//        }
+//    }
+    public void unbind(List<Object> callbackIds) {
+        synchronized (map2) {
+            Map<String, List<String>> selectorsToUnsubscribe = new HashMap<>();
+            List<EventSelector> emptySelectors = new ArrayList<>();
 
-            map2.forEach((selector, pairs) -> {
-                pairs.removeIf(it -> it.context == context);
-                if (pairs.isEmpty()) {
-                    selectorsToUnsubscribe.add(selector);
-                    map2.remove(selector);
+            map2.forEach((key, callbacks) -> {
+                if(callbackIds.isEmpty()) return;
+
+                List<Pair> pairsOfCallbacks = callbacks.stream().filter(p -> callbackIds.contains(p.context)).collect(Collectors.toList());
+                callbacks.removeAll(pairsOfCallbacks);
+                callbackIds.removeAll(pairsOfCallbacks);
+
+                if (callbacks.isEmpty()) {
+                    emptySelectors.add(key);
+
+                    if (key.eventSelectorType instanceof CustomEventSelectorType) {
+                        selectorsToUnsubscribe.putIfAbsent("custom", new ArrayList<>()).add(key.subscriptionId);
+                    } else if (key.eventType instanceof ThreadEventType) {
+                        selectorsToUnsubscribe.putIfAbsent("thread", new ArrayList<>()).add(key.subscriptionId);
+                    } else if (key.eventType instanceof StoreEventType) {
+                        selectorsToUnsubscribe.putIfAbsent("store", new ArrayList<>()).add(key.subscriptionId);
+                    } else if (key.eventType instanceof InboxEventType) {
+                        selectorsToUnsubscribe.putIfAbsent("inbox", new ArrayList<>()).add(key.subscriptionId);
+                    } else if (key.eventType instanceof KvdbEventType) {
+                        selectorsToUnsubscribe.putIfAbsent("kvdb", new ArrayList<>()).add(key.subscriptionId);
+                    }
                 }
             });
 
-            if (!selectorsToUnsubscribe.isEmpty()) onRemoveEntryKey.call(selectorsToUnsubscribe);
-        }
-    }
-
-    public void unbind(List<String> subscriptionIds) {
-        synchronized (map) {
-            List<EventSelector> selectorsToUnsubscribe = new ArrayList<>();
-
-            map2.forEach((key, value) -> {
-                if (subscriptionIds.contains(key.subscriptionId)) {
-                    selectorsToUnsubscribe.add(key);
-                    map2.remove(key);
-                }
-            });
+            emptySelectors.forEach(map2::remove);
             onRemoveEntryKey.call(selectorsToUnsubscribe);
         }
     }
@@ -128,8 +152,10 @@ public class EventDispatcher {
      * Removes all callbacks.
      */
     public void unbindAll() {
-        List<String> subscriptionIds = map2.keySet().stream().map(pairs -> pairs.subscriptionId).collect(Collectors.toList());
-        unbind(subscriptionIds);
+        map2.forEach((k, v) ->{
+            List<Object> callbacksToUnbind = v.stream().map(it -> it.context).collect(Collectors.toList());
+            unbind(callbacksToUnbind);
+        });
     }
 
     private List<Pair> getCallbacks(EventSelector eventSelector) {
@@ -155,10 +181,9 @@ public class EventDispatcher {
         }
     }
 
-    public void assignSelector(EventSelector eventSelector) {
-        List<Pair> callbacks = map2.get(eventSelector);
-        map2.remove(eventSelector);
-        map2.put(eventSelector, callbacks);
+    public void assignSubscriptionId(EventSelector eventSelector) {
+        Optional<EventSelector> es = map2.keySet().stream().filter(key -> key.equals(eventSelector)).findFirst();
+        es.ifPresent(it -> it.subscriptionId = eventSelector.subscriptionId);
     }
 
     private static class Pair {
