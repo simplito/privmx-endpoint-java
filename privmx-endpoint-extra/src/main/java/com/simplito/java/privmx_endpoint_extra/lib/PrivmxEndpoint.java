@@ -11,16 +11,16 @@
 
 package com.simplito.java.privmx_endpoint_extra.lib;
 
+import androidx.arch.core.util.Function;
+
 import com.simplito.java.privmx_endpoint.model.Event;
 import com.simplito.java.privmx_endpoint.model.EventSelector;
 import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
-import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.EventEventSelectorType;
-import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.EventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.CustomEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.InboxEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.KvdbEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StoreEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.ThreadEventSelectorType;
-import com.simplito.java.privmx_endpoint.model.events.eventTypes.EventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
@@ -34,7 +34,9 @@ import com.simplito.java.privmx_endpoint_extra.events.EventSelectorExtra;
 import com.simplito.java.privmx_endpoint_extra.model.Modules;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,9 +46,9 @@ import java.util.stream.Collectors;
  * @category core
  */
 public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable {
-    private final EventCallback<List<EventSelector>> onRemove = (selectors) -> {
+    private final EventCallback<Map<String, List<String>>> onRemove = (map) -> {
         try {
-            unsubscribeMany(selectors);
+            map.forEach(this::unsubscribeMany);
         } catch (Exception e) {
             System.out.println("todo");
         }
@@ -90,12 +92,12 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         this(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
     }
 
-    public void unregisterCallbacks(Object context) {
-        eventDispatcher.unbind(context);
-    }
+//    public void unregisterCallbacks(Object context) {
+//        eventDispatcher.unbind(context);
+//    }
 
-    public void unregisterCallbacks(List<String> subscriptionIds) {
-        eventDispatcher.unbind(subscriptionIds);
+    public void unregisterCallbacks(List<Object> callbacksId) {
+        eventDispatcher.unbind(callbacksId);
     }
 
     public void unregisterAll() {
@@ -106,131 +108,136 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         eventDispatcher.emit(event);
     }
 
-    public List<String> registerMany(ScopeCallback registerScope) throws InstantiationException, IllegalAccessException {
+    public void registerMany(ScopeCallback registerScope) throws InstantiationException, IllegalAccessException {
         ManyScope manyScope = new ManyScope();
         registerScope.execute(manyScope);
-        return manyScope.subscribeAll();
+        manyScope.subscribeAll();
+    }
+
+    private void unsubscribeMany(String container, List<String> subscriptionIds) {
+        switch (container) {
+            case "custom":
+                eventApi.unsubscribeFrom(subscriptionIds);
+                break;
+            case "thread":
+                threadApi.unsubscribeFrom(subscriptionIds);
+                break;
+            case "store":
+                storeApi.unsubscribeFrom(subscriptionIds);
+                break;
+            case "inbox":
+                inboxApi.unsubscribeFrom(subscriptionIds);
+                break;
+            case "kvdb":
+                kvdbApi.unsubscribeFrom(subscriptionIds);
+                break;
+        }
     }
 
     public interface ScopeCallback {
         void execute(Scope scope) throws InstantiationException, IllegalAccessException;
     }
 
-    private void unsubscribeMany(List<EventSelector> selectors) {
-        // EventEventSelectorType
-        eventApi.unsubscribeFrom(selectors.stream().filter(it -> it.eventSelectorType instanceof EventEventSelectorType).map(it -> it.subscriptionId).collect(Collectors.toList()));
-        // ThreadEventType
-        threadApi.unsubscribeFrom(selectors.stream().filter(it -> it.eventType instanceof ThreadEventType).map(it -> it.subscriptionId).collect(Collectors.toList()));
-        // StoreEventType
-        storeApi.unsubscribeFrom(selectors.stream().filter(it -> it.eventType instanceof StoreEventType).map(it -> it.subscriptionId).collect(Collectors.toList()));
-        // InboxEventType
-        inboxApi.unsubscribeFrom(selectors.stream().filter(it -> it.eventType instanceof InboxEventType).map(it -> it.subscriptionId).collect(Collectors.toList()));
-        // KvdbEventType
-        kvdbApi.unsubscribeFrom(selectors.stream().filter(it -> it.eventType instanceof KvdbEventType).map(it -> it.subscriptionId).collect(Collectors.toList()));
-    }
     public interface Scope {
-        <T> void registerCallback(Object callbackId, EventSelector eventSelector, EventCallback<T> callback);
-
-        <T> void registerCallback(Object callbackId, EventType eventType, EventSelectorType eventSelectorType, String selectorId, EventCallback<T> callback);
-
-        <T> void registerCustomCallback(Object callbackId, EventEventSelectorType eventSelectorType, String selectorId, String channelName, EventCallback<T> callback);
+        <T> void registerCallback(Object callbackId, com.simplito.java.privmx_endpoint_extra.events.EventType<T> eventType, EventCallback<T> callback);
     }
 
     private class ManyScope implements Scope {
-        private final ArrayList<EventSelectorExtra<?>> AllSelectors = new ArrayList<>();
+        private final Map<String/*containerName(thread)*/, Map<String/*query*/, List<EventSelectorExtra<?>>>> all = new HashMap<>();
 
         @Override
-        public <T> void registerCallback(Object callbackId, EventSelector eventSelector, EventCallback<T> callback) {
+        public <T> void registerCallback(Object callbackId, com.simplito.java.privmx_endpoint_extra.events.EventType<T> eventType, EventCallback<T> callback) {
+            EventSelector eventSelector = new EventSelector(eventType.eventType, eventType.eventSelectorType, eventType.eventSelectorId);
             EventSelectorExtra<?> eventSelectorExtra = new EventSelectorExtra<T>(callbackId, eventSelector, callback);
+            String containerName = "";
+            String query = "";
 
             String alreadyRegistered = eventDispatcher.registerCallback(eventSelector, callbackId, callback);
             if (alreadyRegistered == null) {
-                if (eventSelector.eventType instanceof ThreadEventType) {
-                    eventSelectorExtra.query = threadApi.buildSubscriptionQuery(
-                            (ThreadEventType) eventSelectorExtra.eventSelector.eventType,
-                            (ThreadEventSelectorType) eventSelectorExtra.eventSelector.eventSelectorType,
+                if (eventSelector.eventSelectorType instanceof CustomEventSelectorType) {
+                    eventSelectorExtra.channelName = eventType.channelName;
+                    containerName = "custom";
+                    query = eventApi.buildSubscriptionQuery(
+                            eventType.channelName,
+                            (CustomEventSelectorType) eventType.eventSelectorType,
+                            eventType.eventSelectorId
+                    );
+                } else if (eventSelector.eventType instanceof ThreadEventType) {
+                    containerName = "thread";
+                    query = threadApi.buildSubscriptionQuery(
+                            (ThreadEventType) eventType.eventType,
+                            (ThreadEventSelectorType) eventType.eventSelectorType,
                             eventSelectorExtra.eventSelector.eventSelectorId
                     );
                 } else if (eventSelector.eventType instanceof StoreEventType) {
-                    eventSelectorExtra.query = storeApi.buildSubscriptionQuery(
+                    containerName = "store";
+                    query = storeApi.buildSubscriptionQuery(
                             (StoreEventType) eventSelectorExtra.eventSelector.eventType,
-                            (StoreEventSelectorType) eventSelectorExtra.eventSelector.eventSelectorType,
-                            eventSelectorExtra.eventSelector.eventSelectorId
+                            (StoreEventSelectorType) eventType.eventSelectorType,
+                            eventType.eventSelectorId
                     );
                 } else if (eventSelector.eventType instanceof InboxEventType) {
-                    eventSelectorExtra.query = inboxApi.buildSubscriptionQuery(
-                            (InboxEventType) eventSelectorExtra.eventSelector.eventType,
-                            (InboxEventSelectorType) eventSelectorExtra.eventSelector.eventSelectorType,
-                            eventSelectorExtra.eventSelector.eventSelectorId
+                    containerName = "inbox";
+                    query = inboxApi.buildSubscriptionQuery(
+                            (InboxEventType) eventType.eventType,
+                            (InboxEventSelectorType) eventType.eventSelectorType,
+                            eventType.eventSelectorId
                     );
                 } else if (eventSelector.eventType instanceof KvdbEventType) {
-                    eventSelectorExtra.query = kvdbApi.buildSubscriptionQuery(
-                            (KvdbEventType) eventSelectorExtra.eventSelector.eventType,
-                            (KvdbEventSelectorType) eventSelectorExtra.eventSelector.eventSelectorType,
-                            eventSelectorExtra.eventSelector.eventSelectorId
+                    containerName = "kvdb";
+                    query = kvdbApi.buildSubscriptionQuery(
+                            (KvdbEventType) eventType.eventType,
+                            (KvdbEventSelectorType) eventType.eventSelectorType,
+                            eventType.eventSelectorId
                     );
-                } else {
-                    // todo
                 }
+
+                all.putIfAbsent(containerName, new HashMap<>());
+                all.get(containerName).putIfAbsent(query, new ArrayList<>());
+                all.get(containerName).get(query).add(eventSelectorExtra);
+
             } else {
-                eventSelectorExtra.query = alreadyRegistered;
+                // todo - is it necessary
+                eventSelectorExtra.eventSelector.subscriptionId = alreadyRegistered;
                 System.out.println("Already subscribed");
             }
-
-            AllSelectors.add(eventSelectorExtra);
         }
 
-        @Override
-        public <T> void registerCallback(Object callbackId, EventType eventType, EventSelectorType eventSelectorType, String selectorId, EventCallback<T> callback) {
-            registerCallback(callbackId, new EventSelector(eventType, eventSelectorType, selectorId), callback);
-        }
-
-        @Override
-        public <T> void registerCustomCallback(Object callbackId, EventEventSelectorType eventSelectorType, String selectorId, String channelName, EventCallback<T> callback) {
-            EventSelectorExtra<?> eventSelectorExtra = new EventSelectorExtra<T>(callbackId, new EventSelector(null, eventSelectorType, selectorId), channelName, callback);
-            AllSelectors.add(eventSelectorExtra);
-        }
-
-        private void subscribeFor(List<EventSelectorExtra<?>> list) {
-            EventType eventType = list.get(0).eventSelector.eventType;
-            EventSelectorType eventSelectorType = list.get(0).eventSelector.eventSelectorType;
-            List<String> queries = list.stream().map((eventSelectorExtra) -> eventSelectorExtra.query).collect(Collectors.toList());
-            List<String> ids = new ArrayList<>();
-
-            if (eventSelectorType instanceof EventEventSelectorType) {
-                ids = eventApi.subscribeFor(queries);
-            } else if (eventType instanceof ThreadEventType) {
-                ids = threadApi.subscribeFor(queries);
-            } else if (eventType instanceof StoreEventType) {
-                ids = threadApi.subscribeFor(queries);
-            } else if (eventType instanceof InboxEventType) {
-                ids = inboxApi.subscribeFor(queries);
-            } else if (eventType instanceof KvdbEventType) {
-                ids = kvdbApi.subscribeFor(queries);
-            }
-
-            if (ids.size() == list.size()) {
+        private void subscribeFor(Map<String, List<EventSelectorExtra<?>>> queriesAndCallbacks, Function<List<String>, List<String>> subscribeMethod) {
+            List<String> queries = queriesAndCallbacks.entrySet().stream().map(Map.Entry::getKey).collect(Collectors.toList());
+            List<String> ids = subscribeMethod.apply(queries);
+            if (ids.size() == queries.size()) {
                 for (int i = 0; i < ids.size(); i++) {
-                    list.get(i).eventSelector.subscriptionId = ids.get(i);
-                    eventDispatcher.assignSelector(list.get(i).eventSelector);
-                }
-            }
-
-            int index = 0;
-            for (EventSelectorExtra<?> eventSelectorExtra : AllSelectors) {
-                if (eventType.getClass().isInstance(eventSelectorExtra.eventSelector.eventType)) {
-                    eventSelectorExtra.eventSelector.subscriptionId = ids.get(index++);
+                    String query = queries.get(i);
+                    final String id = ids.get(i);
+                    queriesAndCallbacks.get(query).forEach(it -> {
+                        it.eventSelector.subscriptionId = id;
+                        eventDispatcher.assignSubscriptionId(it.eventSelector);
+                    });
                 }
             }
         }
 
-        private List<String> subscribeAll() {
-            subscribeFor(AllSelectors.stream().filter(it -> it.eventSelector.eventType instanceof ThreadEventType).collect(Collectors.toList()));
-            subscribeFor(AllSelectors.stream().filter(it -> it.eventSelector.eventType instanceof StoreEventType).collect(Collectors.toList()));
-            subscribeFor(AllSelectors.stream().filter(it -> it.eventSelector.eventType instanceof InboxEventType).collect(Collectors.toList()));
-            subscribeFor(AllSelectors.stream().filter(it -> it.eventSelector.eventType instanceof KvdbEventType).collect(Collectors.toList()));
-
-            return AllSelectors.stream().map(eventSelectorExtra -> eventSelectorExtra.eventSelector.subscriptionId).collect(Collectors.toList());
+        private void subscribeAll() {
+            all.forEach((key, value) -> {
+                switch (key) {
+                    case "custom":
+                        subscribeFor(value, eventApi::subscribeFor);
+                        break;
+                    case "thread":
+                        subscribeFor(value, threadApi::subscribeFor);
+                        break;
+                    case "store":
+                        subscribeFor(value, storeApi::subscribeFor);
+                        break;
+                    case "inbox":
+                        subscribeFor(value, inboxApi::subscribeFor);
+                        break;
+                    case "kvdb":
+                        subscribeFor(value, kvdbApi::subscribeFor);
+                        break;
+                }
+            });
         }
     }
 }
