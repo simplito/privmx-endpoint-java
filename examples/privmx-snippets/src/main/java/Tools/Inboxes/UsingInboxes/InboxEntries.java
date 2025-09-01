@@ -25,10 +25,10 @@ public class InboxEntries extends WorkingWithInboxes {
         byte[] entryData = """
                  {
                     "content": {
-                        "answer": "%s
+                        "answer": "%s"
                     },
                     "version": %d,
-                    "type": %s
+                    "type": "%s"
                  }
                 """.formatted(entryDataAnswer, entryDataVersion, entryDataType).getBytes();
 
