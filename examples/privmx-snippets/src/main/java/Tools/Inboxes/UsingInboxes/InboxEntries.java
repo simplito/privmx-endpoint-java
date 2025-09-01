@@ -113,10 +113,10 @@ public class InboxEntries extends WorkingWithInboxes {
         );
 
         InboxEntry entry = entriesPagingList.readItems.getFirst();
-        File entryFiles = entry.files.getFirst();
+        File entryFile = entry.files.getFirst();
 
         // decoded privateMeta
-        String privateMeta = new String(entry.files.getFirst().privateMeta);
+        String privateMeta = new String(entryFile.privateMeta);
         JSONObject privateMetaJson = new JSONObject(privateMeta);
         String fileName = privateMetaJson.getString("name");
         String fileType = privateMetaJson.getString("mimetype");
