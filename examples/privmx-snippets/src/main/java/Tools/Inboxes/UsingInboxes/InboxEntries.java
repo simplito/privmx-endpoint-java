@@ -44,15 +44,15 @@ public class InboxEntries extends WorkingWithInboxes {
 
     void attachingFiles(String fileID) throws IOException {
         String inboxID = "INBOX_ID";
-        byte[] privateMeta = "My private data".getBytes(StandardCharsets.UTF_8);
-        byte[] publicMeta = "My public data".getBytes(StandardCharsets.UTF_8);
+        byte[] publicMeta = "My public data".getBytes();
+        byte[] entryData = "ENTRY_DATA".getBytes();
 
         String fileName = "FILE_NAME";
         String fileType = "FILE_TYPE";
         byte[] fileContent = "FILE_CONTENT".getBytes();
         long fileSize = fileContent.length;
 
-        byte[] entryData = """
+        byte[] filePrivateMeta = """
                 {
                     "name": "%s",
                     "mimetype": "%s"
@@ -62,7 +62,7 @@ public class InboxEntries extends WorkingWithInboxes {
         InboxFileStreamWriter inboxFileStreamWriter = InboxFileStreamWriter.createFile(
                 endpointSession.inboxApi,
                 publicMeta,
-                privateMeta,
+                filePrivateMeta,
                 fileSize
         );
 
