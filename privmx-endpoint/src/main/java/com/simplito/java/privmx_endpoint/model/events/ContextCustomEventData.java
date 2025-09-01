@@ -29,7 +29,7 @@ public class ContextCustomEventData {
     /**
      * Event's actual payload
      */
-    public final byte[] data;
+    public final byte[] payload;
     /**
      * Payload decryption status
      */
@@ -46,20 +46,20 @@ public class ContextCustomEventData {
      *
      * @param contextId     Context ID
      * @param userId        User ID (event's sender)
-     * @param data          Event's actual payload
+     * @param payload          Event's actual payload
      * @param statusCode    Payload decryption status
      * @param schemaVersion Version of the event data structure and how it is encoded/encrypted
      */
     public ContextCustomEventData(
             String contextId,
             String userId,
-            byte[] data,
+            byte[] payload,
             Long statusCode,
             Long schemaVersion
     ) {
         this.contextId = contextId;
         this.userId = userId;
-        this.data = data;
+        this.payload = payload;
         this.statusCode = statusCode;
         this.schemaVersion = schemaVersion;
     }
@@ -69,19 +69,19 @@ public class ContextCustomEventData {
      *
      * @param contextId     Context ID
      * @param userId        User ID (event's sender)
-     * @param data          Event's actual payload
+     * @param payload          Event's actual payload
      * @param statusCode    Payload decryption status
      */
     @Deprecated
     public ContextCustomEventData(
             String contextId,
             String userId,
-            byte[] data,
+            byte[] payload,
             Long statusCode
     ) {
         this.contextId = contextId;
         this.userId = userId;
-        this.data = data;
+        this.payload = payload;
         this.statusCode = statusCode;
         this.schemaVersion = 0L;
     }
@@ -90,11 +90,11 @@ public class ContextCustomEventData {
     public ContextCustomEventData(
             String contextId,
             String userId,
-            byte[] data
+            byte[] payload
     ) {
         this.contextId = contextId;
         this.userId = userId;
-        this.data = data;
+        this.payload = payload;
         this.statusCode = null;
         this.schemaVersion = 0L;
     }
