@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 
 public class InboxEntries extends WorkingWithInboxes {
@@ -34,7 +35,7 @@ public class InboxEntries extends WorkingWithInboxes {
         long entryHandle = endpointSession.inboxApi.prepareEntry(
                 inboxID,
                 entryData,
-                List.of()
+                Collections.emptyList()
         );
 
         // 2. Sending Entry
