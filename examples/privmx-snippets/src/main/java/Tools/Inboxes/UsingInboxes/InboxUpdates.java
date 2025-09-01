@@ -3,7 +3,6 @@ package Tools.Inboxes.UsingInboxes;
 import com.simplito.java.privmx_endpoint_extra.events.EventType;
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer;
 
-// todo - Inbox Updates - why this name ?!
 public class InboxUpdates extends WorkingWithInboxes {
     void handlingInboxEvents() {
         PrivmxEndpointContainer container = new PrivmxEndpointContainer();
