@@ -100,7 +100,7 @@ public class WorkingWithInboxes {
                 newManagers,
                 inbox.publicMeta,
                 newPrivateMeta,
-                null,
+                null,               // filesConfig
                 inbox.version,
                 false               // force
         );
