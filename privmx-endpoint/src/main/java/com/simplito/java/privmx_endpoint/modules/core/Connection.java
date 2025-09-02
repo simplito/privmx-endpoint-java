@@ -15,6 +15,8 @@ import com.simplito.java.privmx_endpoint.model.Context;
 import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserInfo;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.ConnectionEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.ConnectionEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 
@@ -257,6 +259,34 @@ public class Connection implements AutoCloseable {
      * @throws IllegalStateException thrown when instance is not connected.
      */
     public native void setUserVerifier(UserVerifierInterface userVerifier) throws IllegalStateException, PrivmxException, NativeException;
+
+    /**
+     * Subscribe for the Context events on the given subscription query.
+     *
+     * @param subscriptionQueries List of queries
+     * @return List of subscriptionIds in matching order to subscriptionQueries
+     */
+    public native List<String> subscribeFor(List<String> subscriptionQueries);
+
+    /**
+     * Unsubscribe from events for the given subscriptionId.
+     *
+     * @param subscriptionIds List of subscriptionId
+     */
+    public native void unsubscribeFrom(List<String> subscriptionIds);
+
+    /**
+     * Generate subscription Query for the Context events.
+     *
+     * @param eventType    Type of event which you listen for
+     * @param selectorType Scope on which you listen for events
+     * @param selectorId   ID of the selector
+     */
+    public String buildSubscriptionQuery(ConnectionEventType eventType, ConnectionEventSelectorType selectorType, String selectorId) {
+        return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
+    }
+
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId);
 
     /**
      * If there is an active connection then it
