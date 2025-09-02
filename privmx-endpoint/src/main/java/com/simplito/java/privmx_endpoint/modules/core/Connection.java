@@ -228,6 +228,22 @@ public class Connection implements AutoCloseable {
     public native PagingList<Context> listContexts(long skip, long limit, String sortOrder, String lastId, String queryAsJson, String sortBy) throws IllegalStateException, PrivmxException, NativeException;
 
     /**
+     * Gets a list of users with their status and the last status change.
+     *
+     * @param contextId ID of the Context
+     * @return List of users with their status and the last status change
+     */
+    public native PagingList<UserInfo> listContextUsers(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson,
+            String sortBy
+    );
+
+    /**
      * Subscribe for the Context events on the given subscription query.
      *
      * @param subscriptionQueries List of queries
