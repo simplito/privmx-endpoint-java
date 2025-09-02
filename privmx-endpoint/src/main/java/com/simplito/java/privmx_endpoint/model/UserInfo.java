@@ -29,6 +29,11 @@ public class UserInfo {
     public boolean isActive;
 
     /**
+     * User last status change or no value if they have never logged in
+     */
+    public UserStatusChange lastStatusChange;
+
+    /**
      * Creates instance of {@code UserInfo}
      *
      * @param user     User publicKey and userId
@@ -40,5 +45,22 @@ public class UserInfo {
     ) {
         this.user = user;
         this.isActive = isActive;
+    }
+
+    /**
+     * Creates instance of {@code UserInfo}
+     *
+     * @param user             User publicKey and userId
+     * @param isActive         is user connected to bridge
+     * @param lastStatusChange User last status change or no value if they have never logged in
+     */
+    public UserInfo(
+            UserWithPubKey user,
+            boolean isActive,
+            UserStatusChange lastStatusChange
+    ) {
+        this.user = user;
+        this.isActive = isActive;
+        this.lastStatusChange = lastStatusChange;
     }
 }
