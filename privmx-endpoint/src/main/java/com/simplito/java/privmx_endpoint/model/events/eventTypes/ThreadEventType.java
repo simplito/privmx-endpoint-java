@@ -14,5 +14,6 @@ public enum ThreadEventType implements EventType {
     THREAD_STATS,
     MESSAGE_CREATE,
     MESSAGE_UPDATE,
-    MESSAGE_DELETE
+    MESSAGE_DELETE,
+    COLLECTION_CHANGE
 }

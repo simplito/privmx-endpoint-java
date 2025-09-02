@@ -12,5 +12,6 @@ public enum InboxEventType implements EventType {
     INBOX_UPDATE,
     INBOX_DELETE,
     ENTRY_CREATE,
-    ENTRY_DELETE
+    ENTRY_DELETE,
+    COLLECTION_CHANGE
 }
