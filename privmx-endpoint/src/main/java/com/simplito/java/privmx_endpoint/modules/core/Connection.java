@@ -15,8 +15,6 @@ import com.simplito.java.privmx_endpoint.model.Context;
 import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserInfo;
-import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.ConnectionEventSelectorType;
-import com.simplito.java.privmx_endpoint.model.events.eventTypes.ConnectionEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 
@@ -228,48 +226,12 @@ public class Connection implements AutoCloseable {
     public native PagingList<Context> listContexts(long skip, long limit, String sortOrder, String lastId, String queryAsJson, String sortBy) throws IllegalStateException, PrivmxException, NativeException;
 
     /**
-     * Gets a list of users with their status and the last status change.
+     * Gets a list of users of given context.
      *
-     * @param contextId ID of the Context
-     * @return List of users with their status and the last status change
+     * @param contextId ID of the context
+     * @return list of users Info
      */
-    public native PagingList<UserInfo> listContextUsers(
-            String contextId,
-            long skip,
-            long limit,
-            String sortOrder,
-            String lastId,
-            String queryAsJson,
-            String sortBy
-    );
-
-    /**
-     * Subscribe for the Context events on the given subscription query.
-     *
-     * @param subscriptionQueries List of queries
-     * @return List of subscriptionIds in matching order to subscriptionQueries
-     */
-    public native List<String> subscribeFor(List<String> subscriptionQueries);
-
-    /**
-     * Unsubscribe from events for the given subscriptionId.
-     *
-     * @param subscriptionIds List of subscriptionId
-     */
-    public native void unsubscribeFrom(List<String> subscriptionIds);
-
-    /**
-     * Generate subscription Query for the Context events.
-     *
-     * @param eventType    type of event which you listen for
-     * @param selectorType scope on which you listen for events
-     * @param selectorId   ID of the selector
-     */
-    public String buildSubscriptionQuery(ConnectionEventType eventType, ConnectionEventSelectorType selectorType, String selectorId) {
-        return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
-    }
-
-    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId);
+    public native List<UserInfo> getContextUsers(String contextId) throws IllegalStateException, PrivmxException, NativeException;
 
     /**
      * Gets the ID of the current connection.
