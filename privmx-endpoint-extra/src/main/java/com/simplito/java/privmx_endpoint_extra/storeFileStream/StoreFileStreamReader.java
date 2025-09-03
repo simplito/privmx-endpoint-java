@@ -127,6 +127,17 @@ public class StoreFileStreamReader extends StoreFileStream {
     }
 
     /**
+     * Synchronizes file data with newest data on server
+     *
+     * @throws IllegalStateException when {@code storeApi} is not initialized or there's no connection
+     * @throws PrivmxException       if there is an error while opening Store file
+     * @throws NativeException       if there is an unknown error while opening Store file
+     */
+    public void syncFile() throws IllegalStateException, PrivmxException, NativeException {
+       storeApi.syncFile(handle);
+    }
+
+    /**
      * Moves read cursor.
      *
      * @param position new cursor position
