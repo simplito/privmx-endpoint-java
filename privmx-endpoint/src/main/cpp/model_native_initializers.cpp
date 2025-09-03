@@ -183,6 +183,29 @@ namespace privmx {
             );
         }
 
+        // CollectionItemChange
+        jobject collectionItemChange2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::CollectionItemChange collectionItemChange_c
+        ) {
+            jclass contextCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/CollectionItemChange");
+            jmethodID initThreadDataMID = ctx->GetMethodID(
+                    contextCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;Ljava/lang/String;"  // itemId
+                    "Ljava/lang/String;Ljava/lang/String;"  // action
+                    ")V"
+            );
+            return ctx->NewObject(
+                    contextCls,
+                    initThreadDataMID,
+                    ctx->NewStringUTF(collectionItemChange_c.itemId.c_str()),
+                    ctx->NewStringUTF(collectionItemChange_c.action.c_str())
+            );
+        }
+
         //Context
         jobject context2Java(
                 JniContextUtils &ctx,
