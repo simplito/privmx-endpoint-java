@@ -67,6 +67,9 @@ namespace privmx {
         //UserInfo
         jobject userInfo2Java(JniContextUtils &ctx, privmx::endpoint::core::UserInfo userInfo);
 
+        // UserWithAction
+        jobject userWithAction2Java(JniContextUtils &ctx, privmx::endpoint::core::UserWithAction userWithAction);
+
         jobject bridgeIdentity2Java(JniContextUtils &ctx,
                                     privmx::endpoint::core::BridgeIdentity bridgeIdentity_c);
 
