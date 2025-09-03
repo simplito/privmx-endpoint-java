@@ -860,6 +860,47 @@ namespace privmx {
         }
 
         //Event
+        jobject contextUsersStatusChangeData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContextUsersStatusChangeData contextUsersStatusChangeData_c
+        ) {
+            jclass arrayCls = ctx->FindClass("java/util/ArrayList");
+            jmethodID initArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "<init>",
+                    "()V");
+            jmethodID addToArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "add",
+                    "(Ljava/lang/Object;)Z"
+            );
+            jclass contextUsersStatusChangeDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/ContextUsersStatusChangeData");
+            jmethodID initContextUsersStatusChangeDataMID = ctx->GetMethodID(
+                    contextUsersStatusChangeDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"        // contextId
+                    "Ljava/util/List;"          // users
+                    ")V"
+            );
+
+            jobject users = ctx->NewObject(arrayCls, initArrayMID);
+
+            for (auto &user: contextUsersStatusChangeData_c.users) {
+                ctx->CallBooleanMethod(users,
+                                       addToArrayMID,
+                                       userWithAction2Java(ctx, user)
+                );
+            }
+
+            return ctx->NewObject(
+                    contextUsersStatusChangeDataCls,
+                    initContextUsersStatusChangeDataMID,
+                    ctx->NewStringUTF(contextUsersStatusChangeData_c.contextId.c_str()),
+                    users
+            );
+        }
         jobject storeFileDeletedEventData2Java(JniContextUtils &ctx,
                                                privmx::endpoint::store::StoreFileDeletedEventData storeFileDeletedEventData_c) {
             jclass storeFileDeletedEventDataCls = ctx->FindClass(
