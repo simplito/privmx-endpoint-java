@@ -257,16 +257,28 @@ namespace privmx {
                     userInfoCls,
                     "<init>",
                     "("
-                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;" // userWithPubKey
-                    "Z"
+                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;"      // userWithPubKey
+                    "Z"                                                             // isActive
+                    "Lcom/simplito/java/privmx_endpoint/model/UserStatusChange;"    // lastStatusChange
                     ")V"
             );
-            return ctx->NewObject(
-                    userInfoCls,
-                    initUserInfoMID,
-                    userWithPubKey2Java(ctx, userInfo.user),
-                    (jboolean) userInfo.isActive
-            );
+
+            if (userInfo.lastStatusChange.has_value()) {
+                return ctx->NewObject(
+                        userInfoCls,
+                        initUserInfoMID,
+                        userWithPubKey2Java(ctx, userInfo.user),
+                        (jboolean) userInfo.isActive,
+                        userStatusChange2Java(ctx, userInfo.lastStatusChange.value())
+                );
+            } else {
+                return ctx->NewObject(
+                        userInfoCls,
+                        initUserInfoMID,
+                        userWithPubKey2Java(ctx, userInfo.user),
+                        (jboolean) userInfo.isActive
+                );
+            }
         }
 
         jobject bridgeIdentity2Java(
