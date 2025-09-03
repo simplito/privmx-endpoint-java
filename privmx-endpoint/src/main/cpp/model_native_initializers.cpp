@@ -223,6 +223,29 @@ namespace privmx {
             );
         }
 
+        // UserWithPubKey
+        jobject userStatusChange2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::UserStatusChange userStatusChange
+        ) {
+            jclass userStatusCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/UserStatusChange");
+            jmethodID initUserStatusMID = ctx->GetMethodID(
+                    userStatusCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"    // action
+                    "Ljava/lang/Long;"      // timestamp
+                    ")V"
+            );
+            return ctx->NewObject(
+                    userStatusCls,
+                    initUserStatusMID,
+                    ctx->NewStringUTF(userStatusChange.action.c_str()),
+                    ctx.long2jLong(userStatusChange.timestamp)
+            );
+        }
+
         //UserInfo
         jobject userInfo2Java(
                 JniContextUtils &ctx,
