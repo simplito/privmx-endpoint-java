@@ -24,7 +24,7 @@ public class CollectionChangedEventData {
     /**
      * Count of affected items.
      */
-    public long affectedItemsCount;
+    public Long affectedItemsCount;
 
     /**
      * List of item changes.
@@ -39,7 +39,7 @@ public class CollectionChangedEventData {
      * @param affectedItemsCount Count of affected items
      * @param items              List of item changes
      */
-    public CollectionChangedEventData(String moduleType, String moduleId, long affectedItemsCount, List<CollectionItemChange> items) {
+    public CollectionChangedEventData(String moduleType, String moduleId, Long affectedItemsCount, List<CollectionItemChange> items) {
         this.moduleType = moduleType;
         this.moduleId = moduleId;
         this.affectedItemsCount = affectedItemsCount;
