@@ -263,22 +263,15 @@ namespace privmx {
                     ")V"
             );
 
-            if (userInfo.lastStatusChange.has_value()) {
-                return ctx->NewObject(
-                        userInfoCls,
-                        initUserInfoMID,
-                        userWithPubKey2Java(ctx, userInfo.user),
-                        (jboolean) userInfo.isActive,
-                        userStatusChange2Java(ctx, userInfo.lastStatusChange.value())
-                );
-            } else {
-                return ctx->NewObject(
-                        userInfoCls,
-                        initUserInfoMID,
-                        userWithPubKey2Java(ctx, userInfo.user),
-                        (jboolean) userInfo.isActive
-                );
-            }
+            jobject userStatusChange = userInfo.lastStatusChange.has_value() ?
+                    userStatusChange2Java(ctx, userInfo.lastStatusChange.value()):
+                    nullptr;
+            return ctx->NewObject(
+                    userInfoCls,
+                    initUserInfoMID,
+                    userWithPubKey2Java(ctx, userInfo.user),
+                    (jboolean) userInfo.isActive,
+                    userStatusChange);
         }
 
         jobject bridgeIdentity2Java(
