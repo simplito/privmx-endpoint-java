@@ -43,8 +43,7 @@ public class UserInfo {
             UserWithPubKey user,
             boolean isActive
     ) {
-        this.user = user;
-        this.isActive = isActive;
+        this(user,isActive,null);
     }
 
     /**
