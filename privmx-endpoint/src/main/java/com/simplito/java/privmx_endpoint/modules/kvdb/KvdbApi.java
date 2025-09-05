@@ -617,6 +617,7 @@ public class KvdbApi implements AutoCloseable {
      * @param eventType    type of event which you listen for (Works ony For ENTRY_UPDATE, ENTRY_DELETE = 6,)
      * @param kvdbId       Id of Kvdb
      * @param kvdbEntryKey Key of Kvdb Entry
+     * @return Query to subscribe to an event.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      * @throws IllegalStateException thrown when instance is closed.
