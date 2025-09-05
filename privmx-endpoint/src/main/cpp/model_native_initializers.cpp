@@ -188,10 +188,10 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::core::CollectionItemChange collectionItemChange_c
         ) {
-            jclass contextCls = ctx->FindClass(
+            jclass collectionItemChangeCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/CollectionItemChange");
-            jmethodID initThreadDataMID = ctx->GetMethodID(
-                    contextCls,
+            jmethodID initCollectionItemChangeMID = ctx->GetMethodID(
+                    collectionItemChangeCls,
                     "<init>",
                     "("
                     "Ljava/lang/String;Ljava/lang/String;"  // itemId
@@ -199,8 +199,8 @@ namespace privmx {
                     ")V"
             );
             return ctx->NewObject(
-                    contextCls,
-                    initThreadDataMID,
+                    collectionItemChangeCls,
+                    initCollectionItemChangeMID,
                     ctx->NewStringUTF(collectionItemChange_c.itemId.c_str()),
                     ctx->NewStringUTF(collectionItemChange_c.action.c_str())
             );
@@ -875,7 +875,7 @@ namespace privmx {
                     "(Ljava/lang/Object;)Z"
             );
             jclass contextUsersStatusChangeDataCls = ctx->FindClass(
-                    "com/simplito/java/privmx_endpoint/model/events/ContextUsersStatusChangeData");
+                    "com/simplito/java/privmx_endpoint/model/events/ContextUsersStatusChangedEventData");
             jmethodID initContextUsersStatusChangeDataMID = ctx->GetMethodID(
                     contextUsersStatusChangeDataCls,
                     "<init>",
@@ -912,8 +912,8 @@ namespace privmx {
                     contextUserEventDataCls,
                     "<init>",
                     "("
-                    "Ljava/lang/String;"                                                // contextId
-                    "Lcom/simplito/java/privmx_endpoint/model/ContextUserEventData;"    // user
+                    "Ljava/lang/String;"                                          // contextId
+                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;"    // user
                     ")V"
             );
 
