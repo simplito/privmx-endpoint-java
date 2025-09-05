@@ -2,6 +2,9 @@ package com.simplito.java.privmx_endpoint.model;
 
 /**
  * Contains information about the changed item in the collection.
+ *
+ * @category core
+ * @group Core
  */
 public class CollectionItemChange {
     /**

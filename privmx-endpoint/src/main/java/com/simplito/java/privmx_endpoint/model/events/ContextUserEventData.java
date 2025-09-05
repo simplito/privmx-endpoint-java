@@ -2,6 +2,12 @@ package com.simplito.java.privmx_endpoint.model.events;
 
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 
+/**
+ * Contains information about a user who was added to or removed from the Context.
+ *
+ * @category core
+ * @group Events
+ */
 public class ContextUserEventData {
     /**
      * ID of the Context.
