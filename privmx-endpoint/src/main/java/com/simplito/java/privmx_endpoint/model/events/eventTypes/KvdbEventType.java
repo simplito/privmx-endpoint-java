@@ -14,5 +14,6 @@ public enum KvdbEventType implements EventType {
     KVDB_STATS,
     ENTRY_CREATE,
     ENTRY_UPDATE,
-    ENTRY_DELETE
+    ENTRY_DELETE,
+    COLLECTION_CHANGE
 }

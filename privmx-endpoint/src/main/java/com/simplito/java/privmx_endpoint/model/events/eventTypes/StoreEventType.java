@@ -14,5 +14,6 @@ public enum StoreEventType implements EventType {
     STORE_STATS,
     FILE_CREATE,
     FILE_UPDATE,
-    FILE_DELETE
+    FILE_DELETE,
+    COLLECTION_CHANGE
 }
