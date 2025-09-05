@@ -365,11 +365,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContextUsers
                     query.sortBy = ctx.jString2string(sort_by);
                 }
 
-                auto users_c(
-                        getConnection(env, thiz)->listContextUsers(
-                                ctx.jString2string(context_id),
-                                query
-                        )
+                auto users_c = getConnection(env, thiz)->listContextUsers(
+                        ctx.jString2string(context_id),
+                        query
                 );
 
                 jobject array = ctx->NewObject(arrayCls, initArrayMID);
