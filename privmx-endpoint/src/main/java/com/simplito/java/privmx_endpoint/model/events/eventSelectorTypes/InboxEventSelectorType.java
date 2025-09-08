@@ -1,16 +1,23 @@
 package com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes;
 
-import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
-
 /**
- * The scope or area of the event you want to listen (subscribe) for.
- * Defines where the event specified by {@link InboxEventType} happened.
+ * Specifies the type of identifier used to select an inbox event.
+ * Inbox events can be targeted based on different levels of granularity within the inbox structure.
+ * This enum defines the possible types of selectors for these events.
  *
  * @category core
- * @group EventSelectorTypes
  */
 public enum InboxEventSelectorType implements EventSelectorType {
+    /**
+     * Selects events based on the ID of the context.
+     */
     CONTEXT_ID,
+    /**
+     * Selects events based on the ID of the inbox.
+     */
     INBOX_ID,
+    /**
+     * Selects events based on the ID of a specific entry.
+     */
     ENTRY_ID
 }

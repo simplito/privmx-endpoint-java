@@ -1,16 +1,24 @@
 package com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes;
 
-import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
-
 /**
- * The scope or area of the event you want to listen (subscribe) for.
- * Defines where the event specified by {@link ThreadEventType} happened.
+ * Specifies the type of identifier used to select an thread event.
+ * Thread events can be targeted based on different levels of granularity within the thread structure.
+ * This enum defines the possible types of selectors for these events.
  *
  * @category core
  * @group EventSelectorTypes
  */
 public enum ThreadEventSelectorType implements EventSelectorType {
+    /**
+     * Selects events based on the ID of the context.
+     */
     CONTEXT_ID,
+    /**
+     * Selects events based on the ID of the thread.
+     */
     THREAD_ID,
+    /**
+     * Selects events based on the ID of a specific message.
+     */
     MESSAGE_ID
 }

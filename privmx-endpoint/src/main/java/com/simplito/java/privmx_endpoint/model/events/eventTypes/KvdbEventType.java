@@ -1,19 +1,44 @@
 package com.simplito.java.privmx_endpoint.model.events.eventTypes;
 
 /**
- * The type of event you want to listen (subscribe) for.
- * Determines kind of action performed on a Kvdb or on a KvdbEntry.
+ * Defines the types of events that can occur within the KVDB for which a client can subscribe.
+ * This enum lists the various actions or changes that can happen to
+ * KVDBs and their entries, allowing observers to be notified of specific occurrences.
  *
  * @category core
  * @group EventTypes
  */
 public enum KvdbEventType implements EventType {
+    /**
+     * Type of event triggered when a new KVDB is created.
+     */
     KVDB_CREATE,
+    /**
+     * Type of event triggered when an existing KVDB is updated.
+     */
     KVDB_UPDATE,
+    /**
+     * Type of event triggered when a KVDB is deleted.
+     */
     KVDB_DELETE,
+    /**
+     * Type of event triggered when a KVDB statistics are updated.
+     */
     KVDB_STATS,
+    /**
+     * Type of event triggered when a new entry is created within a KVDB.
+     */
     ENTRY_CREATE,
+    /**
+     * Type of event triggered when an existing KVDB entry is updated.
+     */
     ENTRY_UPDATE,
+    /**
+     * Type of event triggered when a KVDB entry is deleted.
+     */
     ENTRY_DELETE,
+    /**
+     * Type of event triggered when a collection changes.
+     */
     COLLECTION_CHANGE
 }
