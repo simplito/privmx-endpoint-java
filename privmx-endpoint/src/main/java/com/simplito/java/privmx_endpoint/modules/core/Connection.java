@@ -15,7 +15,7 @@ import com.simplito.java.privmx_endpoint.model.Context;
 import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserInfo;
-import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.ConnectionEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.CoreEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.CoreEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
@@ -282,7 +282,7 @@ public class Connection implements AutoCloseable {
      * @param selectorType Scope on which you listen for events
      * @param selectorId   ID of the selector
      */
-    public String buildSubscriptionQuery(ConnectionEventType eventType, ConnectionEventSelectorType selectorType, String selectorId) {
+    public String buildSubscriptionQuery(CoreEventType eventType, CoreEventSelectorType selectorType, String selectorId) {
         return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
     }
 
