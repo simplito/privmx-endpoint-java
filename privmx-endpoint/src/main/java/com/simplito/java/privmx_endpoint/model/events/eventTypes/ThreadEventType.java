@@ -5,8 +5,7 @@ package com.simplito.java.privmx_endpoint.model.events.eventTypes;
  * This enum lists the various actions or changes that can happen to
  * threads and their messages, allowing observers to be notified of specific occurrences.
  *
- * @category core
- * @group EventTypes
+ * @category thread
  */
 public enum ThreadEventType implements EventType {
     /**

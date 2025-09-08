@@ -5,8 +5,7 @@ package com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes;
  * Thread events can be targeted based on different levels of granularity within the thread structure.
  * This enum defines the possible types of selectors for these events.
  *
- * @category core
- * @group EventSelectorTypes
+ * @category thread
  */
 public enum ThreadEventSelectorType implements EventSelectorType {
     /**

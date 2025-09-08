@@ -5,7 +5,7 @@ package com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes;
  * Inbox events can be targeted based on different levels of granularity within the inbox structure.
  * This enum defines the possible types of selectors for these events.
  *
- * @category core
+ * @category inbox
  */
 public enum InboxEventSelectorType implements EventSelectorType {
     /**
