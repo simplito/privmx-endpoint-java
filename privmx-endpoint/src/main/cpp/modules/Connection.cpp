@@ -18,6 +18,7 @@
 #include "../utils.hpp"
 #include "../parser.h"
 #include "../exceptions.h"
+
 using namespace privmx::endpoint;
 
 privmx::endpoint::core::Connection *getConnection(JNIEnv *env, jobject thiz) {
@@ -344,6 +345,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_subscribeFor(
 
                 for (int i = 0; i < ctx->GetArrayLength(subscription_queries_arr); i++) {
                     jobject arrayElement = ctx->GetObjectArrayElement(subscription_queries_arr, i);
+                    if (ctx.nullCheck(arrayElement, "Subscription queries array elements")) {
+                        return nullptr;
+                    }
                     subscription_queries_c.push_back(ctx.jString2string((jstring) arrayElement));
                 }
 
@@ -386,6 +390,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_unsubscribeFrom(
 
                 for (int i = 0; i < ctx->GetArrayLength(subscription_ids_arr); i++) {
                     jobject arrayElement = ctx->GetObjectArrayElement(subscription_ids_arr, i);
+                    if (ctx.nullCheck(arrayElement, "Subscription ids array elements")) {
+                        return nullptr;
+                    }
                     subscription_ids_c.push_back(ctx.jString2string((jstring) arrayElement));
                 }
 
