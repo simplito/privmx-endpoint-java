@@ -11,6 +11,8 @@
 
 package com.simplito.java.privmx_endpoint.model;
 
+import java.util.List;
+
 /**
  * Represents a generic event caught by PrivMX Endpoint.
  *
@@ -29,17 +31,19 @@ public class Event<T> {
      */
     public String channel;
 
-
     /**
      * ID of connection for this event.
      */
     public Long connectionId;
-
     /**
      * The data payload associated with the event.
      * The type of this data is determined by the generic type parameter {@code T}.
      */
     public T data;
+    /**
+     * List of subscription IDs to which the event is related.
+     */
+    public List<String> subscriptions;
 
     /**
      * Creates instance of Event model.
@@ -50,11 +54,35 @@ public class Event<T> {
     /**
      * Creates instance of Event model.
      *
+     * @param type          type of event as text
+     * @param channel       event channel
+     * @param connectionId  ID of connection for this event
+     * @param subscriptions List of subscription IDs to which the event is related
+     * @param data          event data
+     */
+    public Event(
+            String type,
+            String channel,
+            Long connectionId,
+            List<String> subscriptions,
+            T data
+    ) {
+        this.type = type;
+        this.channel = channel;
+        this.connectionId = connectionId;
+        this.subscriptions = subscriptions;
+        this.data = data;
+    }
+
+    /**
+     * Creates instance of Event model.
+     *
      * @param type         type of event as text
      * @param channel      event channel
      * @param connectionId ID of connection for this event
      * @param data         event data
      */
+    @Deprecated
     public Event(
             String type,
             String channel,
@@ -64,6 +92,7 @@ public class Event<T> {
         this.type = type;
         this.channel = channel;
         this.connectionId = connectionId;
+        this.subscriptions = List.of();
         this.data = data;
     }
 }

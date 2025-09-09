@@ -12,6 +12,8 @@
 package com.simplito.java.privmx_endpoint.modules.event;
 
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
+import com.simplito.java.privmx_endpoint.model.events.ContextCustomEventData;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.CustomEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
@@ -60,26 +62,42 @@ public class EventApi implements AutoCloseable {
     public native void emitEvent(String contextId, List<UserWithPubKey> users, String channelName, byte[] eventData) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribe for the custom events on the given channel.
+     * Subscribe for the custom events on the given subscription query.
      *
-     * @param contextId   ID of the Context
-     * @param channelName name of the Channel
+     * @param subscriptionQueries list of queries
+     * @return list of subscriptionIds in matching order to subscriptionQueries
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native void subscribeForCustomEvents(String contextId, String channelName) throws PrivmxException, NativeException, IllegalStateException;
+    public native List<String> subscribeFor(List<String> subscriptionQueries) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Unsubscribe from the custom events on the given channel.
+     * Unsubscribe from events for the given subscriptionId.
      *
-     * @param contextId   ID of the Context
-     * @param channelName name of the Channel
+     * @param subscriptionIds list of subscriptionId
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      */
-    public native void unsubscribeFromCustomEvents(String contextId, String channelName) throws PrivmxException, NativeException, IllegalStateException;
+    public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
+
+    private native String buildSubscriptionQuery(String channelName, long selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+
+    /**
+     * Generate subscription Query for the custom events.
+     *
+     * @param channelName  name of the Channel
+     * @param selectorType selector of scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return // todo - add return description
+     * @throws IllegalStateException thrown when instance is closed.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public String buildSubscriptionQuery(String channelName, CustomEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException {
+        return buildSubscriptionQuery(channelName, (long) selectorType.ordinal(), selectorId);
+    }
 
     /**
      * Frees memory.
