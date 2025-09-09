@@ -667,3 +667,31 @@ Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_unsubscribeFromEntr
         getKvdbApi(ctx, thiz)->unsubscribeFromEntryEvents(ctx.jString2string(kvdb_id));
     });
 }
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_kvdb_KvdbApi_buildSubscriptionQueryForSelectedEntry(
+        JNIEnv *env, jobject thiz, jlong event_type, jstring kvdb_id, jstring kvdb_entry_key) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(kvdb_id, "KVDB ID") ||
+    ctx.nullCheck(kvdb_entry_key, "KVDB Entry key")) {
+        return nullptr;
+    }
+
+    jstring result;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &event_type, &kvdb_id, &kvdb_entry_key]() {
+                auto result = getKvdbApi(ctx, thiz)->buildSubscriptionQueryForSelectedEntry(
+                        static_cast<kvdb::EventType>(event_type),
+                        ctx.jString2string(kvdb_id),
+                        ctx.jString2string(kvdb_entry_key)
+                );
+                return ctx->NewStringUTF(result.c_str());
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
