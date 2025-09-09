@@ -514,7 +514,7 @@ public class StoreApi implements AutoCloseable {
     /**
      * Generate subscription Query for the Store events.
      *
-     * @param eventType    type of event which you listen for
+     * @param eventType    type of event you listen for
      * @param selectorType scope on which you listen for events
      * @param selectorId   ID of the selector
      * @return // todo - add return description
