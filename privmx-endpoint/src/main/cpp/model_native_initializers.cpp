@@ -887,6 +887,36 @@ namespace privmx {
             );
         }
 
+        jobject fileChange2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::store::FileChange file_change_c
+        ) {
+            jclass fileChangeCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/FileChange");
+
+            jmethodID initFcMID = ctx->GetMethodID(
+                    fileChangeCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/Long;"
+                    "Ljava/lang/Long;"
+                    "Z"
+                    ")V"
+            );
+
+            jobject javaPos = ctx.long2jLong(file_change_c.pos);
+            jobject javaLength = ctx.long2jLong(file_change_c.length);
+            jboolean javaTruncate = (jboolean) file_change_c.truncate;
+
+            return ctx->NewObject(
+                    fileChangeCls,
+                    initFcMID,
+                    javaPos,
+                    javaLength,
+                    javaTruncate
+            );
+        }
+
         //Event
         jobject contextUsersStatusChangeData2Java(
                 JniContextUtils &ctx,
@@ -1086,6 +1116,44 @@ namespace privmx {
             );
         }
 
+        jobject storeFileUpdatedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::store::StoreFileUpdatedEventData storeFileUpdatedEventData_c
+        ) {
+            jclass storeFileUpdatedEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/StoreFileUpdatedEventData");
+            jmethodID initStoreFileUpdatedEventDataMID = ctx->GetMethodID(
+                    storeFileUpdatedEventDataCls,
+                    "<init>",
+                    "("
+                    "Lcom/simplito/java/privmx_endpoint/model/File;"
+                    "Ljava/util/List;"
+                    ")V"
+            );
+
+            jclass arrayListCls = ctx->FindClass("java/util/ArrayList");
+            jmethodID arrayListInitMID = ctx->GetMethodID(arrayListCls, "<init>", "()V");
+            jmethodID arrayListAddMID = ctx->GetMethodID(arrayListCls, "add",
+                                                         "(Ljava/lang/Object;)Z");
+
+            jobject changesList = ctx->NewObject(
+                    arrayListCls,
+                    arrayListInitMID
+                );
+
+            for (const auto &change: storeFileUpdatedEventData_c.changes) {
+                jobject javaFileChange = fileChange2Java(ctx, change);
+                ctx->CallBooleanMethod(changesList, arrayListAddMID, javaFileChange);
+            }
+
+            return ctx->NewObject(
+                    storeFileUpdatedEventDataCls,
+                    initStoreFileUpdatedEventDataMID,
+                    file2Java(ctx, storeFileUpdatedEventData_c.file),
+                    changesList
+            );
+        }
+
         jobject threadStatsEventData2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::thread::ThreadStatsEventData threadStatsEventData_c
@@ -1156,18 +1224,21 @@ namespace privmx {
                     "Ljava/lang/String;"    // contextId
                     "Ljava/lang/String;"    // userId
                     "[B"                    // payload
-                    "Ljava/lang/Long"       // statusCode
+                    "Ljava/lang/Long;"       // statusCode
+                    "Ljava/lang/Long;"       // schemaVersion
                     ")V"
             );
-            jbyteArray data = ctx->NewByteArray(contextCustomEvent_c.payload.size());
-            ctx->SetByteArrayRegion(data, 0, contextCustomEvent_c.payload.size(),
+            jbyteArray payload = ctx->NewByteArray(contextCustomEvent_c.payload.size());
+            ctx->SetByteArrayRegion(payload, 0, contextCustomEvent_c.payload.size(),
                                     (jbyte *) contextCustomEvent_c.payload.data());
             return ctx->NewObject(
                     contextCustomEventDataCls,
                     initContextCustomEventDataMID,
                     ctx->NewStringUTF(contextCustomEvent_c.contextId.c_str()),
                     ctx->NewStringUTF(contextCustomEvent_c.userId.c_str()),
-                    data
+                    payload,
+                    ctx.long2jLong(contextCustomEvent_c.statusCode),
+                    ctx.long2jLong(contextCustomEvent_c.schemaVersion)
             );
         }
 

@@ -16,6 +16,7 @@ import com.simplito.java.privmx_endpoint.model.Kvdb;
 import com.simplito.java.privmx_endpoint.model.KvdbEntry;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.KvdbEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
@@ -574,42 +575,43 @@ public class KvdbApi implements AutoCloseable {
     ) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribes for the KVDB module main events.
+     * Subscribe for the KVDB events on the given subscription query.
      *
+     * @param subscriptionQueries list of queries
+     * @return list of subscriptionIds in matching order to subscriptionQueries
+     * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
      */
-    public native void subscribeForKvdbEvents() throws PrivmxException, NativeException, IllegalStateException;
+    public native List<String> subscribeFor(List<String> subscriptionQueries) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Unsubscribes from the KVDB module main events.
+     * Unsubscribe from events with the given subscriptionId.
      *
+     * @param subscriptionIds list of subscriptionId
+     * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
      */
-    public native void unsubscribeFromKvdbEvents() throws PrivmxException, NativeException, IllegalStateException;
+    public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
+
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
+
 
     /**
-     * Subscribes for events in given KVDB.
+     * Generate subscription Query for the KVDB events.
      *
-     * @param kvdbId ID of the KVDB to subscribe
+     * @param eventType    type of event you listen for
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return // todo - add return description
+     * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
      */
-    public native void subscribeForEntryEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribes from events in given KVDB.
-     *
-     * @param kvdbId ID of the KVDB to unsubscribe
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
-     */
-    public native void unsubscribeFromEntryEvents(String kvdbId) throws PrivmxException, NativeException, IllegalStateException;
+    public String buildSubscriptionQuery(KvdbEventType eventType, KvdbEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException {
+        return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
+    }
 
     /**
      * Generate subscription Query for the KVDB events for single KvdbEntry.
