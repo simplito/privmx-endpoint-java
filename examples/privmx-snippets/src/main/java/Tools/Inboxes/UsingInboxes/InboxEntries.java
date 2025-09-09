@@ -44,12 +44,25 @@ public class InboxEntries extends WorkingWithInboxes {
     void attachingFiles(String fileID) throws IOException {
         String inboxID = "INBOX_ID";
         byte[] publicMeta = "My public data".getBytes();
-        byte[] entryData = "ENTRY_DATA".getBytes();
 
         String fileName = "FILE_NAME";
         String fileType = "FILE_TYPE";
         byte[] fileContent = "FILE_CONTENT".getBytes();
         long fileSize = fileContent.length;
+
+        String entryDataAnswer = "USER_PROVIDED_TEXT";
+        long entryDataVersion = 1L;
+        String entryDataType = "TEXT_ANSWER";
+
+        byte[] entryData = """
+                 {
+                    "content": {
+                        "answer": "%s"
+                    },
+                    "version": %d,
+                    "type": "%s"
+                 }
+                """.formatted(entryDataAnswer, entryDataVersion, entryDataType).getBytes();
 
         byte[] filePrivateMeta = """
                 {
