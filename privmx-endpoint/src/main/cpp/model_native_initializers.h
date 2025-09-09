@@ -54,6 +54,9 @@ namespace privmx {
                 privmx::endpoint::core::ContainerPolicy containerPolicy
         );
 
+        // CollectionItemChange
+        jobject collectionItemChange2Java(JniContextUtils &ctx, privmx::endpoint::core::CollectionItemChange collectionItemChange_c);
+
         //Context
         jobject context2Java(JniContextUtils &ctx, privmx::endpoint::core::Context context_c);
 
@@ -66,6 +69,8 @@ namespace privmx {
 
         jobject userStatusChange2Java(JniContextUtils &ctx,
                                       privmx::endpoint::core::UserStatusChange userStatusChange);
+        // UserWithAction
+        jobject userWithAction2Java(JniContextUtils &ctx, privmx::endpoint::core::UserWithAction userWithAction);
 
         jobject bridgeIdentity2Java(JniContextUtils &ctx,
                                     privmx::endpoint::core::BridgeIdentity bridgeIdentity_c);
@@ -109,6 +114,15 @@ namespace privmx {
         jobject file2Java(JniContextUtils &ctx, privmx::endpoint::store::File file_c);
 
         //Event
+        jobject contextUsersStatusChangeData2Java(JniContextUtils &ctx,
+                                               privmx::endpoint::core::ContextUsersStatusChangeData contextUsersStatusChangeData_c);
+
+        jobject contextUserEventData2Java(JniContextUtils &ctx,
+                                                  privmx::endpoint::core::ContextUserEventData contextUserEventData_c);
+
+        jobject collectionChangedEventData2Java(JniContextUtils &ctx,
+                                          privmx::endpoint::core::CollectionChangedEventData collectionChangedEventData_c);
+
         jobject storeDeletedEventData2Java(JniContextUtils &ctx,
                                            privmx::endpoint::store::StoreDeletedEventData storeDeletedEventData_c);
 

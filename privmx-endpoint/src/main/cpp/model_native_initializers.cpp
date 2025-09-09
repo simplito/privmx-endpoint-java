@@ -183,6 +183,29 @@ namespace privmx {
             );
         }
 
+        // CollectionItemChange
+        jobject collectionItemChange2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::CollectionItemChange collectionItemChange_c
+        ) {
+            jclass collectionItemChangeCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/CollectionItemChange");
+            jmethodID initCollectionItemChangeMID = ctx->GetMethodID(
+                    collectionItemChangeCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;Ljava/lang/String;"  // itemId
+                    "Ljava/lang/String;Ljava/lang/String;"  // action
+                    ")V"
+            );
+            return ctx->NewObject(
+                    collectionItemChangeCls,
+                    initCollectionItemChangeMID,
+                    ctx->NewStringUTF(collectionItemChange_c.itemId.c_str()),
+                    ctx->NewStringUTF(collectionItemChange_c.action.c_str())
+            );
+        }
+
         //Context
         jobject context2Java(
                 JniContextUtils &ctx,
@@ -272,6 +295,27 @@ namespace privmx {
                     userWithPubKey2Java(ctx, userInfo.user),
                     (jboolean) userInfo.isActive,
                     userStatusChange);
+        }
+
+        // UserWithAction
+        jobject userWithAction2Java(JniContextUtils &ctx,
+                                    privmx::endpoint::core::UserWithAction userWithAction) {
+            jclass userWithActionCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/UserWithAction");
+            jmethodID initUserWithActionMID = ctx->GetMethodID(
+                    userWithActionCls,
+                    "<init>",
+                    "("
+                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;"  // userWithPubKey
+                    "Ljava/lang/String;"                                        // action
+                    ")V"
+            );
+            return ctx->NewObject(
+                    userWithActionCls,
+                    initUserWithActionMID,
+                    userWithPubKey2Java(ctx, userWithAction.user),
+                    ctx->NewStringUTF(userWithAction.action.c_str())
+            );
         }
 
         jobject bridgeIdentity2Java(
@@ -844,6 +888,118 @@ namespace privmx {
         }
 
         //Event
+        jobject contextUsersStatusChangeData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContextUsersStatusChangeData contextUsersStatusChangeData_c
+        ) {
+            jclass arrayCls = ctx->FindClass("java/util/ArrayList");
+            jmethodID initArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "<init>",
+                    "()V");
+            jmethodID addToArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "add",
+                    "(Ljava/lang/Object;)Z"
+            );
+            jclass contextUsersStatusChangeDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/ContextUsersStatusChangedEventData");
+            jmethodID initContextUsersStatusChangeDataMID = ctx->GetMethodID(
+                    contextUsersStatusChangeDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"        // contextId
+                    "Ljava/util/List;"          // users
+                    ")V"
+            );
+
+            jobject users = ctx->NewObject(arrayCls, initArrayMID);
+
+            for (auto &user: contextUsersStatusChangeData_c.users) {
+                ctx->CallBooleanMethod(users,
+                                       addToArrayMID,
+                                       userWithAction2Java(ctx, user)
+                );
+            }
+
+            return ctx->NewObject(
+                    contextUsersStatusChangeDataCls,
+                    initContextUsersStatusChangeDataMID,
+                    ctx->NewStringUTF(contextUsersStatusChangeData_c.contextId.c_str()),
+                    users
+            );
+        }
+
+        jobject contextUserEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContextUserEventData contextUserEventData_c
+        ) {
+            jclass contextUserEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/ContextUserEventData");
+            jmethodID initContextUserEventDataMID = ctx->GetMethodID(
+                    contextUserEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"                                          // contextId
+                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;"    // user
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    contextUserEventDataCls,
+                    initContextUserEventDataMID,
+                    ctx->NewStringUTF(contextUserEventData_c.contextId.c_str()),
+                    userWithPubKey2Java(ctx, contextUserEventData_c.user)
+            );
+        }
+
+        // CollectionChangedEventData
+        jobject collectionChangedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::CollectionChangedEventData collectionChangedEventData_c
+        ) {
+            jclass arrayCls = ctx->FindClass("java/util/ArrayList");
+            jmethodID initArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "<init>",
+                    "()V");
+            jmethodID addToArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "add",
+                    "(Ljava/lang/Object;)Z"
+            );
+            jclass collectionChangedEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/CollectionChangedEventData");
+            jmethodID initCollectionChangedEventDataMID = ctx->GetMethodID(
+                    collectionChangedEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"        // moduleType
+                    "Ljava/lang/String;"        // moduleId
+                    "Ljava/lang/Long;"          // affectedItemsCount
+                    "Ljava/util/List;"          // items
+                    ")V"
+            );
+
+            jobject items = ctx->NewObject(arrayCls, initArrayMID);
+
+            for (auto &item: collectionChangedEventData_c.items) {
+                ctx->CallBooleanMethod(items,
+                                       addToArrayMID,
+                                       collectionItemChange2Java(ctx, item)
+                );
+            }
+
+            return ctx->NewObject(
+                    collectionChangedEventDataCls,
+                    initCollectionChangedEventDataMID,
+                    ctx->NewStringUTF(collectionChangedEventData_c.moduleType.c_str()),
+                    ctx->NewStringUTF(collectionChangedEventData_c.moduleId.c_str()),
+                    ctx.long2jLong(collectionChangedEventData_c.affectedItemsCount),
+                    items
+            );
+        }
+
         jobject storeFileDeletedEventData2Java(JniContextUtils &ctx,
                                                privmx::endpoint::store::StoreFileDeletedEventData storeFileDeletedEventData_c) {
             jclass storeFileDeletedEventDataCls = ctx->FindClass(
