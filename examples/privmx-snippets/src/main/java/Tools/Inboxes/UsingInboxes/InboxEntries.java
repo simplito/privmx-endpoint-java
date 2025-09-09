@@ -1,15 +1,14 @@
 package Tools.Inboxes.UsingInboxes;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.simplito.java.privmx_endpoint.model.File;
 import com.simplito.java.privmx_endpoint.model.InboxEntry;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint_extra.inboxFileStream.InboxFileStreamWriter;
 import com.simplito.java.privmx_endpoint_extra.model.SortOrder;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 
@@ -115,15 +114,21 @@ public class InboxEntries extends WorkingWithInboxes {
         InboxEntry entry = entriesPagingList.readItems.getFirst();
         File entryFile = entry.files.getFirst();
 
+        // This example uses com.google.code.gson:gson
+        // dependency for handling JSON objects in Java
+
         // decoded privateMeta
         String privateMeta = new String(entryFile.privateMeta);
-        JSONObject privateMetaJson = new JSONObject(privateMeta);
-        String fileName = privateMetaJson.getString("name");
-        String fileType = privateMetaJson.getString("mimetype");
+        JsonObject privateMetaJson = JsonParser.parseString(privateMeta).getAsJsonObject();
+        String fileName = privateMetaJson.get("name").getAsString();
+        String fileType = privateMetaJson.get("mimetype").getAsString();
 
         // decoded data
         String entryData = new String(entry.data);
-        JSONObject entryDataJson = new JSONObject(entryData);
-        String answer = entryDataJson.getJSONObject("content").getString("answer");
+        JsonObject entryDataJson = JsonParser.parseString(entryData).getAsJsonObject();
+        String answer = entryDataJson
+                .getAsJsonObject("content")
+                .get("answer")
+                .getAsString();
     }
 }
