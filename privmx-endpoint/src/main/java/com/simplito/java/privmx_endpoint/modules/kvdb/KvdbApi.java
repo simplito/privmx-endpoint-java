@@ -614,6 +614,23 @@ public class KvdbApi implements AutoCloseable {
     }
 
     /**
+     * Generate subscription Query for the KVDB events for single KvdbEntry.
+     *
+     * @param eventType    type of event you listen for (Works ony For ENTRY_UPDATE, ENTRY_DELETE = 6,)
+     * @param kvdbId       Id of Kvdb
+     * @param kvdbEntryKey Key of Kvdb Entry
+     * @return Query to subscribe to an event.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is closed.
+     */
+    public String buildSubscriptionQueryForSelectedEntry(KvdbEventType eventType, String kvdbId, String kvdbEntryKey) throws PrivmxException, NativeException, IllegalStateException {
+        return buildSubscriptionQueryForSelectedEntry((long) eventType.ordinal(), kvdbId, kvdbEntryKey);
+    }
+
+    private native String buildSubscriptionQueryForSelectedEntry(long eventType, String kvdbId, String kvdbEntryKey) throws PrivmxException, NativeException, IllegalStateException;
+
+    /**
      * Frees memory.
      *
      * @throws Exception when instance is currently closed.
