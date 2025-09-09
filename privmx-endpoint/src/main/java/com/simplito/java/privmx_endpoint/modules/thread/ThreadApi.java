@@ -416,7 +416,7 @@ public class ThreadApi implements AutoCloseable {
     public native List<String> subscribeFor(List<String> subscriptionQueries) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Unsubscribe from events for the given subscriptionId.
+     * Unsubscribe from events with the given subscriptionId.
      *
      * @param subscriptionIds list of subscriptionId
      * @throws IllegalStateException thrown when instance is closed.
