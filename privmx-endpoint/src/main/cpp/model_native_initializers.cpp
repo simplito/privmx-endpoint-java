@@ -246,6 +246,29 @@ namespace privmx {
             );
         }
 
+        // UserWithPubKey
+        jobject userStatusChange2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::UserStatusChange userStatusChange
+        ) {
+            jclass userStatusCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/UserStatusChange");
+            jmethodID initUserStatusMID = ctx->GetMethodID(
+                    userStatusCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"    // action
+                    "Ljava/lang/Long;"      // timestamp
+                    ")V"
+            );
+            return ctx->NewObject(
+                    userStatusCls,
+                    initUserStatusMID,
+                    ctx->NewStringUTF(userStatusChange.action.c_str()),
+                    ctx.long2jLong(userStatusChange.timestamp)
+            );
+        }
+
         //UserInfo
         jobject userInfo2Java(
                 JniContextUtils &ctx,
@@ -257,16 +280,21 @@ namespace privmx {
                     userInfoCls,
                     "<init>",
                     "("
-                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;" // userWithPubKey
-                    "Z"
+                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;"      // userWithPubKey
+                    "Z"                                                             // isActive
+                    "Lcom/simplito/java/privmx_endpoint/model/UserStatusChange;"    // lastStatusChange
                     ")V"
             );
+
+            jobject userStatusChange = userInfo.lastStatusChange.has_value() ?
+                    userStatusChange2Java(ctx, userInfo.lastStatusChange.value()):
+                    nullptr;
             return ctx->NewObject(
                     userInfoCls,
                     initUserInfoMID,
                     userWithPubKey2Java(ctx, userInfo.user),
-                    (jboolean) userInfo.isActive
-            );
+                    (jboolean) userInfo.isActive,
+                    userStatusChange);
         }
 
         // UserWithAction

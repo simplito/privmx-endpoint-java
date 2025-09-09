@@ -19,6 +19,8 @@
 #include "../parser.h"
 #include "../exceptions.h"
 
+using namespace privmx::endpoint;
+
 privmx::endpoint::core::Connection *getConnection(JNIEnv *env, jobject thiz) {
     JniContextUtils ctx(env);
     jclass cls = ctx->GetObjectClass(thiz);
@@ -310,6 +312,78 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_getContextUsers(
                 }
 
                 return array;
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_listContextUsers(
+        JNIEnv *env,
+        jobject thiz,
+        jstring context_id,
+        jlong skip,
+        jlong limit,
+        jstring sort_order,
+        jstring last_id,
+        jstring query_as_json,
+        jstring sort_by
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(context_id, "Context ID") ||
+        ctx.nullCheck(sort_order, "Sort order")) {
+        return nullptr;
+    }
+
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &env, &thiz, &context_id, &skip, &limit, &sort_order, &last_id, &query_as_json, &sort_by]() {
+                jclass pagingListCls = ctx->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/PagingList");
+                jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
+                                                               "(Ljava/lang/Long;Ljava/util/List;)V");
+                jclass arrayCls = ctx->FindClass("java/util/ArrayList");
+                jmethodID initArrayMID = ctx->GetMethodID(arrayCls, "<init>", "()V");
+                jmethodID addToArrayMID = ctx->GetMethodID(arrayCls, "add",
+                                                           "(Ljava/lang/Object;)Z");
+
+                auto query = core::PagingQuery();
+                query.skip = skip;
+                query.limit = limit;
+                query.sortOrder = ctx.jString2string(sort_order);
+                if (last_id != nullptr) {
+                    query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
+                }
+                if (sort_by != nullptr) {
+                    query.sortBy = ctx.jString2string(sort_by);
+                }
+
+                auto users_c = getConnection(env, thiz)->listContextUsers(
+                        ctx.jString2string(context_id),
+                        query
+                );
+
+                jobject array = ctx->NewObject(arrayCls, initArrayMID);
+                for (auto &user: users_c.readItems) {
+                    ctx->CallBooleanMethod(array,
+                                           addToArrayMID,
+                                           privmx::wrapper::userInfo2Java(ctx, user)
+                    );
+                }
+
+                return ctx->NewObject(
+                        pagingListCls,
+                        pagingListInitMID,
+                        ctx.long2jLong(users_c.totalAvailable),
+                        array
+                );
             });
     if (ctx->ExceptionCheck()) {
         return nullptr;
