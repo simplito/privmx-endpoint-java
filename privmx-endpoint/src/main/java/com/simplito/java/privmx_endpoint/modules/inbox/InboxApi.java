@@ -18,6 +18,8 @@ import com.simplito.java.privmx_endpoint.model.InboxEntry;
 import com.simplito.java.privmx_endpoint.model.InboxPublicView;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
+import com.simplito.java.privmx_endpoint.model.events.InboxDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.InboxEntryDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.InboxEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
