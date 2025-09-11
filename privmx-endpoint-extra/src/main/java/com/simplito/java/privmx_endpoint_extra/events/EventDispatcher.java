@@ -13,7 +13,6 @@ package com.simplito.java.privmx_endpoint_extra.events;
 
 
 import com.simplito.java.privmx_endpoint.model.Event;
-import com.simplito.java.privmx_endpoint.model.EventSelector;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.CustomEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
@@ -21,10 +20,12 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -35,9 +36,7 @@ import java.util.stream.Collectors;
  */
 public class EventDispatcher {
 
-    private final Map<String, List<Pair>> map = new HashMap<>();
-    private final Map<EventSelector, List<Pair>> map2 = new HashMap<>();
-    private final Map<EventSelector, List<Pair>> map3 = new HashMap<>();
+    private final Map<EventRegistrationInfo, List<Pair>> map2 = new HashMap<>();
     private final EventCallback <Map<String, List<String>>> onRemoveEntryKey;
 
     /**
@@ -51,22 +50,15 @@ public class EventDispatcher {
         this.onRemoveEntryKey = onRemoveEntryKey;
     }
 
-    public String registerCallback(EventSelector eventSelector, Object callbackId, EventCallback<?> callback) {
-        boolean needSubscribe = eventHasNoCallbacks(eventSelector);
-        getCallbacks(eventSelector).add(new Pair(callbackId, callback));
+    public EventRegistrationInfo registerCallback(
+            CallbackRegistration callbackRegistration
+    ) {
+        EventRegistrationInfo info = new EventRegistrationInfo(null,callbackRegistration.eventType);
+        getCallbackList(info).add(new Pair(callbackRegistration.callbackGroup, callbackRegistration.callback));
 
-        if (!needSubscribe) return null;
-        return getSubscriptionId(eventSelector);
+        return info;
     }
 
-    private String getSubscriptionId(EventSelector eventSelector) {
-        for (EventSelector key : map2.keySet()) {
-            if (key.equals(eventSelector)) {
-                return key.subscriptionId;
-            }
-        }
-        return null;
-    }
 
     /**
      * Emits specified event. It should only be called by event loops.
@@ -89,61 +81,43 @@ public class EventDispatcher {
         }
     }
 
-    private boolean eventHasNoCallbacks(EventSelector eventSelector) {
+    private boolean eventHasNoCallbacks(EventRegistrationInfo eventInfo) {
         synchronized (map2) {
-            List<Pair> callbacks = map2.get(eventSelector);
+            List<Pair> callbacks = map2.get(eventInfo);
             return callbacks == null || callbacks.isEmpty();
         }
     }
 
     /**
-     * Removes all callbacks registered by {@link #(String, String, Object, EventCallback)}. It's identified by given Context.
+     * Removes all callbacks registered by {@link #registerCallback(CallbackRegistration)}. It's identified by given {@code callbackGroups}.
      */
-//    public void unbind(Object context) {
-//        synchronized (map) {
-//            List<EventSelector> selectorsToUnsubscribe = new ArrayList<>();
-//
-//            map2.forEach((selector, pairs) -> {
-//                pairs.removeIf(it -> it.context == context);
-//                if (pairs.isEmpty()) {
-//                    selectorsToUnsubscribe.add(selector);
-//                    map2.remove(selector);
-//                }
-//            });
-//
-//            if (!selectorsToUnsubscribe.isEmpty()) onRemoveEntryKey.call(selectorsToUnsubscribe);
-//        }
-//    }
-    public void unbind(List<Object> callbackIds) {
+    public void unbind(Object... callbackGroups) {
+        List<Object> callbackGroupsList = Arrays.asList(callbackGroups);
+        if(callbackGroupsList.isEmpty()) return;
         synchronized (map2) {
             Map<String, List<String>> selectorsToUnsubscribe = new HashMap<>();
-            List<EventSelector> emptySelectors = new ArrayList<>();
+            Iterator<Map.Entry<EventRegistrationInfo,List<Pair>>> mapIterator = map2.entrySet().iterator();
 
-            map2.forEach((key, callbacks) -> {
-                if(callbackIds.isEmpty()) return;
+            while(mapIterator.hasNext()){
+                Map.Entry<EventRegistrationInfo,List<Pair>> entry = mapIterator.next();
+                EventRegistrationInfo key = entry.getKey();
+                List<Pair> callbacks = entry.getValue();
 
-                List<Pair> pairsOfCallbacks = callbacks.stream().filter(p -> callbackIds.contains(p.context)).collect(Collectors.toList());
+                List<Pair> pairsOfCallbacks = callbacks.stream().filter(p -> callbackGroupsList.contains(p.context)).collect(Collectors.toList());
                 callbacks.removeAll(pairsOfCallbacks);
-                callbackIds.removeAll(pairsOfCallbacks);
+                callbackGroupsList.removeAll(pairsOfCallbacks);
 
                 if (callbacks.isEmpty()) {
-                    emptySelectors.add(key);
-
-                    if (key.eventSelectorType instanceof CustomEventSelectorType) {
-                        selectorsToUnsubscribe.putIfAbsent("custom", new ArrayList<>()).add(key.subscriptionId);
-                    } else if (key.eventType instanceof ThreadEventType) {
-                        selectorsToUnsubscribe.putIfAbsent("thread", new ArrayList<>()).add(key.subscriptionId);
-                    } else if (key.eventType instanceof StoreEventType) {
-                        selectorsToUnsubscribe.putIfAbsent("store", new ArrayList<>()).add(key.subscriptionId);
-                    } else if (key.eventType instanceof InboxEventType) {
-                        selectorsToUnsubscribe.putIfAbsent("inbox", new ArrayList<>()).add(key.subscriptionId);
-                    } else if (key.eventType instanceof KvdbEventType) {
-                        selectorsToUnsubscribe.putIfAbsent("kvdb", new ArrayList<>()).add(key.subscriptionId);
+                    String module = getModuleFromEventRegistrationInfo(key);
+                    if(module != null){
+                        List<String> selectors = selectorsToUnsubscribe.getOrDefault(module, new ArrayList<>());
+                        selectors.add(key.subscriptionID);
+                        selectorsToUnsubscribe.put(module,selectors);
                     }
-                }
-            });
 
-            emptySelectors.forEach(map2::remove);
+                    mapIterator.remove();
+                }
+            }
             onRemoveEntryKey.call(selectorsToUnsubscribe);
         }
     }
@@ -152,27 +126,37 @@ public class EventDispatcher {
      * Removes all callbacks.
      */
     public void unbindAll() {
-        map2.forEach((k, v) ->{
-            List<Object> callbacksToUnbind = v.stream().map(it -> it.context).collect(Collectors.toList());
+        synchronized (map2){
+            List<Object> callbacksToUnbind = map2.entrySet()
+                    .stream()
+                    .flatMap(it->it.getValue().stream())
+                    .map(it->it.context)
+                    .collect(Collectors.toList());
             unbind(callbacksToUnbind);
-        });
-    }
-
-    private List<Pair> getCallbacks(EventSelector eventSelector) {
-        synchronized (map2) {
-            if (!map2.containsKey(eventSelector)) {
-                map2.put(eventSelector, new Vector<>());
-            }
-            return map2.get(eventSelector);
         }
     }
 
+    /**
+     * Get reference to list for adding or removing callbacks.
+     */
+    private List<Pair> getCallbackList(EventRegistrationInfo eventRegistrationInfo) {
+        synchronized (map2) {
+            if (!map2.containsKey(eventRegistrationInfo)) {
+                map2.put(eventRegistrationInfo, new Vector<>());
+            }
+            return map2.get(eventRegistrationInfo);
+        }
+    }
+
+    /**
+     * Get list of all callbacks identified by this subscriptionIds.
+     */
     private List<Pair> getCallbacks(List<String> subscriptionIds) {
         synchronized (map2) {
             List<Pair> pairs = new ArrayList<>();
 
-            for (Map.Entry<EventSelector, List<Pair>> entry : map2.entrySet()) {
-                String subId = entry.getKey().subscriptionId;
+            for (Map.Entry<EventRegistrationInfo, List<Pair>> entry : map2.entrySet()) {
+                String subId = entry.getKey().subscriptionID;
                 if (subId != null && subscriptionIds.contains(subId)) {
                     pairs.addAll(entry.getValue());
                 }
@@ -181,9 +165,32 @@ public class EventDispatcher {
         }
     }
 
-    public void assignSubscriptionId(EventSelector eventSelector) {
-        Optional<EventSelector> es = map2.keySet().stream().filter(key -> key.equals(eventSelector)).findFirst();
-        es.ifPresent(it -> it.subscriptionId = eventSelector.subscriptionId);
+    public void removeNotSubscribedEvents(){
+        synchronized (map2) {
+            Iterator<Map.Entry<EventRegistrationInfo, List<EventDispatcher.Pair>>> entrySetIterator = map2.entrySet().iterator();
+            while (entrySetIterator.hasNext()){
+                EventRegistrationInfo eventRegistrationInfo = entrySetIterator.next().getKey();
+                if (eventRegistrationInfo.subscriptionID == null && !eventRegistrationInfo.eventType.eventName.startsWith("lib")) {
+                    entrySetIterator.remove();
+                }
+            }
+        }
+    }
+
+    private static String getModuleFromEventRegistrationInfo(EventRegistrationInfo key) {
+        String module = null;
+        if (key.eventType.eventSelectorType instanceof CustomEventSelectorType) {
+            module = "custom";
+        } else if (key.eventType.libEventType instanceof ThreadEventType) {
+            module = "thread";
+        } else if (key.eventType.libEventType instanceof StoreEventType) {
+            module = "store";
+        } else if (key.eventType.libEventType instanceof InboxEventType) {
+            module = "inbox";
+        } else if (key.eventType.libEventType instanceof KvdbEventType) {
+            module = "kvdb";
+        }
+        return module;
     }
 
     private static class Pair {
@@ -193,6 +200,28 @@ public class EventDispatcher {
         private Pair(Object context, EventCallback<?> callback) {
             this.context = context;
             this.callback = callback;
+        }
+    }
+
+    public static class EventRegistrationInfo{
+        public String subscriptionID;
+        public EventType<?> eventType;
+        public EventRegistrationInfo(String subscriptionID, EventType<?> eventType){
+            this.subscriptionID = subscriptionID;
+            this.eventType = eventType;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof EventRegistrationInfo)) return false;
+            EventRegistrationInfo that = (EventRegistrationInfo) o;
+            return Objects.equals(subscriptionID, that.subscriptionID) &&
+                    Objects.equals(eventType, that.eventType);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(subscriptionID,eventType);
         }
     }
 }
