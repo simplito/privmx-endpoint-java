@@ -41,7 +41,8 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
-import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint;
+
+import java.util.Objects;
 
 /**
  * Defines the structure to register PrivMX Bridge event callbacks
@@ -89,6 +90,22 @@ public class EventType<T> {
         eventResultClass = eventClass;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof EventType)) return false;
+        EventType<?> eventType1 = (EventType<?>) o;
+        return Objects.equals(eventName, eventType1.eventName) &&
+                Objects.equals(channelName, eventType1.channelName) &&
+                Objects.equals(libEventType, eventType1.libEventType) &&
+                Objects.equals(eventSelectorType, eventType1.eventSelectorType) &&
+                Objects.equals(eventSelectorId, eventType1.eventSelectorId) &&
+                Objects.equals(eventResultClass, eventType1.eventResultClass);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(eventName, channelName, libEventType, eventSelectorType, eventSelectorId, eventResultClass);
+    }
 
     /**
      * Predefined event type that captures successful platform connection events.
