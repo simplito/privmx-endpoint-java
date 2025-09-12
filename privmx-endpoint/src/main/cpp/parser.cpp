@@ -273,6 +273,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
+                    event_cast.subscriptions,
                     privmx::wrapper::collectionChangedEventData2Java(ctx, event_cast.data)
             );
         } else if (core::Events::isContextUserAddedEvent(event)) {
@@ -283,6 +284,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
+                    event_cast.subscriptions,
                     privmx::wrapper::contextUserEventData2Java(ctx, event_cast.data)
             );
         } else if (core::Events::isContextUserRemovedEvent(event)) {
@@ -293,6 +295,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
+                    event_cast.subscriptions,
                     privmx::wrapper::contextUserEventData2Java(ctx, event_cast.data)
             );
         } else if (core::Events::isContextUsersStatusChangeEvent(event)) {
@@ -303,6 +306,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
+                    event_cast.subscriptions,
                     privmx::wrapper::contextUsersStatusChangeData2Java(ctx, event_cast.data)
             );
         } else if (thread::Events::isThreadCreatedEvent(event)) {

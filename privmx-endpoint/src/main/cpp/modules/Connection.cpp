@@ -373,7 +373,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_subscribeFor(
                 for (int i = 0; i < ctx->GetArrayLength(subscription_queries_arr); i++) {
                     jobject arrayElement = ctx->GetObjectArrayElement(subscription_queries_arr, i);
                     if (ctx.nullCheck(arrayElement, "Subscription queries array elements")) {
-                        return nullptr;
+                        return  (jobject) nullptr;
                     }
                     subscription_queries_c.push_back(ctx.jString2string((jstring) arrayElement));
                 }
