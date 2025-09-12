@@ -106,11 +106,11 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         eventDispatcher.emit(event);
     }
 
-    public RegistrationResult registerCallback(
+    public <T> RegistrationResult registerCallback(
             Object callbackGroup,
-            EventCallback<?> callback,
-            EventType<?> eventType
-    ) {
+            EventType<T> eventType,
+            EventCallback<T> callback
+            ) {
         return registerMany(new CallbackRegistration(callbackGroup,eventType,callback)).get(0);
     }
 
