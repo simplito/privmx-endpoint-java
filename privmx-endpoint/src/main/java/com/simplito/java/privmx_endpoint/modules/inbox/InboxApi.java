@@ -1,6 +1,6 @@
 //
 // PrivMX Endpoint Java.
-// Copyright © 2024 Simplito sp. z o.o.
+// Copyright © 2025 Simplito sp. z o.o.
 //
 // This file is part of the PrivMX Platform (https://privmx.dev).
 // This software is Licensed under the MIT License.
@@ -11,6 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.inbox;
 
+import com.simplito.java.privmx_endpoint.LibLoader;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicyWithoutItem;
 import com.simplito.java.privmx_endpoint.model.FilesConfig;
 import com.simplito.java.privmx_endpoint.model.Inbox;
@@ -40,7 +41,7 @@ import java.util.Optional;
  */
 public class InboxApi implements AutoCloseable {
     static {
-        System.loadLibrary("privmx-endpoint-java");
+        LibLoader.loadPrivmxLibraries();
     }
 
     @SuppressWarnings("FieldCanBeLocal")
