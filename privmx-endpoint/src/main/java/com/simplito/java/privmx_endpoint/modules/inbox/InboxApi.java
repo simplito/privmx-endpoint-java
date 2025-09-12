@@ -19,8 +19,8 @@ import com.simplito.java.privmx_endpoint.model.InboxEntry;
 import com.simplito.java.privmx_endpoint.model.InboxPublicView;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
-import com.simplito.java.privmx_endpoint.model.events.InboxDeletedEventData;
-import com.simplito.java.privmx_endpoint.model.events.InboxEntryDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.InboxEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
@@ -681,42 +681,42 @@ public class InboxApi implements AutoCloseable {
     public native String closeFile(long fileHandle) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribes for the Inbox module main events.
+     * Subscribe for the Inbox events on the given subscription query.
      *
+     * @param subscriptionQueries list of queries
+     * @return list of subscriptionIds in matching order to subscriptionQueries
+     * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
      */
-    public native void subscribeForInboxEvents() throws PrivmxException, NativeException, IllegalStateException;
+    public native List<String> subscribeFor(List<String> subscriptionQueries) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribes for the Inbox module main events.
+     * Unsubscribe from events with the given subscriptionId.
      *
+     * @param subscriptionIds list of subscriptionId
+     * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
      */
-    public native void unsubscribeFromInboxEvents() throws PrivmxException, NativeException, IllegalStateException;
+    public native void unsubscribeFrom(List<String> subscriptionIds) throws PrivmxException, NativeException, IllegalStateException;
+
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException;
 
     /**
-     * Subscribes for events in given Inbox.
+     * Generate subscription Query for the Inbox events.
      *
-     * @param inboxId ID of the Inbox to subscribe
+     * @param eventType    type of event you listen for
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return // todo - add return description
+     * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
      */
-    public native void subscribeForEntryEvents(String inboxId) throws PrivmxException, NativeException, IllegalStateException;
-
-    /**
-     * Unsubscribes from events in given Inbox.
-     *
-     * @param inboxId ID of the Inbox to unsubscribe
-     * @throws PrivmxException       thrown when method encounters an exception.
-     * @throws NativeException       thrown when method encounters an unknown exception.
-     * @throws IllegalStateException thrown when instance is closed.
-     */
-    public native void unsubscribeFromEntryEvents(String inboxId) throws PrivmxException, NativeException, IllegalStateException;
+    public String buildSubscriptionQuery(InboxEventType eventType, InboxEventSelectorType selectorType, String selectorId) throws PrivmxException, NativeException, IllegalStateException {
+        return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
+    }
 
     /**
      * Frees memory.
