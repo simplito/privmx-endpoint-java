@@ -67,7 +67,7 @@ public class EventDispatcher {
      * @param event event data to emit
      */
     public <T> void emit(Event<T> event) {
-        List<Pair> callbacks = getCallbacks(event.subscriptions);
+        List<Pair> callbacks = event.type.startsWith("lib") ? getCallbacksByType(event.type): getCallbacks(event.subscriptions);
         for (Pair p : callbacks) {
             try {
                 EventCallback<T> e = (EventCallback<T>) p.callback;
@@ -162,6 +162,12 @@ public class EventDispatcher {
                 }
             }
             return pairs;
+        }
+    }
+
+    private List<Pair> getCallbacksByType(String eventType){
+        synchronized (map2){
+            return map2.entrySet().stream().filter(it->it.getKey().eventType.eventName.equals(eventType)).flatMap(it->it.getValue().stream()).collect(Collectors.toList());
         }
     }
 
