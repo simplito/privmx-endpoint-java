@@ -11,9 +11,11 @@
 
 package com.simplito.java.privmx_endpoint.modules.core.utils;
 
+import com.simplito.java.privmx_endpoint.LibLoader;
+
 public class Hex {
     static {
-        System.loadLibrary("privmx-endpoint-java");
+        LibLoader.loadPrivmxLibraries();
     }
 
     public Hex() {

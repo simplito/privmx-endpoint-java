@@ -1,6 +1,6 @@
 //
 // PrivMX Endpoint Java.
-// Copyright © 2024 Simplito sp. z o.o.
+// Copyright © 2025 Simplito sp. z o.o.
 //
 // This file is part of the PrivMX Platform (https://privmx.dev).
 // This software is Licensed under the MIT License.
@@ -11,6 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.core;
 
+import com.simplito.java.privmx_endpoint.LibLoader;
 import com.simplito.java.privmx_endpoint.model.Context;
 import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
 import com.simplito.java.privmx_endpoint.model.PagingList;
@@ -27,7 +28,7 @@ import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
  */
 public class Connection implements AutoCloseable {
     static {
-        System.loadLibrary("privmx-endpoint-java");
+        LibLoader.loadPrivmxLibraries();
     }
 
     private final Long api;
