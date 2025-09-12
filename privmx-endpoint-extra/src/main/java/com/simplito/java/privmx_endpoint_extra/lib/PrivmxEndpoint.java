@@ -34,7 +34,6 @@ import com.simplito.java.privmx_endpoint_extra.model.Modules;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,18 +109,18 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
             Object callbackGroup,
             EventType<T> eventType,
             EventCallback<T> callback
-            ) {
-        return registerMany(new CallbackRegistration(callbackGroup,eventType,callback)).get(0);
+    ) {
+        return registerManyCallbacks(new CallbackRegistration<>(callbackGroup,eventType,callback)).get(0);
     }
 
-    public List<RegistrationResult> registerMany(
-            CallbackRegistration... registrations
+    public List<RegistrationResult> registerManyCallbacks(
+            CallbackRegistration<?>... registrations
     ) {
         List<CallbackRegistrationWithResult> results = Arrays.stream(registrations).map(it -> new CallbackRegistrationWithResult(it, null)).collect(Collectors.toList());
-        final Map<String/*containerName(thread)*/, EventsToSubscribe> eventsToSubscribeByModule = new HashMap<>();
+        final Map<String/*module*/, EventsToSubscribe> eventsToSubscribeByModule = new HashMap<>();
 
         for (CallbackRegistrationWithResult result : results) {
-            CallbackRegistration registration = result.registration;
+            CallbackRegistration<?> registration = result.registration;
             String containerName = null;
             String query = null;
             EventType<?> eventType = registration.eventType;
@@ -179,20 +178,8 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         return results.stream().map(it -> it.result).collect(Collectors.toList());
     }
 
-    public static class CallbackRegistrationWithResult {
-        public final CallbackRegistration registration;
-        public RegistrationResult result;
-
-        public CallbackRegistrationWithResult(
-                CallbackRegistration registration,
-                RegistrationResult result
-        ) {
-            this.registration = registration;
-            this.result = result;
-        }
-    }
-
     private void unsubscribeMany(String container, List<String> subscriptionIds) throws IllegalStateException, NativeException, PrivmxException{
+        System.out.println("unsubscribe");
         switch (container) {
             case "custom":
                 if(eventApi == null) throw new IllegalStateException("eventApi is not initialized");
@@ -246,7 +233,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                     case "thread":
                         if (threadApi == null){
                             throw new IllegalStateException("threadApi is not initialized");
-                            }
+                        }
                         subscribeFor(value.queriesMap, threadApi::subscribeFor);
                         break;
                     case "store":
@@ -276,6 +263,19 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
             }
         });
         eventDispatcher.removeNotSubscribedEvents();
+    }
+
+    private static class CallbackRegistrationWithResult {
+        public final CallbackRegistration<?> registration;
+        public RegistrationResult result;
+
+        private CallbackRegistrationWithResult(
+                CallbackRegistration<?> registration,
+                RegistrationResult result
+        ) {
+            this.registration = registration;
+            this.result = result;
+        }
     }
 
     public static class RegistrationResult {
