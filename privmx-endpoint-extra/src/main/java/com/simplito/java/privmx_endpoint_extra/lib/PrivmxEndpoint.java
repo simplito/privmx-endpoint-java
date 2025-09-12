@@ -172,6 +172,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                         new EventsToSubscribe()
                 );
                 eventsToSubscribe.add(query, result, registrationInfo);
+                eventsToSubscribeByModule.put(containerName,eventsToSubscribe);
             }
         }
         subscribeAll(eventsToSubscribeByModule);
@@ -307,7 +308,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         private final Map<String, List<EventToSubscribe>> queriesMap = new HashMap<>();
 
         private void add(String query, PrivmxEndpoint.CallbackRegistrationWithResult callbackRegistrationWithResult, EventDispatcher.EventRegistrationInfo eventRegistrationInfo) {
-            List<EventToSubscribe> listToAdd = queriesMap.getOrDefault(query, Collections.emptyList());
+            List<EventToSubscribe> listToAdd = queriesMap.getOrDefault(query, new ArrayList<>());
             listToAdd.add(new EventToSubscribe(callbackRegistrationWithResult, eventRegistrationInfo));
             queriesMap.put(query, listToAdd);
         }
