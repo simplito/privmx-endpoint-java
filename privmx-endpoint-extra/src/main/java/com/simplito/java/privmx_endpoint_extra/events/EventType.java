@@ -11,6 +11,7 @@
 
 package com.simplito.java.privmx_endpoint_extra.events;
 
+import com.simplito.java.privmx_endpoint.model.Event;
 import com.simplito.java.privmx_endpoint.model.File;
 import com.simplito.java.privmx_endpoint.model.Inbox;
 import com.simplito.java.privmx_endpoint.model.InboxEntry;
@@ -88,6 +89,18 @@ public class EventType<T> {
         this.eventSelectorType = null;
         this.eventSelectorId = null;
         eventResultClass = eventClass;
+    }
+
+    public boolean isLibEvent(){
+        return this.equals(EventType.ConnectedEvent) || this.equals(DisconnectedEvent) || this.equals(LibBreakEvent);
+    }
+
+    public static boolean isLibEvent(Event<?> event){
+        return event.subscriptions != null
+                && event.subscriptions.isEmpty()
+                && Objects.equals(event.type, EventType.ConnectedEvent.eventName)
+                && Objects.equals(event.type, DisconnectedEvent.eventName)
+                && Objects.equals(event.type, LibBreakEvent.eventName);
     }
 
     @Override

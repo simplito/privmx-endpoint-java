@@ -126,7 +126,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
 
             EventDispatcher.EventRegistrationInfo registrationInfo = eventDispatcher.registerCallback(registration);
 
-            if (registrationInfo.subscriptionID != null || eventType.eventName.startsWith("lib")) {
+            if (registrationInfo.subscriptionID != null || eventType.isLibEvent()) {
                 result.result = new RegistrationResult(null);
             } else {
                 if (eventType.channelName != null && eventType.eventSelectorType instanceof CustomEventSelectorType) {

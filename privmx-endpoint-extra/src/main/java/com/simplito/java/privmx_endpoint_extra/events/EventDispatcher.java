@@ -65,7 +65,7 @@ public class EventDispatcher {
      * @param event event data to emit
      */
     public <T> void emit(Event<T> event) {
-        List<Pair> callbacks = event.type.startsWith("lib") ? getCallbacksByType(event.type) : getCallbacks(event.subscriptions);
+        List<Pair> callbacks = EventType.isLibEvent(event) ? getCallbacksByType(event.type) : getCallbacks(event.subscriptions);
         for (Pair p : callbacks) {
             try {
                 EventCallback<T> e = (EventCallback<T>) p.callback;
@@ -179,7 +179,7 @@ public class EventDispatcher {
             Iterator<Map.Entry<EventRegistrationInfo, List<EventDispatcher.Pair>>> entrySetIterator = callbackMap.entrySet().iterator();
             while (entrySetIterator.hasNext()) {
                 EventRegistrationInfo eventRegistrationInfo = entrySetIterator.next().getKey();
-                if (eventRegistrationInfo.subscriptionID == null && !eventRegistrationInfo.eventType.eventName.startsWith("lib")) {
+                if (eventRegistrationInfo.subscriptionID == null && !eventRegistrationInfo.eventType.isLibEvent()) {
                     entrySetIterator.remove();
                 }
             }
