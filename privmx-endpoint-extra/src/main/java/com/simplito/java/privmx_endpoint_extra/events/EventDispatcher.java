@@ -119,12 +119,16 @@ public class EventDispatcher {
      */
     public void unbindAll() {
         synchronized (callbackMap) {
-            List<Object> callbacksToUnbind = callbackMap.entrySet()
-                    .stream()
-                    .flatMap(it -> it.getValue().stream())
-                    .map(it -> it.context)
-                    .collect(Collectors.toList());
-            unbind(callbacksToUnbind);
+            Map<Modules, List<String>> selectorsToUnsubscribe = new HashMap<>();
+            callbackMap.keySet().forEach(it -> {
+                Modules module = getModuleFromEventRegistrationInfo(it);
+                if (it.subscriptionID != null && module != null) {
+                    List<String> subscriptionsList = selectorsToUnsubscribe.getOrDefault(module, new ArrayList<>());
+                    subscriptionsList.add(it.subscriptionID);
+                    selectorsToUnsubscribe.put(module, subscriptionsList);
+                }
+            });
+            onRemoveEntryKey.call(selectorsToUnsubscribe);
         }
     }
 
