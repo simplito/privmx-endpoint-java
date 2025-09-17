@@ -51,10 +51,9 @@ public class EventDispatcher {
         this.onRemoveEntryKey = onRemoveEntryKey;
     }
 
-    public EventRegistrationInfo registerCallback(CallbackRegistration callbackRegistration) {
-        EventRegistrationInfo info = new EventRegistrationInfo(null, callbackRegistration.eventType);
+    public EventRegistrationInfo registerCallback(CallbackRegistration<?> callbackRegistration) {
+        EventRegistrationInfo info = getRegistrationInfo(callbackRegistration.eventType);
         getCallbackList(info).add(new Pair(callbackRegistration.callbackGroup, callbackRegistration.callback));
-
         return info;
     }
 
@@ -169,6 +168,16 @@ public class EventDispatcher {
                             it.getValue().stream()
                     )
                     .collect(Collectors.toList());
+        }
+    }
+
+    private EventRegistrationInfo getRegistrationInfo(EventType<?> eventType) {
+        synchronized (callbackMap) {
+            return callbackMap.keySet()
+                    .stream()
+                    .filter(it -> it.eventType.equals(eventType))
+                    .findFirst()
+                    .orElse(new EventRegistrationInfo(null, eventType));
         }
     }
 
