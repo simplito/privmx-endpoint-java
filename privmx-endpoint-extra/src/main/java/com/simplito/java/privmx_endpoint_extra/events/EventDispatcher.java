@@ -80,13 +80,6 @@ public class EventDispatcher {
         }
     }
 
-    private boolean eventHasNoCallbacks(EventRegistrationInfo eventInfo) {
-        synchronized (callbackMap) {
-            List<Pair> callbacks = callbackMap.get(eventInfo);
-            return callbacks == null || callbacks.isEmpty();
-        }
-    }
-
     /**
      * Removes all callbacks registered by {@link #registerCallback(CallbackRegistration)}. It's identified by given {@code callbackGroups}.
      */
