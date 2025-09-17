@@ -50,8 +50,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
     private final EventCallback<Map<String, List<String>>> onRemove = (map) -> {
         try {
             map.forEach(this::unsubscribeMany);
-        } catch (Exception e) {
-            System.out.println("Cannot unsubscribe");
+        } catch (Exception ignore) {
         }
     };
     private final EventDispatcher eventDispatcher = new EventDispatcher(onRemove);
@@ -179,7 +178,6 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
     }
 
     private void unsubscribeMany(String container, List<String> subscriptionIds) throws IllegalStateException, NativeException, PrivmxException{
-        System.out.println("unsubscribe");
         switch (container) {
             case "custom":
                 if(eventApi == null) throw new IllegalStateException("eventApi is not initialized");
