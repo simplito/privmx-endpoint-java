@@ -18,6 +18,7 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
+import com.simplito.java.privmx_endpoint_extra.model.Modules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
 public class EventDispatcher {
 
     private final Map<EventRegistrationInfo, List<Pair>> callbackMap = new HashMap<>();
-    private final EventCallback<Map<String, List<String>>> onRemoveEntryKey;
+    private final EventCallback<Map<Modules, List<String>>> onRemoveEntryKey;
 
     /**
      * Creates instance of {@code EventDispatcher}.
@@ -46,7 +47,7 @@ public class EventDispatcher {
      *                         from channel entry have been removed
      *                         (it can also unsubscribe from the channel)
      */
-    public EventDispatcher(EventCallback<Map<String, List<String>>> onRemoveEntryKey) {
+    public EventDispatcher(EventCallback<Map<Modules, List<String>>> onRemoveEntryKey) {
         this.onRemoveEntryKey = onRemoveEntryKey;
     }
 
@@ -93,7 +94,7 @@ public class EventDispatcher {
         List<Object> callbackGroupsList = Arrays.asList(callbackGroups);
         if (callbackGroupsList.isEmpty()) return;
         synchronized (callbackMap) {
-            Map<String, List<String>> selectorsToUnsubscribe = new HashMap<>();
+            Map<Modules, List<String>> selectorsToUnsubscribe = new HashMap<>();
             Iterator<Map.Entry<EventRegistrationInfo, List<Pair>>> mapIterator = callbackMap.entrySet().iterator();
 
             while (mapIterator.hasNext()) {
@@ -106,7 +107,7 @@ public class EventDispatcher {
                 callbackGroupsList.removeAll(pairsOfCallbacks);
 
                 if (callbacks.isEmpty()) {
-                    String module = getModuleFromEventRegistrationInfo(key);
+                    Modules module = getModuleFromEventRegistrationInfo(key);
                     if (module != null) {
                         List<String> selectors = selectorsToUnsubscribe.getOrDefault(module, new ArrayList<>());
                         selectors.add(key.subscriptionID);
@@ -186,18 +187,18 @@ public class EventDispatcher {
         }
     }
 
-    private static String getModuleFromEventRegistrationInfo(EventRegistrationInfo key) {
-        String module = null;
+    private static Modules getModuleFromEventRegistrationInfo(EventRegistrationInfo key) {
+        Modules module = null;
         if (key.eventType.eventSelectorType instanceof CustomEventSelectorType) {
-            module = "custom";
+            module = Modules.CUSTOM_EVENT;
         } else if (key.eventType.libEventType instanceof ThreadEventType) {
-            module = "thread";
+            module = Modules.THREAD;
         } else if (key.eventType.libEventType instanceof StoreEventType) {
-            module = "store";
+            module = Modules.STORE;
         } else if (key.eventType.libEventType instanceof InboxEventType) {
-            module = "inbox";
+            module = Modules.INBOX;
         } else if (key.eventType.libEventType instanceof KvdbEventType) {
-            module = "kvdb";
+            module = Modules.KVDB;
         }
         return module;
     }

@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  * @category core
  */
 public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable {
-    private final EventCallback<Map<String, List<String>>> onRemove = (map) -> {
+    private final EventCallback<Map<Modules, List<String>>> onRemove = (map) -> {
         try {
             map.forEach(this::unsubscribeMany);
         } catch (Exception ignore) {
@@ -116,11 +116,11 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
             CallbackRegistration<?>... registrations
     ) {
         List<CallbackRegistrationWithResult> results = Arrays.stream(registrations).map(it -> new CallbackRegistrationWithResult(it, null)).collect(Collectors.toList());
-        final Map<String/*module*/, EventsToSubscribe> eventsToSubscribeByModule = new HashMap<>();
+        final Map<Modules, EventsToSubscribe> eventsToSubscribeByModule = new HashMap<>();
 
         for (CallbackRegistrationWithResult result : results) {
             CallbackRegistration<?> registration = result.registration;
-            String containerName = null;
+            Modules module = null;
             String query = null;
             EventType<?> eventType = registration.eventType;
 
@@ -130,35 +130,35 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                 result.result = new RegistrationResult(null);
             } else {
                 if (eventType.channelName != null && eventType.eventSelectorType instanceof CustomEventSelectorType) {
-                    containerName = "custom";
+                    module = Modules.CUSTOM_EVENT;
                     query = eventApi.buildSubscriptionQuery(
                             eventType.channelName,
                             (CustomEventSelectorType) eventType.eventSelectorType,
                             eventType.eventSelectorId
                     );
                 } else if (eventType.libEventType instanceof ThreadEventType) {
-                    containerName = "thread";
+                    module = Modules.THREAD;
                     query = threadApi.buildSubscriptionQuery(
                             (ThreadEventType) eventType.libEventType,
                             (ThreadEventSelectorType) eventType.eventSelectorType,
                             eventType.eventSelectorId
                     );
                 } else if (eventType.libEventType instanceof StoreEventType) {
-                    containerName = "store";
+                    module = Modules.STORE;
                     query = storeApi.buildSubscriptionQuery(
                             (StoreEventType) eventType.libEventType,
                             (StoreEventSelectorType) eventType.eventSelectorType,
                             eventType.eventSelectorId
                     );
                 } else if (eventType.libEventType instanceof InboxEventType) {
-                    containerName = "inbox";
+                    module = Modules.INBOX;
                     query = inboxApi.buildSubscriptionQuery(
                             (InboxEventType) eventType.libEventType,
                             (InboxEventSelectorType) eventType.eventSelectorType,
                             eventType.eventSelectorId
                     );
                 } else if (eventType.libEventType instanceof KvdbEventType) {
-                    containerName = "kvdb";
+                    module = Modules.INBOX;
                     query = kvdbApi.buildSubscriptionQuery(
                             (KvdbEventType) eventType.libEventType,
                             (KvdbEventSelectorType) eventType.eventSelectorType,
@@ -166,37 +166,41 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                     );
                 }
                 EventsToSubscribe eventsToSubscribe = eventsToSubscribeByModule.getOrDefault(
-                        containerName,
+                        module,
                         new EventsToSubscribe()
                 );
                 eventsToSubscribe.add(query, result, registrationInfo);
-                eventsToSubscribeByModule.put(containerName,eventsToSubscribe);
+                eventsToSubscribeByModule.put(module, eventsToSubscribe);
             }
         }
         subscribeAll(eventsToSubscribeByModule);
         return results.stream().map(it -> it.result).collect(Collectors.toList());
     }
 
-    private void unsubscribeMany(String container, List<String> subscriptionIds) throws IllegalStateException, NativeException, PrivmxException{
-        switch (container) {
-            case "custom":
-                if(eventApi == null) throw new IllegalStateException("eventApi is not initialized");
+    private void unsubscribeMany(Modules module, List<String> subscriptionIds) throws IllegalStateException, NativeException, PrivmxException {
+        switch (module) {
+            case CUSTOM_EVENT:
+                if (eventApi == null)
+                    throw new IllegalStateException("eventApi is not initialized");
                 eventApi.unsubscribeFrom(subscriptionIds);
                 break;
-            case "thread":
-                if(threadApi == null) throw new IllegalStateException("threadApi is not initialized");
+            case THREAD:
+                if (threadApi == null)
+                    throw new IllegalStateException("threadApi is not initialized");
                 threadApi.unsubscribeFrom(subscriptionIds);
                 break;
-            case "store":
-                if(storeApi == null) throw new IllegalStateException("storeApi is not initialized");
+            case STORE:
+                if (storeApi == null)
+                    throw new IllegalStateException("storeApi is not initialized");
                 storeApi.unsubscribeFrom(subscriptionIds);
                 break;
-            case "inbox":
-                if(inboxApi == null) throw new IllegalStateException("inboxApi is not initialized");
+            case INBOX:
+                if (inboxApi == null)
+                    throw new IllegalStateException("inboxApi is not initialized");
                 inboxApi.unsubscribeFrom(subscriptionIds);
                 break;
-            case "kvdb":
-                if(kvdbApi == null) throw new IllegalStateException("kvdbApi is not initialized");
+            case KVDB:
+                if (kvdbApi == null) throw new IllegalStateException("kvdbApi is not initialized");
                 kvdbApi.unsubscribeFrom(subscriptionIds);
                 break;
         }
@@ -218,35 +222,35 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         }
     }
 
-    private void subscribeAll(Map<String/*containerName(thread)*/, EventsToSubscribe> eventsToSubscribeByModule) {
+    private void subscribeAll(Map<Modules, EventsToSubscribe> eventsToSubscribeByModule) {
         eventsToSubscribeByModule.forEach((key, value) -> {
             try {
                 switch (key) {
-                    case "custom":
+                    case CUSTOM_EVENT:
                         if (eventApi == null) {
                             throw new IllegalStateException("eventApi is not initialized");
                         }
                         subscribeFor(value.queriesMap, eventApi::subscribeFor);
                         break;
-                    case "thread":
-                        if (threadApi == null){
+                    case THREAD:
+                        if (threadApi == null) {
                             throw new IllegalStateException("threadApi is not initialized");
                         }
                         subscribeFor(value.queriesMap, threadApi::subscribeFor);
                         break;
-                    case "store":
+                    case STORE:
                         if (storeApi == null) {
                             throw new IllegalStateException("storeApi is not initialized");
                         }
                         subscribeFor(value.queriesMap, storeApi::subscribeFor);
                         break;
-                    case "inbox":
+                    case INBOX:
                         if (inboxApi == null) {
                             throw new IllegalStateException("inboxApi is not initialized");
                         }
                         subscribeFor(value.queriesMap, inboxApi::subscribeFor);
                         break;
-                    case "kvdb":
+                    case KVDB:
                         if (kvdbApi == null) {
                             throw new IllegalStateException("kvdbApi is not initialized");
                         }
