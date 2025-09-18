@@ -20,7 +20,10 @@ import com.simplito.java.privmx_endpoint.model.KvdbEntry;
 import com.simplito.java.privmx_endpoint.model.Message;
 import com.simplito.java.privmx_endpoint.model.Store;
 import com.simplito.java.privmx_endpoint.model.Thread;
+import com.simplito.java.privmx_endpoint.model.events.CollectionChangedEventData;
 import com.simplito.java.privmx_endpoint.model.events.ContextCustomEventData;
+import com.simplito.java.privmx_endpoint.model.events.ContextUserEventData;
+import com.simplito.java.privmx_endpoint.model.events.ContextUsersStatusChangedEventData;
 import com.simplito.java.privmx_endpoint.model.events.InboxDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.InboxEntryDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.KvdbDeletedEntryEventData;
@@ -32,12 +35,14 @@ import com.simplito.java.privmx_endpoint.model.events.StoreStatsChangedEventData
 import com.simplito.java.privmx_endpoint.model.events.ThreadDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.ThreadDeletedMessageEventData;
 import com.simplito.java.privmx_endpoint.model.events.ThreadStatsEventData;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.CoreEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.CustomEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.EventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.InboxEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.KvdbEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StoreEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.ThreadEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.CoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
@@ -52,7 +57,7 @@ import java.util.Objects;
  * @category core
  */
 public class EventType<T> {
-
+    //TODO: Add better descriptions for new eventType constructors, especially for containers where selector type is not passed as parameter
     /**
      * This event type as a string.
      */
@@ -91,11 +96,11 @@ public class EventType<T> {
         eventResultClass = eventClass;
     }
 
-    public boolean isLibEvent(){
+    public boolean isLibEvent() {
         return this.equals(EventType.ConnectedEvent) || this.equals(DisconnectedEvent) || this.equals(LibBreakEvent);
     }
 
-    public static boolean isLibEvent(Event<?> event){
+    public static boolean isLibEvent(Event<?> event) {
         return event.subscriptions != null
                 && event.subscriptions.isEmpty()
                 && Objects.equals(event.type, EventType.ConnectedEvent.eventName)
@@ -144,7 +149,7 @@ public class EventType<T> {
     );
 
     /**
-     * Predefined event type to catch created Thread events.
+     * Predefined event type to catch created Thread events on specified {@code contextId}
      */
     public static EventType<Thread> ThreadCreatedEvent(String contextId) {
         return new EventType<>(
@@ -170,100 +175,121 @@ public class EventType<T> {
     /**
      * Predefined event type to catch updated Thread stats events.
      */
-    public static final EventType<ThreadStatsEventData> ThreadStatsChangedEvent(ThreadEventSelectorType selectorType, String selectorId) {
+    public static EventType<ThreadStatsEventData> ThreadStatsChangedEvent(ThreadEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "threadStats",
                 ThreadEventType.THREAD_STATS,
                 selectorType,
-                selectorId, ThreadStatsEventData.class);
+                selectorId,
+                ThreadStatsEventData.class);
     }
 
     /**
      * Predefined event type to catch deleted Thread events.
      */
-    public static final EventType<ThreadDeletedEventData> ThreadDeletedEvent(ThreadEventSelectorType selectorType, String selectorId) {
+    public static EventType<ThreadDeletedEventData> ThreadDeletedEvent(ThreadEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "threadDeleted",
                 ThreadEventType.THREAD_DELETE,
                 selectorType,
-                selectorId, ThreadDeletedEventData.class);
+                selectorId,
+                ThreadDeletedEventData.class);
     }
 
     /**
      * Predefined event type to catch created Store events.
      */
-    public static final EventType<Store> StoreCreatedEvent(String contextId) {
+    public static EventType<Store> StoreCreatedEvent(String contextId) {
         return new EventType<>(
                 "storeCreated",
                 StoreEventType.STORE_CREATE,
                 StoreEventSelectorType.CONTEXT_ID,
-                contextId, Store.class);
+                contextId,
+                Store.class);
     }
 
     /**
      * Predefined event type to catch updated Store events.
      */
-    public static final EventType<Store> StoreUpdatedEvent(StoreEventSelectorType selectorType, String selectorId) {
+    public static EventType<Store> StoreUpdatedEvent(StoreEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "storeUpdated",
                 StoreEventType.STORE_UPDATE,
                 selectorType,
-                selectorId, Store.class);
+                selectorId,
+                Store.class);
     }
 
     /**
      * Predefined event type to catch updated Store stats events.
      */
-    public static final EventType<StoreStatsChangedEventData> StoreStatsChangedEvent(StoreEventSelectorType selectorType, String selectorId) {
+    public static EventType<StoreStatsChangedEventData> StoreStatsChangedEvent(StoreEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "storeStatsChanged",
                 StoreEventType.STORE_STATS,
                 selectorType,
-                selectorId, StoreStatsChangedEventData.class);
+                selectorId,
+                StoreStatsChangedEventData.class);
     }
 
     /**
      * Predefined event type to catch deleted Store stats events.
      */
-    public static final EventType<StoreDeletedEventData> StoreDeletedEvent(StoreEventSelectorType selectorType, String selectorId) {
+    public static EventType<StoreDeletedEventData> StoreDeletedEvent(StoreEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "storeDeleted",
                 StoreEventType.STORE_DELETE,
                 selectorType,
-                selectorId, StoreDeletedEventData.class);
+                selectorId,
+                StoreDeletedEventData.class);
+    }
+
+    /**
+     * Predefined event type to catch created KVDB events.
+     */
+    public static EventType<Kvdb> KvdbCreatedEvent(String contextId) {
+        return new EventType<>(
+                "kvdbCreated",
+                KvdbEventType.KVDB_CREATE,
+                KvdbEventSelectorType.CONTEXT_ID,
+                contextId,
+                Kvdb.class);
     }
 
     /**
      * Predefined event type to catch updated KVDB events.
      */
-    public static final EventType<Kvdb> KvdbUpdatedEvent(KvdbEventSelectorType selectorType, String selectorId) {
+    public static EventType<Kvdb> KvdbUpdatedEvent(KvdbEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "kvdbUpdated",
                 KvdbEventType.KVDB_UPDATE,
                 selectorType,
-                selectorId, Kvdb.class);
+                selectorId,
+                Kvdb.class);
     }
 
     /**
      * Predefined event type to catch deleted KVDB events.
      */
-    public static final EventType<KvdbDeletedEventData> KvdbDeletedEvent(KvdbEventSelectorType selectorType, String selectorId) {
+    public static EventType<KvdbDeletedEventData> KvdbDeletedEvent(KvdbEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "kvdbDeleted",
                 KvdbEventType.KVDB_DELETE,
                 selectorType,
-                selectorId, KvdbDeletedEventData.class);
+                selectorId,
+                KvdbDeletedEventData.class);
     }
 
     /**
      * Predefined event type to catch updated KVDB stats events.
      */
-    public static final EventType<KvdbStatsEventData> KvdbStatsEvent(KvdbEventSelectorType selectorType, String selectorId) {
+    public static EventType<KvdbStatsEventData> KvdbStatsEvent(KvdbEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "kvdbStatsChanged",
                 KvdbEventType.KVDB_STATS,
                 selectorType,
-                selectorId, KvdbStatsEventData.class);
+                selectorId,
+                KvdbStatsEventData.class);
     }
 
     /**
@@ -274,7 +300,8 @@ public class EventType<T> {
                 "inboxCreated",
                 InboxEventType.INBOX_CREATE,
                 InboxEventSelectorType.CONTEXT_ID,
-                contextId, Inbox.class);
+                contextId,
+                Inbox.class);
     }
 
     /**
@@ -283,9 +310,10 @@ public class EventType<T> {
     public static EventType<Inbox> InboxUpdatedEvent(InboxEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "inboxUpdated",
-                InboxEventType.INBOX_CREATE,
+                InboxEventType.INBOX_UPDATE,
                 selectorType,
-                selectorId, Inbox.class);
+                selectorId,
+                Inbox.class);
     }
 
     /**
@@ -296,20 +324,9 @@ public class EventType<T> {
                 "inboxDeleted",
                 InboxEventType.INBOX_DELETE,
                 selectorType,
-                selectorId, InboxDeletedEventData.class);
+                selectorId,
+                InboxDeletedEventData.class);
     }
-
-    /**
-     * Predefined event type to catch created KVDB events.
-     */
-    public static EventType<Kvdb> KvdbCreatedEvent(String contextId) {
-        return new EventType<>(
-                "kvdbCreated",
-                KvdbEventType.KVDB_DELETE,
-                KvdbEventSelectorType.CONTEXT_ID,
-                contextId, Kvdb.class);
-    }
-
 
     /**
      * Returns instance to register on new message Events.
@@ -321,7 +338,8 @@ public class EventType<T> {
                 "threadNewMessage",
                 ThreadEventType.MESSAGE_CREATE,
                 selectorType,
-                selectorId, Message.class);
+                selectorId,
+                Message.class);
     }
 
     /**
@@ -334,7 +352,8 @@ public class EventType<T> {
                 "threadUpdatedMessage",
                 ThreadEventType.MESSAGE_UPDATE,
                 selectorType,
-                selectorId, Message.class);
+                selectorId,
+                Message.class);
     }
 
     /**
@@ -347,7 +366,8 @@ public class EventType<T> {
                 "threadMessageDeleted",
                 ThreadEventType.MESSAGE_DELETE,
                 selectorType,
-                selectorId, ThreadDeletedMessageEventData.class);
+                selectorId,
+                ThreadDeletedMessageEventData.class);
     }
 
     /**
@@ -360,7 +380,8 @@ public class EventType<T> {
                 "storeFileCreated",
                 StoreEventType.FILE_CREATE,
                 selectorType,
-                selectorId, File.class);
+                selectorId,
+                File.class);
     }
 
     /**
@@ -373,7 +394,8 @@ public class EventType<T> {
                 "storeFileUpdated",
                 StoreEventType.FILE_UPDATE,
                 selectorType,
-                selectorId, File.class);
+                selectorId,
+                File.class);
     }
 
     /**
@@ -386,7 +408,8 @@ public class EventType<T> {
                 "storeFileDeleted",
                 StoreEventType.FILE_DELETE,
                 selectorType,
-                selectorId, StoreFileDeletedEventData.class);
+                selectorId,
+                StoreFileDeletedEventData.class);
     }
 
     /**
@@ -399,9 +422,9 @@ public class EventType<T> {
                 "inboxEntryCreated",
                 InboxEventType.ENTRY_CREATE,
                 selectorType,
-                selectorId, InboxEntry.class);
+                selectorId,
+                InboxEntry.class);
     }
-
 
     /**
      * Returns instance to register on deleting entries Events.
@@ -413,7 +436,8 @@ public class EventType<T> {
                 "inboxEntryDeleted",
                 InboxEventType.ENTRY_DELETE,
                 selectorType,
-                selectorId, InboxEntryDeletedEventData.class);
+                selectorId,
+                InboxEntryDeletedEventData.class);
     }
 
     /**
@@ -441,7 +465,8 @@ public class EventType<T> {
                 "kvdbNewEntry",
                 KvdbEventType.ENTRY_CREATE,
                 selectorType,
-                selectorId, KvdbEntry.class);
+                selectorId,
+                KvdbEntry.class);
     }
 
     /**
@@ -452,7 +477,8 @@ public class EventType<T> {
                 "kvdbEntryUpdated",
                 KvdbEventType.ENTRY_UPDATE,
                 selectorType,
-                selectorId, KvdbEntry.class);
+                selectorId,
+                KvdbEntry.class);
     }
 
     /**
@@ -463,6 +489,79 @@ public class EventType<T> {
                 "kvdbEntryDeleted",
                 KvdbEventType.ENTRY_DELETE,
                 selectorType,
-                selectorId, KvdbDeletedEntryEventData.class);
+                selectorId,
+                KvdbDeletedEntryEventData.class);
     }
+
+    public static EventType<CollectionChangedEventData> CollectionChangedEvent(ThreadEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "collectionChanged",
+                ThreadEventType.COLLECTION_CHANGE,
+                selectorType,
+                selectorId,
+                CollectionChangedEventData.class
+        );
+    }
+
+    public static EventType<CollectionChangedEventData> CollectionChangedEvent(StoreEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "collectionChanged",
+                StoreEventType.COLLECTION_CHANGE,
+                selectorType,
+                selectorId,
+                CollectionChangedEventData.class
+        );
+    }
+
+    public static EventType<CollectionChangedEventData> CollectionChangedEvent(InboxEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "collectionChanged",
+                InboxEventType.COLLECTION_CHANGE,
+                selectorType,
+                selectorId,
+                CollectionChangedEventData.class
+        );
+    }
+
+    public static EventType<CollectionChangedEventData> CollectionChangedEvent(KvdbEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "collectionChanged",
+                KvdbEventType.COLLECTION_CHANGE,
+                selectorType,
+                selectorId,
+                CollectionChangedEventData.class
+        );
+    }
+
+
+    public static EventType<ContextUserEventData> ContextUserAddedEvent(CoreEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "contextUserAdded",
+                CoreEventType.USER_ADD,
+                selectorType,
+                selectorId,
+                ContextUserEventData.class
+        );
+    }
+
+    public static EventType<ContextUserEventData> ContextUserRemovedEvent(CoreEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "contextUserRemoved",
+                CoreEventType.USER_REMOVE,
+                selectorType,
+                selectorId,
+                ContextUserEventData.class
+        );
+    }
+
+    public static EventType<ContextUsersStatusChangedEventData> ContextUsersStatusChangeEvent(CoreEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "contextUserStatusChanged",
+                CoreEventType.USER_STATUS,
+                selectorType,
+                selectorId,
+                ContextUsersStatusChangedEventData.class
+        );
+    }
+
 }
