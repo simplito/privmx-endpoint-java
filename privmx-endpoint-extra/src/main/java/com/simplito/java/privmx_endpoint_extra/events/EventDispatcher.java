@@ -14,6 +14,7 @@ package com.simplito.java.privmx_endpoint_extra.events;
 
 import com.simplito.java.privmx_endpoint.model.Event;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.CustomEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.CoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
 public class EventDispatcher {
 
     private final Map<EventRegistrationInfo, List<Pair>> callbackMap = new HashMap<>();
-    private final EventCallback<Map<Modules, List<String>>> onRemoveEntryKey;
+    private final EventCallback<Map<SubscriptionModule, List<String>>> onRemoveEntryKey;
 
     /**
      * Creates instance of {@code EventDispatcher}.
@@ -47,7 +48,7 @@ public class EventDispatcher {
      *                         from channel entry have been removed
      *                         (it can also unsubscribe from the channel)
      */
-    public EventDispatcher(EventCallback<Map<Modules, List<String>>> onRemoveEntryKey) {
+    public EventDispatcher(EventCallback<Map<SubscriptionModule, List<String>>> onRemoveEntryKey) {
         this.onRemoveEntryKey = onRemoveEntryKey;
     }
 
@@ -86,7 +87,7 @@ public class EventDispatcher {
         List<Object> callbackGroupsList = Arrays.asList(callbackGroups);
         if (callbackGroupsList.isEmpty()) return;
         synchronized (callbackMap) {
-            Map<Modules, List<String>> selectorsToUnsubscribe = new HashMap<>();
+            Map<SubscriptionModule, List<String>> selectorsToUnsubscribe = new HashMap<>();
             Iterator<Map.Entry<EventRegistrationInfo, List<Pair>>> mapIterator = callbackMap.entrySet().iterator();
 
             while (mapIterator.hasNext()) {
@@ -99,7 +100,7 @@ public class EventDispatcher {
                 callbackGroupsList.removeAll(pairsOfCallbacks);
 
                 if (callbacks.isEmpty()) {
-                    Modules module = getModuleFromEventRegistrationInfo(key);
+                    SubscriptionModule module = getModuleFromEventRegistrationInfo(key);
                     if (module != null) {
                         List<String> selectors = selectorsToUnsubscribe.getOrDefault(module, new ArrayList<>());
                         selectors.add(key.subscriptionID);
@@ -118,9 +119,9 @@ public class EventDispatcher {
      */
     public void unbindAll() {
         synchronized (callbackMap) {
-            Map<Modules, List<String>> selectorsToUnsubscribe = new HashMap<>();
+            Map<SubscriptionModule, List<String>> selectorsToUnsubscribe = new HashMap<>();
             callbackMap.keySet().forEach(it -> {
-                Modules module = getModuleFromEventRegistrationInfo(it);
+                SubscriptionModule module = getModuleFromEventRegistrationInfo(it);
                 if (it.subscriptionID != null && module != null) {
                     List<String> subscriptionsList = selectorsToUnsubscribe.getOrDefault(module, new ArrayList<>());
                     subscriptionsList.add(it.subscriptionID);
@@ -193,20 +194,49 @@ public class EventDispatcher {
         }
     }
 
-    private static Modules getModuleFromEventRegistrationInfo(EventRegistrationInfo key) {
-        Modules module = null;
+    private static SubscriptionModule getModuleFromEventRegistrationInfo(EventRegistrationInfo key) {
+        SubscriptionModule module = null;
         if (key.eventType.eventSelectorType instanceof CustomEventSelectorType) {
-            module = Modules.CUSTOM_EVENT;
+            module = SubscriptionModule.CUSTOM_EVENT;
         } else if (key.eventType.libEventType instanceof ThreadEventType) {
-            module = Modules.THREAD;
+            module = SubscriptionModule.THREAD;
         } else if (key.eventType.libEventType instanceof StoreEventType) {
-            module = Modules.STORE;
+            module = SubscriptionModule.STORE;
         } else if (key.eventType.libEventType instanceof InboxEventType) {
-            module = Modules.INBOX;
+            module = SubscriptionModule.INBOX;
         } else if (key.eventType.libEventType instanceof KvdbEventType) {
-            module = Modules.KVDB;
+            module = SubscriptionModule.KVDB;
+        } else if (key.eventType.libEventType instanceof CoreEventType) {
+            module = SubscriptionModule.CORE;
         }
         return module;
+    }
+
+    public enum SubscriptionModule {
+        /**
+         * Thread module case.
+         */
+        THREAD,
+        /**
+         * Store module case.
+         */
+        STORE,
+        /**
+         * Inbox module case.
+         */
+        INBOX,
+        /**
+         * Custom Event module case.
+         */
+        CUSTOM_EVENT,
+        /**
+         * KVDB module case.
+         */
+        KVDB,
+        /**
+         * CoreModules
+         */
+        CORE
     }
 
     private static class Pair {

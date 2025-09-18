@@ -13,11 +13,13 @@ package com.simplito.java.privmx_endpoint_extra.lib;
 
 import com.simplito.java.privmx_endpoint.model.Event;
 import com.simplito.java.privmx_endpoint.model.PKIVerificationOptions;
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.CoreEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.CustomEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.InboxEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.KvdbEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StoreEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.ThreadEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.CoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
@@ -47,7 +49,7 @@ import java.util.stream.Collectors;
  * @category core
  */
 public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable {
-    private final EventCallback<Map<Modules, List<String>>> onRemove = (map) -> {
+    private final EventCallback<Map<EventDispatcher.SubscriptionModule, List<String>>> onRemove = (map) -> {
         try {
             map.forEach(this::unsubscribeMany);
         } catch (Exception ignore) {
@@ -109,18 +111,18 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
             EventType<T> eventType,
             EventCallback<T> callback
     ) {
-        return registerManyCallbacks(new CallbackRegistration<>(callbackGroup,eventType,callback)).get(0);
+        return registerManyCallbacks(new CallbackRegistration<>(callbackGroup, eventType, callback)).get(0);
     }
 
     public List<RegistrationResult> registerManyCallbacks(
             CallbackRegistration<?>... registrations
     ) {
         List<CallbackRegistrationWithResult> results = Arrays.stream(registrations).map(it -> new CallbackRegistrationWithResult(it, null)).collect(Collectors.toList());
-        final Map<Modules, EventsToSubscribe> eventsToSubscribeByModule = new HashMap<>();
+        final Map<EventDispatcher.SubscriptionModule, EventsToSubscribe> eventsToSubscribeByModule = new HashMap<>();
 
         for (CallbackRegistrationWithResult result : results) {
             CallbackRegistration<?> registration = result.registration;
-            Modules module = null;
+            EventDispatcher.SubscriptionModule module = null;
             String query = null;
             EventType<?> eventType = registration.eventType;
 
@@ -130,38 +132,45 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                 result.result = new RegistrationResult(null);
             } else {
                 if (eventType.channelName != null && eventType.eventSelectorType instanceof CustomEventSelectorType) {
-                    module = Modules.CUSTOM_EVENT;
+                    module = EventDispatcher.SubscriptionModule.CUSTOM_EVENT;
                     query = eventApi.buildSubscriptionQuery(
                             eventType.channelName,
                             (CustomEventSelectorType) eventType.eventSelectorType,
                             eventType.eventSelectorId
                     );
                 } else if (eventType.libEventType instanceof ThreadEventType) {
-                    module = Modules.THREAD;
+                    module = EventDispatcher.SubscriptionModule.THREAD;
                     query = threadApi.buildSubscriptionQuery(
                             (ThreadEventType) eventType.libEventType,
                             (ThreadEventSelectorType) eventType.eventSelectorType,
                             eventType.eventSelectorId
                     );
                 } else if (eventType.libEventType instanceof StoreEventType) {
-                    module = Modules.STORE;
+                    module = EventDispatcher.SubscriptionModule.STORE;
                     query = storeApi.buildSubscriptionQuery(
                             (StoreEventType) eventType.libEventType,
                             (StoreEventSelectorType) eventType.eventSelectorType,
                             eventType.eventSelectorId
                     );
                 } else if (eventType.libEventType instanceof InboxEventType) {
-                    module = Modules.INBOX;
+                    module = EventDispatcher.SubscriptionModule.INBOX;
                     query = inboxApi.buildSubscriptionQuery(
                             (InboxEventType) eventType.libEventType,
                             (InboxEventSelectorType) eventType.eventSelectorType,
                             eventType.eventSelectorId
                     );
                 } else if (eventType.libEventType instanceof KvdbEventType) {
-                    module = Modules.INBOX;
+                    module = EventDispatcher.SubscriptionModule.INBOX;
                     query = kvdbApi.buildSubscriptionQuery(
                             (KvdbEventType) eventType.libEventType,
                             (KvdbEventSelectorType) eventType.eventSelectorType,
+                            eventType.eventSelectorId
+                    );
+                } else if (eventType.libEventType instanceof CoreEventType) {
+                    module = EventDispatcher.SubscriptionModule.CORE;
+                    query = connection.buildSubscriptionQuery(
+                            (CoreEventType) eventType.libEventType,
+                            (CoreEventSelectorType) eventType.eventSelectorType,
                             eventType.eventSelectorId
                     );
                 }
@@ -177,7 +186,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         return results.stream().map(it -> it.result).collect(Collectors.toList());
     }
 
-    private void unsubscribeMany(Modules module, List<String> subscriptionIds) throws IllegalStateException, NativeException, PrivmxException {
+    private void unsubscribeMany(EventDispatcher.SubscriptionModule module, List<String> subscriptionIds) throws IllegalStateException, NativeException, PrivmxException {
         switch (module) {
             case CUSTOM_EVENT:
                 if (eventApi == null)
@@ -203,6 +212,10 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                 if (kvdbApi == null) throw new IllegalStateException("kvdbApi is not initialized");
                 kvdbApi.unsubscribeFrom(subscriptionIds);
                 break;
+            case CORE:
+                if (connection == null) throw new IllegalStateException("Connection is not initialized");
+                connection.unsubscribeFrom(subscriptionIds);
+                break;
         }
     }
 
@@ -222,7 +235,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         }
     }
 
-    private void subscribeAll(Map<Modules, EventsToSubscribe> eventsToSubscribeByModule) {
+    private void subscribeAll(Map<EventDispatcher.SubscriptionModule, EventsToSubscribe> eventsToSubscribeByModule) {
         eventsToSubscribeByModule.forEach((key, value) -> {
             try {
                 switch (key) {
@@ -255,6 +268,12 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                             throw new IllegalStateException("kvdbApi is not initialized");
                         }
                         subscribeFor(value.queriesMap, kvdbApi::subscribeFor);
+                        break;
+                    case CORE:
+                        if (connection == null) {
+                            throw new IllegalStateException("Connection is not initialized");
+                        }
+                        subscribeFor(value.queriesMap, connection::subscribeFor);
                         break;
                 }
             } catch (IllegalStateException | NativeException | PrivmxException e) {
