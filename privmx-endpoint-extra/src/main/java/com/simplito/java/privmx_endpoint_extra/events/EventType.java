@@ -57,7 +57,6 @@ import java.util.Objects;
  * @category core
  */
 public class EventType<T> {
-    //TODO: Add better descriptions for new eventType constructors, especially for containers where selector type is not passed as parameter
     /**
      * This event type as a string.
      */
@@ -149,7 +148,10 @@ public class EventType<T> {
     );
 
     /**
-     * Predefined event type to catch created Thread events on specified {@code contextId}
+     * Predefined event type to catch created Thread events.
+     *
+     * @param contextId Context Id on which you listen for events
+     * @return Predefined event type to catch created Thread events.
      */
     public static EventType<Thread> ThreadCreatedEvent(String contextId) {
         return new EventType<>(
@@ -162,6 +164,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch updated Thread events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch updated Thread events.
      */
     public static EventType<Thread> ThreadUpdatedEvent(ThreadEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -174,6 +180,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch updated Thread stats events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch updated Thread stats events.
      */
     public static EventType<ThreadStatsEventData> ThreadStatsChangedEvent(ThreadEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -186,6 +196,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch deleted Thread events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch deleted Thread events.
      */
     public static EventType<ThreadDeletedEventData> ThreadDeletedEvent(ThreadEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -198,6 +212,9 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch created Store events.
+     *
+     * @param contextId Context Id on which you listen for events
+     * @return Predefined event type to catch created Store events.
      */
     public static EventType<Store> StoreCreatedEvent(String contextId) {
         return new EventType<>(
@@ -210,6 +227,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch updated Store events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch updated Store events.
      */
     public static EventType<Store> StoreUpdatedEvent(StoreEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -222,6 +243,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch updated Store stats events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch updated Store stats events.
      */
     public static EventType<StoreStatsChangedEventData> StoreStatsChangedEvent(StoreEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -233,7 +258,11 @@ public class EventType<T> {
     }
 
     /**
-     * Predefined event type to catch deleted Store stats events.
+     * Predefined event type to catch deleted Store events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch deleted Store events.
      */
     public static EventType<StoreDeletedEventData> StoreDeletedEvent(StoreEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -246,6 +275,9 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch created KVDB events.
+     *
+     * @param contextId Context Id on which you listen for events
+     * @return Predefined event type to catch created KVDB events.
      */
     public static EventType<Kvdb> KvdbCreatedEvent(String contextId) {
         return new EventType<>(
@@ -258,6 +290,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch updated KVDB events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch updated KVDB events.
      */
     public static EventType<Kvdb> KvdbUpdatedEvent(KvdbEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -270,6 +306,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch deleted KVDB events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch deleted KVDB events.
      */
     public static EventType<KvdbDeletedEventData> KvdbDeletedEvent(KvdbEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -282,6 +322,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch updated KVDB stats events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch updated KVDB stats events.
      */
     public static EventType<KvdbStatsEventData> KvdbStatsEvent(KvdbEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -294,6 +338,9 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch created Inbox events.
+     *
+     * @param contextId Context Id on which you listen for events
+     * @return Predefined event type to catch created Inbox events.
      */
     public static EventType<Inbox> InboxCreatedEvent(String contextId) {
         return new EventType<>(
@@ -305,7 +352,11 @@ public class EventType<T> {
     }
 
     /**
-     * Predefined event type to catch update Inbox events.
+     * Predefined event type to catch updated Inbox events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch updated Inbox events.
      */
     public static EventType<Inbox> InboxUpdatedEvent(InboxEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -318,6 +369,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch deleted Inbox events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch deleted Inbox events.
      */
     public static EventType<InboxDeletedEventData> InboxDeletedEvent(InboxEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -331,6 +386,8 @@ public class EventType<T> {
     /**
      * Returns instance to register on new message Events.
      *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
      * @return Predefined event type to catch new messages in matching Thread events
      */
     public static EventType<Message> ThreadNewMessageEvent(ThreadEventSelectorType selectorType, String selectorId) {
@@ -345,7 +402,9 @@ public class EventType<T> {
     /**
      * Returns instance to register on message update Events.
      *
-     * @return predefined event type to catch message updates in matching Thread events
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch message updates in matching Thread events
      */
     public static EventType<Message> ThreadMessageUpdatedEvent(ThreadEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -359,6 +418,8 @@ public class EventType<T> {
     /**
      * Returns instance to register on deleted message Events.
      *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
      * @return Predefined event type to catch deleted messages in matching Thread events
      */
     public static EventType<ThreadDeletedMessageEventData> ThreadMessageDeletedEvent(ThreadEventSelectorType selectorType, String selectorId) {
@@ -373,6 +434,8 @@ public class EventType<T> {
     /**
      * Returns instance to register on created file Events.
      *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
      * @return Predefined event type to catch new files in matching Store events
      */
     public static EventType<File> StoreFileCreatedEvent(StoreEventSelectorType selectorType, String selectorId) {
@@ -387,6 +450,8 @@ public class EventType<T> {
     /**
      * Returns instance to register on file update Events.
      *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
      * @return Predefined event type to catch updated files in matching Store events
      */
     public static EventType<File> StoreFileUpdatedEvent(StoreEventSelectorType selectorType, String selectorId) {
@@ -401,6 +466,8 @@ public class EventType<T> {
     /**
      * Returns instance to register on deleted file Events.
      *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
      * @return Predefined event type to catch deleted files in matching Store events
      */
     public static EventType<StoreFileDeletedEventData> StoreFileDeletedEvent(StoreEventSelectorType selectorType, String selectorId) {
@@ -415,7 +482,9 @@ public class EventType<T> {
     /**
      * Returns instance to register on created entry Events.
      *
-     * @return predefined event type to catch created entries in matching Inbox events
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch created entries in matching Inbox events
      */
     public static EventType<InboxEntry> InboxEntryCreatedEvent(InboxEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -429,7 +498,9 @@ public class EventType<T> {
     /**
      * Returns instance to register on deleting entries Events.
      *
-     * @return predefined event type to catch deleted entries in matching Inbox events
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch deleted entries in matching Inbox events
      */
     public static EventType<InboxEntryDeletedEventData> InboxEntryDeletedEvent(InboxEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -445,7 +516,7 @@ public class EventType<T> {
      *
      * @param contextId   ID of the Context to observe
      * @param channelName name of the Channel
-     * @return predefined event type to catch emitted custom Context events
+     * @return Predefined event type to catch emitted custom Context events
      */
     public static EventType<ContextCustomEventData> ContextCustomEvent(String contextId, String channelName) {
         return new EventType<>(
@@ -459,6 +530,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch created KVDB entries events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch created KVDB entries events.
      */
     public static EventType<KvdbEntry> KvdbNewEntryEvent(KvdbEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -471,6 +546,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch updated KVDB entries events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch updated KVDB entries events.
      */
     public static EventType<KvdbEntry> KvdbEntryUpdatedEvent(KvdbEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -483,6 +562,10 @@ public class EventType<T> {
 
     /**
      * Predefined event type to catch deleted KVDB entries events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch deleted KVDB entries events.
      */
     public static EventType<KvdbDeletedEntryEventData> KvdbEntryDeletedEvent(KvdbEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
@@ -493,6 +576,13 @@ public class EventType<T> {
                 KvdbDeletedEntryEventData.class);
     }
 
+    /**
+     * Returns instance to register for collection change events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch collection change events
+     */
     public static EventType<CollectionChangedEventData> CollectionChangedEvent(ThreadEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "collectionChanged",
@@ -503,6 +593,13 @@ public class EventType<T> {
         );
     }
 
+    /**
+     * Returns instance to register for collection change events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch collection change events
+     */
     public static EventType<CollectionChangedEventData> CollectionChangedEvent(StoreEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "collectionChanged",
@@ -513,6 +610,13 @@ public class EventType<T> {
         );
     }
 
+    /**
+     * Returns instance to register for collection change events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch collection change events
+     */
     public static EventType<CollectionChangedEventData> CollectionChangedEvent(InboxEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "collectionChanged",
@@ -523,6 +627,13 @@ public class EventType<T> {
         );
     }
 
+    /**
+     * Returns instance to register for collection change events.
+     *
+     * @param selectorType scope on which you listen for events
+     * @param selectorId   ID of the selector
+     * @return Predefined event type to catch collection change events
+     */
     public static EventType<CollectionChangedEventData> CollectionChangedEvent(KvdbEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "collectionChanged",
@@ -533,33 +644,50 @@ public class EventType<T> {
         );
     }
 
-
-    public static EventType<ContextUserEventData> ContextUserAddedEvent(CoreEventSelectorType selectorType, String selectorId) {
+    /**
+     * Returns instance to register for user added to the Context events.
+     *
+     * @param contextId Context Id on which you listen for events
+     * @return Predefined event type to catch user added to the Context events
+     */
+    public static EventType<ContextUserEventData> ContextUserAddedEvent(String contextId) {
         return new EventType<>(
                 "contextUserAdded",
                 CoreEventType.USER_ADD,
-                selectorType,
-                selectorId,
+                CoreEventSelectorType.CONTEXT_ID,
+                contextId,
                 ContextUserEventData.class
         );
     }
 
-    public static EventType<ContextUserEventData> ContextUserRemovedEvent(CoreEventSelectorType selectorType, String selectorId) {
+    /**
+     * Returns instance to register for user removed from the Context events.
+     *
+     * @param contextId Context Id on which you listen for events
+     * @return Predefined event type to catch user removed from the Context events
+     */
+    public static EventType<ContextUserEventData> ContextUserRemovedEvent(String contextId) {
         return new EventType<>(
                 "contextUserRemoved",
                 CoreEventType.USER_REMOVE,
-                selectorType,
-                selectorId,
+                CoreEventSelectorType.CONTEXT_ID,
+                contextId,
                 ContextUserEventData.class
         );
     }
 
-    public static EventType<ContextUsersStatusChangedEventData> ContextUsersStatusChangeEvent(CoreEventSelectorType selectorType, String selectorId) {
+    /**
+     * Returns instance to register for user status change events.
+     *
+     * @param contextId Context Id on which you listen for events
+     * @return Predefined event type to catch user status change events
+     */
+    public static EventType<ContextUsersStatusChangedEventData> ContextUsersStatusChangeEvent(String contextId) {
         return new EventType<>(
                 "contextUserStatusChanged",
                 CoreEventType.USER_STATUS,
-                selectorType,
-                selectorId,
+                CoreEventSelectorType.CONTEXT_ID,
+                contextId,
                 ContextUsersStatusChangedEventData.class
         );
     }
