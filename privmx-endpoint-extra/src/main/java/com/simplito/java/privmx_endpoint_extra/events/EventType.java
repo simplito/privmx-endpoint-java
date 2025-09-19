@@ -95,10 +95,19 @@ public class EventType<T> {
         eventResultClass = eventClass;
     }
 
+    /**
+     * Check if this instance is event produced by PrivMX library.
+     * @return true if instance is one of the PivMX library Events.
+     */
     public boolean isLibEvent() {
         return this.equals(EventType.ConnectedEvent) || this.equals(DisconnectedEvent) || this.equals(LibBreakEvent);
     }
 
+    /**
+     * Check if event was produced by PrivMX library.
+     * @param event event instance to check
+     * @return true if event is one of the PrivMX library Events.
+     */
     public static boolean isLibEvent(Event<?> event) {
         return event.subscriptions != null
                 && event.subscriptions.isEmpty()
