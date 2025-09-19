@@ -92,26 +92,65 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         this(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
     }
 
+    /**
+     * Unregister callbacks identified by this group reference.
+     *
+     * @param callbackGroups callback groups to unregister. Passing more groups allows optimize
+     *                       amount of request sending to server.
+     */
     public void unregisterCallbacks(Object... callbackGroups) {
         eventDispatcher.unbind(callbackGroups);
     }
 
+    /**
+     * Unregisters all callbacks registered by {@link #registerCallback(Object, EventType, EventCallback)}.
+     */
     public void unregisterAll() {
         eventDispatcher.unbindAll();
     }
 
+    /**
+     * Handles event and invokes all related callbacks. It should only be called by event loops.
+     *
+     * @param event event to handle
+     */
     public void handleEvent(Event<?> event) {
         eventDispatcher.emit(event);
     }
 
+    /**
+     * Register single callback for a specified event type.
+     * If you need to register multiple callbacks simultaneously, consider using the
+     * {@link #registerManyCallbacks)}.
+     *
+     * @param callbackGroup An identifier used to group related callbacks
+     * @param eventType     The specific type of event to subscribe to
+     * @param callback      The block of code that will be executed
+     *                      when an event of the specified {@code eventType} is handled
+     * @param <T>           type of data passed to callback
+     * @return registration result contains {@link Throwable} error if an exception occurs during registering.
+     */
     public <T> RegistrationResult registerCallback(
             Object callbackGroup,
             EventType<T> eventType,
             EventCallback<T> callback
     ) {
-        return registerManyCallbacks(new CallbackRegistration<>(callbackGroup,eventType,callback)).get(0);
+        return registerManyCallbacks(new CallbackRegistration<>(callbackGroup, eventType, callback)).get(0);
     }
 
+    /**
+     * Registers multiple callbacks in a batch.
+     * This method allows for the registration of several event listeners at once,
+     * which is more efficient than registering each callback individually,
+     * because the number of requests can be minimized.
+     *
+     * @param registrations A list of {@link CallbackRegistration} objects. Each object
+     *                      encapsulates the details for a single event listener to be
+     *                      registered, including the event type, the callback to execute,
+     *                      and a callback group identifier.
+     * @return A list of results, in an order matching the input {@code registrations}.
+     * Each result contains a {@link Throwable} error if an exception occurred during its corresponding registration.
+     */
     public List<RegistrationResult> registerManyCallbacks(
             CallbackRegistration<?>... registrations
     ) {
@@ -280,6 +319,9 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         }
     }
 
+    /**
+     * An result for single {@link CallbackRegistration}.
+     */
     public static class RegistrationResult {
         private final Throwable exception;
 
@@ -287,10 +329,22 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
             this.exception = exception;
         }
 
+        /**
+         * Checks if the registration attempt associated with this result encountered an error.
+         *
+         * @return {@code true} if an error is present (i.e., an exception occurred),
+         * {@code false} if the registration was successful.
+         */
         public boolean isError() {
             return exception != null;
         }
 
+        /**
+         * Retrieves the error that occurred during the registration attempt, if any.
+         *
+         * @return The {@link Throwable} representing the error if one occurred;
+         * otherwise, returns {@code null} indicating a successful registration.
+         */
         public Throwable getError() {
             return this.exception;
         }

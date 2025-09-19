@@ -181,6 +181,9 @@ public class EventDispatcher {
         }
     }
 
+    /**
+     * Removes all events, excluding internal library events, that do not have {@code subscriptionId}.
+     */
     public void removeNotSubscribedEvents() {
         synchronized (callbackMap) {
             Iterator<Map.Entry<EventRegistrationInfo, List<EventDispatcher.Pair>>> entrySetIterator = callbackMap.entrySet().iterator();
@@ -223,7 +226,7 @@ public class EventDispatcher {
         public String subscriptionID;
         public EventType<?> eventType;
 
-        public EventRegistrationInfo(String subscriptionID, EventType<?> eventType) {
+        private EventRegistrationInfo(String subscriptionID, EventType<?> eventType) {
             this.subscriptionID = subscriptionID;
             this.eventType = eventType;
         }
