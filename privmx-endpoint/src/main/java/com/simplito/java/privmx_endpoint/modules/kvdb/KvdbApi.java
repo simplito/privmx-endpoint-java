@@ -617,7 +617,7 @@ public class KvdbApi implements AutoCloseable {
     /**
      * Generate subscription Query for the KVDB events for single KvdbEntry.
      *
-     * @param eventType    type of event you listen for (Works ony For ENTRY_UPDATE, ENTRY_DELETE = 6,)
+     * @param eventType    type of event which you listen for
      * @param kvdbId       Id of Kvdb
      * @param kvdbEntryKey Key of Kvdb Entry
      * @return Query to subscribe to an event.
