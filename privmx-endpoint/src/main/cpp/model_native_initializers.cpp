@@ -918,9 +918,9 @@ namespace privmx {
         }
 
         //Event
-        jobject contextUsersStatusChangeData2Java(
+        jobject contextUsersStatusChangedEventData2Java(
                 JniContextUtils &ctx,
-                privmx::endpoint::core::ContextUsersStatusChangeData contextUsersStatusChangeData_c
+                privmx::endpoint::core::ContextUsersStatusChangedEventData contextUsersStatusChangedEventData_c
         ) {
             jclass arrayCls = ctx->FindClass("java/util/ArrayList");
             jmethodID initArrayMID = ctx->GetMethodID(
@@ -932,10 +932,10 @@ namespace privmx {
                     "add",
                     "(Ljava/lang/Object;)Z"
             );
-            jclass contextUsersStatusChangeDataCls = ctx->FindClass(
+            jclass ContextUsersStatusChangedEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/ContextUsersStatusChangedEventData");
-            jmethodID initContextUsersStatusChangeDataMID = ctx->GetMethodID(
-                    contextUsersStatusChangeDataCls,
+            jmethodID initContextUsersStatusChangedEventDataMID = ctx->GetMethodID(
+                    ContextUsersStatusChangedEventDataCls,
                     "<init>",
                     "("
                     "Ljava/lang/String;"        // contextId
@@ -945,7 +945,7 @@ namespace privmx {
 
             jobject users = ctx->NewObject(arrayCls, initArrayMID);
 
-            for (auto &user: contextUsersStatusChangeData_c.users) {
+            for (auto &user: contextUsersStatusChangedEventData_c.users) {
                 ctx->CallBooleanMethod(users,
                                        addToArrayMID,
                                        userWithAction2Java(ctx, user)
@@ -953,9 +953,9 @@ namespace privmx {
             }
 
             return ctx->NewObject(
-                    contextUsersStatusChangeDataCls,
-                    initContextUsersStatusChangeDataMID,
-                    ctx->NewStringUTF(contextUsersStatusChangeData_c.contextId.c_str()),
+                    ContextUsersStatusChangedEventDataCls,
+                    initContextUsersStatusChangedEventDataMID,
+                    ctx->NewStringUTF(contextUsersStatusChangedEventData_c.contextId.c_str()),
                     users
             );
         }
