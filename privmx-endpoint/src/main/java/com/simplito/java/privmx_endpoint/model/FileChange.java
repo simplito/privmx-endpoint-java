@@ -24,7 +24,7 @@ public class FileChange {
      * Creates instance of {@code FileChange}.
      *
      * @param pos      Position of the first changed chunk.
-     * @param length   Length aligned to full chunks
+     * @param length   Length aligned to full chunks.
      * @param truncate Remove all data.
      */
     public FileChange(Long pos, Long length, boolean truncate) {
