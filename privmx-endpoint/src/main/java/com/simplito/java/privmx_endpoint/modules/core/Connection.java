@@ -21,6 +21,8 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.CoreEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 
+import java.util.List;
+
 /**
  * Manages a connection between the Endpoint and the Bridge server.
  *
@@ -281,15 +283,21 @@ public class Connection implements AutoCloseable {
      *
      * @param subscriptionQueries List of queries
      * @return List of subscriptionIds in matching order to subscriptionQueries
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is not connected.
      */
-    public native List<String> subscribeFor(List<String> subscriptionQueries);
+    public native List<String> subscribeFor(List<String> subscriptionQueries) throws IllegalStateException, PrivmxException, NativeException;
 
     /**
      * Unsubscribe from events for the given subscriptionId.
      *
      * @param subscriptionIds List of subscriptionId
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is not connected.
      */
-    public native void unsubscribeFrom(List<String> subscriptionIds);
+    public native void unsubscribeFrom(List<String> subscriptionIds) throws IllegalStateException, PrivmxException, NativeException;
 
     /**
      * Generate subscription Query for the Context events.
@@ -297,12 +305,15 @@ public class Connection implements AutoCloseable {
      * @param eventType    Type of event which you listen for
      * @param selectorType Scope on which you listen for events
      * @param selectorId   ID of the selector
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is not connected.
      */
-    public String buildSubscriptionQuery(CoreEventType eventType, CoreEventSelectorType selectorType, String selectorId) {
+    public String buildSubscriptionQuery(CoreEventType eventType, CoreEventSelectorType selectorType, String selectorId) throws IllegalStateException, PrivmxException, NativeException {
         return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
     }
 
-    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId);
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId) throws IllegalStateException, PrivmxException, NativeException;
 
     /**
      * If there is an active connection then it
