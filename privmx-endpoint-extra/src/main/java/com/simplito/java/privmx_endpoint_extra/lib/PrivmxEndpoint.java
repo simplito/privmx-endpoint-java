@@ -108,6 +108,9 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         eventDispatcher.unbindAll();
     }
 
+    /**
+     * Handles event and invokes all related callbacks. It should only be called by event loops.
+     */
     public void handleEvent(Event<?> event) {
         eventDispatcher.emit(event);
     }
