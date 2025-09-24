@@ -21,6 +21,8 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.CoreEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 
+import java.util.List;
+
 /**
  * Manages a connection between the Endpoint and the Bridge server.
  *
