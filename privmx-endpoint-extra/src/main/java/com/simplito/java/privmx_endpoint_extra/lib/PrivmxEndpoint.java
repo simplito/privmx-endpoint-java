@@ -314,6 +314,9 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         }
     }
 
+    /**
+     * Represents the result of an event callback registration attempt.
+     */
     public static class RegistrationResult {
         private final Throwable exception;
 
