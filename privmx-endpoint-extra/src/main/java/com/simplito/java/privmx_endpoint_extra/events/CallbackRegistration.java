@@ -1,5 +1,8 @@
 package com.simplito.java.privmx_endpoint_extra.events;
 
+/**
+ * Contains all necessary information for registering an event callback.
+ */
 public class CallbackRegistration<T> {
     public Object callbackGroup;
     public EventCallback<T> callback;
