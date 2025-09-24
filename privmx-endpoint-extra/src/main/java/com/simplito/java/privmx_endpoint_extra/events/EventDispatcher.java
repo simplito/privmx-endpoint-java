@@ -185,6 +185,9 @@ public class EventDispatcher {
         }
     }
 
+    /**
+     * Removes event registrations from the {@link #callbackMap} that do not have any active subscription.
+     */
     public void removeNotSubscribedEvents() {
         synchronized (callbackMap) {
             Iterator<Map.Entry<EventRegistrationInfo, List<EventDispatcher.Pair>>> entrySetIterator = callbackMap.entrySet().iterator();
