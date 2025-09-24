@@ -126,6 +126,9 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         return registerManyCallbacks(new CallbackRegistration<>(callbackGroup, eventType, callback)).get(0);
     }
 
+    /**
+     * Registers one or more event callbacks based on the provided {@link CallbackRegistration} details.
+     */
     public List<RegistrationResult> registerManyCallbacks(
             CallbackRegistration<?>... registrations
     ) {
