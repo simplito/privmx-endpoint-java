@@ -52,12 +52,15 @@ public class EventDispatcher {
         this.onRemoveEntryKey = onRemoveEntryKey;
     }
 
+    /**
+     * Registers new event callback and associates it with a specific event type.
+     * Received object can be used later to unregister the callback.
+     */
     public EventRegistrationInfo registerCallback(CallbackRegistration<?> callbackRegistration) {
         EventRegistrationInfo info = getRegistrationInfo(callbackRegistration.eventType);
         getCallbackList(info).add(new Pair(callbackRegistration.callbackGroup, callbackRegistration.callback));
         return info;
     }
-
 
     /**
      * Emits specified event. It should only be called by event loops.
