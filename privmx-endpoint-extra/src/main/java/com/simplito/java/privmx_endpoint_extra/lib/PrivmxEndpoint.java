@@ -101,6 +101,9 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         eventDispatcher.unbind(callbackGroups);
     }
 
+    /**
+     * Unregisters all registered callbacks.
+     */
     public void unregisterAll() {
         eventDispatcher.unbindAll();
     }
