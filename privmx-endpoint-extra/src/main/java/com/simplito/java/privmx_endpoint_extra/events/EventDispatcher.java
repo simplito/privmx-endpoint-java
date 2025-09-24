@@ -255,6 +255,9 @@ public class EventDispatcher {
         }
     }
 
+    /**
+     * Holds information about a registered event.
+     */
     public static class EventRegistrationInfo {
         public String subscriptionID;
         public EventType<?> eventType;
