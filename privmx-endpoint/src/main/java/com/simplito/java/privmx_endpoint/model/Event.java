@@ -66,6 +66,9 @@ public class Event<T> {
      * @param connectionId  ID of connection for this event
      * @param subscriptions List of subscription IDs to which the event is related
      * @param timestamp     Timestamp of the event.
+     *                      Represents the point in time when event occurred.
+     *                      For events received from Bridge, this value comes from Bridge.
+     *                      For events generated in the library, this is a local timestamp.
      * @param data          event data
      */
     public Event(
