@@ -34,6 +34,7 @@
 #include "privmx/endpoint/crypto/ExtKey.hpp"
 #include "privmx/endpoint/kvdb/KvdbApi.hpp"
 #include "privmx/endpoint/kvdb/Types.hpp"
+#include "privmx/endpoint/kvdb/Events.hpp"
 
 namespace privmx {
     namespace wrapper {
@@ -151,6 +152,10 @@ namespace privmx {
 
         jobject contextCustomEventData2Java(JniContextUtils &ctx,
                                             privmx::endpoint::event::ContextCustomEventData contextCustomEventData_c
+        );
+
+        jobject kvdbDeletedEventData2Java(JniContextUtils &ctx,
+                                          privmx::endpoint::kvdb::KvdbDeletedEventData kvdbDeletedEventData_c
         );
 
         //Kvdb
