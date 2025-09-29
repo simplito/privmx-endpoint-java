@@ -194,8 +194,8 @@ namespace privmx {
                     collectionItemChangeCls,
                     "<init>",
                     "("
-                    "Ljava/lang/String;Ljava/lang/String;"  // itemId
-                    "Ljava/lang/String;Ljava/lang/String;"  // action
+                    "Ljava/lang/String;"  // itemId
+                    "Ljava/lang/String;"  // action
                     ")V"
             );
             return ctx->NewObject(
