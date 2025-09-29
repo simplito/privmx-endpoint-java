@@ -1264,6 +1264,31 @@ namespace privmx {
             );
         }
 
+        jobject kvdbStatsEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::kvdb::KvdbStatsEventData kvdbStatsEventData_c
+        ) {
+            jclass kvdbStatsEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/KvdbStatsEventData");
+            jmethodID initKvdbStatsEventDataMID = ctx->GetMethodID(
+                    kvdbStatsEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"    // kvdbId
+                    "Ljava/lang/Long;"      // lastEntryDate
+                    "Ljava/lang/Long;"      // entries
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    kvdbStatsEventDataCls,
+                    initKvdbStatsEventDataMID,
+                    ctx->NewStringUTF(kvdbStatsEventData_c.kvdbId.c_str()),
+                    ctx.long2jLong(kvdbStatsEventData_c.lastEntryDate),
+                    ctx.long2jLong(kvdbStatsEventData_c.entries)
+            );
+        }
+
 
         //Kvdb
         jobject kvdb2Java(
