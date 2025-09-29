@@ -563,7 +563,19 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.timestamp,
                     privmx::wrapper::kvdb2Java(ctx, event_cast.data)
             );
-        } else if (kvdb::Events::isKvdbNewEntryEvent(event)) {
+        } else if (kvdb::Events::isKvdbStatsEvent(event)) {
+            privmx::endpoint::kvdb::KvdbStatsChangedEvent event_cast = kvdb::Events::extractKvdbStatsEvent(
+                    event);
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::kvdbStatsEventData2Java(ctx, event_cast.data)
+            );
+        }else if (kvdb::Events::isKvdbNewEntryEvent(event)) {
             privmx::endpoint::kvdb::KvdbNewEntryEvent event_cast = kvdb::Events::extractKvdbNewEntryEvent(
                     event);
             return initEvent(
