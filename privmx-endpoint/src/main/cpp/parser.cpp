@@ -197,7 +197,7 @@ privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobj
 }
 
 jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, int64_t connectionId,
-                  std::vector<std::string> &subscriptions, jobject data_j) {
+                  std::vector<std::string> &subscriptions, int64_t timestamp, jobject data_j) {
     if (type.empty()) return nullptr;
     jclass eventCls = ctx->FindClass("com/simplito/java/privmx_endpoint/model/Event");
     jmethodID eventInitMID = ctx->GetMethodID(eventCls, "<init>", "()V");
@@ -209,6 +209,8 @@ jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, i
 
     jfieldID eventSubscriptionsFieldID = ctx->GetFieldID(eventCls, "subscriptions",
                                                          "Ljava/util/List;");
+    jfieldID eventTimestampFieldID = ctx->GetFieldID(eventCls, "timestamp",
+                                                        "Ljava/lang/Long;");
 
     jclass arrayListCls = ctx->FindClass("java/util/ArrayList");
     jmethodID arrayListInit = ctx->GetMethodID(arrayListCls, "<init>", "()V");
@@ -247,6 +249,11 @@ jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, i
             eventSubscriptionsFieldID,
             subscriptionsList
     );
+    ctx->SetObjectField(
+            event_j,
+            eventTimestampFieldID,
+            ctx.long2jLong(timestamp)
+    );
 
     return event_j;
 }
@@ -263,6 +270,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::contextCustomEventData2Java(ctx, event_cast.data)
             );
         } else if (core::Events::isCollectionChangedEvent(event)) {
@@ -273,6 +281,8 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::collectionChangedEventData2Java(ctx, event_cast.data)
             );
         } else if (core::Events::isContextUserAddedEvent(event)) {
@@ -283,6 +293,8 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::contextUserEventData2Java(ctx, event_cast.data)
             );
         } else if (core::Events::isContextUserRemovedEvent(event)) {
@@ -293,6 +305,8 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::contextUserEventData2Java(ctx, event_cast.data)
             );
         } else if (core::Events::isContextUsersStatusChangeEvent(event)) {
@@ -303,6 +317,8 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::contextUsersStatusChangeData2Java(ctx, event_cast.data)
             );
         } else if (thread::Events::isThreadCreatedEvent(event)) {
@@ -314,6 +330,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::thread2Java(ctx, event_cast.data)
             );
         } else if (thread::Events::isThreadUpdatedEvent(event)) {
@@ -325,6 +342,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::thread2Java(ctx, event_cast.data)
             );
         } else if (thread::Events::isThreadStatsEvent(event)) {
@@ -336,6 +354,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::threadStatsEventData2Java(ctx, event_cast.data)
             );
         } else if (thread::Events::isThreadDeletedEvent(event)) {
@@ -347,6 +366,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::threadDeletedEventData2Java(ctx, event_cast.data)
             );
         } else if (thread::Events::isThreadNewMessageEvent(event)) {
@@ -358,6 +378,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::message2Java(ctx, event_cast.data)
             );
             return nullptr;
@@ -370,6 +391,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::message2Java(ctx, event_cast.data)
             );
             return nullptr;
@@ -382,6 +404,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::threadDeletedMessageEventData2Java(ctx, event_cast.data)
             );
         } else if (store::Events::isStoreCreatedEvent(event)) {
@@ -393,6 +416,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::store2Java(ctx, event_cast.data)
             );
         } else if (store::Events::isStoreUpdatedEvent(event)) {
@@ -404,6 +428,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::store2Java(ctx, event_cast.data)
             );
         } else if (store::Events::isStoreStatsChangedEvent(event)) {
@@ -415,6 +440,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::storeStatsChangedEventData2Java(ctx, event_cast.data)
             );
         } else if (store::Events::isStoreUpdatedEvent(event)) {
@@ -426,6 +452,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::store2Java(ctx, event_cast.data)
             );
         } else if (store::Events::isStoreDeletedEvent(event)) {
@@ -437,6 +464,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::storeDeletedEventData2Java(ctx, event_cast.data)
             );
         } else if (store::Events::isStoreFileCreatedEvent(event)) {
@@ -448,6 +476,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::file2Java(ctx, event_cast.data)
             );
         } else if (store::Events::isStoreFileUpdatedEvent(event)) {
@@ -459,6 +488,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::storeFileUpdatedEventData2Java(ctx, event_cast.data)
             );
         } else if (store::Events::isStoreFileDeletedEvent(event)) {
@@ -470,6 +500,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::storeFileDeletedEventData2Java(ctx, event_cast.data)
             );
         } else if (inbox::Events::isInboxCreatedEvent(event)) {
@@ -481,6 +512,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::inbox2Java(ctx, event_cast.data)
             );
         } else if (inbox::Events::isInboxUpdatedEvent(event)) {
@@ -492,6 +524,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::inbox2Java(ctx, event_cast.data)
             );
         } else if (inbox::Events::isInboxDeletedEvent(event)) {
@@ -503,6 +536,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::inboxDeletedEventData2Java(ctx, event_cast.data)
             );
         } else if (inbox::Events::isInboxEntryCreatedEvent(event)) {
@@ -514,6 +548,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::inboxEntry2Java(ctx, event_cast.data)
             );
         } else if (inbox::Events::isInboxEntryDeletedEvent(event)) {
@@ -525,6 +560,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.channel,
                     event_cast.connectionId,
                     event_cast.subscriptions,
+                    event_cast.timestamp,
                     privmx::wrapper::inboxEntryDeletedEventData2Java(ctx, event_cast.data)
             );
         } else if (kvdb::Events::isKvdbCreatedEvent(event)) {
@@ -618,6 +654,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event->channel,
                     event->connectionId,
                     event->subscriptions,
+                    event->timestamp,
                     nullptr
             );
         }
