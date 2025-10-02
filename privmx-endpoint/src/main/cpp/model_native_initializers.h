@@ -116,8 +116,10 @@ namespace privmx {
         jobject fileChange2Java(JniContextUtils &ctx, privmx::endpoint::store::FileChange file_change_c);
 
         //Event
-        jobject contextUsersStatusChangeData2Java(JniContextUtils &ctx,
-                                               privmx::endpoint::core::ContextUsersStatusChangeData contextUsersStatusChangeData_c);
+        jobject contextUsersStatusChangedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContextUsersStatusChangedEventData contextUsersStatusChangedEventData_c
+        );
 
         jobject contextUserEventData2Java(JniContextUtils &ctx,
                                                   privmx::endpoint::core::ContextUserEventData contextUserEventData_c);

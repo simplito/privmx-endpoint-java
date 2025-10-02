@@ -309,8 +309,8 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.timestamp,
                     privmx::wrapper::contextUserEventData2Java(ctx, event_cast.data)
             );
-        } else if (core::Events::isContextUsersStatusChangeEvent(event)) {
-            privmx::endpoint::core::ContextUsersStatusChangeEvent event_cast = core::Events::extractContextUsersStatusChangeEvent(
+        } else if (core::Events::isContextUsersStatusChangedEvent(event)) {
+            privmx::endpoint::core::ContextUsersStatusChangedEvent event_cast = core::Events::extractContextUsersStatusChangedEvent(
                     event);
             return initEvent(
                     ctx,
@@ -319,7 +319,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.connectionId,
                     event_cast.subscriptions,
                     event_cast.timestamp,
-                    privmx::wrapper::contextUsersStatusChangeData2Java(ctx, event_cast.data)
+                    privmx::wrapper::contextUsersStatusChangedEventData2Java(ctx, event_cast.data)
             );
         } else if (thread::Events::isThreadCreatedEvent(event)) {
             privmx::endpoint::thread::ThreadCreatedEvent event_cast = thread::Events::extractThreadCreatedEvent(
