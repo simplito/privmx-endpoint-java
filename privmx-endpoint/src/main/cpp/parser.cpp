@@ -527,6 +527,90 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.subscriptions,
                     privmx::wrapper::inboxEntryDeletedEventData2Java(ctx, event_cast.data)
             );
+        } else if (kvdb::Events::isKvdbCreatedEvent(event)) {
+            privmx::endpoint::kvdb::KvdbCreatedEvent event_cast = kvdb::Events::extractKvdbCreatedEvent(
+                    event);
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::kvdb2Java(ctx, event_cast.data)
+            );
+        } else if (kvdb::Events::isKvdbDeletedEvent(event)) {
+            privmx::endpoint::kvdb::KvdbDeletedEvent event_cast = kvdb::Events::extractKvdbDeletedEvent(
+                    event);
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::kvdbDeletedEventData2Java(ctx, event_cast.data)
+            );
+        } else if (kvdb::Events::isKvdbUpdatedEvent(event)) {
+            privmx::endpoint::kvdb::KvdbUpdatedEvent event_cast = kvdb::Events::extractKvdbUpdatedEvent(
+                    event);
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::kvdb2Java(ctx, event_cast.data)
+            );
+        } else if (kvdb::Events::isKvdbStatsEvent(event)) {
+            privmx::endpoint::kvdb::KvdbStatsChangedEvent event_cast = kvdb::Events::extractKvdbStatsEvent(
+                    event);
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::kvdbStatsEventData2Java(ctx, event_cast.data)
+            );
+        }else if (kvdb::Events::isKvdbNewEntryEvent(event)) {
+            privmx::endpoint::kvdb::KvdbNewEntryEvent event_cast = kvdb::Events::extractKvdbNewEntryEvent(
+                    event);
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::kvdbEntry2Java(ctx, event_cast.data)
+            );
+        } else if (kvdb::Events::isKvdbEntryUpdatedEvent(event)) {
+            privmx::endpoint::kvdb::KvdbEntryUpdatedEvent event_cast = kvdb::Events::extractKvdbEntryUpdatedEvent(
+                    event);
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::kvdbEntry2Java(ctx, event_cast.data)
+            );
+        } else if (kvdb::Events::isKvdbEntryDeletedEvent(event)) {
+            privmx::endpoint::kvdb::KvdbEntryDeletedEvent event_cast = kvdb::Events::extractKvdbEntryDeletedEvent(
+                    event);
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::kvdbDeletedEntryEventData2Java(ctx, event_cast.data)
+            );
         } else {
             return initEvent(
                     ctx,

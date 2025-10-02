@@ -1243,6 +1243,75 @@ namespace privmx {
         }
 
 
+        jobject kvdbDeletedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::kvdb::KvdbDeletedEventData kvdbDeletedEventData_c
+        ) {
+            jclass kvdbDeletedEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/KvdbDeletedEventData");
+            jmethodID initKvdbDeletedEventDataMID = ctx->GetMethodID(
+                    kvdbDeletedEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"    // kvdbId
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    kvdbDeletedEventDataCls,
+                    initKvdbDeletedEventDataMID,
+                    ctx->NewStringUTF(kvdbDeletedEventData_c.kvdbId.c_str())
+            );
+        }
+
+        jobject kvdbStatsEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::kvdb::KvdbStatsEventData kvdbStatsEventData_c
+        ) {
+            jclass kvdbStatsEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/KvdbStatsEventData");
+            jmethodID initKvdbStatsEventDataMID = ctx->GetMethodID(
+                    kvdbStatsEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"    // kvdbId
+                    "Ljava/lang/Long;"      // lastEntryDate
+                    "Ljava/lang/Long;"      // entries
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    kvdbStatsEventDataCls,
+                    initKvdbStatsEventDataMID,
+                    ctx->NewStringUTF(kvdbStatsEventData_c.kvdbId.c_str()),
+                    ctx.long2jLong(kvdbStatsEventData_c.lastEntryDate),
+                    ctx.long2jLong(kvdbStatsEventData_c.entries)
+            );
+        }
+
+        jobject kvdbDeletedEntryEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::kvdb::KvdbDeletedEntryEventData kvdbDeletedEntryEventData_c
+        ) {
+            jclass kvdbDeletedEntryEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/KvdbDeletedEntryEventData");
+            jmethodID initKvdbDeletedEntryEventDataMID = ctx->GetMethodID(
+                    kvdbDeletedEntryEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"    // kvdbId
+                    "Ljava/lang/String;"    // kvdbEntryKey
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    kvdbDeletedEntryEventDataCls,
+                    initKvdbDeletedEntryEventDataMID,
+                    ctx->NewStringUTF(kvdbDeletedEntryEventData_c.kvdbId.c_str()),
+                    ctx->NewStringUTF(kvdbDeletedEntryEventData_c.kvdbEntryKey.c_str())
+                    );
+        }
+
         //Kvdb
         jobject kvdb2Java(
                 JniContextUtils &ctx,
