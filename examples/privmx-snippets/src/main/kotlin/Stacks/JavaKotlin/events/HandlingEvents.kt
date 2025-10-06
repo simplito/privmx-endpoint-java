@@ -242,26 +242,44 @@ fun handlingFileEvents() {
 fun handlingInboxEvents() {
     val callbacksId = "CALLBACKS_ID"
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.InboxCreatedEvent
-    ) { newInboxData ->
-        // some actions when new inbox created
-    }
+    endpointSession.registerManyCallbacks(
+        CallbackRegistration(
+            callbacksId,
+            EventType.InboxCreatedEvent(contextId)
+        ) { newInboxData ->
+            // some actions when a new inbox is created
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.InboxUpdatedEvent
-    ) { inboxUpdateData ->
-        // some actions when inbox updated
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.InboxUpdatedEvent(
+                InboxEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { inboxUpdateData ->
+            // some actions when an inbox is updated
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.InboxDeletedEvent
-    ) { deletedInboxData ->
-        // some actions when inbox deleted
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.CollectionChangedEvent(
+                InboxEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { changedCollectionData ->
+            // some actions when inbox collection changes
+        },
+
+        CallbackRegistration(
+            callbacksId,
+            EventType.InboxDeletedEvent(
+                InboxEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { deletedInboxData ->
+            // some actions when an inbox is deleted
+        }
+    )
 }
 
 fun handlingEntriesEvents() {
