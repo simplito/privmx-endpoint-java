@@ -315,26 +315,54 @@ fun handlingEntriesEvents() {
 fun handlingKvdbsEvents() {
     val callbacksId = "CALLBACKS_ID"
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.KvdbCreatedEvent
-    ) { kvdbCreatedData ->
-        // some actions when new KVDB created
-    }
+    endpointSession.registerManyCallbacks(
+        CallbackRegistration(
+            callbacksId,
+            EventType.KvdbCreatedEvent(contextId)
+        ) { kvdbCreatedData ->
+            // some actions when a new KVDB is created
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.KvdbUpdatedEvent
-    ) { kvdbUpdatedData ->
-        // some actions when KVDB updated
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.KvdbUpdatedEvent(
+                KvdbEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { kvdbUpdatedData ->
+            // some actions when a KVDB is updated
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.KvdbDeletedEvent
-    ) { kvdbDeletedData ->
-        // some actions when KVDB deleted
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.KvdbStatsEvent(       // todo - change
+                KvdbEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { kvdbStatsUpdateData ->
+            // some actions when kvdb stats have changed
+        },
+
+        CallbackRegistration(
+            callbacksId,
+            EventType.CollectionChangedEvent(
+                KvdbEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { changedCollectionData ->
+            // some actions when kvdb collection changes
+        },
+
+        CallbackRegistration(
+            callbacksId,
+            EventType.KvdbDeletedEvent(
+                KvdbEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { kvdbDeletedData ->
+            // some actions when KVDB deleted
+        }
+    )
 }
 
 fun handlingKvdbEntriesEvents() {
