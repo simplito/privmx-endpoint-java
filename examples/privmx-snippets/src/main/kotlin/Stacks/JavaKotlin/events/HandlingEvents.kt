@@ -110,26 +110,37 @@ fun handlingMessageEvents() {
     val callbacksId = "CALLBACKS_ID"
     val threadID = "THREAD_ID"
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.ThreadNewMessageEvent(threadID)
-    ) { newMessageData ->
-        // some actions on new message
-    }
+    endpointSession.registerManyCallbacks(
+        CallbackRegistration(
+            callbacksId,
+            EventType.ThreadNewMessageEvent(
+                ThreadEventSelectorType.THREAD_ID,
+                threadID
+            )
+        ) { newMessageData ->
+            // some actions on a new message
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.ThreadMessageUpdatedEvent(threadID)
-    ) { updatedMessageData ->
-        // some actions when message updated
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.ThreadMessageUpdatedEvent(
+                ThreadEventSelectorType.THREAD_ID,
+                threadID
+            )
+        ) { updatedMessageData ->
+            // some actions when a message is updated
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.ThreadMessageDeletedEvent(threadID)
-    ) { deletedMessageData ->
-        // some actions when message deleted
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.ThreadMessageDeletedEvent(
+                ThreadEventSelectorType.THREAD_ID,
+                threadID
+            )
+        ) { deletedMessageData ->
+            // some actions when a message is deleted
+        }
+    )
 }
 // END: Threads events snippets
 
