@@ -286,19 +286,27 @@ fun handlingEntriesEvents() {
     val callbacksId = "CALLBACKS_ID"
     val inboxID = "INBOX_ID"
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.InboxEntryCreatedEvent(inboxID)
-    ) { newEntryData ->
-        // some actions on new entry
-    }
+    endpointSession.registerManyCallbacks(
+        CallbackRegistration(
+            callbacksId,
+            EventType.InboxEntryCreatedEvent(
+                InboxEventSelectorType.INBOX_ID,
+                inboxID
+            )
+        ) { newEntryData ->
+            // some actions on a new entry
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.InboxEntryDeletedEvent(inboxID)
-    ) { deletedEntryData ->
-        // some actions when entry deleted
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.InboxEntryDeletedEvent(
+                InboxEventSelectorType.INBOX_ID,
+                inboxID
+            )
+        ) { deletedEntryData ->
+            // some actions when an entry is deleted
+        }
+    )
 }
 // END: Inboxes events snippets
 
