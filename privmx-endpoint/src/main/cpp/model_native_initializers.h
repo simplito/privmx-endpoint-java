@@ -34,6 +34,7 @@
 #include "privmx/endpoint/crypto/ExtKey.hpp"
 #include "privmx/endpoint/kvdb/KvdbApi.hpp"
 #include "privmx/endpoint/kvdb/Types.hpp"
+#include "privmx/endpoint/kvdb/Events.hpp"
 
 namespace privmx {
     namespace wrapper {
@@ -115,8 +116,10 @@ namespace privmx {
         jobject fileChange2Java(JniContextUtils &ctx, privmx::endpoint::store::FileChange file_change_c);
 
         //Event
-        jobject contextUsersStatusChangeData2Java(JniContextUtils &ctx,
-                                               privmx::endpoint::core::ContextUsersStatusChangeData contextUsersStatusChangeData_c);
+        jobject contextUsersStatusChangedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContextUsersStatusChangedEventData contextUsersStatusChangedEventData_c
+        );
 
         jobject contextUserEventData2Java(JniContextUtils &ctx,
                                                   privmx::endpoint::core::ContextUserEventData contextUserEventData_c);
@@ -151,6 +154,18 @@ namespace privmx {
 
         jobject contextCustomEventData2Java(JniContextUtils &ctx,
                                             privmx::endpoint::event::ContextCustomEventData contextCustomEventData_c
+        );
+
+        jobject kvdbDeletedEventData2Java(JniContextUtils &ctx,
+                                          privmx::endpoint::kvdb::KvdbDeletedEventData kvdbDeletedEventData_c
+        );
+
+        jobject kvdbStatsEventData2Java(JniContextUtils &ctx,
+                                        privmx::endpoint::kvdb::KvdbStatsEventData kvdbStatsEventData_c
+        );
+
+        jobject kvdbDeletedEntryEventData2Java(JniContextUtils &ctx,
+                                               privmx::endpoint::kvdb::KvdbDeletedEntryEventData kvdbDeletedEntryEventData_c
         );
 
         //Kvdb
