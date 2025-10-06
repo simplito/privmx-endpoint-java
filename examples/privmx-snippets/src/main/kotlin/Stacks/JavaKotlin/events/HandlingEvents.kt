@@ -369,25 +369,36 @@ fun handlingKvdbEntriesEvents() {
     val callbacksId = "CALLBACKS_ID"
     val kvdbID = "KVDB_ID"
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.KvdbNewEntryEvent(kvdbID)
-    ) { newEntryData ->
-        // some actions on new KVDB entry
-    }
+    endpointSession.registerManyCallbacks(
+        CallbackRegistration(
+            callbacksId,
+            EventType.KvdbNewEntryEvent(
+                KvdbEventSelectorType.KVDB_ID,
+                kvdbID
+            )
+        ) { newEntryData ->
+            // some actions on a new KVDB entry
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.KvdbEntryUpdatedEvent(kvdbID)
-    ) { updatedEntryData ->
-        // some actions when KVDB entry updated
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.KvdbEntryUpdatedEvent(
+                KvdbEventSelectorType.KVDB_ID,
+                kvdbID
+            )
+        ) { updatedEntryData ->
+            // some actions when a KVDB entry is updated
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.KvdbEntryDeletedEvent(kvdbID)
-    ) { deletedEntryData ->
-        // some actions when KVDB entry deleted
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.KvdbEntryDeletedEvent(
+                KvdbEventSelectorType.KVDB_ID,
+                kvdbID
+            )
+        ) { deletedEntryData ->
+            // some actions when a KVDB entry is deleted
+        }
+    )
 }
 // END: KVDBs events snippets
