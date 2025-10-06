@@ -44,11 +44,47 @@ public class Event<T> {
      * List of subscription IDs to which the event is related.
      */
     public List<String> subscriptions;
+    /**
+     * Timestamp of the event.
+     * Represents the point in time when event occurred.
+     * - For events received from Bridge, this value comes from Bridge.
+     * - For events generated in the library, this is a local timestamp.
+     */
+    public Long timestamp;
 
     /**
      * Creates instance of Event model.
      */
     Event() {
+    }
+
+    /**
+     * Creates instance of Event model.
+     *
+     * @param type          type of event as text
+     * @param channel       event channel
+     * @param connectionId  ID of connection for this event
+     * @param subscriptions List of subscription IDs to which the event is related
+     * @param timestamp     Timestamp of the event.
+     *                      Represents the point in time when event occurred.
+     *                      For events received from Bridge, this value comes from Bridge.
+     *                      For events generated in the library, this is a local timestamp.
+     * @param data          event data
+     */
+    public Event(
+            String type,
+            String channel,
+            Long connectionId,
+            List<String> subscriptions,
+            Long timestamp,
+            T data
+    ) {
+        this.type = type;
+        this.channel = channel;
+        this.connectionId = connectionId;
+        this.subscriptions = subscriptions;
+        this.timestamp = timestamp;
+        this.data = data;
     }
 
     /**
