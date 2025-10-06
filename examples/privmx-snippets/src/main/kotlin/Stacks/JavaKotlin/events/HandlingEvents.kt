@@ -23,6 +23,34 @@ fun handlingConnectionEvents() {
 }
 // END: Connection events snippets
 
+// START: Core events snippets
+fun handlingCoreEvents() {
+    val callbacksId = "CALLBACKS_ID"
+
+    endpointSession.registerManyCallbacks(
+        CallbackRegistration(
+            callbacksId,
+            EventType.ContextUserAddedEvent(contextId)
+        ) { newUserData ->
+            // some actions when a user is added to the context
+        },
+
+        CallbackRegistration(
+            callbacksId,
+            EventType.ContextUserRemovedEvent(contextId)
+        ) { removedUserData ->
+            // some actions when a user is removed from the context
+        },
+
+        CallbackRegistration(
+            callbacksId,
+            EventType.ContextUsersStatusChangeEvent(contextId)
+        ) { usersWithStatusUpdateData ->
+            // some actions when user statuses have changed
+        }
+    )
+}
+// END: Core events snippets
 
 // START: Threads events snippets
 fun handlingThreadEvents() {
