@@ -149,33 +149,54 @@ fun handlingMessageEvents() {
 fun handlingStoreEvents() {
     val callbacksId = "CALLBACKS_ID"
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.StoreCreatedEvent
-    ) { newStoreData ->
-        // some actions when new store created
-    }
+    endpointSession.registerManyCallbacks(
+        CallbackRegistration(
+            callbacksId,
+            EventType.StoreCreatedEvent(contextId)
+        ) { newStoreData ->
+            // some actions when new store created
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.StoreUpdatedEvent
-    ) { storeUpdateData ->
-        // some actions when store updated
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.StoreUpdatedEvent(
+                StoreEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { storeUpdateData ->
+            // some actions when a store is updated
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.StoreStatsChangedEvent
-    ) { storeStatsUpdateData ->
-        // some actions when store stats changed
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.StoreStatsChangedEvent(
+                StoreEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { storeStatsUpdateData ->
+            // some actions when store stats have changed
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.StoreDeletedEvent
-    ) { deletedStoreData ->
-        // some actions when store deleted
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.CollectionChangedEvent(
+                StoreEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { changedCollectionData ->
+            // some actions when store collection changes
+        },
+
+        CallbackRegistration(
+            callbacksId,
+            EventType.StoreDeletedEvent(
+                StoreEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { deletedStoreData ->
+            // some actions when a store is deleted
+        }
+    )
 }
 
 fun handlingFileEvents() {
