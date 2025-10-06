@@ -1,7 +1,13 @@
 package Stacks.JavaKotlin.events
 
-import com.simplito.java.privmx_endpoint_extra.events.EventType
+import Stacks.JavaKotlin.contextId
 import Stacks.JavaKotlin.endpointSession
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.InboxEventSelectorType
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.KvdbEventSelectorType
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StoreEventSelectorType
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.ThreadEventSelectorType
+import com.simplito.java.privmx_endpoint_extra.events.CallbackRegistration
+import com.simplito.java.privmx_endpoint_extra.events.EventType
 
 // START: Connection events snippets
 fun handlingConnectionEvents() {
