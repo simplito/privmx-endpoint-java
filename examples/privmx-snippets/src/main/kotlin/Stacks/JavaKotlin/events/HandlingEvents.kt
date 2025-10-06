@@ -56,33 +56,54 @@ fun handlingCoreEvents() {
 fun handlingThreadEvents() {
     val callbacksId = "CALLBACKS_ID"
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.ThreadCreatedEvent
-    ) { newThreadData ->
-        // some actions when new thread created
-    }
+    endpointSession.registerManyCallbacks(
+        CallbackRegistration(
+            callbacksId,
+            EventType.ThreadCreatedEvent(contextId)
+        ) { newThreadData ->
+            // some actions when a new thread is created
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.ThreadUpdatedEvent
-    ) { threadUpdateData ->
-        // some actions when thread updated
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.ThreadUpdatedEvent(
+                ThreadEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { threadUpdateData ->
+            // some actions when a thread is updated
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.ThreadStatsChangedEvent
-    ) { threadStatsUpdateData ->
-        // some actions when thread stats changed
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.ThreadStatsChangedEvent(
+                ThreadEventSelectorType.CONTEXT_ID,
+                contextId,
+            )
+        ) { threadUpdateData ->
+            // some actions when thread stats have changed
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.ThreadDeletedEvent
-    ) { deletedThreadData ->
-        // some actions when thread deleted
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.CollectionChangedEvent(
+                ThreadEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { changedCollectionData ->
+            // some actions when thread collection changes
+        },
+
+        CallbackRegistration(
+            callbacksId,
+            EventType.ThreadDeletedEvent(
+                ThreadEventSelectorType.CONTEXT_ID,
+                contextId
+            )
+        ) { deletedThreadData ->
+            // some actions when thread is deleted
+        }
+    )
 }
 
 fun handlingMessageEvents() {
