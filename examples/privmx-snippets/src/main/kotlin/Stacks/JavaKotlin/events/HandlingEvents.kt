@@ -203,26 +203,37 @@ fun handlingFileEvents() {
     val callbacksId = "CALLBACKS_ID"
     val storeID = "STORE_ID"
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.StoreFileCreatedEvent(storeID)
-    ) { newFileData ->
-        // some actions on new file
-    }
+    endpointSession.registerManyCallbacks(
+        CallbackRegistration(
+            callbacksId,
+            EventType.StoreFileCreatedEvent(
+                StoreEventSelectorType.STORE_ID,
+                storeID
+            )
+        ) { newFileData ->
+            // some actions on a new file
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.StoreFileUpdatedEvent(storeID)
-    ) { updatedFileData ->
-        // some actions when file updated
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.StoreFileUpdatedEvent(
+                StoreEventSelectorType.STORE_ID,
+                storeID
+            )
+        ) { updatedFileData ->
+            // some actions when a file is updated
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.StoreFileDeletedEvent(storeID)
-    ) { deletedFileData ->
-        // some actions when file deleted
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.StoreFileDeletedEvent(
+                StoreEventSelectorType.STORE_ID,
+                storeID
+            )
+        ) { deletedFileData ->
+            // some actions when a file is deleted
+        }
+    )
 }
 // END: Stores events snippets
 
