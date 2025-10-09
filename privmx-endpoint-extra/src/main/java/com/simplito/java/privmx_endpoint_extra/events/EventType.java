@@ -28,6 +28,7 @@ import com.simplito.java.privmx_endpoint.model.events.KvdbDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.KvdbStatsEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreFileDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.StoreFileUpdatedEventData;
 import com.simplito.java.privmx_endpoint.model.events.StoreStatsChangedEventData;
 import com.simplito.java.privmx_endpoint.model.events.ThreadDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.ThreadDeletedMessageEventData;
@@ -368,12 +369,13 @@ public class EventType<T> {
      *
      * @return Predefined event type to catch updated files in matching Store events
      */
-    public static EventType<File> StoreFileUpdatedEvent(StoreEventSelectorType selectorType, String selectorId) {
+    public static EventType<StoreFileUpdatedEventData> StoreFileUpdatedEvent(StoreEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "storeFileUpdated",
                 StoreEventType.FILE_UPDATE,
                 selectorType,
-                selectorId, File.class);
+                selectorId,
+                StoreFileUpdatedEventData.class);
     }
 
     /**
