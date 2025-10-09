@@ -297,6 +297,7 @@ public class Connection implements AutoCloseable {
      * @param eventType    Type of event which you listen for
      * @param selectorType Scope on which you listen for events
      * @param selectorId   ID of the selector
+     * @return Query for subscribing event
      */
     public String buildSubscriptionQuery(CoreEventType eventType, CoreEventSelectorType selectorType, String selectorId) {
         return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
