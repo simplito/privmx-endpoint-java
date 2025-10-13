@@ -10,7 +10,7 @@ fun quickStart(){
     // Step 1: Start the event loop
     endpointContainer.startListening()
 
-    // Step 2: Add event listener for 'ThreadCreatedEvent' related with callbackID
+    // Step 2: Add single event listener for 'ThreadCreatedEvent' related with callbackID
     val callbackID = "CALLBACK_ID"
 
     endpointSession.registerCallback(
