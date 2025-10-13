@@ -210,6 +210,25 @@ fun overwritingFileContent() {
     )
 }
 
+fun overwriteFileContentUsingRandomWrite() {
+val fileID = "FILE_ID"  // file created with random write support
+val newContent = "New partial content".encodeToByteArray()
+
+// Open the file to get a read/write handle.
+val fileHandle = storeApi.openFile(fileID)
+
+// Seek to the desired position
+storeApi.seekInFile(fileHandle, 0)
+
+// Write the new data, overwriting the existing content at given position
+storeApi.writeToFile(
+    fileHandle,
+    newContent
+)
+
+endpointSession.storeApi.closeFile(fileHandle)
+}
+
 fun deletingFile() {
     val fileID = "FILE_ID"
     storeApi.deleteFile(fileID)
