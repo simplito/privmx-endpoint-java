@@ -13,19 +13,21 @@ import com.simplito.java.privmx_endpoint_extra.events.EventType
 fun handlingConnectionEvents() {
     val callbacksId = "CALLBACKS_ID"
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.ConnectedEvent
-    ) {
-        // some actions when lib was connected
-    }
+    endpointSession.registerManyCallbacks(
+        CallbackRegistration(
+            callbacksId,
+            EventType.ConnectedEvent
+        ) {
+            // some actions when lib was connected
+        },
 
-    endpointSession.registerCallback(
-        callbacksId,
-        EventType.DisconnectedEvent
-    ) {
-        // some actions when lib was disconnected
-    }
+        CallbackRegistration(
+            callbacksId,
+            EventType.DisconnectedEvent
+        ) {
+            // some actions when lib was disconnected
+        }
+    )
 }
 // END: Connection events snippets
 
