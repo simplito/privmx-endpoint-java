@@ -77,7 +77,7 @@ fun uploadFileUsingStreams() {
         }
     }
 
-    val fileId = StoreFileStreamWriter.createFile(
+    val fileID = StoreFileStreamWriter.createFile(
         storeApi,
         storeID,
         publicMeta,
@@ -118,12 +118,12 @@ val fileID = endpointSession.storeApi.closeFile(fileHandle)
 // START: Getting Files snippets
 
 fun getMostRecentFiles() {
-    val storeId = "STORE_ID"
+    val storeID = "STORE_ID"
     val startIndex = 0L
     val pageSize = 100L
 
     val filesPagingList = storeApi.listFiles(
-        storeId,
+        storeID,
         startIndex,
         pageSize,
         SortOrder.DESC
@@ -138,12 +138,12 @@ fun getMostRecentFiles() {
 }
 
 fun getOldestFiles() {
-    val storeId = "STORE_ID"
+    val storeID = "STORE_ID"
     val startIndex = 0L
     val pageSize = 100L
 
     val filesPagingList = storeApi.listFiles(
-        storeId,
+        storeID,
         startIndex,
         pageSize,
         SortOrder.ASC
