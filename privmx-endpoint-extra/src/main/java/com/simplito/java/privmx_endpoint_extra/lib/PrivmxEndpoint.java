@@ -49,13 +49,13 @@ import java.util.stream.Collectors;
  * @category core
  */
 public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable {
-    private final EventCallback<Map<EventDispatcher.SubscriptionModule, List<String>>> onRemove = (map) -> {
+    private final EventCallback<Map<EventDispatcher.SubscriptionModule, List<String>>> onRemoveSubscriptionEntry = (map) -> {
         try {
             map.forEach(this::unsubscribeMany);
         } catch (Exception ignore) {
         }
     };
-    private final EventDispatcher eventDispatcher = new EventDispatcher(onRemove);
+    private final EventDispatcher eventDispatcher = new EventDispatcher(onRemoveSubscriptionEntry);
 
     /**
      * Calls {@link BasicPrivmxEndpoint#BasicPrivmxEndpoint(Set, String, String, String, PKIVerificationOptions)}.
@@ -213,7 +213,8 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                 kvdbApi.unsubscribeFrom(subscriptionIds);
                 break;
             case CORE:
-                if (connection == null) throw new IllegalStateException("Connection is not initialized");
+                if (connection == null)
+                    throw new IllegalStateException("Connection is not initialized");
                 connection.unsubscribeFrom(subscriptionIds);
                 break;
         }

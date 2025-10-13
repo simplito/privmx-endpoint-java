@@ -39,17 +39,17 @@ import java.util.stream.Collectors;
 public class EventDispatcher {
 
     private final Map<EventRegistrationInfo, List<Pair>> callbackMap = new HashMap<>();
-    private final EventCallback<Map<SubscriptionModule, List<String>>> onRemoveEntryKey;
+    private final EventCallback<Map<SubscriptionModule, List<String>>> onRemoveSubscriptionEntry;
 
     /**
      * Creates instance of {@code EventDispatcher}.
      *
-     * @param onRemoveEntryKey callback triggered when all events
-     *                         from channel entry have been removed
-     *                         (it can also unsubscribe from the channel)
+     * @param onRemoveSubscriptionEntry callback triggered when all events
+     *                                  from channel entry have been removed
+     *                                  (it can also unsubscribe from the channel)
      */
-    public EventDispatcher(EventCallback<Map<SubscriptionModule, List<String>>> onRemoveEntryKey) {
-        this.onRemoveEntryKey = onRemoveEntryKey;
+    public EventDispatcher(EventCallback<Map<SubscriptionModule, List<String>>> onRemoveSubscriptionEntry) {
+        this.onRemoveSubscriptionEntry = onRemoveSubscriptionEntry;
     }
 
     public EventRegistrationInfo registerCallback(CallbackRegistration<?> callbackRegistration) {
@@ -110,7 +110,7 @@ public class EventDispatcher {
                     mapIterator.remove();
                 }
             }
-            onRemoveEntryKey.call(selectorsToUnsubscribe);
+            onRemoveSubscriptionEntry.call(selectorsToUnsubscribe);
         }
     }
 
@@ -128,7 +128,7 @@ public class EventDispatcher {
                     selectorsToUnsubscribe.put(module, subscriptionsList);
                 }
             });
-            onRemoveEntryKey.call(selectorsToUnsubscribe);
+            onRemoveSubscriptionEntry.call(selectorsToUnsubscribe);
         }
     }
 
