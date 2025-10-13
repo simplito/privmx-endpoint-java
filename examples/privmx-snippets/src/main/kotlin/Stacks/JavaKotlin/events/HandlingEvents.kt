@@ -9,6 +9,33 @@ import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.ThreadE
 import com.simplito.java.privmx_endpoint_extra.events.CallbackRegistration
 import com.simplito.java.privmx_endpoint_extra.events.EventType
 
+// START: Mixed events snippets
+fun handlingMixedEvents() {
+    val newUserCallbackId = "NEW_USER_CALLBACK_ID"
+    val newMessageCallbackId = "NEW_MESSAGE_CALLBACK_ID"
+    val threadID = "THREAD_ID"
+
+    endpointSession.registerManyCallbacks(
+        CallbackRegistration(
+            newUserCallbackId,
+            EventType.ContextUserAddedEvent(contextId)
+        ) { newUserData ->
+            // e.g. Send a message to a new user who has been added to the context
+        },
+
+        CallbackRegistration(
+            newMessageCallbackId,
+            EventType.ThreadNewMessageEvent(
+                ThreadEventSelectorType.THREAD_ID,
+                threadID
+            )
+        ) { newMessageData ->
+            // e.g. Notify me when new message is posted in this thread
+        }
+    )
+}
+// END: Mixed events snippets
+
 // START: Connection events snippets
 fun handlingConnectionEvents() {
     val callbacksId = "CALLBACKS_ID"
