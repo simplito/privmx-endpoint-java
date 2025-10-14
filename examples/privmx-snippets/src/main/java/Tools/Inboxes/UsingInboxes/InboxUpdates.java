@@ -6,8 +6,8 @@ import com.simplito.java.privmx_endpoint_extra.events.EventType;
 
 public class InboxUpdates extends WorkingWithInboxes {
     void handlingInboxEvents() {
-        String InboxCallbackID = "INBOX_CALLBACK_ID";
-        String EntryCallbackID = "ENTRY_CALLBACK_ID";
+        String inboxCallbackID = "INBOX_CALLBACK_ID";
+        String entryCallbackID = "ENTRY_CALLBACK_ID";
         String inboxID = "INBOX_ID";
 
         // Starting the Event Loop
@@ -17,7 +17,7 @@ public class InboxUpdates extends WorkingWithInboxes {
 
                 // Handling Inbox Events
                 new CallbackRegistration<>(
-                        InboxCallbackID,
+                        inboxCallbackID,
                         EventType.InboxUpdatedEvent(
                                 InboxEventSelectorType.CONTEXT_ID,
                                 contextId
@@ -29,7 +29,7 @@ public class InboxUpdates extends WorkingWithInboxes {
 
                 // Handling Inbox Entry Events
                 new CallbackRegistration<>(
-                        EntryCallbackID,
+                        entryCallbackID,
                         EventType.InboxEntryCreatedEvent(
                                 InboxEventSelectorType.INBOX_ID,
                                 inboxID
@@ -39,10 +39,8 @@ public class InboxUpdates extends WorkingWithInboxes {
                         }
                 )
         );
-        // Finish handling events
-        endpointSession.unregisterCallbacks(InboxCallbackID);
-        endpointSession.unregisterCallbacks(EntryCallbackID);
 
-        endpointSession.unregisterAll();
+        // Finish handling events
+        endpointSession.unregisterCallbacks(inboxCallbackID, entryCallbackID);
     }
 }
