@@ -104,4 +104,9 @@ public class ManagingThreads {
                 false
         );
     }
+
+    void deletingThreads() {
+        String threadID = "THREAD_ID";
+        endpointSession.threadApi.deleteThread(threadID);
+    }
 }
