@@ -336,7 +336,7 @@ public class EventType<T> {
      * @param selectorId   ID of the selector
      * @return Predefined event type to catch updated KVDB stats events.
      */
-    public static EventType<KvdbStatsEventData> KvdbStatsEvent(KvdbEventSelectorType selectorType, String selectorId) {
+    public static EventType<KvdbStatsEventData> KvdbStatsChangedEvent(KvdbEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "kvdbStatsChanged",
                 KvdbEventType.KVDB_STATS,
