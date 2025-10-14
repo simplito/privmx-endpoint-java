@@ -11,20 +11,20 @@ import com.simplito.java.privmx_endpoint_extra.events.EventType
 
 // START: Mixed events snippets
 fun handlingMixedEvents() {
-    val newUserCallbackId = "NEW_USER_CALLBACK_ID"
-    val newMessageCallbackId = "NEW_MESSAGE_CALLBACK_ID"
+    val newUserCallbacksGroup = "NEW_USER_CALLBACKS_GROUP"
+    val newMessageCallbacksGroup = "NEW_MESSAGE_CALLBACKS_GROUP"
     val threadID = "THREAD_ID"
 
     endpointSession.registerManyCallbacks(
         CallbackRegistration(
-            newUserCallbackId,
+            newUserCallbacksGroup,
             EventType.ContextUserAddedEvent(contextId)
         ) { newUserData ->
             // e.g. Send a message to a new user who has been added to the context
         },
 
         CallbackRegistration(
-            newMessageCallbackId,
+            newMessageCallbacksGroup,
             EventType.ThreadNewMessageEvent(
                 ThreadEventSelectorType.THREAD_ID,
                 threadID
@@ -38,18 +38,18 @@ fun handlingMixedEvents() {
 
 // START: Connection events snippets
 fun handlingConnectionEvents() {
-    val callbacksId = "CALLBACKS_ID"
+    val callbacksGroup = "CALLBACKS_GROUP"
 
     endpointSession.registerManyCallbacks(
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.ConnectedEvent
         ) {
             // some actions when lib was connected
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.DisconnectedEvent
         ) {
             // some actions when lib was disconnected
@@ -60,25 +60,25 @@ fun handlingConnectionEvents() {
 
 // START: Core events snippets
 fun handlingCoreEvents() {
-    val callbacksId = "CALLBACKS_ID"
+    val callbacksGroup = "CALLBACKS_GROUP"
 
     endpointSession.registerManyCallbacks(
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.ContextUserAddedEvent(contextId)
         ) { newUserData ->
             // some actions when a user is added to the context
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.ContextUserRemovedEvent(contextId)
         ) { removedUserData ->
             // some actions when a user is removed from the context
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.ContextUsersStatusChangeEvent(contextId)
         ) { usersWithStatusUpdateData ->
             // some actions when user statuses have changed
@@ -89,18 +89,18 @@ fun handlingCoreEvents() {
 
 // START: Threads events snippets
 fun handlingThreadEvents() {
-    val callbacksId = "CALLBACKS_ID"
+    val callbacksGroup = "CALLBACKS_GROUP"
 
     endpointSession.registerManyCallbacks(
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.ThreadCreatedEvent(contextId)
         ) { newThreadData ->
             // some actions when a new thread is created
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.ThreadUpdatedEvent(
                 ThreadEventSelectorType.CONTEXT_ID,
                 contextId
@@ -110,7 +110,7 @@ fun handlingThreadEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.ThreadStatsChangedEvent(
                 ThreadEventSelectorType.CONTEXT_ID,
                 contextId,
@@ -120,7 +120,7 @@ fun handlingThreadEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.CollectionChangedEvent(
                 ThreadEventSelectorType.CONTEXT_ID,
                 contextId
@@ -130,7 +130,7 @@ fun handlingThreadEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.ThreadDeletedEvent(
                 ThreadEventSelectorType.CONTEXT_ID,
                 contextId
@@ -142,12 +142,12 @@ fun handlingThreadEvents() {
 }
 
 fun handlingMessageEvents() {
-    val callbacksId = "CALLBACKS_ID"
+    val callbacksGroup = "CALLBACKS_GROUP"
     val threadID = "THREAD_ID"
 
     endpointSession.registerManyCallbacks(
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.ThreadNewMessageEvent(
                 ThreadEventSelectorType.THREAD_ID,
                 threadID
@@ -157,7 +157,7 @@ fun handlingMessageEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.ThreadMessageUpdatedEvent(
                 ThreadEventSelectorType.THREAD_ID,
                 threadID
@@ -167,7 +167,7 @@ fun handlingMessageEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.ThreadMessageDeletedEvent(
                 ThreadEventSelectorType.THREAD_ID,
                 threadID
@@ -182,18 +182,18 @@ fun handlingMessageEvents() {
 
 // START: Stores events snippets
 fun handlingStoreEvents() {
-    val callbacksId = "CALLBACKS_ID"
+    val callbacksGroup = "CALLBACKS_GROUP"
 
     endpointSession.registerManyCallbacks(
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.StoreCreatedEvent(contextId)
         ) { newStoreData ->
             // some actions when new store created
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.StoreUpdatedEvent(
                 StoreEventSelectorType.CONTEXT_ID,
                 contextId
@@ -203,7 +203,7 @@ fun handlingStoreEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.StoreStatsChangedEvent(
                 StoreEventSelectorType.CONTEXT_ID,
                 contextId
@@ -213,7 +213,7 @@ fun handlingStoreEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.CollectionChangedEvent(
                 StoreEventSelectorType.CONTEXT_ID,
                 contextId
@@ -223,7 +223,7 @@ fun handlingStoreEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.StoreDeletedEvent(
                 StoreEventSelectorType.CONTEXT_ID,
                 contextId
@@ -235,12 +235,12 @@ fun handlingStoreEvents() {
 }
 
 fun handlingFileEvents() {
-    val callbacksId = "CALLBACKS_ID"
+    val callbacksGroup = "CALLBACKS_GROUP"
     val storeID = "STORE_ID"
 
     endpointSession.registerManyCallbacks(
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.StoreFileCreatedEvent(
                 StoreEventSelectorType.STORE_ID,
                 storeID
@@ -250,7 +250,7 @@ fun handlingFileEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.StoreFileUpdatedEvent(
                 StoreEventSelectorType.STORE_ID,
                 storeID
@@ -260,7 +260,7 @@ fun handlingFileEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.StoreFileDeletedEvent(
                 StoreEventSelectorType.STORE_ID,
                 storeID
@@ -275,18 +275,18 @@ fun handlingFileEvents() {
 
 // START: Inboxes events snippets
 fun handlingInboxEvents() {
-    val callbacksId = "CALLBACKS_ID"
+    val callbacksGroup = "CALLBACKS_GROUP"
 
     endpointSession.registerManyCallbacks(
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.InboxCreatedEvent(contextId)
         ) { newInboxData ->
             // some actions when a new inbox is created
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.InboxUpdatedEvent(
                 InboxEventSelectorType.CONTEXT_ID,
                 contextId
@@ -296,7 +296,7 @@ fun handlingInboxEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.CollectionChangedEvent(
                 InboxEventSelectorType.CONTEXT_ID,
                 contextId
@@ -306,7 +306,7 @@ fun handlingInboxEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.InboxDeletedEvent(
                 InboxEventSelectorType.CONTEXT_ID,
                 contextId
@@ -318,12 +318,12 @@ fun handlingInboxEvents() {
 }
 
 fun handlingEntriesEvents() {
-    val callbacksId = "CALLBACKS_ID"
+    val callbacksGroup = "CALLBACKS_GROUP"
     val inboxID = "INBOX_ID"
 
     endpointSession.registerManyCallbacks(
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.InboxEntryCreatedEvent(
                 InboxEventSelectorType.INBOX_ID,
                 inboxID
@@ -333,7 +333,7 @@ fun handlingEntriesEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.InboxEntryDeletedEvent(
                 InboxEventSelectorType.INBOX_ID,
                 inboxID
@@ -348,18 +348,18 @@ fun handlingEntriesEvents() {
 
 // START: KVDBs events snippets
 fun handlingKvdbsEvents() {
-    val callbacksId = "CALLBACKS_ID"
+    val callbacksGroup = "CALLBACKS_GROUP"
 
     endpointSession.registerManyCallbacks(
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.KvdbCreatedEvent(contextId)
         ) { kvdbCreatedData ->
             // some actions when a new KVDB is created
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.KvdbUpdatedEvent(
                 KvdbEventSelectorType.CONTEXT_ID,
                 contextId
@@ -369,7 +369,7 @@ fun handlingKvdbsEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.KvdbStatsChangedEvent(
                 KvdbEventSelectorType.CONTEXT_ID,
                 contextId
@@ -379,7 +379,7 @@ fun handlingKvdbsEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.CollectionChangedEvent(
                 KvdbEventSelectorType.CONTEXT_ID,
                 contextId
@@ -389,7 +389,7 @@ fun handlingKvdbsEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.KvdbDeletedEvent(
                 KvdbEventSelectorType.CONTEXT_ID,
                 contextId
@@ -401,12 +401,12 @@ fun handlingKvdbsEvents() {
 }
 
 fun handlingKvdbEntriesEvents() {
-    val callbacksId = "CALLBACKS_ID"
+    val callbacksGroup = "CALLBACKS_GROUP"
     val kvdbID = "KVDB_ID"
 
     endpointSession.registerManyCallbacks(
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.KvdbNewEntryEvent(
                 KvdbEventSelectorType.KVDB_ID,
                 kvdbID
@@ -416,7 +416,7 @@ fun handlingKvdbEntriesEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.KvdbEntryUpdatedEvent(
                 KvdbEventSelectorType.KVDB_ID,
                 kvdbID
@@ -426,7 +426,7 @@ fun handlingKvdbEntriesEvents() {
         },
 
         CallbackRegistration(
-            callbacksId,
+            callbacksGroup,
             EventType.KvdbEntryDeletedEvent(
                 KvdbEventSelectorType.KVDB_ID,
                 kvdbID
