@@ -104,4 +104,9 @@ public class ManagingStores {
                 false
         );
     }
+
+    void deletingStores() {
+        String storeID = "STORE_ID";
+        endpointSession.storeApi.deleteStore(storeID);
+    }
 }
