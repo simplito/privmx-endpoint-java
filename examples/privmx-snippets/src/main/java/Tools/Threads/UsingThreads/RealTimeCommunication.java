@@ -6,8 +6,8 @@ import com.simplito.java.privmx_endpoint_extra.events.EventType;
 
 public class RealTimeCommunication extends ManagingThreads {
     void handlingThreadAndMessageEvents() {
-        String threadCallbackID = "THREAD_CALLBACK_ID";
-        String messageCallbackID = "MESSAGE_CALLBACK_ID";
+        String threadCallbacksGroup = "THREAD_CALLBACKS_GROUP";
+        String messageCallbacksGroup = "MESSAGE_CALLBACKS_GROUP";
         String threadID = "THREAD_ID";
 
         // Starting the Event Loop
@@ -17,7 +17,7 @@ public class RealTimeCommunication extends ManagingThreads {
 
                 // Handling Thread events
                 new CallbackRegistration<>(
-                        threadCallbackID,
+                        threadCallbacksGroup,
                         EventType.ThreadCreatedEvent(contextId),
                         newThread -> {
                             System.out.println(newThread.threadId);
@@ -26,7 +26,7 @@ public class RealTimeCommunication extends ManagingThreads {
 
                 //Handling message Events
                 new CallbackRegistration<>(
-                        messageCallbackID,
+                        messageCallbacksGroup,
                         EventType.ThreadNewMessageEvent(
                                 ThreadEventSelectorType.THREAD_ID,
                                 threadID
@@ -38,6 +38,6 @@ public class RealTimeCommunication extends ManagingThreads {
         );
 
         // Finish handling events
-        endpointSession.unregisterCallbacks(threadCallbackID, messageCallbackID);
+        endpointSession.unregisterCallbacks(threadCallbacksGroup, messageCallbacksGroup);
     }
 }

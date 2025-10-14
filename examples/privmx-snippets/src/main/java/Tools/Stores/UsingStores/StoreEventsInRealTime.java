@@ -6,8 +6,8 @@ import com.simplito.java.privmx_endpoint_extra.events.EventType;
 
 public class StoreEventsInRealTime extends ManagingStores {
     void handlingStoreEvents() {
-        String storeCallbackID = "STORE_CALLBACK_ID";
-        String fileCallbackID = "FILE_CALLBACK_ID";
+        String storeCallbacksGroup = "STORE_CALLBACKS_GROUP";
+        String fileCallbacksGroup = "FILE_CALLBACKS_GROUP";
         String storeID = "STORE_ID";
 
         // Starting the Event Loop
@@ -17,7 +17,7 @@ public class StoreEventsInRealTime extends ManagingStores {
 
                 // Handling Store Events
                 new CallbackRegistration<>(
-                        storeCallbackID,
+                        storeCallbacksGroup,
                         EventType.StoreCreatedEvent(contextId),
                         newStore -> {
                             System.out.println(newStore.storeId);
@@ -26,7 +26,7 @@ public class StoreEventsInRealTime extends ManagingStores {
 
                 // Handling File Events
                 new CallbackRegistration<>(
-                        fileCallbackID,
+                        fileCallbacksGroup,
                         EventType.StoreFileCreatedEvent(
                                 StoreEventSelectorType.STORE_ID,
                                 storeID
@@ -38,6 +38,6 @@ public class StoreEventsInRealTime extends ManagingStores {
         );
 
         // Finish handling events
-        endpointSession.unregisterCallbacks(storeCallbackID, fileCallbackID);
+        endpointSession.unregisterCallbacks(storeCallbacksGroup, fileCallbacksGroup);
     }
 }

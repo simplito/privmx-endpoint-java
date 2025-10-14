@@ -6,8 +6,8 @@ import com.simplito.java.privmx_endpoint_extra.events.EventType;
 
 public class ListeningForChanges extends ManagingKvdbs {
     void handlingKvdbEvents() {
-        String kvdbCallbackID = "KVDB_CALLBACK_ID";
-        String entryCallbackID = "ENTRY_CALLBACK_ID";
+        String kvdbCallbacksGroup = "KVDB_CALLBACKS_GROUP";
+        String entryCallbacksGroup = "ENTRY_CALLBACKS_GROUP";
         String kvdbID = "KVDB_ID";
 
         // Starting the Event Loop
@@ -17,7 +17,7 @@ public class ListeningForChanges extends ManagingKvdbs {
 
                 // Handling KVDB Events
                 new CallbackRegistration<>(
-                        kvdbCallbackID,
+                        kvdbCallbacksGroup,
                         EventType.KvdbStatsChangedEvent(
                                 KvdbEventSelectorType.CONTEXT_ID,
                                 contextId
@@ -29,7 +29,7 @@ public class ListeningForChanges extends ManagingKvdbs {
 
                 // Handling KVDB Entry Events
                 new CallbackRegistration<>(
-                        entryCallbackID,
+                        entryCallbacksGroup,
                         EventType.KvdbNewEntryEvent(
                                 KvdbEventSelectorType.KVDB_ID,
                                 kvdbID
@@ -41,6 +41,6 @@ public class ListeningForChanges extends ManagingKvdbs {
         );
 
         // Finish handling events
-        endpointSession.unregisterCallbacks(kvdbCallbackID, entryCallbackID);
+        endpointSession.unregisterCallbacks(kvdbCallbacksGroup, entryCallbacksGroup);
     }
 }
