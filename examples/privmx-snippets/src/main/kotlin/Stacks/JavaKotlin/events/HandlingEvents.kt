@@ -370,7 +370,7 @@ fun handlingKvdbsEvents() {
 
         CallbackRegistration(
             callbacksId,
-            EventType.KvdbStatsEvent(       // todo - change
+            EventType.KvdbStatsChangedEvent(
                 KvdbEventSelectorType.CONTEXT_ID,
                 contextId
             )
