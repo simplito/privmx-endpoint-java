@@ -1,7 +1,8 @@
 package Tools.Kvdbs.UsingKvdbs;
 
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.KvdbEventSelectorType;
+import com.simplito.java.privmx_endpoint_extra.events.CallbackRegistration;
 import com.simplito.java.privmx_endpoint_extra.events.EventType;
-import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer;
 
 public class ListeningForChanges extends ManagingKvdbs {
     void handlingKvdbEvents() {
@@ -12,22 +13,31 @@ public class ListeningForChanges extends ManagingKvdbs {
         // Starting the Event Loop
         endpointContainer.startListening();
 
-        // Handling KVDB Events
-        endpointSession.registerCallback(
-                KvdbCallbackID,
-                EventType.KvdbStatsEvent,
-                kvdbStats -> {
-                    System.out.println(kvdbStats.lastEntryDate);
-                }
-        );
+        endpointSession.registerManyCallbacks(
 
-        // Handling KVDB Entry Events
-        endpointSession.registerCallback(
-                EntrycallbackID,
-                EventType.KvdbNewEntryEvent(kvdbID),
-                newEntry -> {
-                    System.out.println(newEntry.info.key);
-                }
+                // Handling KVDB Events
+                new CallbackRegistration<>(
+                        KvdbCallbackID,
+                        EventType.KvdbStatsEvent(
+                                KvdbEventSelectorType.CONTEXT_ID,
+                                contextId
+                        ),
+                        kvdbStats -> {
+                            System.out.println(kvdbStats.lastEntryDate);
+                        }
+                ),
+
+                // Handling KVDB Entry Events
+                new CallbackRegistration<>(
+                        EntrycallbackID,
+                        EventType.KvdbNewEntryEvent(
+                                KvdbEventSelectorType.KVDB_ID,
+                                kvdbID
+                        ),
+                        newEntry -> {
+                            System.out.println(newEntry.info.key);
+                        }
+                )
         );
 
         // Finish handling events

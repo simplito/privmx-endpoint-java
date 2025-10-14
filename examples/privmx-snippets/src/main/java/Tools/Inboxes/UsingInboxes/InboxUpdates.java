@@ -1,5 +1,7 @@
 package Tools.Inboxes.UsingInboxes;
 
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.InboxEventSelectorType;
+import com.simplito.java.privmx_endpoint_extra.events.CallbackRegistration;
 import com.simplito.java.privmx_endpoint_extra.events.EventType;
 
 public class InboxUpdates extends WorkingWithInboxes {
@@ -11,24 +13,32 @@ public class InboxUpdates extends WorkingWithInboxes {
         // Starting the Event Loop
         endpointContainer.startListening();
 
-        // Handling Inbox Events
-        endpointSession.registerCallback(
-                InboxCallbackID,
-                EventType.InboxUpdatedEvent,
-                updatedInbox -> {
-                    System.out.println(updatedInbox.lastModifier);
-                }
-        );
+        endpointSession.registerManyCallbacks(
 
-        // Handling Inbox Entry Events
-        endpointSession.registerCallback(
-                EntryCallbackID,
-                EventType.InboxEntryCreatedEvent(inboxID),
-                newEntry -> {
-                    System.out.println(newEntry.inboxId);
-                }
-        );
+                // Handling Inbox Events
+                new CallbackRegistration<>(
+                        InboxCallbackID,
+                        EventType.InboxUpdatedEvent(
+                                InboxEventSelectorType.CONTEXT_ID,
+                                contextId
+                        ),
+                        updatedInbox -> {
+                            System.out.println(updatedInbox.lastModifier);
+                        }
+                ),
 
+                // Handling Inbox Entry Events
+                new CallbackRegistration<>(
+                        EntryCallbackID,
+                        EventType.InboxEntryCreatedEvent(
+                                InboxEventSelectorType.INBOX_ID,
+                                inboxID
+                        ),
+                        newEntry -> {
+                            System.out.println(newEntry.inboxId);
+                        }
+                )
+        );
         // Finish handling events
         endpointSession.unregisterCallbacks(InboxCallbackID);
         endpointSession.unregisterCallbacks(EntryCallbackID);

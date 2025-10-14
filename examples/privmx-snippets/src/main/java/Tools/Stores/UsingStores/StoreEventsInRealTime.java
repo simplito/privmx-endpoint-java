@@ -1,8 +1,10 @@
 package Tools.Stores.UsingStores;
 
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StoreEventSelectorType;
+import com.simplito.java.privmx_endpoint_extra.events.CallbackRegistration;
 import com.simplito.java.privmx_endpoint_extra.events.EventType;
 
-public class StoreEventsInRealTime extends ManagingStores{
+public class StoreEventsInRealTime extends ManagingStores {
     void handlingStoreEvents() {
         String callbacksID = "CALLBACK_ID";
         String storeID = "STORE_ID";
@@ -10,22 +12,28 @@ public class StoreEventsInRealTime extends ManagingStores{
         // Starting the Event Loop
         endpointContainer.startListening();
 
-        // Handling Store Events
-        endpointSession.registerCallback(
-                callbacksID,
-                EventType.StoreCreatedEvent,
-                newStore -> {
-                    System.out.println(newStore.storeId);
-                }
-        );
+        endpointSession.registerManyCallbacks(
 
-        // Handling File Events
-        endpointSession.registerCallback(
-                callbacksID,
-                EventType.StoreFileCreatedEvent(storeID),
-                newFile -> {
-                    System.out.println(newFile.info.fileId);
-                }
+                // Handling Store Events
+                new CallbackRegistration<>(
+                        callbacksID,
+                        EventType.StoreCreatedEvent(contextId),
+                        newStore -> {
+                            System.out.println(newStore.storeId);
+                        }
+                ),
+
+                // Handling File Events
+                new CallbackRegistration<>(
+                        callbacksID,
+                        EventType.StoreFileCreatedEvent(
+                                StoreEventSelectorType.STORE_ID,
+                                storeID
+                        ),
+                        newFile -> {
+                            System.out.println(newFile.info.fileId);
+                        }
+                )
         );
     }
 }
