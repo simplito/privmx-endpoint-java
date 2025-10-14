@@ -18,7 +18,7 @@ public class ListeningForChanges extends ManagingKvdbs {
                 // Handling KVDB Events
                 new CallbackRegistration<>(
                         kvdbCallbackID,
-                        EventType.KvdbStatsEvent(
+                        EventType.KvdbStatsChangedEvent(
                                 KvdbEventSelectorType.CONTEXT_ID,
                                 contextId
                         ),
