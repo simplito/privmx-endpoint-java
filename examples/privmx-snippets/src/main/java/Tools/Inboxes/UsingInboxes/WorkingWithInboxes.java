@@ -1,6 +1,10 @@
 package Tools.Inboxes.UsingInboxes;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.simplito.java.privmx_endpoint.model.Inbox;
+import com.simplito.java.privmx_endpoint.model.InboxPublicView;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint;
@@ -104,5 +108,26 @@ public class WorkingWithInboxes {
                 inbox.version,
                 false               // force
         );
+    }
+
+    void deletingInboxes() {
+        String inboxID = "INBOX_ID";
+        endpointSession.inboxApi.deleteInbox(inboxID);
+    }
+
+    void usingPublicView() {
+        String inboxID = "INBOX_ID";
+
+        InboxPublicView inboxPublicView = endpointSession.inboxApi.getInboxPublicView(inboxID);
+
+        // This example uses com.google.code.gson:gson
+        // dependency for handling JSON objects in Java
+
+        // decoded publicMeta
+        String privateMeta = new String(inboxPublicView.publicMeta);
+        JsonObject privateMetaJson = JsonParser.parseString(privateMeta).getAsJsonObject();
+        JsonArray fieldsArray = privateMetaJson.getAsJsonArray("fields");
+        String question_1 = fieldsArray.get(0).getAsJsonObject().get("question").getAsString();
+        String question_2 = fieldsArray.get(1).getAsJsonObject().get("question").getAsString();
     }
 }
