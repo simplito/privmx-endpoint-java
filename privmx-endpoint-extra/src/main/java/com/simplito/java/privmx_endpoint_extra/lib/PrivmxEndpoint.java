@@ -340,7 +340,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
     }
 
     /**
-     * An result for single {@link CallbackRegistration}.
+     * A result for single {@link CallbackRegistration}.
      */
     public static class RegistrationResult {
         private final Throwable exception;
@@ -360,7 +360,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
         }
 
         /**
-         * Retrieves the error that occurred during the registration attempt, if any.
+         * Retrieves any error that occured during the registration attempt.
          *
          * @return The {@link Throwable} representing the error if one occurred;
          * otherwise, returns {@code null} indicating a successful registration.
