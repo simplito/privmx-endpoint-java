@@ -231,6 +231,75 @@ public class Connection implements AutoCloseable {
     /**
      * Gets a list of users with their status and the last status change.
      *
+     * @param contextId ID of the Context
+     * @param skip      number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @return List of users with their status and the last status change
+     * @throws IllegalStateException thrown when instance is not connected.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<UserInfo> listContextUsers(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder
+    ) throws IllegalStateException, PrivmxException, NativeException {
+        return listContextUsers(contextId, skip, limit, sortOrder, null, null, null);
+    }
+
+    /**
+     * Gets a list of users with their status and the last status change.
+     *
+     * @param contextId ID of the Context
+     * @param skip      number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId    ID of the element from which query results should start
+     * @return List of users with their status and the last status change
+     * @throws IllegalStateException thrown when instance is not connected.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<UserInfo> listContextUsers(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId
+    ) throws IllegalStateException, PrivmxException, NativeException {
+        return listContextUsers(contextId, skip, limit, sortOrder, lastId, null, null);
+    }
+
+    /**
+     * Gets a list of users with their status and the last status change.
+     *
+     * @param contextId   ID of the Context
+     * @param skip        number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ("asc" for ascending, "desc" for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @return List of users with their status and the last status change
+     * @throws IllegalStateException thrown when instance is not connected.
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     */
+    public PagingList<UserInfo> listContextUsers(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson
+    ) throws IllegalStateException, PrivmxException, NativeException {
+        return listContextUsers(contextId, skip, limit, sortOrder, lastId, queryAsJson, null);
+    }
+
+    /**
+     * Gets a list of users with their status and the last status change.
+     *
      * @param contextId   ID of the Context
      * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
@@ -283,15 +352,21 @@ public class Connection implements AutoCloseable {
      *
      * @param subscriptionQueries List of queries
      * @return List of subscriptionIds in matching order to subscriptionQueries
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is not connected.
      */
-    public native List<String> subscribeFor(List<String> subscriptionQueries);
+    public native List<String> subscribeFor(List<String> subscriptionQueries) throws IllegalStateException, PrivmxException, NativeException;
 
     /**
      * Unsubscribe from events for the given subscriptionId.
      *
      * @param subscriptionIds List of subscriptionId
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is not connected.
      */
-    public native void unsubscribeFrom(List<String> subscriptionIds);
+    public native void unsubscribeFrom(List<String> subscriptionIds) throws IllegalStateException, PrivmxException, NativeException;
 
     /**
      * Generate subscription Query for the Context events.
@@ -299,12 +374,15 @@ public class Connection implements AutoCloseable {
      * @param eventType    Type of event which you listen for
      * @param selectorType Scope on which you listen for events
      * @param selectorId   ID of the selector
+     * @throws PrivmxException       thrown when method encounters an exception.
+     * @throws NativeException       thrown when method encounters an unknown exception.
+     * @throws IllegalStateException thrown when instance is not connected.
      */
-    public String buildSubscriptionQuery(CoreEventType eventType, CoreEventSelectorType selectorType, String selectorId) {
+    public String buildSubscriptionQuery(CoreEventType eventType, CoreEventSelectorType selectorType, String selectorId) throws IllegalStateException, PrivmxException, NativeException {
         return buildSubscriptionQuery((long) eventType.ordinal(), (long) selectorType.ordinal(), selectorId);
     }
 
-    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId);
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId) throws IllegalStateException, PrivmxException, NativeException;
 
     /**
      * If there is an active connection then it

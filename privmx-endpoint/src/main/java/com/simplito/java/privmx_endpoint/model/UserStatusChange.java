@@ -17,11 +17,11 @@ public class UserStatusChange {
     /**
      * Creates instance of {@code UserStatusChange}
      *
-     * @param timestamp User status change action, which can be "login" or "logout"
      * @param action    Timestamp of the change
+     * @param timestamp User status change action, which can be "login" or "logout"
      */
-    public UserStatusChange(Long timestamp, String action) {
-        this.timestamp = timestamp;
+    public UserStatusChange(String action, Long timestamp) {
         this.action = action;
+        this.timestamp = timestamp;
     }
 }
