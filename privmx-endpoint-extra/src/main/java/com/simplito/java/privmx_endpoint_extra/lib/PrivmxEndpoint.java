@@ -95,7 +95,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
     }
 
     /**
-     * Unregister callbacks identified by this group references.
+     * Unregisters all callbacks associated with the given group references.
      *
      * @param callbackGroups callback groups to unregister. Passing more groups allows optimize
      *                       amount of request sending to server.
