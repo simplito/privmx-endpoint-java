@@ -605,7 +605,7 @@ public class KvdbApi implements AutoCloseable {
      * @param eventType    type of event you listen for
      * @param selectorType scope on which you listen for events
      * @param selectorId   ID of the selector
-     * @return // todo - add return description
+     * @return Query for subscribing event
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
@@ -617,7 +617,7 @@ public class KvdbApi implements AutoCloseable {
     /**
      * Generate subscription Query for the KVDB events for single KvdbEntry.
      *
-     * @param eventType    type of event you listen for (Works ony For ENTRY_UPDATE, ENTRY_DELETE = 6,)
+     * @param eventType    type of event which you listen for
      * @param kvdbId       Id of Kvdb
      * @param kvdbEntryKey Key of Kvdb Entry
      * @return Query to subscribe to an event.

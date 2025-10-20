@@ -1,5 +1,6 @@
 package Stacks.JavaKotlin.events
 
+import Stacks.JavaKotlin.contextId
 import Stacks.JavaKotlin.endpointContainer
 import Stacks.JavaKotlin.endpointSession
 import com.simplito.java.privmx_endpoint_extra.events.EventType
@@ -9,11 +10,12 @@ fun quickStart(){
     // Step 1: Start the event loop
     endpointContainer.startListening()
 
-    // Step 2: Add event listener for 'ThreadCreatedEvent' related with callbackID
+    // Step 2: Add single event listener for 'ThreadCreatedEvent' related with callbackID
     val callbackID = "CALLBACK_ID"
+
     endpointSession.registerCallback(
         callbackID,
-        EventType.ThreadCreatedEvent
+        EventType.ThreadCreatedEvent(contextId)
     ){ newThreadData ->
         // some actions with newThreadData
     }

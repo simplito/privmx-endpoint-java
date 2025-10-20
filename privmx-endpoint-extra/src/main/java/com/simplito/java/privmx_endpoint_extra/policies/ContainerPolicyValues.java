@@ -15,6 +15,8 @@ package com.simplito.java.privmx_endpoint_extra.policies;
  * Provides a set of predefined values for configuring container policies.
  */
 public class ContainerPolicyValues {
+    private ContainerPolicyValues() {
+    }
 
     /**
      * Uses the default value provided by the Bridge.

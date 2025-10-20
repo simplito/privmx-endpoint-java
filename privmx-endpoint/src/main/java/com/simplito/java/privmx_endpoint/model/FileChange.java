@@ -1,3 +1,14 @@
+//
+// PrivMX Endpoint Java.
+// Copyright © 2025 Simplito sp. z o.o.
+//
+// This file is part of the PrivMX Platform (https://privmx.dev).
+// This software is Licensed under the MIT License.
+//
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
 package com.simplito.java.privmx_endpoint.model;
 
 /**
@@ -8,11 +19,11 @@ package com.simplito.java.privmx_endpoint.model;
  */
 public class FileChange {
     /**
-     * Position of file change
+     * Position of the first changed chunk
      */
     public Long pos;
     /**
-     * Length of file change
+     * Length aligned to full chunks
      */
     public Long length;
     /**
@@ -23,8 +34,8 @@ public class FileChange {
     /**
      * Creates instance of {@code FileChange}.
      *
-     * @param pos      Position of file change.
-     * @param length   Length of file change.
+     * @param pos      Position of the first changed chunk.
+     * @param length   Length aligned to full chunks.
      * @param truncate Remove all data.
      */
     public FileChange(Long pos, Long length, boolean truncate) {
