@@ -133,7 +133,7 @@ public class EventDispatcher {
     }
 
     /**
-     * Get reference to list for adding or removing callbacks.
+     * Get reference to a list that can be used to add or remove callbacks.
      */
     private List<Pair> getCallbackList(EventRegistrationInfo eventRegistrationInfo) {
         synchronized (callbackMap) {
@@ -182,6 +182,9 @@ public class EventDispatcher {
         }
     }
 
+    /**
+     * Removes all events, excluding internal library events, that do not have {@code subscriptionId}.
+     */
     public void removeNotSubscribedEvents() {
         synchronized (callbackMap) {
             Iterator<Map.Entry<EventRegistrationInfo, List<EventDispatcher.Pair>>> entrySetIterator = callbackMap.entrySet().iterator();
@@ -253,7 +256,7 @@ public class EventDispatcher {
         public String subscriptionID;
         public EventType<?> eventType;
 
-        public EventRegistrationInfo(String subscriptionID, EventType<?> eventType) {
+        private EventRegistrationInfo(String subscriptionID, EventType<?> eventType) {
             this.subscriptionID = subscriptionID;
             this.eventType = eventType;
         }
