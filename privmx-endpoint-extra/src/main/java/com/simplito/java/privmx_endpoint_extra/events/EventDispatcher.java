@@ -223,6 +223,10 @@ public class EventDispatcher {
         return module;
     }
 
+
+    /**
+     * Available subscription modules for event handling.
+     */
     public enum SubscriptionModule {
         /**
          * Thread module case.
