@@ -88,6 +88,8 @@ public class EventDispatcher {
 
     /**
      * Removes all callbacks registered by {@link #registerCallback(CallbackRegistration)}. It's identified by given {@code callbackGroups}.
+     *
+     * @param callbackGroups one or more callback group identifiers used to select callbacks to unbind
      */
     public void unbind(Object... callbackGroups) {
         List<Object> callbackGroupsList = Arrays.asList(callbackGroups);
