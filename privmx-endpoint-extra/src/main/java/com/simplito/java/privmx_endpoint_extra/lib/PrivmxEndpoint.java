@@ -123,7 +123,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
     /**
      * Register single callback for a specified event type.
      * If you need to register multiple callbacks simultaneously, consider using the
-     * {@link #registerManyCallbacks)}.
+     * {@link #registerManyCallbacks}.
      *
      * @param callbackGroup An identifier used to group related callbacks
      * @param eventType     The specific type of event to subscribe to
