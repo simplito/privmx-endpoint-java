@@ -374,6 +374,7 @@ public class Connection implements AutoCloseable {
      * @param eventType    Type of event which you listen for
      * @param selectorType Scope on which you listen for events
      * @param selectorId   ID of the selector
+     * @return Query for subscribing event
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
      * @throws IllegalStateException thrown when instance is not connected.
