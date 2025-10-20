@@ -439,7 +439,7 @@ public class InboxEntryStream {
      */
     @SuppressWarnings("EmptyMethod")
     public abstract static class EntryStreamListener {
-        private EntryStreamListener() {
+        public EntryStreamListener() {
         }
 
         /**
