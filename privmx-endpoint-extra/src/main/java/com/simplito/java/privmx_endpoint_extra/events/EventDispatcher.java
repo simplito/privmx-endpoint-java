@@ -19,7 +19,6 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
-import com.simplito.java.privmx_endpoint_extra.model.Modules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +51,12 @@ public class EventDispatcher {
         this.onRemoveSubscriptionEntry = onRemoveSubscriptionEntry;
     }
 
+    /**
+     * Registers new event callback.
+     *
+     * @param callbackRegistration object describing single callback registration
+     * @return this callback registration info
+     */
     public EventRegistrationInfo registerCallback(CallbackRegistration<?> callbackRegistration) {
         EventRegistrationInfo info = getRegistrationInfo(callbackRegistration.eventType);
         getCallbackList(info).add(new Pair(callbackRegistration.callbackGroup, callbackRegistration.callback));
@@ -82,6 +87,8 @@ public class EventDispatcher {
 
     /**
      * Removes all callbacks registered by {@link #registerCallback(CallbackRegistration)}. It's identified by given {@code callbackGroups}.
+     *
+     * @param callbackGroups one or more callback group identifiers used to select callbacks to unbind
      */
     public void unbind(Object... callbackGroups) {
         List<Object> callbackGroupsList = Arrays.asList(callbackGroups);
@@ -215,6 +222,10 @@ public class EventDispatcher {
         return module;
     }
 
+
+    /**
+     * Available subscription modules for event handling.
+     */
     public enum SubscriptionModule {
         /**
          * Thread module case.
@@ -252,8 +263,18 @@ public class EventDispatcher {
         }
     }
 
+    /**
+     * Holds essential information about a single event registration.
+     */
     public static class EventRegistrationInfo {
+
+        /**
+         * Unique identifier for the event subscription
+         */
         public String subscriptionID;
+        /**
+         * Type of registered event
+         */
         public EventType<?> eventType;
 
         private EventRegistrationInfo(String subscriptionID, EventType<?> eventType) {

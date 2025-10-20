@@ -439,6 +439,8 @@ public class InboxEntryStream {
      */
     @SuppressWarnings("EmptyMethod")
     public abstract static class EntryStreamListener {
+        public EntryStreamListener() {
+        }
 
         /**
          * Override this method to handle when the process of sending file starts.
