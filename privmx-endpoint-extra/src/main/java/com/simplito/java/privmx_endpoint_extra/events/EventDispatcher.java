@@ -54,7 +54,7 @@ public class EventDispatcher {
     /**
      * Registers a new callback for a specific event type.
      *
-     * @param callbackRegistration the registration containing the event type, group, and callback
+     * @param callbackRegistration object describing single callback registration
      * @return the registration info for the given event type
      */
     public EventRegistrationInfo registerCallback(CallbackRegistration<?> callbackRegistration) {
