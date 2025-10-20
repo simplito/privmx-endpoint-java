@@ -52,6 +52,12 @@ public class EventDispatcher {
         this.onRemoveSubscriptionEntry = onRemoveSubscriptionEntry;
     }
 
+    /**
+     * Registers a new callback for a specific event type.
+     *
+     * @param callbackRegistration the registration containing the event type, group, and callback
+     * @return the registration info for the given event type
+     */
     public EventRegistrationInfo registerCallback(CallbackRegistration<?> callbackRegistration) {
         EventRegistrationInfo info = getRegistrationInfo(callbackRegistration.eventType);
         getCallbackList(info).add(new Pair(callbackRegistration.callbackGroup, callbackRegistration.callback));
