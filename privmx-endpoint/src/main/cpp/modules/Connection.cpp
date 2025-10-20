@@ -361,7 +361,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_subscribeFor(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &env, &thiz, &subscription_queries]() {
+            [&ctx, &env, &thiz, &subscription_queries]() -> jobject {
                 jclass arrayListCls = env->FindClass("java/util/ArrayList");
                 jmethodID initMID = env->GetMethodID(arrayListCls, "<init>", "()V");
                 jmethodID addToListMID = env->GetMethodID(arrayListCls, "add",
@@ -372,8 +372,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_subscribeFor(
 
                 for (int i = 0; i < ctx->GetArrayLength(subscription_queries_arr); i++) {
                     jobject arrayElement = ctx->GetObjectArrayElement(subscription_queries_arr, i);
-                    if (ctx.nullCheck(arrayElement, "Subscription queries array elements")) {
-                        return nullptr;
+                    if (ctx.nullCheck(arrayElement, "Subscription queries list elements")) {
+                        return (jobject) nullptr;
                     }
                     subscription_queries_c.push_back(ctx.jString2string((jstring) arrayElement));
                 }
@@ -418,7 +418,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_unsubscribeFrom(
                 for (int i = 0; i < ctx->GetArrayLength(subscription_ids_arr); i++) {
                     jobject arrayElement = ctx->GetObjectArrayElement(subscription_ids_arr, i);
                     if (ctx.nullCheck(arrayElement, "Subscription ids array elements")) {
-                        return nullptr;
+                        return;
                     }
                     subscription_ids_c.push_back(ctx.jString2string((jstring) arrayElement));
                 }

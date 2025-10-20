@@ -1,3 +1,14 @@
+//
+// PrivMX Endpoint Java.
+// Copyright © 2025 Simplito sp. z o.o.
+//
+// This file is part of the PrivMX Platform (https://privmx.dev).
+// This software is Licensed under the MIT License.
+//
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
 package com.simplito.java.privmx_endpoint.model;
 
 /**
@@ -17,11 +28,11 @@ public class UserStatusChange {
     /**
      * Creates instance of {@code UserStatusChange}
      *
+     * @param action    User status change action, which can be "login" or "logout"
      * @param timestamp Timestamp of the change
-     * @param action    User status change action, which can be "login" or "logout".
      */
-    public UserStatusChange(Long timestamp, String action) {
-        this.timestamp = timestamp;
+    public UserStatusChange(String action, Long timestamp) {
         this.action = action;
+        this.timestamp = timestamp;
     }
 }
