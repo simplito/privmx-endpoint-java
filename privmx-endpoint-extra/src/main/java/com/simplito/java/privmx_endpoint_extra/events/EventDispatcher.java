@@ -264,8 +264,18 @@ public class EventDispatcher {
         }
     }
 
+    /**
+     * Holds essential information about a single event registration.
+     */
     public static class EventRegistrationInfo {
+
+        /**
+         * Unique identifier for the event subscription
+         */
         public String subscriptionID;
+        /**
+         * Type of registered event
+         */
         public EventType<?> eventType;
 
         private EventRegistrationInfo(String subscriptionID, EventType<?> eventType) {
