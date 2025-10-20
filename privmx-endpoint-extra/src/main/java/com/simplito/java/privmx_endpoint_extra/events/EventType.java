@@ -58,14 +58,28 @@ import java.util.Objects;
  */
 public class EventType<T> {
     /**
-     * This event type as a string.
+     * Name of an event as a string
      */
     public final String eventName;
+    /**
+     * Channel name (for custom events)
+     */
     public final String channelName;
-
+    /**
+     * Type of an event
+     */
     public final com.simplito.java.privmx_endpoint.model.events.eventTypes.EventType libEventType;
+    /**
+     * Type of a scope for event listening
+     */
     public final EventSelectorType eventSelectorType;
+    /**
+     * Id of chosen selector type
+     */
     public final String eventSelectorId;
+    /**
+     * Type of event data.
+     */
     public final Class<T> eventResultClass;
 
     private EventType(String eventName, com.simplito.java.privmx_endpoint.model.events.eventTypes.EventType libEventType, EventSelectorType eventSelectorType, String eventSelectorId, String channelName, Class<T> eventClass) {
