@@ -19,7 +19,6 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
-import com.simplito.java.privmx_endpoint_extra.model.Modules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
