@@ -101,9 +101,11 @@ public class WorkingWithInboxes {
                 newManagers,
                 inbox.publicMeta,
                 newPrivateMeta,
-                null,               // filesConfig
+                null,     // filesConfig
                 inbox.version,
-                false               // force
+                false,        // force
+                false,              // forceGenerateNewKey
+                inbox.policy
         );
     }
 

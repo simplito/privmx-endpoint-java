@@ -105,8 +105,9 @@ public class ManagingKvdbs {
                 publicMeta,
                 privateMeta,
                 kvdb.version,
-                false,
-                false
+                false,     // force
+                false,           // forceGenerateNewKey
+                kvdb.policy
         );
     }
     // END: Modifying KVDBs

@@ -101,7 +101,9 @@ public class ManagingThreads {
                 thread.publicMeta,
                 newPrivateMeta,
                 thread.version,
-                false
+                false,       // force
+                false,             // forceGenerateNewKey
+                thread.policy
         );
     }
 
