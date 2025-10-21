@@ -40,7 +40,6 @@ public class InboxUpdates extends WorkingWithInboxes {
                 )
         );
 
-        // Finish handling events
         endpointSession.unregisterCallbacks(inboxCallbacksGroup, entryCallbacksGroup);
     }
 }

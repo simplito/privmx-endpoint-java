@@ -37,7 +37,6 @@ public class StoreEventsInRealTime extends ManagingStores {
                 )
         );
 
-        // Finish handling events
         endpointSession.unregisterCallbacks(storeCallbacksGroup, fileCallbacksGroup);
     }
 }

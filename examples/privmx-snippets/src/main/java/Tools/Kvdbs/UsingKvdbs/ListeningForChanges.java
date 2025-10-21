@@ -40,7 +40,6 @@ public class ListeningForChanges extends ManagingKvdbs {
                 )
         );
 
-        // Finish handling events
         endpointSession.unregisterCallbacks(kvdbCallbacksGroup, entryCallbacksGroup);
     }
 }

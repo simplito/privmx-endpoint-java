@@ -37,7 +37,6 @@ public class RealTimeCommunication extends ManagingThreads {
                 )
         );
 
-        // Finish handling events
         endpointSession.unregisterCallbacks(threadCallbacksGroup, messageCallbacksGroup);
     }
 }
