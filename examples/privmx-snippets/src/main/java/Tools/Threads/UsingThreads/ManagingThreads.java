@@ -39,7 +39,7 @@ public class ManagingThreads {
 
     PrivmxEndpointContainer endpointContainer = new PrivmxEndpointContainer();
 
-    Set<Modules> initModules = Set.of(Modules.STORE);
+    Set<Modules> initModules = Set.of(Modules.THREAD);
     PrivmxEndpoint endpointSession = endpointContainer.connect(
             initModules,
             user1PrivateKey,
