@@ -135,7 +135,7 @@ public class CryptoApi implements AutoCloseable {
     /**
      * Generates ECC key and BIP-39 mnemonic from a password using BIP-39.
      *
-     * @param strength size of BIP-39 entropy, must be a multiple of 32
+     * @param strength size of BIP-39 entropy, must be a multiple of 32 between 128 and 256.
      * @param password the password used to generate the Key
      * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
      */
@@ -144,7 +144,7 @@ public class CryptoApi implements AutoCloseable {
     /**
      * Generates ECC key and BIP-39 mnemonic from a password using BIP-39.
      *
-     * @param strength size of BIP-39 entropy, must be a multiple of 32
+     * @param strength size of BIP-39 entropy, must be a multiple of 32 between 128 and 256.
      * @return BIP39 object containing ECC Key and associated with it BIP-39 mnemonic and entropy
      */
     public BIP39 generateBip39(long strength) throws PrivmxException, NativeException {
