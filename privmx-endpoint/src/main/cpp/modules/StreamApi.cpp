@@ -178,3 +178,31 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_removeTrack(
         );
     });
 }
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_publishStream(
+        JNIEnv *env,
+        jobject thiz,
+        jobject stream_handle
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_handle, "Stream Handle")) {
+        return nullptr;
+    }
+
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &env, &thiz, &stream_handle]() {
+                auto id =
+                        getStreamApi(ctx, thiz)->publishStream(
+                                parseStreamHandle(ctx, stream_handle));
+                return privmx::wrapper::remoteStreamId2Java(ctx, id);
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}

@@ -2,6 +2,7 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 
 import com.simplito.java.privmx_endpoint.LibLoader;
 import com.simplito.java.privmx_endpoint.model.streams.MediaDevice;
+import com.simplito.java.privmx_endpoint.model.streams.RemoteStreamId;
 import com.simplito.java.privmx_endpoint.model.streams.Stream;
 import com.simplito.java.privmx_endpoint.model.streams.StreamHandle;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
@@ -37,6 +38,8 @@ public class StreamApi implements AutoCloseable {
     public native void addTrack(StreamHandle streamHandle, MediaDevice track);
 
     public native void removeTrack(StreamHandle streamHandle, MediaDevice track);
+
+    public native RemoteStreamId publishStream(StreamHandle streamHandle);
 
     @Override
     public void close() throws Exception {
