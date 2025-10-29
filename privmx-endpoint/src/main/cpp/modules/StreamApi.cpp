@@ -105,3 +105,62 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_createStreamRoo
     }
     return result;
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_updateStreamRoom(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id,
+        jobject users,
+        jobject managers,
+        jbyteArray public_meta,
+        jbyteArray private_meta,
+        jlong version,
+        jboolean force,
+        jboolean force_generate_new_key,
+        jobject container_policies
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
+        ctx.nullCheck(users, "Users list") ||
+        ctx.nullCheck(managers, "Managers list") ||
+        ctx.nullCheck(public_meta, "Public meta") ||
+        ctx.nullCheck(private_meta, "Private meta")) {
+        return;
+    }
+    ctx.callVoidEndpointApi(
+            [
+                    &ctx,
+                    &thiz,
+                    &stream_room_id,
+                    &users, &managers,
+                    &public_meta,
+                    &private_meta,
+                    &version,
+                    &force,
+                    &force_generate_new_key,
+                    &container_policies
+            ]() {
+                std::vector<core::UserWithPubKey> users_c = usersToVector(
+                        ctx,
+                        ctx.jObject2jArray(users));
+                std::vector<core::UserWithPubKey> managers_c = usersToVector(
+                        ctx,
+                        ctx.jObject2jArray(managers));
+                auto container_policies_n = std::optional<core::ContainerPolicy>(
+                        parseContainerPolicy(ctx, container_policies));
+
+                getStreamApi(ctx, thiz)->updateStreamRoom(
+                        ctx.jString2string(stream_room_id),
+                        users_c,
+                        managers_c,
+                        core::Buffer::from(ctx.jByteArray2String(public_meta)),
+                        core::Buffer::from(ctx.jByteArray2String(private_meta)),
+                        version,
+                        force == JNI_TRUE,
+                        force_generate_new_key == JNI_TRUE,
+                        container_policies_n
+                );
+            });
+}

@@ -46,6 +46,54 @@ public class StreamApi implements AutoCloseable {
         return createStreamRoom(contextId, users, managers, publicMeta, privateMeta, null);
     }
 
+    public native void updateStreamRoom(
+            String streamRoomId,
+            List<UserWithPubKey> users,
+            List<UserWithPubKey> managers,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            long version,
+            boolean force,
+            boolean forceGenerateNewKey,
+            ContainerPolicy policy
+    );
+
+    public void updateStreamRoom(
+            String streamRoomId,
+            List<UserWithPubKey> users,
+            List<UserWithPubKey> managers,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            long version,
+            boolean force,
+            boolean forceGenerateNewKey
+    ) {
+        updateStreamRoom(streamRoomId, users, managers, publicMeta, privateMeta, version, force, forceGenerateNewKey, null);
+    }
+
+    public void updateStreamRoom(
+            String streamRoomId,
+            List<UserWithPubKey> users,
+            List<UserWithPubKey> managers,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            long version,
+            boolean force
+    ) {
+        updateStreamRoom(streamRoomId, users, managers, publicMeta, privateMeta, version, force, false, null);
+    }
+
+    public void updateStreamRoom(
+            String streamRoomId,
+            List<UserWithPubKey> users,
+            List<UserWithPubKey> managers,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            long version
+    ) {
+        updateStreamRoom(streamRoomId, users, managers, publicMeta, privateMeta, version, false, false, null);
+    }
+
     @Override
     public void close() throws Exception {
         deinit();
