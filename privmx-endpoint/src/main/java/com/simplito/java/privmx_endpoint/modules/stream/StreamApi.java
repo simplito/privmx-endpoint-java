@@ -106,6 +106,8 @@ public class StreamApi implements AutoCloseable {
             String sortBy
     );
 
+    public native StreamRoom getStreamRoom(String streamRoomId);
+
     @Override
     public void close() throws Exception {
         deinit();
