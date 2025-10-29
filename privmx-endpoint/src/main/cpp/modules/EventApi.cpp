@@ -9,13 +9,7 @@
 // limitations under the License.
 //
 
-#include <jni.h>
-#include <privmx/endpoint/event/EventApi.hpp>
-#include "../utils.hpp"
-#include "Connection.h"
-#include "../parser.h"
-
-using namespace privmx::endpoint;
+#include "EventApi.h"
 
 event::EventApi *getEventApi(JniContextUtils &ctx, jobject thiz) {
     jclass cls = ctx->GetObjectClass(thiz);
