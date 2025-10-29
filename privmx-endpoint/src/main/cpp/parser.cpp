@@ -572,3 +572,83 @@ parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery) {
 
     return result;
 }
+
+// java -> c++
+template<typename T>
+std::vector<T> jArrayToVector(
+        JniContextUtils &ctx,
+        jobjectArray jArray,
+        std::function<T(JniContextUtils &, jobject)> fun
+) {
+    std::vector<T> result;
+
+    for (int i = 0; i < ctx->GetArrayLength(jArray); i++) {
+        jobject element = ctx->GetObjectArrayElement(jArray, i);
+        result.push_back(fun(ctx, element));
+    }
+    return result;
+}
+
+int64_t jobject2long(JniContextUtils &ctx, jobject jLong) {
+    jclass longClass = ctx->FindClass("java/lang/Long");
+    jmethodID longValueMethod = ctx->GetMethodID(longClass, "longValue", "()J");
+    jlong value = ctx->CallLongMethod(jLong, longValueMethod);
+    return (int64_t) value;
+}
+
+std::string jobject2string(JniContextUtils &ctx, jobject jString) {
+    auto js = (jstring) jString;
+    return ctx.jString2string(js);
+}
+
+
+// c++ -> java
+template<typename T, typename F>
+jobject vectorTojArray(
+        JniContextUtils &ctx,
+        const std::vector<T> &vector,
+        F fun
+) {
+    jclass arrayListCls = ctx->FindClass("java/util/ArrayList");
+    jmethodID initMID = ctx->GetMethodID(arrayListCls, "<init>", "()V");
+    jmethodID addToListMID = ctx->GetMethodID(arrayListCls, "add", "(Ljava/lang/Object;)Z");
+
+    jobject listObj = ctx->NewObject(arrayListCls, initMID);
+
+    for (const auto &item: vector) {
+        jobject jItem = fun(ctx, item);
+        ctx->CallBooleanMethod(listObj, addToListMID, jItem);
+    }
+
+    return listObj;
+}
+
+template<typename T, typename F>
+jobject pagingList2Java(
+        JniContextUtils &ctx,
+        privmx::endpoint::core::PagingList<T> pagingList,
+        F fun
+) {
+    jclass pagingListCls = ctx->FindClass(
+            "com/simplito/java/privmx_endpoint/model/PagingList");
+    jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
+                                                   "(Ljava/lang/Long;Ljava/util/List;)V"
+    );
+
+    jobject array = vectorTojArray(ctx, pagingList.readItems, fun);
+
+    return ctx->NewObject(
+            pagingListCls,
+            pagingListInitMID,
+            ctx.long2jLong(pagingList.totalAvailable),
+            array
+    );
+}
+
+jobject string2jobject(JniContextUtils &ctx, const std::string &str) {
+    return ctx->NewStringUTF(str.c_str());
+}
+
+jobject long2jobject(JniContextUtils &ctx, const int64_t &lng) {
+    return ctx.long2jLong(lng);
+}
