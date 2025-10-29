@@ -260,3 +260,21 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_deleteStreamRoo
         );
     });
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_joinRoom(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room ID")) {
+        return;
+    }
+    ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id]() {
+        getStreamApi(ctx, thiz)->joinRoom(
+                ctx.jString2string(stream_room_id)
+        );
+    });
+}
