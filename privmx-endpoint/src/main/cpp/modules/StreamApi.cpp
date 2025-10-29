@@ -158,3 +158,23 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_addTrack(
         );
     });
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_removeTrack(
+        JNIEnv *env,
+        jobject thiz,
+        jobject stream_handle,
+        jobject track
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_handle, "Stream Handle") ||
+        ctx.nullCheck(track, "Media Device")) {
+        return;
+    }
+    ctx.callVoidEndpointApi([&ctx, &thiz, &stream_handle, &track]() {
+        getStreamApi(ctx, thiz)->removeTrack(
+                parseStreamHandle(ctx, stream_handle),
+                parseMediaDevice(ctx, track)
+        );
+    });
+}

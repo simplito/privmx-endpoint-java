@@ -36,6 +36,8 @@ public class StreamApi implements AutoCloseable {
 
     public native void addTrack(StreamHandle streamHandle, MediaDevice track);
 
+    public native void removeTrack(StreamHandle streamHandle, MediaDevice track);
+
     @Override
     public void close() throws Exception {
         deinit();
