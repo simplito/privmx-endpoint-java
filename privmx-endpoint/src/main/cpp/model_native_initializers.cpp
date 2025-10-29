@@ -1394,5 +1394,29 @@ namespace privmx {
             );
         }
 
+        //Stream
+        jobject stream2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::Stream stream_c
+        ) {
+            jclass itemCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/Stream");
+
+            jmethodID initItemMID = ctx->GetMethodID(
+                    itemCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/Long;"      // streamId
+                    "Ljava/lang/String;"    // userId
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    itemCls,
+                    initItemMID,
+                    ctx.long2jLong(stream_c.streamId),
+                    ctx->NewStringUTF(stream_c.userId.c_str())
+            );
+        }
     } // wrapper
 } // privmx

@@ -34,6 +34,7 @@
 #include "privmx/endpoint/crypto/ExtKey.hpp"
 #include "privmx/endpoint/kvdb/KvdbApi.hpp"
 #include "privmx/endpoint/kvdb/Types.hpp"
+#include "privmx/endpoint/stream/Types.hpp"
 
 namespace privmx {
     namespace wrapper {
@@ -161,6 +162,8 @@ namespace privmx {
 
         jobject kvdbEntry2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::KvdbEntry entry_c);
 
+        //Stream
+        jobject stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
 
     } // wrapper
 } // privmx
