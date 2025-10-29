@@ -1394,5 +1394,63 @@ namespace privmx {
             );
         }
 
+        // Stream
+        jobject streamRoom2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamRoom streamRoom_c
+        ) {
+            jclass itemCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/StreamRoom");
+            jmethodID initItemMID = ctx->GetMethodID(
+                    itemCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"    // contextId
+                    "Ljava/lang/String;"    // streamRoomId
+                    "Ljava/lang/Long;"      // createDate
+                    "Ljava/lang/String;"    // creator
+                    "Ljava/lang/Long;"      // lastModificationDate
+                    "Ljava/lang/String;"    // lastModifier
+                    "Ljava/util/List;"      // users
+                    "Ljava/util/List;"      // managers
+                    "Ljava/lang/Long;"      // version
+                    "[B"                    // publicMeta
+                    "[B"                    // privateMeta
+                    "Lcom/simplito/java/privmx_endpoint/model/ContainerPolicy;" // policy
+                    "Ljava/lang/Long;"      // statusCode
+                    "Ljava/lang/Long;"      // schemaVersion
+                    ")V"
+            );
+
+            jbyteArray publicMeta = ctx->NewByteArray(streamRoom_c.publicMeta.size());
+            jbyteArray privateMeta = ctx->NewByteArray(streamRoom_c.privateMeta.size());
+
+            ctx->SetByteArrayRegion(publicMeta, 0, streamRoom_c.publicMeta.size(),
+                                    (jbyte *) streamRoom_c.publicMeta.data());
+            ctx->SetByteArrayRegion(privateMeta, 0, streamRoom_c.privateMeta.size(),
+                                    (jbyte *) streamRoom_c.privateMeta.data());
+
+            jobject users = vectorTojArray(ctx, streamRoom_c.users, string2jobject);
+            jobject managers = vectorTojArray(ctx, streamRoom_c.managers, string2jobject);
+
+            return ctx->NewObject(
+                    itemCls,
+                    initItemMID,
+                    ctx->NewStringUTF(streamRoom_c.contextId.c_str()),
+                    ctx->NewStringUTF(streamRoom_c.streamRoomId.c_str()),
+                    ctx.long2jLong(streamRoom_c.createDate),
+                    ctx->NewStringUTF(streamRoom_c.creator.c_str()),
+                    ctx.long2jLong(streamRoom_c.lastModificationDate),
+                    ctx->NewStringUTF(streamRoom_c.lastModifier.c_str()),
+                    users,
+                    managers,
+                    ctx.long2jLong(streamRoom_c.version),
+                    publicMeta,
+                    privateMeta,
+                    containerPolicy2Java(ctx, streamRoom_c.policy),
+                    ctx.long2jLong(streamRoom_c.statusCode),
+                    ctx.long2jLong(streamRoom_c.schemaVersion)
+            );
+        }
     } // wrapper
 } // privmx

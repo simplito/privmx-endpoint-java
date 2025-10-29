@@ -14,6 +14,7 @@
 
 #include <jni.h>
 #include "utils.hpp"
+#include "parser.h"
 #include "privmx/endpoint/core/Connection.hpp"
 #include "privmx/endpoint/core/UserVerifierInterface.hpp"
 #include "privmx/endpoint/core/Types.hpp"
@@ -161,6 +162,8 @@ namespace privmx {
 
         jobject kvdbEntry2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::KvdbEntry entry_c);
 
+        //Stream
+        jobject streamRoom2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamRoom streamRoom_c);
 
     } // wrapper
 } // privmx
