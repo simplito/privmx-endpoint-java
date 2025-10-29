@@ -165,6 +165,8 @@ namespace privmx {
         //Stream
         jobject stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
 
+        jobject streamHandle2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamHandle streamHandle_c);
+
     } // wrapper
 } // privmx
 
