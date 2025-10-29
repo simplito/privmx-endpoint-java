@@ -1419,6 +1419,22 @@ namespace privmx {
             );
         }
 
+        jobject deviceType2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::DeviceType deviceType_c
+        ) {
+            jclass itemCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/streams/DeviceType");
+
+            jmethodID valuesMID = ctx->GetStaticMethodID(itemCls, "values",
+                                                         "()[Lcom/simplito/java/privmx_endpoint/model/streams/DeviceType;");
+
+            jobjectArray enumValues = (jobjectArray) ctx->CallStaticObjectMethod(itemCls,
+                                                                                 valuesMID);
+
+            return (jobject) ctx->GetObjectArrayElement(enumValues, (int) deviceType_c);
+        }
+
         jobject streamHandle2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::stream::StreamHandle streamHandle_c

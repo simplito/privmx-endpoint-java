@@ -35,6 +35,7 @@
 #include "privmx/endpoint/kvdb/KvdbApi.hpp"
 #include "privmx/endpoint/kvdb/Types.hpp"
 #include "privmx/endpoint/stream/Types.hpp"
+#include "privmx/endpoint/stream/webrtc/Types.hpp"
 
 namespace privmx {
     namespace wrapper {
@@ -164,6 +165,9 @@ namespace privmx {
 
         //Stream
         jobject stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
+
+        jobject deviceType2Java(JniContextUtils &ctx,privmx::endpoint::stream::DeviceType deviceType_c);
+
 
         jobject streamHandle2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamHandle streamHandle_c);
 
