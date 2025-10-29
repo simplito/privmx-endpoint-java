@@ -139,3 +139,21 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_getMediaDevices
     }
     return result;
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_addTrack(
+        JNIEnv *env, jobject thiz,
+        jobject stream_handle,
+        jobject track
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(track, "TrackParam")) {
+        return;
+    }
+    ctx.callVoidEndpointApi([&ctx, &thiz, &stream_handle, &track]() {
+        getStreamApi(ctx, thiz)->addTrack(
+                parseStreamHandle(ctx, stream_handle),
+                parseMediaDevice(ctx, track)
+        );
+    });
+}
