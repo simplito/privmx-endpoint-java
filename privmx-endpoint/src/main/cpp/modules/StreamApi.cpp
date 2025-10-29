@@ -116,3 +116,26 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_createStream(
     }
     return result;
 }
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_getMediaDevices(
+        JNIEnv *env,
+        jobject thiz
+) {
+    JniContextUtils ctx(env);
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &thiz]() {
+                auto media_devices_c(
+                        getStreamApi(ctx, thiz)->getMediaDevices()
+                );
+                return vectorTojArray(ctx, media_devices_c, privmx::wrapper::mediaDevice2Java);
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}

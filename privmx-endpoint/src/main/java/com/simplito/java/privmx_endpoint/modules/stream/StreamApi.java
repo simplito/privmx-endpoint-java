@@ -31,6 +31,8 @@ public class StreamApi implements AutoCloseable {
 
     public native StreamHandle createStream(String streamRoomId);
 
+    public native List<MediaDevice> getMediaDevices();
+
     @Override
     public void close() throws Exception {
         deinit();
