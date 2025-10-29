@@ -2,7 +2,9 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 
 import com.simplito.java.privmx_endpoint.LibLoader;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
+import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
+import com.simplito.java.privmx_endpoint.model.streams.StreamRoom;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 
@@ -93,6 +95,16 @@ public class StreamApi implements AutoCloseable {
     ) {
         updateStreamRoom(streamRoomId, users, managers, publicMeta, privateMeta, version, false, false, null);
     }
+
+    public native PagingList<StreamRoom> listStreamRooms(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String queryAsJson,
+            String sortBy
+    );
 
     @Override
     public void close() throws Exception {

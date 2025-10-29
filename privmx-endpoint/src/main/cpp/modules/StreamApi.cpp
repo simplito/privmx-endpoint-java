@@ -164,3 +164,53 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_updateStreamRoo
                 );
             });
 }
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_listStreamRooms(
+        JNIEnv *env,
+        jobject thiz,
+        jstring context_id,
+        jlong skip,
+        jlong limit,
+        jstring sort_order,
+        jstring last_id,
+        jstring query_as_json,
+        jstring sort_by
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(sort_order, "Sort order") ||
+        ctx.nullCheck(context_id, "Context ID")) {
+        return nullptr;
+    }
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &thiz, &context_id, &skip, &limit, &sort_order, &last_id, &query_as_json, &sort_by]() {
+                auto query = core::PagingQuery();
+                query.skip = skip;
+                query.limit = limit;
+                query.sortOrder = ctx.jString2string(sort_order);
+                if (last_id != nullptr) {
+                    query.lastId = ctx.jString2string(last_id);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
+                }
+                if (sort_by != nullptr) {
+                    query.sortBy = ctx.jString2string(sort_by);
+                }
+                auto streamRooms_c(
+                        getStreamApi(ctx, thiz)->listStreamRooms(
+                                ctx.jString2string(context_id),
+                                query
+                        )
+                );
+
+                return pagingList2Java(ctx, streamRooms_c, long2jobject);
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
