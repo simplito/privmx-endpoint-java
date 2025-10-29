@@ -2,6 +2,7 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 
 import com.simplito.java.privmx_endpoint.LibLoader;
 import com.simplito.java.privmx_endpoint.model.streams.Stream;
+import com.simplito.java.privmx_endpoint.model.streams.StreamHandle;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 
@@ -27,6 +28,8 @@ public class StreamApi implements AutoCloseable {
     }
 
     public native List<Stream> listStreams(String streamRoomId);
+
+    public native StreamHandle createStream(String streamRoomId);
 
     @Override
     public void close() throws Exception {
