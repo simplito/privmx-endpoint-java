@@ -41,6 +41,8 @@ public class StreamApi implements AutoCloseable {
 
     public native RemoteStreamId publishStream(StreamHandle streamHandle);
 
+    public native void unpublishStream(StreamHandle streamHandle);
+
     @Override
     public void close() throws Exception {
         deinit();

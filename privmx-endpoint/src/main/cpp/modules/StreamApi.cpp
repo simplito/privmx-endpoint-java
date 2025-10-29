@@ -206,3 +206,18 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_publishStream(
     }
     return result;
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_unpublishStream(
+        JNIEnv *env,
+        jobject thiz,
+        jobject stream_handle
+) {
+    JniContextUtils ctx(env);
+    ctx.callVoidEndpointApi([&ctx, &thiz, &stream_handle]() {
+        getStreamApi(ctx, thiz)->unpublishStream(
+                parseStreamHandle(ctx, stream_handle)
+        );
+    });
+}
