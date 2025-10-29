@@ -573,6 +573,19 @@ parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery) {
     return result;
 }
 
+// streams
+privmx::endpoint::stream::DeviceType parseDeviceType(JniContextUtils &ctx, jobject type) {
+    jclass itemClass = ctx->FindClass(
+            "com/simplito/java/privmx_endpoint/model/streams/DeviceType)");
+    jmethodID ordinalMethod = ctx->GetMethodID(itemClass, "ordinal", "()I");
+    jint ordinalMID = ctx->CallIntMethod(type, ordinalMethod);
+
+    privmx::endpoint::stream::DeviceType type_c = static_cast<privmx::endpoint::stream::DeviceType >(ordinalMID);
+
+    return type_c;
+}
+
+
 // java -> c++
 template<typename T>
 std::vector<T> jArrayToVector(
