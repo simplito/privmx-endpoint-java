@@ -168,6 +168,7 @@ namespace privmx {
 
         jobject deviceType2Java(JniContextUtils &ctx,privmx::endpoint::stream::DeviceType deviceType_c);
 
+        jobject mediaDevice2Java(JniContextUtils &ctx, privmx::endpoint::stream::MediaDevice mediaDevice_c);
 
         jobject streamHandle2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamHandle streamHandle_c);
 

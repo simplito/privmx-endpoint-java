@@ -1435,6 +1435,34 @@ namespace privmx {
             return (jobject) ctx->GetObjectArrayElement(enumValues, (int) deviceType_c);
         }
 
+
+        jobject mediaDevice2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::MediaDevice mediaDevice_c
+        ) {
+            jclass itemCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/streams/MediaDevice");
+
+            jmethodID initItemMID = ctx->GetMethodID(
+                    itemCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"      // name
+                    "Ljava/lang/String;"      // id
+                    "Lcom/simplito/java/privmx_endpoint/model/streams/DeviceType;"  // type
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    itemCls,
+                    initItemMID,
+                    ctx->NewStringUTF(mediaDevice_c.name.c_str()),
+                    ctx->NewStringUTF(mediaDevice_c.id.c_str()),
+                    deviceType2Java(ctx, mediaDevice_c.type)
+
+            );
+        }
+
         jobject streamHandle2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::stream::StreamHandle streamHandle_c
