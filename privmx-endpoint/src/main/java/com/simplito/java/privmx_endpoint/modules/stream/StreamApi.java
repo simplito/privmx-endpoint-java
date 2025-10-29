@@ -112,6 +112,8 @@ public class StreamApi implements AutoCloseable {
 
     public native void joinRoom(String streamRoomId); // required before createStream and openStream
 
+    public native void leaveRoom(String streamRoomId);
+
     @Override
     public void close() throws Exception {
         deinit();
