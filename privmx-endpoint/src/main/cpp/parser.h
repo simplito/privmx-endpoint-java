@@ -40,6 +40,8 @@ privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobje
 // streams
 privmx::endpoint::stream::DeviceType parseDeviceType(JniContextUtils &ctx, jobject type);
 
+privmx::endpoint::stream::MediaDevice parseMediaDevice(JniContextUtils &ctx, jobject mediaDevice);
+
 // java -> c++
 template<typename T>
 std::vector<T> jArrayToVector(JniContextUtils &ctx, jobjectArray jArray,

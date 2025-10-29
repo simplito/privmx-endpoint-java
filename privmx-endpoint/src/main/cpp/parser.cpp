@@ -585,6 +585,24 @@ privmx::endpoint::stream::DeviceType parseDeviceType(JniContextUtils &ctx, jobje
     return type_c;
 }
 
+privmx::endpoint::stream::MediaDevice parseMediaDevice(JniContextUtils &ctx, jobject mediaDevice) {
+    auto result = privmx::endpoint::stream::MediaDevice();
+
+    jclass mediaDeviceCls = ctx->GetObjectClass(mediaDevice);
+    jfieldID name = ctx->GetFieldID(mediaDeviceCls, "name", "Ljava/lang/String;");
+    jfieldID id = ctx->GetFieldID(mediaDeviceCls, "id", "Ljava/lang/String;");
+    jfieldID type = ctx->GetFieldID(mediaDeviceCls, "type",
+                                    "Lcom/simplito/java/privmx_endpoint/model/streams/DeviceType;");
+
+    result.name = ctx.jString2string(
+            (jstring) ctx->GetObjectField(mediaDevice, name));
+    result.id = ctx.jString2string(
+            (jstring) ctx->GetObjectField(mediaDevice, id));
+    result.type = parseDeviceType(ctx, ctx->GetObjectField(mediaDevice, type));
+
+    return result;
+}
+
 
 // java -> c++
 template<typename T>
