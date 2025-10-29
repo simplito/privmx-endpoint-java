@@ -57,3 +57,34 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_deinit(
         );
     }
 }
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_listStreams(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room ID")) {
+        return nullptr;
+    }
+
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &thiz, &stream_room_id]() {
+                std::vector<privmx::endpoint::stream::Stream> streams_c = getStreamApi(
+                        ctx, thiz)->listStreams(
+                        ctx.jString2string(stream_room_id)
+                );
+
+                return vectorTojArray(ctx, streams_c,   privmx::wrapper::stream2Java);
+            }
+    );
+
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
