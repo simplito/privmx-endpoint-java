@@ -57,3 +57,51 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_deinit(
         );
     }
 }
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_createStreamRoom(
+        JNIEnv *env,
+        jobject thiz,
+        jstring context_id,
+        jobject users,
+        jobject managers,
+        jbyteArray public_meta,
+        jbyteArray private_meta,
+        jobject container_policies
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(context_id, "Context ID") ||
+        ctx.nullCheck(users, "Users list") ||
+        ctx.nullCheck(managers, "Managers list") ||
+        ctx.nullCheck(public_meta, "Public meta") ||
+        ctx.nullCheck(private_meta, "Private meta")) {
+        return nullptr;
+    }
+    jstring result;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &context_id, &users, &managers, &public_meta, &private_meta, &container_policies]() {
+                std::vector<core::UserWithPubKey> managers_c = usersToVector(
+                        ctx,
+                        ctx.jObject2jArray(managers));
+                std::vector<core::UserWithPubKey> users_c = usersToVector(
+                        ctx,
+                        ctx.jObject2jArray(users));
+                auto container_policies_n = std::optional<core::ContainerPolicy>(
+                        parseContainerPolicy(ctx, container_policies));
+                return ctx->NewStringUTF(
+                        getStreamApi(ctx, thiz)->createStreamRoom(
+                                ctx.jString2string(context_id),
+                                users_c,
+                                managers_c,
+                                core::Buffer::from(ctx.jByteArray2String(public_meta)),
+                                core::Buffer::from(ctx.jByteArray2String(private_meta)),
+                                container_policies_n
+                        ).c_str());
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
