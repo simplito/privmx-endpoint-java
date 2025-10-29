@@ -603,6 +603,15 @@ privmx::endpoint::stream::MediaDevice parseMediaDevice(JniContextUtils &ctx, job
     return result;
 }
 
+privmx::endpoint::stream::StreamHandle parseStreamHandle(
+        JniContextUtils &ctx,
+        jobject streamHandle
+) {
+    jclass streamHandleCls = ctx->GetObjectClass(streamHandle);
+    jfieldID valueFID = ctx->GetFieldID(streamHandleCls, "value", "Ljava/lang/Long;");
+
+    return jobject2long(ctx, ctx->GetObjectField(streamHandle, valueFID));
+}
 
 // java -> c++
 template<typename T>
