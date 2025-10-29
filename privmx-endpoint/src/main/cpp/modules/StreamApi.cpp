@@ -147,7 +147,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_addTrack(
         jobject track
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(track, "TrackParam")) {
+    if (ctx.nullCheck(stream_handle, "Stream Handle") ||
+        ctx.nullCheck(track, "Media Device")) {
         return;
     }
     ctx.callVoidEndpointApi([&ctx, &thiz, &stream_handle, &track]() {
