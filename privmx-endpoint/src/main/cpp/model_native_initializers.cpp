@@ -1485,5 +1485,24 @@ namespace privmx {
             );
         }
 
+        jobject remoteStreamId2Java(JniContextUtils &ctx, privmx::endpoint::stream::RemoteStreamId remoteStreamId_c){
+            jclass itemCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/streams/RemoteStreamId");
+
+            jmethodID initItemMID = ctx->GetMethodID(
+                    itemCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/Long;"      // value
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    itemCls,
+                    initItemMID,
+                    ctx.long2jLong(remoteStreamId_c)
+            );
+        }
+
     } // wrapper
 } // privmx
