@@ -613,6 +613,11 @@ privmx::endpoint::stream::StreamHandle parseStreamHandle(
     return jobject2long(ctx, ctx->GetObjectField(streamHandle, valueFID));
 }
 
+privmx::endpoint::stream::Settings parseSettings(JniContextUtils &ctx, jobject settings){
+    auto result = privmx::endpoint::stream::Settings();
+    return result;
+}
+
 privmx::endpoint::stream::StreamSettings parseStreamSettings(JNIEnv *env,jobject streamSettings){
     privmx::endpoint::stream::StreamSettings result;
     JniContextUtils ctx(env);

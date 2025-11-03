@@ -13,7 +13,7 @@
 #define PRIVMX_POCKET_LIB_PARSER_H
 
 #include "utils.hpp"
-
+#include "modules/StreamSettingsJNI.h"
 #include <jni.h>
 #include "model_native_initializers.h"
 
@@ -43,6 +43,8 @@ privmx::endpoint::stream::DeviceType parseDeviceType(JniContextUtils &ctx, jobje
 privmx::endpoint::stream::MediaDevice parseMediaDevice(JniContextUtils &ctx, jobject mediaDevice);
 
 privmx::endpoint::stream::StreamHandle parseStreamHandle(JniContextUtils &ctx, jobject streamHandle);
+
+privmx::endpoint::stream::Settings parseSettings(JniContextUtils &ctx, jobject settings);
 
 privmx::endpoint::stream::StreamSettings parseStreamSettings(JNIEnv *env, jobject streamSettings);
 
