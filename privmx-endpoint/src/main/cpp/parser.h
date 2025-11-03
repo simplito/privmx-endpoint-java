@@ -48,6 +48,8 @@ privmx::endpoint::stream::Settings parseSettings(JniContextUtils &ctx, jobject s
 
 privmx::endpoint::stream::StreamSettings parseStreamSettings(JNIEnv *env, jobject streamSettings);
 
+privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextUtils &ctx, jobject streamSubscription);
+
 // java -> c++
 template<typename T>
 std::vector<T> jArrayToVector(JniContextUtils &ctx, jobjectArray jArray,

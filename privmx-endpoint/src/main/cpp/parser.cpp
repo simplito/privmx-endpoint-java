@@ -640,6 +640,30 @@ privmx::endpoint::stream::StreamSettings parseStreamSettings(JNIEnv *env,jobject
     return result;
 }
 
+privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextUtils &ctx, jobject streamSubscription){
+ privmx::endpoint::stream::StreamSubscription result;
+    jclass cls = ctx->GetObjectClass(streamSubscription);
+    jfieldID streamIdFID = ctx->GetFieldID(
+            ctx->GetObjectClass(streamSubscription),
+            "streamId",
+            "J"
+    );
+
+    jfieldID trackIdFID = ctx->GetFieldID(
+            ctx->GetObjectClass(streamSubscription),
+            "streamTrackId",
+            "Ljava/lang/String;"
+    );
+
+    jobject streamId = ctx->GetObjectField(streamSubscription, streamIdFID);
+    jobject streamTrackId =  ctx->GetObjectField(streamSubscription, trackIdFID);
+
+    result.streamId = jobject2long(ctx, streamId);
+    if(streamTrackId != nullptr) result.streamTrackId = jobject2string(ctx, streamTrackId);
+
+    return result;
+}
+
 // java -> c++
 template<typename T>
 std::vector<T> jArrayToVector(
