@@ -253,3 +253,46 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_subscribeToRemo
         );
     });
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_modifyRemoteStreamsSubscriptions(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id,
+        jobject subscriptions_to_add,
+        jobject subscriptions_to_remove,
+        jobject options
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
+        ctx.nullCheck(options, "Options") ||
+        ctx.nullCheck(subscriptions_to_add, "Subscriptions To Add List") ||
+        ctx.nullCheck(subscriptions_to_remove, "Subscriptions To Remove List")) {
+        return;
+    }
+
+    ctx.callVoidEndpointApi(
+            [&ctx, &thiz, &stream_room_id, &subscriptions_to_add, &subscriptions_to_remove, &options, &env]() {
+                std::vector<privmx::endpoint::stream::StreamSubscription> subscriptions_to_add_c =
+                        jArrayToVector<privmx::endpoint::stream::StreamSubscription>(
+                                ctx,
+                                ctx.jObject2jArray(
+                                        subscriptions_to_add),
+                                parseStreamSubscription
+                        );
+                std::vector<privmx::endpoint::stream::StreamSubscription> subscriptions_to_remove_c =
+                        jArrayToVector<privmx::endpoint::stream::StreamSubscription>(
+                                ctx,
+                                ctx.jObject2jArray(
+                                        subscriptions_to_remove),
+                                parseStreamSubscription
+                        );
+                getStreamApi(ctx, thiz)->modifyRemoteStreamsSubscriptions(
+                        ctx.jString2string(stream_room_id),
+                        subscriptions_to_add_c,
+                        subscriptions_to_remove_c,
+                        parseStreamSettings(env, options)
+                );
+            });
+}
