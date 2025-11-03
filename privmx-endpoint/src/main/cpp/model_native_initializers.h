@@ -174,6 +174,8 @@ namespace privmx {
 
         jobject remoteStreamId2Java(JniContextUtils &ctx, privmx::endpoint::stream::RemoteStreamId remoteStreamId_c);
 
+        jobject frame2Java(JniContextUtils &ctx, privmx::endpoint::stream::Frame &frame_c);
+
     } // wrapper
 } // privmx
 

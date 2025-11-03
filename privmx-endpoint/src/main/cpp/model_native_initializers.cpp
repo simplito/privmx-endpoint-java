@@ -1504,5 +1504,20 @@ namespace privmx {
             );
         }
 
+        jobject frame2Java(JniContextUtils &ctx, privmx::endpoint::stream::Frame &frame_c) {
+            jclass itemCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/streams/Frame");
+
+            jmethodID initItemMID = ctx->GetMethodID(
+                    itemCls,
+                    "<init>",
+                    "()V"
+            );
+
+            return ctx->NewObject(
+                    itemCls,
+                    initItemMID
+            );
+        }
     } // wrapper
 } // privmx
