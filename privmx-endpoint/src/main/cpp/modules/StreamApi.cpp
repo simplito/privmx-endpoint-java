@@ -57,3 +57,42 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_deinit(
         );
     }
 }
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_subscribeFor(
+        JNIEnv *env,
+        jobject thiz,
+        jobject subscription_queries
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(subscription_queries, "Subscription queries")) {
+        return nullptr;
+    }
+
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &thiz, &subscription_queries]() -> jobject {
+
+                std::vector<std::string> queries = jArrayToVector<std::string>(
+                        ctx,
+                        ctx.jObject2jArray(subscription_queries),
+                        jobject2string
+                );
+
+                std::vector<std::string> subscription_ids_c =
+                        getStreamApi(ctx, thiz)->subscribeFor(queries);
+
+                return vectorTojArray(
+                        ctx,
+                        subscription_ids_c,
+                        string2jobject
+                );
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
