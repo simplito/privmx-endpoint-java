@@ -325,3 +325,24 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_unsubscribeFrom
         );
     });
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_dropBrokenFrames(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id,
+        jboolean enable
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room ID")) {
+        return;
+    }
+
+    ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id, &enable]() {
+        getStreamApi(ctx, thiz)->dropBrokenFrames(
+                ctx.jString2string(stream_room_id),
+                enable == JNI_TRUE
+        );
+    });
+}
