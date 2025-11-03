@@ -296,3 +296,32 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_modifyRemoteStr
                 );
             });
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_unsubscribeFromRemoteStreams(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id,
+        jobject subscriptions_to_remove
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
+        ctx.nullCheck(subscriptions_to_remove, "Subscriptions To Remove List")) {
+        return;
+    }
+
+    ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id, &subscriptions_to_remove]() {
+        std::vector<privmx::endpoint::stream::StreamSubscription> subscriptions_to_remove_c =
+                jArrayToVector<privmx::endpoint::stream::StreamSubscription>(
+                        ctx,
+                        ctx.jObject2jArray(
+                                subscriptions_to_remove),
+                        parseStreamSubscription
+                );
+        getStreamApi(ctx, thiz)->unsubscribeFromRemoteStreams(
+                ctx.jString2string(stream_room_id),
+                subscriptions_to_remove_c
+        );
+    });
+}
