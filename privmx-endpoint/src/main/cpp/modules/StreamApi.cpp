@@ -128,3 +128,27 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_buildSubscripti
     }
     return result;
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_unsubscribeFrom(
+        JNIEnv *env,
+        jobject thiz,
+        jobject subscription_ids
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(subscription_ids, "Subscription IDs")) {
+        return;
+    }
+
+    ctx.callVoidEndpointApi([&ctx, &thiz, &subscription_ids]() {
+        auto subscription_ids_arr = ctx.jObject2jArray(subscription_ids);
+        auto subscription_ids_c = jArrayToVector<std::string>(
+                ctx,
+                subscription_ids_arr,
+                jobject2string
+        );
+
+        getStreamApi(ctx, thiz)->unsubscribeFrom(subscription_ids_c);
+    });
+}

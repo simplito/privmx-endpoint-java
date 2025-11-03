@@ -37,6 +37,9 @@ public class StreamApi implements AutoCloseable {
     }
 
     private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId);
+
+    public native void unsubscribeFrom(List<String> subscriptionIds);
+
     @Override
     public void close() throws Exception {
         deinit();
