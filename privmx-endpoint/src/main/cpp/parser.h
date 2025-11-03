@@ -44,6 +44,8 @@ privmx::endpoint::stream::MediaDevice parseMediaDevice(JniContextUtils &ctx, job
 
 privmx::endpoint::stream::StreamHandle parseStreamHandle(JniContextUtils &ctx, jobject streamHandle);
 
+privmx::endpoint::stream::StreamSettings parseStreamSettings(JNIEnv *env, jobject streamSettings);
+
 // java -> c++
 template<typename T>
 std::vector<T> jArrayToVector(JniContextUtils &ctx, jobjectArray jArray,

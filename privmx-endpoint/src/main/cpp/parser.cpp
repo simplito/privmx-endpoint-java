@@ -613,6 +613,28 @@ privmx::endpoint::stream::StreamHandle parseStreamHandle(
     return jobject2long(ctx, ctx->GetObjectField(streamHandle, valueFID));
 }
 
+privmx::endpoint::stream::StreamSettings parseStreamSettings(JNIEnv *env,jobject streamSettings){
+    privmx::endpoint::stream::StreamSettings result;
+    JniContextUtils ctx(env);
+    jclass cls = ctx->GetObjectClass(streamSettings);
+    StreamSettingsJNI streamSettingsJni (env, streamSettings);
+
+    jfieldID settingsFID = env->GetFieldID(
+            env->GetObjectClass(streamSettings),
+            "settings",
+            "Lcom/simplito/java/privmx_endpoint/model/streams/Settings;"
+    );
+
+    jobject jsettings = ctx->GetObjectField(streamSettings, settingsFID);
+
+    result.settings = parseSettings(ctx, jsettings);
+    result.OnFrame = streamSettingsJni.OnFrame;
+    result.OnVideo = streamSettingsJni.OnVideo;
+    result.OnVideoRemove = streamSettingsJni.OnVideoRemove;
+
+    return result;
+}
+
 // java -> c++
 template<typename T>
 std::vector<T> jArrayToVector(
