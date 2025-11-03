@@ -221,3 +221,35 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_unpublishStream
         );
     });
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_subscribeToRemoteStreams(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id,
+        jobject subscriptions,
+        jobject options
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
+        ctx.nullCheck(options, "Options") ||
+        ctx.nullCheck(subscriptions, "Subscriptions List")) {
+        return;
+    }
+
+    ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id, &subscriptions, &options, &env]() {
+        std::vector<privmx::endpoint::stream::StreamSubscription> subscriptions_c =
+                jArrayToVector<privmx::endpoint::stream::StreamSubscription>(
+                        ctx,
+                        ctx.jObject2jArray(
+                                subscriptions),
+                        parseStreamSubscription
+                );
+        getStreamApi(ctx, thiz)->subscribeToRemoteStreams(
+                ctx.jString2string(stream_room_id),
+                subscriptions_c,
+                parseStreamSettings(env, options)
+        );
+    });
+}

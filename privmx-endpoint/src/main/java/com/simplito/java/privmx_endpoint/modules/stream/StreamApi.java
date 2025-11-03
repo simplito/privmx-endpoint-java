@@ -5,6 +5,8 @@ import com.simplito.java.privmx_endpoint.model.streams.MediaDevice;
 import com.simplito.java.privmx_endpoint.model.streams.RemoteStreamId;
 import com.simplito.java.privmx_endpoint.model.streams.Stream;
 import com.simplito.java.privmx_endpoint.model.streams.StreamHandle;
+import com.simplito.java.privmx_endpoint.model.streams.StreamSettings;
+import com.simplito.java.privmx_endpoint.model.streams.StreamSubscription;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 
@@ -42,6 +44,14 @@ public class StreamApi implements AutoCloseable {
     public native RemoteStreamId publishStream(StreamHandle streamHandle);
 
     public native void unpublishStream(StreamHandle streamHandle);
+
+    public native void subscribeToRemoteStreams(String streamRoomId, List<StreamSubscription> subscriptions, StreamSettings options);
+
+    public native void modifyRemoteStreamsSubscriptions(String streamRoomId, List<StreamSubscription> subscriptionsToAdd, List<StreamSubscription> subscriptionsToRemove,  StreamSettings options);
+
+    public native void unsubscribeFromRemoteStreams(String streamRoomId, List<StreamSubscription> subscriptionsToRemove);
+
+    public native void dropBrokenFrames(String streamRoomId, boolean enable);
 
     @Override
     public void close() throws Exception {
