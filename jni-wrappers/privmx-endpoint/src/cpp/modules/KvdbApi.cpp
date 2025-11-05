@@ -9,14 +9,14 @@
 // limitations under the License.
 //
 
-#include "../../../includes/privmx/endpoint/wrapper/utils/utils.hpp"
-#include "../../../includes/privmx/endpoint/wrapper/parsers/parser.h"
-#include "../../../includes/privmx/endpoint/wrapper/modules/Connection.h"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
+#include "privmx/endpoint/wrapper/parsers/parser.h"
+#include "privmx/endpoint/wrapper/modules/Connection.h"
 #include <privmx/endpoint/kvdb/KvdbApi.hpp>
 #include <jni.h>
-#include "../../../includes/privmx/endpoint/wrapper/parsers/model_native_initializers.h"
+#include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
 
-using namespace privmx::endpoint;
+using namespace privmx::endpoint;s
 
 kvdb::KvdbApi *getKvdbApi(JniContextUtils &ctx, jobject kvdbApiInstance) {
     jclass cls = ctx->GetObjectClass(kvdbApiInstance);

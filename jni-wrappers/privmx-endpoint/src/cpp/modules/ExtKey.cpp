@@ -10,7 +10,7 @@
 //
 
 #include "privmx/endpoint/crypto/ExtKey.hpp"
-#include "utils/utils.hpp"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
 #include <jni.h>
 
 using namespace privmx::endpoint;

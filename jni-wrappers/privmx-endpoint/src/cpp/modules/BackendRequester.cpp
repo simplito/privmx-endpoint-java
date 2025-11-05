@@ -10,8 +10,8 @@
 //
 
 #include <jni.h>
-#include "utils/exceptions.h"
-#include "utils/utils.hpp"
+#include "privmx/endpoint/wrapper/utils/exceptions.h"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
 #include <privmx/endpoint/core/BackendRequester.hpp>
 #include <privmx/endpoint/core/Exception.hpp>
 

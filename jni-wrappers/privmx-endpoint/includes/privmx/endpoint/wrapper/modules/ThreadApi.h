@@ -11,7 +11,7 @@
 
 #include <jni.h>
 #include "privmx/endpoint/thread/ThreadApi.hpp"
-#include "utils/utils.hpp"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
 
 #ifndef PRIVMXENDPOINT_THREADAPI_H
 #define PRIVMXENDPOINT_THREADAPI_H

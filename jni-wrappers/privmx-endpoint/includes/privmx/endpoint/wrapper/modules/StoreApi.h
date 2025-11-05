@@ -11,7 +11,7 @@
 
 #include <jni.h>
 #include "privmx/endpoint/store/StoreApi.hpp"
-#include "utils/utils.hpp"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
 
 #ifndef PRIVMXENDPOINT_STOREAPI_H
 #define PRIVMXENDPOINT_STOREAPI_H

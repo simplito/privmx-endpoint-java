@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#include "../../../includes/privmx/endpoint/wrapper/utils/exceptions.h"
+#include "privmx/endpoint/wrapper/utils/exceptions.h"
 
 IllegalStateException::IllegalStateException(const char *message) {
     this->message = message;

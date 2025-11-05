@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#include "../../../includes/privmx/endpoint/wrapper/parsers/model_native_initializers.h"
+#include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
 
 namespace privmx {
     namespace wrapper {

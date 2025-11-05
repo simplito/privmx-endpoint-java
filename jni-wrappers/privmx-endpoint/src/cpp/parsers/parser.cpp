@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#include "../../../includes/privmx/endpoint/wrapper/parsers/parser.h"
+#include "privmx/endpoint/wrapper/parsers/parser.h"
 
 using namespace privmx::endpoint;
 

@@ -12,9 +12,9 @@
 #include <jni.h>
 #include <privmx/endpoint/core/Exception.hpp>
 #include <privmx/endpoint/crypto/CryptoApi.hpp>
-#include "utils/utils.hpp"
-#include "../../../includes/privmx/endpoint/wrapper/parsers/parser.h"
-#include "utils/exceptions.h"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
+#include "privmx/endpoint/wrapper/parsers/parser.h"
+#include "privmx/endpoint/wrapper/utils/exceptions.h"
 
 using namespace privmx::endpoint;
 

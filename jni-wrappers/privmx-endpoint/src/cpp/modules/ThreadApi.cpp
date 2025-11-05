@@ -12,12 +12,12 @@
 #include <jni.h>
 #include <privmx/endpoint/thread/ThreadApi.hpp>
 #include <privmx/endpoint/core/Exception.hpp>
-#include "../../../includes/privmx/endpoint/wrapper/modules/Connection.h"
-#include "../../../includes/privmx/endpoint/wrapper/modules/ThreadApi.h"
-#include "utils/utils.hpp"
-#include "../../../includes/privmx/endpoint/wrapper/parsers/parser.h"
-#include "utils/exceptions.h"
-#include "../../../includes/privmx/endpoint/wrapper/modules/Connection.h"
+#include "privmx/endpoint/wrapper/modules/Connection.h"
+#include "privmx/endpoint/wrapper/modules/ThreadApi.h"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
+#include "privmx/endpoint/wrapper/parsers/parser.h"
+#include "privmx/endpoint/wrapper/utils/exceptions.h"
+#include "privmx/endpoint/wrapper/modules/Connection.h"
 
 using namespace privmx::endpoint;
 

@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#include "utils/utils.hpp"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
 #include <jni.h>
 #include <privmx/endpoint/core/Utils.hpp>
 

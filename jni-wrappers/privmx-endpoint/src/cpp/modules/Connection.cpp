@@ -13,11 +13,11 @@
 #include <privmx/endpoint/core/Connection.hpp>
 #include "privmx/endpoint/core/Config.hpp"
 #include <privmx/endpoint/core/Exception.hpp>
-#include "../../../includes/privmx/endpoint/wrapper/modules/UserVerifierInterfaceJNI.h"
-#include "../../../includes/privmx/endpoint/wrapper/modules/Connection.h"
-#include "utils/utils.hpp"
-#include "../../../includes/privmx/endpoint/wrapper/parsers/parser.h"
-#include "utils/exceptions.h"
+#include "privmx/endpoint/wrapper/modules/UserVerifierInterfaceJNI.h"
+#include "privmx/endpoint/wrapper/modules/Connection.h"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
+#include "privmx/endpoint/wrapper/parsers/parser.h"
+#include "privmx/endpoint/wrapper/utils/exceptions.h"
 
 using namespace privmx::endpoint;
 

@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#include "../../../includes/privmx/endpoint/wrapper/utils/jniUtils.h"
+#include "privmx/endpoint/wrapper/utils/jniUtils.h"
 
 namespace privmx {
     namespace wrapper {

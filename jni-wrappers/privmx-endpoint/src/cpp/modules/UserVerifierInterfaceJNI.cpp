@@ -9,10 +9,10 @@
 // limitations under the License.
 //
 
-#include "../../../includes/privmx/endpoint/wrapper/modules/UserVerifierInterfaceJNI.h"
-#include "../../../includes/privmx/endpoint/wrapper/parsers/model_native_initializers.h"
-#include "utils/utils.hpp"
-#include "utils/jniUtils.h"
+#include "privmx/endpoint/wrapper/modules/UserVerifierInterfaceJNI.h"
+#include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
+#include "privmx/endpoint/wrapper/utils/jniUtils.h"
 #include <thread>
 #include <jni.h>
 #include <iostream>

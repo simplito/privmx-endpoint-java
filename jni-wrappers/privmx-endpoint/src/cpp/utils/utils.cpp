@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#include "../../../includes/privmx/endpoint/wrapper/utils/utils.hpp"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
 
 void replace_all(std::string &input, const std::string &from, const std::string &to);
 
