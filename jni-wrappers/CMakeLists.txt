@@ -39,8 +39,7 @@ include_directories(${JAVA_HOME}/include ${JAVA_HOME}/include/darwin)
 
 # Add the subdirectories that contain the libraries
 #add_subdirectory(utils)
-add_subdirectory(privmx-endpoint-streams/jvm)
-add_subdirectory(privmx-endpoint-streams/android)
+#add_subdirectory(privmx-endpoint-streams/jvm)
+#add_subdirectory(privmx-endpoint-streams/android)
 add_subdirectory(privmx-endpoint)
 message("Install to ${CMAKE_INSTALL_PREFIX}")
-#install(TARGETS privmx-endpoint DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java)

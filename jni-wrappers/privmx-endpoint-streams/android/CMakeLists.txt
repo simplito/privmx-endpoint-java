@@ -12,10 +12,10 @@ cmake_minimum_required(VERSION 3.22.1)
 project("privmx-endpoint-streams-android")
 set(CMAKE_PROJECT_NAME "privmx-endpoint-streams-android")
 
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_library(${CMAKE_PROJECT_NAME} SHARED
         src/cpp/privmx/endpoint/wrapper/streams/StreamApiLow.cpp
 )
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 
 add_library(privmxendpointstream SHARED IMPORTED GLOBAL)
 set_target_properties(privmxendpointstream PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointstream.${file_extension})

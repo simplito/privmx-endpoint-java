@@ -11,8 +11,6 @@ cmake_minimum_required(VERSION 3.22.1)
 # build script scope).
 project("privmx-endpoint-java")
 set(CMAKE_PROJECT_NAME "privmx-endpoint-java")
-
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_library(${CMAKE_PROJECT_NAME} SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/parsers/parser.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/parsers/model_native_initializers.cpp
@@ -32,6 +30,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/modules/Utils.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/modules/KvdbApi.cpp
 )
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 
 add_library(ssl SHARED IMPORTED GLOBAL)
 set_target_properties(ssl PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libssl.${file_extension})
