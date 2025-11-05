@@ -27,6 +27,14 @@ rootProject.name = "PrivmxEndpoint"
 include ':privmx-endpoint'
 include ':privmx-endpoint-extra'
 include ':privmx-endpoint-android'
-include ':privmx-endpoint-jni'
+
+//Jni implementation of modules
+include ':jni-wrappers'
+
+//Streams modules
+include ':privmx-endpoint-streams:jvm'
+include ':privmx-endpoint-streams:android'
+
+
 include ':examples:privmx-snippets'
-project(':privmx-endpoint-jni').projectDir = file("privmx-endpoint/src/main/cpp")
+include ':examples:privmx-snippets'
