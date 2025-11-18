@@ -1,3 +1,5 @@
-privmx-libs
 scripts
 **/build
+!privmx-libs/**/.gitkeep
+!privmx-libs/**/.gitignore
+privmx-libs
