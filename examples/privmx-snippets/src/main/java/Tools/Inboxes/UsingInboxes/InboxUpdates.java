@@ -1,38 +1,45 @@
 package Tools.Inboxes.UsingInboxes;
 
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.InboxEventSelectorType;
+import com.simplito.java.privmx_endpoint_extra.events.CallbackRegistration;
 import com.simplito.java.privmx_endpoint_extra.events.EventType;
 
 public class InboxUpdates extends WorkingWithInboxes {
     void handlingInboxEvents() {
-        String InboxCallbackID = "INBOX_CALLBACK_ID";
-        String EntryCallbackID = "ENTRY_CALLBACK_ID";
+        String inboxCallbacksGroup = "INBOX_CALLBACKS_GROUP";
+        String entryCallbacksGroup = "ENTRY_CALLBACKS_GROUP";
         String inboxID = "INBOX_ID";
 
         // Starting the Event Loop
         endpointContainer.startListening();
 
-        // Handling Inbox Events
-        endpointSession.registerCallback(
-                InboxCallbackID,
-                EventType.InboxUpdatedEvent,
-                updatedInbox -> {
-                    System.out.println(updatedInbox.lastModifier);
-                }
+        endpointSession.registerManyCallbacks(
+
+                // Handling Inbox Events
+                new CallbackRegistration<>(
+                        inboxCallbacksGroup,
+                        EventType.InboxUpdatedEvent(
+                                InboxEventSelectorType.CONTEXT_ID,
+                                contextId
+                        ),
+                        updatedInbox -> {
+                            System.out.println(updatedInbox.lastModifier);
+                        }
+                ),
+
+                // Handling Inbox Entry Events
+                new CallbackRegistration<>(
+                        entryCallbacksGroup,
+                        EventType.InboxEntryCreatedEvent(
+                                InboxEventSelectorType.INBOX_ID,
+                                inboxID
+                        ),
+                        newEntry -> {
+                            System.out.println(newEntry.inboxId);
+                        }
+                )
         );
 
-        // Handling Inbox Entry Events
-        endpointSession.registerCallback(
-                EntryCallbackID,
-                EventType.InboxEntryCreatedEvent(inboxID),
-                newEntry -> {
-                    System.out.println(newEntry.inboxId);
-                }
-        );
-
-        // Finish handling events
-        endpointSession.unregisterCallbacks(InboxCallbackID);
-        endpointSession.unregisterCallbacks(EntryCallbackID);
-
-        endpointSession.unregisterAll();
+        endpointSession.unregisterCallbacks(inboxCallbacksGroup, entryCallbacksGroup);
     }
 }

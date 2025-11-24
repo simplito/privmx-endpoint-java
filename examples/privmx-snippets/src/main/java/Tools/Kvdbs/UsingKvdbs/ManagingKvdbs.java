@@ -1,9 +1,11 @@
 package Tools.Kvdbs.UsingKvdbs;
 
+import com.simplito.java.privmx_endpoint.model.Kvdb;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint;
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer;
 import com.simplito.java.privmx_endpoint_extra.model.Modules;
+import com.simplito.java.privmx_endpoint_extra.model.SortOrder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -45,6 +47,7 @@ public class ManagingKvdbs {
     );
     // END: Initial Assumptions Snippets
 
+    // START: Creating KVDBs
     void creatingKvdbs() {
         byte[] privateMeta = "KVDB's private data".getBytes(StandardCharsets.UTF_8);
         byte[] publicMeta = "KVDB's public data".getBytes(StandardCharsets.UTF_8);
@@ -64,4 +67,55 @@ public class ManagingKvdbs {
                 privateMeta
         );
     }
+    // END: Creating KVDBs
+
+    // START: Listing KVDBs
+    void listingKvdbs() {
+        long startIndex = 0;
+        long pageSize = 30;
+
+        List<Kvdb> kvdbs = endpointSession.kvdbApi.listKvdbs(
+                contextId,
+                startIndex,
+                pageSize,
+                SortOrder.DESC
+        ).readItems;
+    }
+    // END: Listing KVDBs
+
+    // START: Modifying KVDBs
+    void updatingKvdbs() {
+        String kvdbID = "KVDB_ID";
+        byte[] privateMeta = "New KVDB's private data".getBytes(StandardCharsets.UTF_8);
+        byte[] publicMeta = "New KVDB's public data".getBytes(StandardCharsets.UTF_8);
+        List<UserWithPubKey> newUsersList = List.of(
+                new UserWithPubKey(user1Id, user1PublicKey),
+                new UserWithPubKey(user2Id, user3PublicKey),
+                new UserWithPubKey(user3Id, user3PublicKey)
+        );
+        List<UserWithPubKey> managers = List.of(
+                new UserWithPubKey(user1Id, user1PublicKey)
+        );
+        Kvdb kvdb = endpointSession.kvdbApi.getKvdb(kvdbID);
+
+        endpointSession.kvdbApi.updateKvdb(
+                kvdbID,
+                newUsersList,
+                managers,
+                publicMeta,
+                privateMeta,
+                kvdb.version,
+                false,     // force
+                false,           // forceGenerateNewKey
+                kvdb.policy
+        );
+    }
+    // END: Modifying KVDBs
+
+    // START: Deleting KVDBs
+    void deletingKvdb() {
+        String kvdbID = "KVDB_ID";
+        endpointSession.kvdbApi.deleteKvdb(kvdbID);
+    }
+    // END: Deleting KVDBs
 }
