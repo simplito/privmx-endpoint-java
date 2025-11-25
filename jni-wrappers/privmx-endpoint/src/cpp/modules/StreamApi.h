@@ -1,7 +1,6 @@
 #include <jni.h>
 #include <privmx/endpoint/stream/StreamApi.hpp>
 #include "privmx/endpoint/wrapper/utils/utils.hpp"
-#include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
 #include "privmx/endpoint/wrapper/modules/Connection.h"
 #include "privmx/endpoint/wrapper/modules/EventApi.h"
 
