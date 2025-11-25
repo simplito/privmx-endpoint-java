@@ -1,0 +1,10 @@
+plugins {
+    id 'java-library'
+    id 'signing'
+    id 'maven-publish'
+}
+
+
+dependencies {
+    implementation(project(":privmx-endpoint"))
+}
