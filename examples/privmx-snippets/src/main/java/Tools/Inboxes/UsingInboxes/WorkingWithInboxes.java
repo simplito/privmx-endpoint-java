@@ -1,6 +1,7 @@
 package Tools.Inboxes.UsingInboxes;
 
 import com.simplito.java.privmx_endpoint.model.Inbox;
+import com.simplito.java.privmx_endpoint.model.InboxPublicView;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint;
@@ -100,9 +101,24 @@ public class WorkingWithInboxes {
                 newManagers,
                 inbox.publicMeta,
                 newPrivateMeta,
-                null,               // filesConfig
+                null,     // filesConfig
                 inbox.version,
-                false               // force
+                false,        // force
+                false,              // forceGenerateNewKey
+                inbox.policy
         );
+    }
+
+    void deletingInboxes() {
+        String inboxID = "INBOX_ID";
+        endpointSession.inboxApi.deleteInbox(inboxID);
+    }
+
+    void usingPublicView() {
+        String inboxID = "INBOX_ID";
+
+        InboxPublicView inboxPublicView = endpointSession.inboxApi.getInboxPublicView(inboxID);
+        String publicMeta = new String(inboxPublicView.publicMeta, StandardCharsets.UTF_8);
+        System.out.println(publicMeta);
     }
 }

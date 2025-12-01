@@ -1213,7 +1213,7 @@ namespace privmx {
 
         jobject contextCustomEventData2Java(
                 JniContextUtils &ctx,
-                privmx::endpoint::event::ContextCustomEventData contextCustomEvent_c
+                privmx::endpoint::event::ContextCustomEventData contextCustomEventData_c
         ) {
             jclass contextCustomEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/ContextCustomEventData");

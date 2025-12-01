@@ -39,7 +39,7 @@ public class ManagingThreads {
 
     PrivmxEndpointContainer endpointContainer = new PrivmxEndpointContainer();
 
-    Set<Modules> initModules = Set.of(Modules.STORE);
+    Set<Modules> initModules = Set.of(Modules.THREAD);
     PrivmxEndpoint endpointSession = endpointContainer.connect(
             initModules,
             user1PrivateKey,
@@ -101,7 +101,14 @@ public class ManagingThreads {
                 thread.publicMeta,
                 newPrivateMeta,
                 thread.version,
-                false
+                false,       // force
+                false,             // forceGenerateNewKey
+                thread.policy
         );
+    }
+
+    void deletingThreads() {
+        String threadID = "THREAD_ID";
+        endpointSession.threadApi.deleteThread(threadID);
     }
 }
