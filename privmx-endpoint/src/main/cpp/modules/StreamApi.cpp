@@ -215,6 +215,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_unpublishStream
         jobject stream_handle
 ) {
     JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_handle, "Stream Handle")){
+        return;
+    }
+
     ctx.callVoidEndpointApi([&ctx, &thiz, &stream_handle]() {
         getStreamApi(ctx, thiz)->unpublishStream(
                 parseStreamHandle(ctx, stream_handle)
