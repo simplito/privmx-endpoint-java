@@ -148,7 +148,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_addTrack(
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_handle, "Stream Handle") ||
-        ctx.nullCheck(track, "Media Device")) {
+        ctx.nullCheck(track, "Track")) {
         return;
     }
     ctx.callVoidEndpointApi([&ctx, &thiz, &stream_handle, &track]() {
@@ -168,7 +168,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApi_removeTrack(
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_handle, "Stream Handle") ||
-        ctx.nullCheck(track, "Media Device")) {
+        ctx.nullCheck(track, "Track")) {
         return;
     }
     ctx.callVoidEndpointApi([&ctx, &thiz, &stream_handle, &track]() {
