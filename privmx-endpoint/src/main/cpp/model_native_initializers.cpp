@@ -183,6 +183,29 @@ namespace privmx {
             );
         }
 
+        // CollectionItemChange
+        jobject collectionItemChange2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::CollectionItemChange collectionItemChange_c
+        ) {
+            jclass collectionItemChangeCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/CollectionItemChange");
+            jmethodID initCollectionItemChangeMID = ctx->GetMethodID(
+                    collectionItemChangeCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"  // itemId
+                    "Ljava/lang/String;"  // action
+                    ")V"
+            );
+            return ctx->NewObject(
+                    collectionItemChangeCls,
+                    initCollectionItemChangeMID,
+                    ctx->NewStringUTF(collectionItemChange_c.itemId.c_str()),
+                    ctx->NewStringUTF(collectionItemChange_c.action.c_str())
+            );
+        }
+
         //Context
         jobject context2Java(
                 JniContextUtils &ctx,
@@ -223,6 +246,29 @@ namespace privmx {
             );
         }
 
+        // UserWithPubKey
+        jobject userStatusChange2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::UserStatusChange userStatusChange
+        ) {
+            jclass userStatusCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/UserStatusChange");
+            jmethodID initUserStatusMID = ctx->GetMethodID(
+                    userStatusCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"    // action
+                    "Ljava/lang/Long;"      // timestamp
+                    ")V"
+            );
+            return ctx->NewObject(
+                    userStatusCls,
+                    initUserStatusMID,
+                    ctx->NewStringUTF(userStatusChange.action.c_str()),
+                    ctx.long2jLong(userStatusChange.timestamp)
+            );
+        }
+
         //UserInfo
         jobject userInfo2Java(
                 JniContextUtils &ctx,
@@ -234,15 +280,41 @@ namespace privmx {
                     userInfoCls,
                     "<init>",
                     "("
-                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;" // userWithPubKey
-                    "Z"
+                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;"      // userWithPubKey
+                    "Z"                                                             // isActive
+                    "Lcom/simplito/java/privmx_endpoint/model/UserStatusChange;"    // lastStatusChange
                     ")V"
             );
+
+            jobject userStatusChange = userInfo.lastStatusChange.has_value() ?
+                    userStatusChange2Java(ctx, userInfo.lastStatusChange.value()):
+                    nullptr;
             return ctx->NewObject(
                     userInfoCls,
                     initUserInfoMID,
                     userWithPubKey2Java(ctx, userInfo.user),
-                    (jboolean) userInfo.isActive
+                    (jboolean) userInfo.isActive,
+                    userStatusChange);
+        }
+
+        // UserWithAction
+        jobject userWithAction2Java(JniContextUtils &ctx,
+                                    privmx::endpoint::core::UserWithAction userWithAction) {
+            jclass userWithActionCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/UserWithAction");
+            jmethodID initUserWithActionMID = ctx->GetMethodID(
+                    userWithActionCls,
+                    "<init>",
+                    "("
+                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;"  // userWithPubKey
+                    "Ljava/lang/String;"                                        // action
+                    ")V"
+            );
+            return ctx->NewObject(
+                    userWithActionCls,
+                    initUserWithActionMID,
+                    userWithPubKey2Java(ctx, userWithAction.user),
+                    ctx->NewStringUTF(userWithAction.action.c_str())
             );
         }
 
@@ -302,7 +374,7 @@ namespace privmx {
             jobject bridgeIdentity = nullptr;
             if (verificationRequest_c.bridgeIdentity.has_value()) {
                 bridgeIdentity = bridgeIdentity2Java(ctx,
-                        verificationRequest_c.bridgeIdentity.value());
+                                                     verificationRequest_c.bridgeIdentity.value());
             }
 
             return ctx->NewObject(
@@ -344,7 +416,7 @@ namespace privmx {
             );
             jbyteArray entropy = ctx->NewByteArray(BIP39_c.entropy.size());
             ctx->SetByteArrayRegion(entropy, 0, BIP39_c.entropy.size(),
-                    (jbyte *) BIP39_c.entropy.data());
+                                    (jbyte *) BIP39_c.entropy.data());
 
             return ctx->NewObject(
                     BIP39Cls,
@@ -400,18 +472,18 @@ namespace privmx {
             jbyteArray publicMeta = ctx->NewByteArray(thread_c.publicMeta.size());
             jbyteArray privateMeta = ctx->NewByteArray(thread_c.privateMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, thread_c.publicMeta.size(),
-                    (jbyte *) thread_c.publicMeta.data());
+                                    (jbyte *) thread_c.publicMeta.data());
             ctx->SetByteArrayRegion(privateMeta, 0, thread_c.privateMeta.size(),
-                    (jbyte *) thread_c.privateMeta.data());
+                                    (jbyte *) thread_c.privateMeta.data());
             for (auto &user: thread_c.users) {
                 ctx->CallBooleanMethod(users,
-                        addToArrayMID,
-                        ctx->NewStringUTF(user.c_str()));
+                                       addToArrayMID,
+                                       ctx->NewStringUTF(user.c_str()));
             }
             for (auto &manager: thread_c.managers) {
                 ctx->CallBooleanMethod(managers,
-                        addToArrayMID,
-                        ctx->NewStringUTF(manager.c_str()));
+                                       addToArrayMID,
+                                       ctx->NewStringUTF(manager.c_str()));
             }
             return ctx->NewObject(
                     threadCls,
@@ -437,7 +509,7 @@ namespace privmx {
 
         //Messages
         jobject serverMessageInfo2Java(JniContextUtils &ctx,
-                privmx::endpoint::thread::ServerMessageInfo serverMessageInfo_c) {
+                                       privmx::endpoint::thread::ServerMessageInfo serverMessageInfo_c) {
             jclass messageCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/ServerMessageInfo");
             jmethodID initMessageMID = ctx->GetMethodID(
@@ -475,13 +547,13 @@ namespace privmx {
             jbyteArray privateMeta = ctx->NewByteArray(message_c.privateMeta.size());
             jbyteArray data = ctx->NewByteArray(message_c.data.size());
             ctx->SetByteArrayRegion(publicMeta, 0, message_c.publicMeta.size(),
-                    (jbyte *) message_c.publicMeta.data());
+                                    (jbyte *) message_c.publicMeta.data());
 
             ctx->SetByteArrayRegion(privateMeta, 0, message_c.privateMeta.size(),
-                    (jbyte *) message_c.privateMeta.data());
+                                    (jbyte *) message_c.privateMeta.data());
 
             ctx->SetByteArrayRegion(data, 0, message_c.data.size(),
-                    (jbyte *) message_c.data.data());
+                                    (jbyte *) message_c.data.data());
 
             return ctx->NewObject(
                     messageCls,
@@ -539,18 +611,18 @@ namespace privmx {
             jbyteArray publicMeta = ctx->NewByteArray(store_c.publicMeta.size());
             jbyteArray privateMeta = ctx->NewByteArray(store_c.privateMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, store_c.publicMeta.size(),
-                    (jbyte *) store_c.publicMeta.data());
+                                    (jbyte *) store_c.publicMeta.data());
             ctx->SetByteArrayRegion(privateMeta, 0, store_c.privateMeta.size(),
-                    (jbyte *) store_c.privateMeta.data());
+                                    (jbyte *) store_c.privateMeta.data());
             for (auto &user: store_c.users) {
                 ctx->CallBooleanMethod(users,
-                        addToArrayMID,
-                        ctx->NewStringUTF(user.c_str()));
+                                       addToArrayMID,
+                                       ctx->NewStringUTF(user.c_str()));
             }
             for (auto &manager: store_c.managers) {
                 ctx->CallBooleanMethod(managers,
-                        addToArrayMID,
-                        ctx->NewStringUTF(manager.c_str()));
+                                       addToArrayMID,
+                                       ctx->NewStringUTF(manager.c_str()));
             }
 
             return ctx->NewObject(
@@ -615,18 +687,18 @@ namespace privmx {
             jbyteArray publicMeta = ctx->NewByteArray(inbox_c.publicMeta.size());
             jbyteArray privateMeta = ctx->NewByteArray(inbox_c.privateMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, inbox_c.publicMeta.size(),
-                    (jbyte *) inbox_c.publicMeta.data());
+                                    (jbyte *) inbox_c.publicMeta.data());
             ctx->SetByteArrayRegion(privateMeta, 0, inbox_c.privateMeta.size(),
-                    (jbyte *) inbox_c.privateMeta.data());
+                                    (jbyte *) inbox_c.privateMeta.data());
             for (auto &user: inbox_c.users) {
                 ctx->CallBooleanMethod(users,
-                        addToArrayMID,
-                        ctx->NewStringUTF(user.c_str()));
+                                       addToArrayMID,
+                                       ctx->NewStringUTF(user.c_str()));
             }
             for (auto &manager: inbox_c.managers) {
                 ctx->CallBooleanMethod(managers,
-                        addToArrayMID,
-                        ctx->NewStringUTF(manager.c_str()));
+                                       addToArrayMID,
+                                       ctx->NewStringUTF(manager.c_str()));
             }
 
             jobject filesConfig = nullptr;
@@ -685,12 +757,12 @@ namespace privmx {
             );
             jbyteArray data = ctx->NewByteArray(inboxEntry_c.data.size());
             ctx->SetByteArrayRegion(data, 0, inboxEntry_c.data.size(),
-                    (jbyte *) inboxEntry_c.data.data());
+                                    (jbyte *) inboxEntry_c.data.data());
             jobject files = ctx->NewObject(arrayCls, initArrayMID);
             for (auto &file: inboxEntry_c.files) {
                 ctx->CallBooleanMethod(files,
-                        addToArrayMID,
-                        file2Java(ctx, file));
+                                       addToArrayMID,
+                                       file2Java(ctx, file));
             }
             return ctx->NewObject(
                     inboxEntryCls,
@@ -707,7 +779,7 @@ namespace privmx {
         }
 
         jobject inboxPublicView2Java(JniContextUtils &ctx,
-                privmx::endpoint::inbox::InboxPublicView inboxPublicView_c) {
+                                     privmx::endpoint::inbox::InboxPublicView inboxPublicView_c) {
             jclass inboxPublicViewCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/InboxPublicView");
             jmethodID initInboxPublicViewMID = ctx->GetMethodID(
@@ -721,7 +793,7 @@ namespace privmx {
             );
             jbyteArray publicMeta = ctx->NewByteArray(inboxPublicView_c.publicMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, inboxPublicView_c.publicMeta.size(),
-                    (jbyte *) inboxPublicView_c.publicMeta.data());
+                                    (jbyte *) inboxPublicView_c.publicMeta.data());
             return ctx->NewObject(
                     inboxPublicViewCls,
                     initInboxPublicViewMID,
@@ -757,7 +829,7 @@ namespace privmx {
 
         //Files
         jobject serverFileInfo2Java(JniContextUtils &ctx,
-                privmx::endpoint::store::ServerFileInfo serverFileInfo_c) {
+                                    privmx::endpoint::store::ServerFileInfo serverFileInfo_c) {
             jclass serverFileInfoCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/ServerFileInfo");
             jmethodID initServerFileInfoMID = ctx->GetMethodID(
@@ -782,23 +854,24 @@ namespace privmx {
                     fileCls,
                     "<init>",
                     "("
-                    "Lcom/simplito/java/privmx_endpoint/model/ServerFileInfo;"
-                    "[B"
-                    "[B"
-                    "Ljava/lang/Long;"
-                    "Ljava/lang/String;"
-                    "Ljava/lang/Long;"
-                    "Ljava/lang/Long;"
+                    "Lcom/simplito/java/privmx_endpoint/model/ServerFileInfo;"  // info
+                    "[B"                    // publicMeta
+                    "[B"                    // privateMeta
+                    "Ljava/lang/Long;"      // size
+                    "Ljava/lang/String;"    // authorPubKey
+                    "Ljava/lang/Long;"      // statusCode
+                    "Ljava/lang/Long;"      // schemaVersion
+                    "Z"                     // randomWrite
                     ")V"
             );
 
             jbyteArray publicMeta = ctx->NewByteArray(file_c.publicMeta.size());
             jbyteArray privateMeta = ctx->NewByteArray(file_c.privateMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, file_c.publicMeta.size(),
-                    (jbyte *) file_c.publicMeta.data());
+                                    (jbyte *) file_c.publicMeta.data());
 
             ctx->SetByteArrayRegion(privateMeta, 0, file_c.privateMeta.size(),
-                    (jbyte *) file_c.privateMeta.data());
+                                    (jbyte *) file_c.privateMeta.data());
 
             return ctx->NewObject(
                     fileCls,
@@ -809,13 +882,156 @@ namespace privmx {
                     ctx.long2jLong(file_c.size),
                     ctx->NewStringUTF(file_c.authorPubKey.c_str()),
                     ctx.long2jLong(file_c.statusCode),
-                    ctx.long2jLong(file_c.schemaVersion)
+                    ctx.long2jLong(file_c.schemaVersion),
+                    (jboolean) file_c.randomWrite
+            );
+        }
+
+        jobject fileChange2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::store::FileChange file_change_c
+        ) {
+            jclass fileChangeCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/FileChange");
+
+            jmethodID initFcMID = ctx->GetMethodID(
+                    fileChangeCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/Long;"
+                    "Ljava/lang/Long;"
+                    "Z"
+                    ")V"
+            );
+
+            jobject javaPos = ctx.long2jLong(file_change_c.pos);
+            jobject javaLength = ctx.long2jLong(file_change_c.length);
+            jboolean javaTruncate = (jboolean) file_change_c.truncate;
+
+            return ctx->NewObject(
+                    fileChangeCls,
+                    initFcMID,
+                    javaPos,
+                    javaLength,
+                    javaTruncate
             );
         }
 
         //Event
+        jobject contextUsersStatusChangedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContextUsersStatusChangedEventData contextUsersStatusChangedEventData_c
+        ) {
+            jclass arrayCls = ctx->FindClass("java/util/ArrayList");
+            jmethodID initArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "<init>",
+                    "()V");
+            jmethodID addToArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "add",
+                    "(Ljava/lang/Object;)Z"
+            );
+            jclass ContextUsersStatusChangedEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/ContextUsersStatusChangedEventData");
+            jmethodID initContextUsersStatusChangedEventDataMID = ctx->GetMethodID(
+                    ContextUsersStatusChangedEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"        // contextId
+                    "Ljava/util/List;"          // users
+                    ")V"
+            );
+
+            jobject users = ctx->NewObject(arrayCls, initArrayMID);
+
+            for (auto &user: contextUsersStatusChangedEventData_c.users) {
+                ctx->CallBooleanMethod(users,
+                                       addToArrayMID,
+                                       userWithAction2Java(ctx, user)
+                );
+            }
+
+            return ctx->NewObject(
+                    ContextUsersStatusChangedEventDataCls,
+                    initContextUsersStatusChangedEventDataMID,
+                    ctx->NewStringUTF(contextUsersStatusChangedEventData_c.contextId.c_str()),
+                    users
+            );
+        }
+
+        jobject contextUserEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContextUserEventData contextUserEventData_c
+        ) {
+            jclass contextUserEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/ContextUserEventData");
+            jmethodID initContextUserEventDataMID = ctx->GetMethodID(
+                    contextUserEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"                                          // contextId
+                    "Lcom/simplito/java/privmx_endpoint/model/UserWithPubKey;"    // user
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    contextUserEventDataCls,
+                    initContextUserEventDataMID,
+                    ctx->NewStringUTF(contextUserEventData_c.contextId.c_str()),
+                    userWithPubKey2Java(ctx, contextUserEventData_c.user)
+            );
+        }
+
+        // CollectionChangedEventData
+        jobject collectionChangedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::CollectionChangedEventData collectionChangedEventData_c
+        ) {
+            jclass arrayCls = ctx->FindClass("java/util/ArrayList");
+            jmethodID initArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "<init>",
+                    "()V");
+            jmethodID addToArrayMID = ctx->GetMethodID(
+                    arrayCls,
+                    "add",
+                    "(Ljava/lang/Object;)Z"
+            );
+            jclass collectionChangedEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/CollectionChangedEventData");
+            jmethodID initCollectionChangedEventDataMID = ctx->GetMethodID(
+                    collectionChangedEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"        // moduleType
+                    "Ljava/lang/String;"        // moduleId
+                    "Ljava/lang/Long;"          // affectedItemsCount
+                    "Ljava/util/List;"          // items
+                    ")V"
+            );
+
+            jobject items = ctx->NewObject(arrayCls, initArrayMID);
+
+            for (auto &item: collectionChangedEventData_c.items) {
+                ctx->CallBooleanMethod(items,
+                                       addToArrayMID,
+                                       collectionItemChange2Java(ctx, item)
+                );
+            }
+
+            return ctx->NewObject(
+                    collectionChangedEventDataCls,
+                    initCollectionChangedEventDataMID,
+                    ctx->NewStringUTF(collectionChangedEventData_c.moduleType.c_str()),
+                    ctx->NewStringUTF(collectionChangedEventData_c.moduleId.c_str()),
+                    ctx.long2jLong(collectionChangedEventData_c.affectedItemsCount),
+                    items
+            );
+        }
+
         jobject storeFileDeletedEventData2Java(JniContextUtils &ctx,
-                privmx::endpoint::store::StoreFileDeletedEventData storeFileDeletedEventData_c) {
+                                               privmx::endpoint::store::StoreFileDeletedEventData storeFileDeletedEventData_c) {
             jclass storeFileDeletedEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/StoreFileDeletedEventData");
             jmethodID initStoreFileDeletedEventDataMID = ctx->GetMethodID(
@@ -833,7 +1049,7 @@ namespace privmx {
         }
 
         jobject storeStatsChangedEventData2Java(JniContextUtils &ctx,
-                privmx::endpoint::store::StoreStatsChangedEventData storeStatsChangedEventData_c) {
+                                                privmx::endpoint::store::StoreStatsChangedEventData storeStatsChangedEventData_c) {
             jclass storeStatsChangedEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/StoreStatsChangedEventData");
             jmethodID initStoreStatsChangedEventDataMID = ctx->GetMethodID(
@@ -852,7 +1068,7 @@ namespace privmx {
         }
 
         jobject threadDeletedEventData2Java(JniContextUtils &ctx,
-                privmx::endpoint::thread::ThreadDeletedEventData threadDeletedEventData_c) {
+                                            privmx::endpoint::thread::ThreadDeletedEventData threadDeletedEventData_c) {
             jclass threadDeletedEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/ThreadDeletedEventData");
             jmethodID initThreadDeletedEventDataMID = ctx->GetMethodID(
@@ -868,7 +1084,7 @@ namespace privmx {
         }
 
         jobject threadDeletedMessageEventData2Java(JniContextUtils &ctx,
-                privmx::endpoint::thread::ThreadDeletedMessageEventData threadDeletedMessageEventData) {
+                                                   privmx::endpoint::thread::ThreadDeletedMessageEventData threadDeletedMessageEventData) {
             jclass threadDeletedMessageEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/ThreadDeletedMessageEventData");
             jmethodID initThreadDeletedMessageEventDataMID = ctx->GetMethodID(
@@ -885,7 +1101,7 @@ namespace privmx {
         }
 
         jobject storeDeletedEventData2Java(JniContextUtils &ctx,
-                privmx::endpoint::store::StoreDeletedEventData storeDeletedEventData_c) {
+                                           privmx::endpoint::store::StoreDeletedEventData storeDeletedEventData_c) {
             jclass storeDeletedEventDataCls = ctx->FindClass(
                     "com/simplito/java/privmx_endpoint/model/events/StoreDeletedEventData");
             jmethodID initStoreDeletedEventDataMID = ctx->GetMethodID(
@@ -897,6 +1113,44 @@ namespace privmx {
                     storeDeletedEventDataCls,
                     initStoreDeletedEventDataMID,
                     ctx->NewStringUTF(storeDeletedEventData_c.storeId.c_str())
+            );
+        }
+
+        jobject storeFileUpdatedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::store::StoreFileUpdatedEventData storeFileUpdatedEventData_c
+        ) {
+            jclass storeFileUpdatedEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/StoreFileUpdatedEventData");
+            jmethodID initStoreFileUpdatedEventDataMID = ctx->GetMethodID(
+                    storeFileUpdatedEventDataCls,
+                    "<init>",
+                    "("
+                    "Lcom/simplito/java/privmx_endpoint/model/File;"
+                    "Ljava/util/List;"
+                    ")V"
+            );
+
+            jclass arrayListCls = ctx->FindClass("java/util/ArrayList");
+            jmethodID arrayListInitMID = ctx->GetMethodID(arrayListCls, "<init>", "()V");
+            jmethodID arrayListAddMID = ctx->GetMethodID(arrayListCls, "add",
+                                                         "(Ljava/lang/Object;)Z");
+
+            jobject changesList = ctx->NewObject(
+                    arrayListCls,
+                    arrayListInitMID
+                );
+
+            for (const auto &change: storeFileUpdatedEventData_c.changes) {
+                jobject javaFileChange = fileChange2Java(ctx, change);
+                ctx->CallBooleanMethod(changesList, arrayListAddMID, javaFileChange);
+            }
+
+            return ctx->NewObject(
+                    storeFileUpdatedEventDataCls,
+                    initStoreFileUpdatedEventDataMID,
+                    file2Java(ctx, storeFileUpdatedEventData_c.file),
+                    changesList
             );
         }
 
@@ -971,21 +1225,92 @@ namespace privmx {
                     "Ljava/lang/String;"    // userId
                     "[B"                    // payload
                     "Ljava/lang/Long;"       // statusCode
+                    "Ljava/lang/Long;"       // schemaVersion
                     ")V"
             );
             jbyteArray payload = ctx->NewByteArray(contextCustomEventData_c.payload.size());
             ctx->SetByteArrayRegion(payload, 0, contextCustomEventData_c.payload.size(),
-                    (jbyte *) contextCustomEventData_c.payload.data());
+                                    (jbyte *) contextCustomEventData_c.payload.data());
             return ctx->NewObject(
                     contextCustomEventDataCls,
                     initContextCustomEventDataMID,
                     ctx->NewStringUTF(contextCustomEventData_c.contextId.c_str()),
                     ctx->NewStringUTF(contextCustomEventData_c.userId.c_str()),
                     payload,
-                    ctx.long2jLong(contextCustomEventData_c.statusCode)
+                    ctx.long2jLong(contextCustomEventData_c.statusCode),
+                    ctx.long2jLong(contextCustomEventData_c.schemaVersion)
             );
         }
 
+
+        jobject kvdbDeletedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::kvdb::KvdbDeletedEventData kvdbDeletedEventData_c
+        ) {
+            jclass kvdbDeletedEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/KvdbDeletedEventData");
+            jmethodID initKvdbDeletedEventDataMID = ctx->GetMethodID(
+                    kvdbDeletedEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"    // kvdbId
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    kvdbDeletedEventDataCls,
+                    initKvdbDeletedEventDataMID,
+                    ctx->NewStringUTF(kvdbDeletedEventData_c.kvdbId.c_str())
+            );
+        }
+
+        jobject kvdbStatsEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::kvdb::KvdbStatsEventData kvdbStatsEventData_c
+        ) {
+            jclass kvdbStatsEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/KvdbStatsEventData");
+            jmethodID initKvdbStatsEventDataMID = ctx->GetMethodID(
+                    kvdbStatsEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"    // kvdbId
+                    "Ljava/lang/Long;"      // lastEntryDate
+                    "Ljava/lang/Long;"      // entries
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    kvdbStatsEventDataCls,
+                    initKvdbStatsEventDataMID,
+                    ctx->NewStringUTF(kvdbStatsEventData_c.kvdbId.c_str()),
+                    ctx.long2jLong(kvdbStatsEventData_c.lastEntryDate),
+                    ctx.long2jLong(kvdbStatsEventData_c.entries)
+            );
+        }
+
+        jobject kvdbDeletedEntryEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::kvdb::KvdbDeletedEntryEventData kvdbDeletedEntryEventData_c
+        ) {
+            jclass kvdbDeletedEntryEventDataCls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/events/KvdbDeletedEntryEventData");
+            jmethodID initKvdbDeletedEntryEventDataMID = ctx->GetMethodID(
+                    kvdbDeletedEntryEventDataCls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"    // kvdbId
+                    "Ljava/lang/String;"    // kvdbEntryKey
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    kvdbDeletedEntryEventDataCls,
+                    initKvdbDeletedEntryEventDataMID,
+                    ctx->NewStringUTF(kvdbDeletedEntryEventData_c.kvdbId.c_str()),
+                    ctx->NewStringUTF(kvdbDeletedEntryEventData_c.kvdbEntryKey.c_str())
+                    );
+        }
 
         //Kvdb
         jobject kvdb2Java(
@@ -1031,18 +1356,18 @@ namespace privmx {
             jbyteArray publicMeta = ctx->NewByteArray(kvdb_c.publicMeta.size());
             jbyteArray privateMeta = ctx->NewByteArray(kvdb_c.privateMeta.size());
             ctx->SetByteArrayRegion(publicMeta, 0, kvdb_c.publicMeta.size(),
-                    (jbyte *) kvdb_c.publicMeta.data());
+                                    (jbyte *) kvdb_c.publicMeta.data());
             ctx->SetByteArrayRegion(privateMeta, 0, kvdb_c.privateMeta.size(),
-                    (jbyte *) kvdb_c.privateMeta.data());
+                                    (jbyte *) kvdb_c.privateMeta.data());
             for (auto &user: kvdb_c.users) {
                 ctx->CallBooleanMethod(users,
-                        addToArrayMID,
-                        ctx->NewStringUTF(user.c_str()));
+                                       addToArrayMID,
+                                       ctx->NewStringUTF(user.c_str()));
             }
             for (auto &manager: kvdb_c.managers) {
                 ctx->CallBooleanMethod(managers,
-                        addToArrayMID,
-                        ctx->NewStringUTF(manager.c_str()));
+                                       addToArrayMID,
+                                       ctx->NewStringUTF(manager.c_str()));
             }
 
             return ctx->NewObject(
@@ -1118,11 +1443,11 @@ namespace privmx {
             jbyteArray data = ctx->NewByteArray(kvdbEntry_c.data.size());
 
             ctx->SetByteArrayRegion(publicMeta, 0, kvdbEntry_c.publicMeta.size(),
-                    (jbyte *) kvdbEntry_c.publicMeta.data());
+                                    (jbyte *) kvdbEntry_c.publicMeta.data());
             ctx->SetByteArrayRegion(privateMeta, 0, kvdbEntry_c.privateMeta.size(),
-                    (jbyte *) kvdbEntry_c.privateMeta.data());
+                                    (jbyte *) kvdbEntry_c.privateMeta.data());
             ctx->SetByteArrayRegion(data, 0, kvdbEntry_c.data.size(),
-                    (jbyte *) kvdbEntry_c.data.data());
+                                    (jbyte *) kvdbEntry_c.data.data());
 
             return ctx->NewObject(
                     itemCls,

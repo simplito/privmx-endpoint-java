@@ -101,7 +101,14 @@ public class ManagingStores {
                 store.publicMeta,
                 newPrivateMeta,
                 store.version,
-                false
+                false,          // force
+                false,                // forceGenerateNewKey
+                store.policy
         );
+    }
+
+    void deletingStores() {
+        String storeID = "STORE_ID";
+        endpointSession.storeApi.deleteStore(storeID);
     }
 }

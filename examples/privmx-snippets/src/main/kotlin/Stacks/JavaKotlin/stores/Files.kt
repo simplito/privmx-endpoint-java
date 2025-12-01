@@ -1,5 +1,6 @@
 package Stacks.JavaKotlin.stores
 
+import Tools.Stores.UsingStores.endpointSession
 import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStream
 import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStreamWriter
 import com.simplito.java.privmx_endpoint_extra.model.SortOrder
@@ -76,7 +77,7 @@ fun uploadFileUsingStreams() {
         }
     }
 
-    val fileId = StoreFileStreamWriter.createFile(
+    val fileID = StoreFileStreamWriter.createFile(
         storeApi,
         storeID,
         publicMeta,
@@ -87,18 +88,42 @@ fun uploadFileUsingStreams() {
     )
 }
 
+fun uploadFileWithRandomWriteSupport() {
+val storeID = "STORE_ID"
+val fileContent = "Text file content".encodeToByteArray()
+val publicMeta = ByteArray(0)
+val privateMeta = ByteArray(0)
+
+// Create a file handle with the random write flag set to 'true'
+val fileHandle = endpointSession.storeApi.createFile(
+    storeID,
+    publicMeta,
+    privateMeta,
+    fileContent.size.toLong(),
+    true // Enable random write support
+)
+
+// Write to the file
+endpointSession.storeApi.writeToFile(
+    fileHandle,
+    fileContent
+)
+
+val fileID = endpointSession.storeApi.closeFile(fileHandle)
+}
+
 // END: Uploading Files snippets
 
 
 // START: Getting Files snippets
 
 fun getMostRecentFiles() {
-    val storeId = "STORE_ID"
+    val storeID = "STORE_ID"
     val startIndex = 0L
     val pageSize = 100L
 
     val filesPagingList = storeApi.listFiles(
-        storeId,
+        storeID,
         startIndex,
         pageSize,
         SortOrder.DESC
@@ -113,12 +138,12 @@ fun getMostRecentFiles() {
 }
 
 fun getOldestFiles() {
-    val storeId = "STORE_ID"
+    val storeID = "STORE_ID"
     val startIndex = 0L
     val pageSize = 100L
 
     val filesPagingList = storeApi.listFiles(
-        storeId,
+        storeID,
         startIndex,
         pageSize,
         SortOrder.ASC
@@ -183,6 +208,25 @@ fun overwritingFileContent() {
         inputStream,
         streamController
     )
+}
+
+fun overwriteFileContentUsingRandomWrite() {
+val fileID = "FILE_ID"  // file created with random write support
+val newContent = "New partial content".encodeToByteArray()
+
+// Open the file to get a read/write handle.
+val fileHandle = storeApi.openFile(fileID)
+
+// Seek to the desired position
+storeApi.seekInFile(fileHandle, 0)
+
+// Write the new data, overwriting the existing content at given position
+storeApi.writeToFile(
+    fileHandle,
+    newContent
+)
+
+endpointSession.storeApi.closeFile(fileHandle)
 }
 
 fun deletingFile() {

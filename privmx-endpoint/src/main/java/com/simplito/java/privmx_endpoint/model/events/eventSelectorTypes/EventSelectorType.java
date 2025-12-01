@@ -1,0 +1,19 @@
+//
+// PrivMX Endpoint Java.
+// Copyright © 2025 Simplito sp. z o.o.
+//
+// This file is part of the PrivMX Platform (https://privmx.dev).
+// This software is Licensed under the MIT License.
+//
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+package com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes;
+
+/**
+ * The base interface for enums specifying selector event types.
+ *
+ * @category core
+ */
+public interface EventSelectorType { }

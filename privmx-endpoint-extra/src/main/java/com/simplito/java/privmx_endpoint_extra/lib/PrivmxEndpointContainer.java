@@ -242,7 +242,7 @@ public class PrivmxEndpointContainer implements AutoCloseable {
                 PrivmxEndpoint endpoint = privmxEndpoints.get(event.connectionId);
                 if (endpoint != null) {
                     endpoint.handleEvent(event);
-                    if (event.type.equals(EventType.DisconnectedEvent.eventType)) {
+                    if (event.type.equals(EventType.DisconnectedEvent.eventName)) {
                         try {
                             PrivmxEndpoint closedConnection = privmxEndpoints.remove(event.connectionId);
                             closedConnection.close();
@@ -253,7 +253,7 @@ public class PrivmxEndpointContainer implements AutoCloseable {
             }
         }
 
-        if (event.type.equals(EventType.LibBreakEvent.eventType)) {
+        if (event.type.equals(EventType.LibBreakEvent.eventName)) {
             eventLoopStarted = false;
             return;
         }
