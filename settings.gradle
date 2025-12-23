@@ -12,14 +12,23 @@ pluginManagement {
     }
 }
 plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
 dependencyResolutionManagement {
+    Properties properties = new Properties()
+    properties.load(file("local.properties").newInputStream())
+
+    def localRepoPath = properties.getProperty('repositoryURL')
+
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+        maven {
+            name = 'LocalMaven'
+            url = uri(localRepoPath)
+        }
     }
 }
 
@@ -29,4 +38,9 @@ include ':privmx-endpoint-extra'
 include ':privmx-endpoint-android'
 include ':privmx-endpoint-jni'
 include ':examples:privmx-snippets'
+
+// streams
+include ':privmx-endpoint-streams-android'
+include ':privmx-endpoint-streams:jvm'
+
 project(':privmx-endpoint-jni').projectDir = file("privmx-endpoint/src/main/cpp")
