@@ -116,7 +116,7 @@ namespace privmx {
 
         //Event
         jobject contextUsersStatusChangeData2Java(JniContextUtils &ctx,
-                                               privmx::endpoint::core::ContextUsersStatusChangeData contextUsersStatusChangeData_c);
+                                               privmx::endpoint::core::ContextUsersStatusChangedEventData contextUsersStatusChangeData_c);
 
         jobject contextUserEventData2Java(JniContextUtils &ctx,
                                                   privmx::endpoint::core::ContextUserEventData contextUserEventData_c);

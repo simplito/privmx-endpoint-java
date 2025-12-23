@@ -920,7 +920,7 @@ namespace privmx {
         //Event
         jobject contextUsersStatusChangeData2Java(
                 JniContextUtils &ctx,
-                privmx::endpoint::core::ContextUsersStatusChangeData contextUsersStatusChangeData_c
+                privmx::endpoint::core::ContextUsersStatusChangedEventData contextUsersStatusChangeData_c
         ) {
             jclass arrayCls = ctx->FindClass("java/util/ArrayList");
             jmethodID initArrayMID = ctx->GetMethodID(
@@ -1228,17 +1228,17 @@ namespace privmx {
                     "Ljava/lang/Long;"       // schemaVersion
                     ")V"
             );
-            jbyteArray payload = ctx->NewByteArray(contextCustomEvent_c.payload.size());
-            ctx->SetByteArrayRegion(payload, 0, contextCustomEvent_c.payload.size(),
-                                    (jbyte *) contextCustomEvent_c.payload.data());
+            jbyteArray payload = ctx->NewByteArray(contextCustomEventData_c.payload.size());
+            ctx->SetByteArrayRegion(payload, 0, contextCustomEventData_c.payload.size(),
+                                    (jbyte *) contextCustomEventData_c.payload.data());
             return ctx->NewObject(
                     contextCustomEventDataCls,
                     initContextCustomEventDataMID,
-                    ctx->NewStringUTF(contextCustomEvent_c.contextId.c_str()),
-                    ctx->NewStringUTF(contextCustomEvent_c.userId.c_str()),
+                    ctx->NewStringUTF(contextCustomEventData_c.contextId.c_str()),
+                    ctx->NewStringUTF(contextCustomEventData_c.userId.c_str()),
                     payload,
-                    ctx.long2jLong(contextCustomEvent_c.statusCode),
-                    ctx.long2jLong(contextCustomEvent_c.schemaVersion)
+                    ctx.long2jLong(contextCustomEventData_c.statusCode),
+                    ctx.long2jLong(contextCustomEventData_c.schemaVersion)
             );
         }
 

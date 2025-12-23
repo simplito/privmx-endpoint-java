@@ -273,6 +273,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
+                    event_cast.subscriptions,
                     privmx::wrapper::collectionChangedEventData2Java(ctx, event_cast.data)
             );
         } else if (core::Events::isContextUserAddedEvent(event)) {
@@ -283,6 +284,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
+                    event_cast.subscriptions,
                     privmx::wrapper::contextUserEventData2Java(ctx, event_cast.data)
             );
         } else if (core::Events::isContextUserRemovedEvent(event)) {
@@ -293,17 +295,20 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
+                    event_cast.subscriptions,
                     privmx::wrapper::contextUserEventData2Java(ctx, event_cast.data)
             );
-        } else if (core::Events::isContextUsersStatusChangeEvent(event)) {
-            privmx::endpoint::core::ContextUsersStatusChangeEvent event_cast = core::Events::extractContextUsersStatusChangeEvent(
+        } else if (core::Events::isContextUsersStatusChangedEvent(event)) {
+            privmx::endpoint::core::ContextUsersStatusChangedEvent event_cast = core::Events::extractContextUsersStatusChangedEvent(
                     event);
             return initEvent(
                     ctx,
                     event_cast.type,
                     event_cast.channel,
                     event_cast.connectionId,
-                    privmx::wrapper::contextUsersStatusChangeData2Java(ctx, event_cast.data)
+                    event_cast.subscriptions,
+                    privmx::wrapper::contextUsersStatusChangeData2Java(ctx, event_cast.data
+                    )
             );
         } else if (thread::Events::isThreadCreatedEvent(event)) {
             privmx::endpoint::thread::ThreadCreatedEvent event_cast = thread::Events::extractThreadCreatedEvent(

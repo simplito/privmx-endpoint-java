@@ -361,7 +361,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_Connection_subscribeFor(
     jobject result;
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &env, &thiz, &subscription_queries]() {
+            [&ctx, &env, &thiz, &subscription_queries] () -> jobject {
                 jclass arrayListCls = env->FindClass("java/util/ArrayList");
                 jmethodID initMID = env->GetMethodID(arrayListCls, "<init>", "()V");
                 jmethodID addToListMID = env->GetMethodID(arrayListCls, "add",
