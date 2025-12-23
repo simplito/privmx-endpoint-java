@@ -7,4 +7,5 @@ plugins {
 
 dependencies {
     implementation(project(":privmx-endpoint"))
+    implementation project(':privmx-endpoint-streams-android')
 }
