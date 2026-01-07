@@ -29,6 +29,10 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags("-std=c++17")
+                this.arguments.addAll(listOf(
+                    "-DBUILD_ENDPOINT=ON",
+                    "-DBUILD_ANDROID_STREAM=ON"
+                ))
             }
         }
     }
@@ -73,6 +77,7 @@ abstract class NativeBuild @Inject constructor(
                 compileDir.dir("${arch.getSystemName()}/${privmxEndpointJavaVersion.get()}/${arch.getArchName()}").asFile
             val platformInstallDir =
                 installDir.dir("${arch.getSystemName()}/${privmxEndpointJavaVersion.get()}/${arch.getArchName()}").asFile
+            println("Build command ${buildCommand(arch,platformCompileDir,platformInstallDir)}")
 
             exec.exec {
                 workingDir = project.layout.projectDirectory.asFile
@@ -199,6 +204,7 @@ tasks.register<NativeBuild>("buildJNIStreamsJVM") {
 }
 
 tasks.register<NativeBuild>("buildJNIStreamsAndroid") {
+    dependsOn("buildJNIEndpoint")
     setArchs(*NativeBuild.Arch.AndroidArch.values())
     setTarget(NativeBuild.NativePrivMXTarget.ANDROID_STREAM)
     androidAPILevel.set("24")
