@@ -4,6 +4,10 @@ cmake_minimum_required(VERSION 3.10)
 # Set the project name
 project("jni-wrappers")
 
+option(BUILD_ENDPOINT "Building endpoint" OFF)
+option(BUILD_ANDROID_STREAM "Building Android streams" OFF)
+option(BUILD_JVM_STREAM "Building Desktop streams" OFF)
+
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
 
@@ -38,14 +42,15 @@ message(DEBUG "CMAKE DEST PROCESSOR ${CMAKE_DESTINATION_ARCHITECTURE}")
 include_directories(${JAVA_HOME}/include ${JAVA_HOME}/include/darwin)
 
 # Add the subdirectories that contain the libraries
-if(BUILD_ENDPOINT STREQUAL "ON")
+if(BUILD_ENDPOINT)
     add_subdirectory(privmx-endpoint)
 endif ()
 
-if(BUILD_ANDROID_STREAM STREQUAL "ON")
+if(BUILD_ANDROID_STREAM)
+    message("Build Android Streams")
     add_subdirectory(privmx-endpoint-streams/android)
 endif ()
 
-if(BUILD_JVM_STREAM STREQUAL "ON")
+if(BUILD_JVM_STREAM)
     add_subdirectory(privmx-endpoint-streams/jvm)
 endif ()
