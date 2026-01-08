@@ -36,12 +36,7 @@
 #include "privmx/endpoint/kvdb/Types.hpp"
 #include "privmx/endpoint/kvdb/Events.hpp"
 #include "privmx/endpoint/stream/Types.hpp"
-#include "privmx/endpoint/stream/webrtc/Types.hpp"
-#include "privmx/endpoint/stream/StreamApi.hpp"
-#include "privmx/endpoint/stream/StreamApiLow.hpp"
 #include "privmx/endpoint/stream/WebRTCInterface.hpp"
-
-#include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
 
 namespace privmx {
     namespace wrapper {

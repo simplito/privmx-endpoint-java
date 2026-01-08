@@ -51,7 +51,21 @@ std::string jobject2string(JniContextUtils &ctx, jobject jString);
 
 // c++ -> java
 template<typename T, typename F>
-jobject vectorTojArray(JniContextUtils &ctx, const std::vector<T> &vector,F fun);
+jobject vectorTojArray(JniContextUtils &ctx, const std::vector<T> &vector,F fun){
+    jclass arrayListCls = ctx->FindClass("java/util/ArrayList");
+    jmethodID initMID = ctx->GetMethodID(arrayListCls, "<init>", "()V");
+    jmethodID addToListMID = ctx->GetMethodID(arrayListCls, "add", "(Ljava/lang/Object;)Z");
+
+    jobject listObj = ctx->NewObject(arrayListCls, initMID);
+
+    for (const auto &item: vector) {
+        jobject jItem = fun(ctx, item);
+        ctx->CallBooleanMethod(listObj, addToListMID, jItem);
+    }
+
+    return listObj;
+}
+
 template<typename T, typename F>
 jobject pagingList2Java(JniContextUtils &ctx, privmx::endpoint::core::PagingList<T> pagingList,F fun);
 
