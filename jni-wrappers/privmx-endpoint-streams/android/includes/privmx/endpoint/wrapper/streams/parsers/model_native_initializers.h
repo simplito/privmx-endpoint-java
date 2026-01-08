@@ -9,22 +9,18 @@
 // limitations under the License.
 //
 
-#ifndef PRIVMXENDPOINTWRAPPER_MODEL_NATIVE_INITIALIZERS_H
-#define PRIVMXENDPOINTWRAPPER_MODEL_NATIVE_INITIALIZERS_H
+//#ifndef PRIVMXENDPOINTWRAPPER_MODEL_NATIVE_INITIALIZERS_H
+//#define PRIVMXENDPOINTWRAPPER_MODEL_NATIVE_INITIALIZERS_H
 
 #include <jni.h>
-#include "privmx/endpoint/wrapper/streams/utils/utils.hpp"
-#include "privmx/endpoint/wrapper/streams/parsers/parser.h"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
+#include "privmx/endpoint/wrapper/parsers/parser.h"
 #include "privmx/endpoint/stream/Types.hpp"
 #include "privmx/endpoint/stream/webrtc/Types.hpp"
 #include "privmx/endpoint/stream/StreamApi.hpp"
 #include "privmx/endpoint/stream/StreamApiLow.hpp"
 #include "privmx/endpoint/stream/WebRTCInterface.hpp"
-#include <privmx/endpoint/wrapper/parsers/parser.h>
-
-#include "privmx/endpoint/wrapper/utils/utils.hpp"
-#include "privmx/endpoint/wrapper/parsers/parser.h"
-#include <privmx/endpoint/wrapper/parsers/model_native_initializers.h>
+#include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
 
 namespace privmx {
     namespace wrapper {
@@ -40,13 +36,13 @@ namespace privmx {
 
             jobject streamHandle2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamHandle streamHandle_c);
 
+            jobject streamTrackInfo2Java(JniContextUtils &ctx,privmx::endpoint::stream::StreamTrackInfo streamTrackInfo_c);
+
             jobject streamInfo2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamInfo streamInfo_c);
 
-            jobject streamTrackInfo2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamTrackInfo streamTrackInfo_c);
+            jobject publishedStreamData2Java(JniContextUtils &ctx, privmx::endpoint::stream::PublishedStreamData publishedStreamData_c);
 
             jobject streamPublishResult2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamPublishResult streamPublishResult_c);
-
-            jobject publishedStreamData2Java(JniContextUtils &ctx, privmx::endpoint::stream::PublishedStreamData publishedStreamData_c);
 
             jobject remoteStreamId2Java(JniContextUtils &ctx, privmx::endpoint::stream::RemoteStreamId remoteStreamId_c);
 
@@ -71,4 +67,4 @@ namespace privmx {
     } // wrapper
 } // privmx
 
-#endif //PRIVMXENDPOINTWRAPPER_MODEL_NATIVE_INITIALIZERS_H
+//#endif //PRIVMXENDPOINTWRAPPER_MODEL_NATIVE_INITIALIZERS_H

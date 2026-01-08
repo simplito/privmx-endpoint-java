@@ -3,23 +3,21 @@
 //
 // Created by Dawid Jenczewski on 14/02/2025.
 //
-#include "privmx/endpoint/wrapper/streams/modules/WebRTCInterfaceJNI.h"
-#include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
-#include "privmx/endpoint/wrapper/streams/parsers/parser.h"
-#include "privmx/endpoint/wrapper/streams/modules/StreamApiLow.hpp"
-#include "privmx/endpoint/wrapper/streams/utils/utils.hpp"
-
 #include "privmx/endpoint/wrapper/utils/utils.hpp"
 #include "privmx/endpoint/wrapper/parsers/parser.h"
 #include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
 #include "privmx/endpoint/wrapper/modules/Connection.h"
 #include "privmx/endpoint/wrapper/modules/EventApi.h"
 
+#include "privmx/endpoint/wrapper/streams/modules/WebRTCInterfaceJNI.h"
+#include <privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h>
+#include "privmx/endpoint/wrapper/streams/parsers/parser.h"
+
 //#include <privmx-endpoint/includes/privmx/endpoint/wrapper/parsers/parser.h>
 
 using namespace privmx::endpoint::stream;
 using namespace privmx::endpoint;
-using namespace privmx::wrapper;
+//using namespace privmx::wrapper;
 
 StreamApiLow *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
     jclass cls = ctx->GetObjectClass(streamApiInstance);
@@ -28,8 +26,41 @@ StreamApiLow *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
     if (apiLong == nullptr) {
         throw IllegalStateException("ThreadApi cannot be used");
     }
-    return (StreamApiLow *) ctx.getObject(apiLong).getLongValue();
+    return(stream::StreamApiLow *) ctx.getObject(apiLong).getLongValue();
 }
+
+//extern "C"
+//JNIEXPORT jobject JNICALL
+//Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_init(
+//        JNIEnv *env,
+//        jobject thiz,
+//        jobject connection,
+//        jobject eventApi
+//) {
+//    JniContextUtils ctx(env);
+//    jobject result;
+//
+//    if (ctx.nullCheck(connection, "Connection") ||
+//            ctx.nullCheck(eventApi, "EventApi")) {
+//        return nullptr;
+//    }
+//
+////    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &thiz, &connection, &eventApi] {
+//        auto connection_c = getConnection(env, connection);
+//        auto eventApi_c = getEventApi(ctx, eventApi);
+//        auto streamApiLow = stream::StreamApiLow::create(
+//                *connection_c,
+//                *eventApi_c
+//                );
+//        auto streamApiLow_ptr = new stream::StreamApiLow();
+//        *streamApiLow_ptr = streamApiLow;
+//        return ctx.long2jLong((jlong) streamApiLow_ptr);
+////    });
+//    if (ctx->ExceptionCheck()) {
+//        return nullptr;
+//    }
+//    return result;
+//}
 
 extern "C"
 JNIEXPORT jobject JNICALL
@@ -44,22 +75,24 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_create(
         return nullptr;
     }
 
-    jobject result;
-    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &clazz, &connection, &eventApi] {
+//    jobject result;
+//    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &clazz, &connection, &eventApi] {
         jmethodID initMID = ctx->GetMethodID(clazz, "<init>",
-                                             "(Ljava/lang/Long;)V");
+                "(Ljava/lang/Long;)V");
         auto connection_c = getConnection(env, connection);
         auto eventApi_c = getEventApi(ctx, eventApi);
         auto streamApiLow = StreamApiLow::create(*connection_c, *eventApi_c);
         auto *api = new StreamApiLow();
         *api = streamApiLow;
+
         jobject result = ctx->NewObject(
                 clazz,
                 initMID,
                 ctx.long2jLong((jlong) api)
         );
         return result;
-    });
+
+//    });
     if (ctx->ExceptionCheck()) {
         return nullptr;
     }
@@ -85,7 +118,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_deinit(
                 env->FindClass("java/lang/IllegalStateException"),
                 e.what()
         );
-        return;
     }
 }
 
@@ -103,10 +135,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_createStream
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
-        ctx.nullCheck(users, "Users list") ||
-        ctx.nullCheck(managers, "Managers list") ||
-        ctx.nullCheck(public_meta, "Public meta") ||
-        ctx.nullCheck(private_meta, "Private meta")) {
+            ctx.nullCheck(users, "Users list") ||
+            ctx.nullCheck(managers, "Managers list") ||
+            ctx.nullCheck(public_meta, "Public meta") ||
+            ctx.nullCheck(private_meta, "Private meta")) {
         return nullptr;
     }
 
@@ -130,7 +162,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_createStream
                         ctx,
                         ctx.jObject2jArray(managers));
                 auto container_policies_c = std::optional<core::ContainerPolicy>(
-                        privmx:wrapper::parseContainerPolicy(ctx, policies));
+                        parseContainerPolicy(ctx, policies));
                 return ctx->NewStringUTF(
                         getStreamApi(ctx, thiz)->createStreamRoom(
                                 ctx.jString2string(context_id),
@@ -164,10 +196,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_updateStream
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream room ID") ||
-        ctx.nullCheck(users, "Users list") ||
-        ctx.nullCheck(managers, "Managers list") ||
-        ctx.nullCheck(public_meta, "Public meta") ||
-        ctx.nullCheck(private_meta, "Private meta")) {
+            ctx.nullCheck(users, "Users list") ||
+            ctx.nullCheck(managers, "Managers list") ||
+            ctx.nullCheck(public_meta, "Public meta") ||
+            ctx.nullCheck(private_meta, "Private meta")) {
         return;
     }
     ctx.callVoidEndpointApi(
@@ -221,7 +253,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
-        ctx.nullCheck(sort_order, "Sort order")) {
+            ctx.nullCheck(sort_order, "Sort order")) {
         return nullptr;
     }
 
@@ -246,11 +278,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                         "(Ljava/lang/Long;Ljava/util/List;)V");
                 jclass arrayCls = env->FindClass("java/util/ArrayList");
                 jmethodID initArrayMID = env->GetMethodID(arrayCls,
-                                                          "<init>",
-                                                          "()V");
+                        "<init>",
+                        "()V");
                 jmethodID addToArrayMID = env->GetMethodID(arrayCls,
-                                                           "add",
-                                                           "(Ljava/lang/Object;)Z");
+                        "add",
+                        "(Ljava/lang/Object;)Z");
                 auto query = core::PagingQuery();
                 query.skip = skip;
                 query.limit = limit;
@@ -271,9 +303,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                 jobject array = env->NewObject(arrayCls, initArrayMID);
                 for (auto &streamRoom_c: streamRooms_c.readItems) {
                     env->CallBooleanMethod(array,
-                                           addToArrayMID,
-                                           privmx::wrapper::streamRoom2Java(
-                                                   ctx, streamRoom_c)
+                            addToArrayMID,
+                            privmx::wrapper::streams::streamRoom2Java(
+                                    ctx, streamRoom_c)
                     );
                 }
                 return ctx->NewObject(
@@ -304,7 +336,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getStreamRoo
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &thiz, &stream_room_id] {
 
-        return privmx::wrapper::streamRoom2Java(
+        return privmx::wrapper::streams::streamRoom2Java(
                 ctx,
                 getStreamApi(ctx, thiz)->getStreamRoom(
                         ctx.jString2string(stream_room_id)
@@ -349,7 +381,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_createStream
 
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &thiz, &stream_room_id] {
-        return privmx::wrapper::streamHandle2Java(
+
+        return privmx::wrapper::streams::streamHandle2Java(
                 ctx,
                 getStreamApi(ctx, thiz)->createStream(
                         ctx.jString2string(stream_room_id)
@@ -382,7 +415,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_publishStrea
                 parseStreamHandle(ctx, stream_handle)
         );
 
-        return privmx::wrapper::streamPublishResult2Java(
+        return privmx::wrapper::streams::streamPublishResult2Java(
                 ctx,
                 result
         );
@@ -404,7 +437,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_joinStreamRo
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream room ID") ||
-        ctx.nullCheck(web_rtc, "webRtc")) {
+            ctx.nullCheck(web_rtc, "webRtc")) {
         return;
     }
 
@@ -447,7 +480,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreams(
             env->CallBooleanMethod(
                     array,
                     addToArrayMID,
-                    privmx::wrapper::streamInfo2Java(ctx, info_c)
+                    privmx::wrapper::streams::streamInfo2Java(ctx, info_c)
             );
         }
         return array;
@@ -518,7 +551,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getTurnCrede
             env->CallBooleanMethod(
                     array,
                     addToArrayMID,
-                    privmx::wrapper::turnCredentials2Java(ctx, turnCredentials_c)
+                    privmx::wrapper::streams::turnCredentials2Java(ctx, turnCredentials_c)
             );
         }
 
@@ -663,7 +696,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeF
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
-        ctx.nullCheck(subscriptions_to_remove, "Subscriptions to remove")) {
+            ctx.nullCheck(subscriptions_to_remove, "Subscriptions to remove")) {
         return;
     }
 
@@ -704,9 +737,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_modifyRemote
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
-        ctx.nullCheck(subscriptions_to_add, "Subscriptions to add") ||
-        ctx.nullCheck(subscriptions_to_add, "Subscriptions to remove") ||
-        ctx.nullCheck(options, "Options")) {
+            ctx.nullCheck(subscriptions_to_add, "Subscriptions to add") ||
+            ctx.nullCheck(subscriptions_to_add, "Subscriptions to remove") ||
+            ctx.nullCheck(options, "Options")) {
         return;
     }
 
@@ -735,7 +768,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_modifyRemote
                 }
                 for (int i = 0; i < subscriptions_to_remove_length; i++) {
                     jobject arrayElement = ctx->GetObjectArrayElement(subscriptions_to_remove_arr,
-                                                                      i);
+                            i);
                     if (ctx.nullCheck(arrayElement, "Subscriptions to remove array elements")) {
                         return;
                     }
@@ -767,8 +800,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeToR
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
-        ctx.nullCheck(subscriptions, "Subscriptions") ||
-        ctx.nullCheck(options, "Options")) {
+            ctx.nullCheck(subscriptions, "Subscriptions") ||
+            ctx.nullCheck(options, "Options")) {
         return;
     }
 

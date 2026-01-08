@@ -8,7 +8,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
+#include "privmx/endpoint/wrapper/parsers/parser.h"
 #include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
 
 namespace privmx {
@@ -346,6 +346,75 @@ namespace privmx {
                 );
             }
 
+            jobject streamTrackInfo2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::StreamTrackInfo streamTrackInfo_c
+            ) {
+                jclass itemCls = ctx->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/StreamTrackInfo");
+
+                jmethodID initItemMID = ctx->GetMethodID(
+                        itemCls,
+                        "<init>",
+                        "("
+                        "Ljava/lang/String;"        // type
+                        "Ljava/lang/Long;"          // mindex
+                        "Ljava/lang/String;"        // mid
+                        "Ljava/lang/Boolean;"       // disabled         [optional]
+                        "Ljava/lang/String;"        // codec            [optional]
+                        "Ljava/lang/String;"        // description      [optional]
+                        "Ljava/lang/Boolean;"       // moderated        [optional]
+                        "Ljava/lang/Boolean;"       // simulcast        [optional]
+                        "Ljava/lang/Boolean;"       // talking          [optional]
+                        ")V"
+                );
+
+                jobject disabled = nullptr;
+                jobject codec = nullptr;
+                jobject description = nullptr;
+                jobject moderated = nullptr;
+                jobject simulcast = nullptr;
+                jobject talking = nullptr;
+
+                if (streamTrackInfo_c.disabled.has_value()) {
+                    disabled = ctx.bool2jBoolean(streamTrackInfo_c.disabled.value());
+                }
+
+                if (streamTrackInfo_c.codec.has_value()) {
+                    codec = ctx->NewStringUTF(streamTrackInfo_c.codec.value().c_str());
+                }
+
+                if (streamTrackInfo_c.description.has_value()) {
+                    description = ctx->NewStringUTF(streamTrackInfo_c.description.value().c_str());
+                }
+
+                if (streamTrackInfo_c.moderated.has_value()) {
+                    moderated = ctx.bool2jBoolean(streamTrackInfo_c.moderated.value());
+                }
+
+                if (streamTrackInfo_c.simulcast.has_value()) {
+                    simulcast = ctx.bool2jBoolean(streamTrackInfo_c.simulcast.value());
+                }
+
+                if (streamTrackInfo_c.talking.has_value()) {
+                    talking = ctx.bool2jBoolean(streamTrackInfo_c.talking.value());
+                }
+
+                return ctx->NewObject(
+                        itemCls,
+                        initItemMID,
+                        ctx->NewStringUTF(streamTrackInfo_c.type.c_str()),
+                        ctx.long2jLong(streamTrackInfo_c.mindex),
+                        ctx->NewStringUTF(streamTrackInfo_c.mid.c_str()),
+                        disabled,
+                        codec,
+                        description,
+                        moderated,
+                        simulcast,
+                        talking
+                );
+            }
+
             jobject
             streamInfo2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamInfo streamInfo_c) {
                 jclass arrayCls = ctx->FindClass("java/util/ArrayList");
@@ -416,73 +485,26 @@ namespace privmx {
                 );
 
             }
-
-            jobject streamTrackInfo2Java(
-                    JniContextUtils &ctx,
-                    privmx::endpoint::stream::StreamTrackInfo streamTrackInfo_c
-            ) {
+            jobject publishedStreamData2Java(JniContextUtils &ctx, privmx::endpoint::stream::PublishedStreamData publishedStreamData_c) {
                 jclass itemCls = ctx->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/streams/StreamInfo");
+                        "com/simplito/java/privmx_endpoint/model/streams/PublishedStreamData");
 
                 jmethodID initItemMID = ctx->GetMethodID(
                         itemCls,
                         "<init>",
                         "("
-                        "Ljava/lang/String;"        // type
-                        "Ljava/lang/Long;"          // mindex
-                        "Ljava/lang/String;"        // mid
-                        "Ljava/lang/Boolean;"       // disabled         [optional]
-                        "Ljava/lang/String;"        // codec            [optional]
-                        "Ljava/lang/String;"        // description      [optional]
-                        "Ljava/lang/Boolean;"       // moderated        [optional]
-                        "Ljava/lang/Boolean;"       // simulcast        [optional]
-                        "Ljava/lang/Boolean;"       // talking          [optional]
+                        "Ljava/lang/String;"      // streamRoomId
+                        "Lcom/simplito/java/privmx_endpoint/model/streams/StreamInfo;"      // stream
+                        "Ljava/lang/String;"      //userId
                         ")V"
                 );
-
-                jobject disabled = nullptr;
-                jobject codec = nullptr;
-                jobject description = nullptr;
-                jobject moderated = nullptr;
-                jobject simulcast = nullptr;
-                jobject talking = nullptr;
-
-                if (streamTrackInfo_c.disabled.has_value()) {
-                    disabled = ctx.bool2jBoolean(streamTrackInfo_c.disabled.value());
-                }
-
-                if (streamTrackInfo_c.codec.has_value()) {
-                    codec = ctx->NewStringUTF(streamTrackInfo_c.codec.value().c_str());
-                }
-
-                if (streamTrackInfo_c.description.has_value()) {
-                    description = ctx->NewStringUTF(streamTrackInfo_c.description.value().c_str());
-                }
-
-                if (streamTrackInfo_c.moderated.has_value()) {
-                    moderated = ctx.bool2jBoolean(streamTrackInfo_c.moderated.value());
-                }
-
-                if (streamTrackInfo_c.simulcast.has_value()) {
-                    simulcast = ctx.bool2jBoolean(streamTrackInfo_c.simulcast.value());
-                }
-
-                if (streamTrackInfo_c.talking.has_value()) {
-                    talking = ctx.bool2jBoolean(streamTrackInfo_c.talking.value());
-                }
 
                 return ctx->NewObject(
                         itemCls,
                         initItemMID,
-                        ctx->NewStringUTF(streamTrackInfo_c.type.c_str()),
-                        ctx.long2jLong(streamTrackInfo_c.mindex),
-                        ctx->NewStringUTF(streamTrackInfo_c.mid.c_str()),
-                        disabled,
-                        codec,
-                        description,
-                        moderated,
-                        simulcast,
-                        talking
+                        ctx->NewStringUTF(publishedStreamData_c.streamRoomId.c_str()),
+                        streamInfo2Java(ctx, publishedStreamData_c.stream),
+                        ctx->NewStringUTF(publishedStreamData_c.userId.c_str())
                 );
             }
 
@@ -512,28 +534,6 @@ namespace privmx {
                 );
             }
 
-            jobject publishedStreamData2Java(JniContextUtils &ctx, privmx::endpoint::stream::PublishedStreamData publishedStreamData_c) {
-                jclass itemCls = ctx->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/streams/PublishedStreamData");
-
-                jmethodID initItemMID = ctx->GetMethodID(
-                        itemCls,
-                        "<init>",
-                        "("
-                        "Ljava/lang/String;"      // streamRoomId
-                        "Lcom/simplito/java/privmx_endpoint/model/streams/StreamInfo;"      // stream
-                        "Ljava/lang/String;"      //userId
-                        ")V"
-                );
-
-                return ctx->NewObject(
-                        itemCls,
-                        initItemMID,
-                        ctx->NewStringUTF(publishedStreamData_c.streamRoomId.c_str()),
-                        streamInfo2Java(ctx, publishedStreamData_c.stream),
-                        ctx->NewStringUTF(publishedStreamData_c.userId.c_str())
-                );
-            }
 
             jobject remoteStreamId2Java(JniContextUtils &ctx,
                     privmx::endpoint::stream::RemoteStreamId remoteStreamId_c) {

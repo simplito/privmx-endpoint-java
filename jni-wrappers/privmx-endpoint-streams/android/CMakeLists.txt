@@ -18,7 +18,6 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         src/cpp/privmx/endpoint/wrapper/streams/modules/StreamSettingsJNI.cpp
         src/cpp/privmx/endpoint/wrapper/streams/parsers/parser.cpp
         src/cpp/privmx/endpoint/wrapper/streams/parsers/model_native_initializers.cpp
-        src/cpp/privmx/endpoint/wrapper/streams/utils/utils.cpp
 )
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/includes
