@@ -23,12 +23,30 @@ target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/includes
 )
 
-add_library( privmxendpointstream SHARED IMPORTED GLOBAL)
-set_target_properties(privmxendpointstream PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointstream.${file_extension})
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE True)
 
-include_directories(${PRIVMX_INCLUDES_DIR})
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE privmx-endpoint-java privmxendpointstream)
+add_library( privmxendpointjavacompiled SHARED IMPORTED GLOBAL)
+set_target_properties(privmxendpointjavacompiled PROPERTIES IMPORTED_LOCATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/lib/libprivmx-endpoint-java.${file_extension})
+
+
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${PRIVMX_INCLUDES_DIR} ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/includes)
+#include_directories(${PRIVMX_INCLUDES_DIR}
+#        ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/includes)
+
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
+#        privmxendpointjavacompiled
+        privmx-endpoint-java
+        privmxendpointstream
+#        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
+#        ssl crypto
+#        gmp
+)
+
+#target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ssl crypto)
+#target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC gmp)
+#target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto)
+#target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC Pson)
 
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-streams/android/lib)
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/includes DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-streams/android/include)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/includes DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-streams/android)
 install(IMPORTED_RUNTIME_ARTIFACTS privmxendpointstream DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-streams/android/lib)
