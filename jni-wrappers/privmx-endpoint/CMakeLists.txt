@@ -17,13 +17,6 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/utils/exceptions.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/utils/jniUtils.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/utils/utils.cpp
-
-#        src/cpp/parsers/parser.cpp
-#        src/cpp/parsers/model_native_initializers.cpp
-#        src/cpp/utils/exceptions.cpp
-#        src/cpp/utils/jniUtils.cpp
-#        src/cpp/utils/utils.cpp
-
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/modules/Connection.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/modules/CryptoApi.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/modules/ThreadApi.cpp
@@ -40,10 +33,11 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes PRIVATE ${PRIVMX_INCLUDES_DIR})
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE True)
 
-#target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ssl crypto)
-#target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC gmp)
-#target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE privmxendpointcrypto privmxendpointcore privmxendpointstore privmxendpointthread privmxendpointinbox privmxendpointevent privmxendpointkvdb)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ssl crypto)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE gmp)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Pson)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE libprivmx privmxendpointcrypto privmxendpointcore privmxendpointstore privmxendpointthread privmxendpointinbox privmxendpointevent privmxendpointkvdb)
 
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/includes DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/)

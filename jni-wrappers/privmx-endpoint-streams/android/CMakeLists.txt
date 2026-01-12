@@ -28,24 +28,18 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE
 add_library( privmxendpointjavacompiled SHARED IMPORTED GLOBAL)
 set_target_properties(privmxendpointjavacompiled PROPERTIES IMPORTED_LOCATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/lib/libprivmx-endpoint-java.${file_extension})
 
-
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${PRIVMX_INCLUDES_DIR} ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/includes)
-#include_directories(${PRIVMX_INCLUDES_DIR}
-#        ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/includes)
+
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ssl crypto)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE gmp)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Pson)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE libprivmx privmxendpointcrypto privmxendpointcore privmxendpointstore privmxendpointthread privmxendpointinbox privmxendpointevent privmxendpointkvdb)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
-#        privmxendpointjavacompiled
-        privmx-endpoint-java
+        privmxendpointjavacompiled
         privmxendpointstream
-#        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
-#        ssl crypto
-#        gmp
 )
-
-#target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ssl crypto)
-#target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC gmp)
-#target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto)
-#target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC Pson)
 
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-streams/android/lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/includes DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-streams/android)

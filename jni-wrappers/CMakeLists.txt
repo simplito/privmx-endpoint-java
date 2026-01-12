@@ -8,8 +8,8 @@ option(BUILD_ENDPOINT "Building endpoint" OFF)
 option(BUILD_ANDROID_STREAM "Building Android streams" OFF)
 option(BUILD_JVM_STREAM "Building Desktop streams" OFF)
 
-#set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
-#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
 
 if (NOT DEFINED CMAKE_DESTINATION_OS)
     set(CMAKE_DESTINATION_OS ${CMAKE_SYSTEM_NAME})
@@ -75,105 +75,41 @@ add_library(Pson SHARED IMPORTED GLOBAL)
 set_target_properties(Pson PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libPson.${file_extension})
 
 add_library(libprivmx SHARED IMPORTED GLOBAL)
-set_target_properties(libprivmx PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmx.${file_extension}
-        INTERFACE_LINK_LIBRARIES
-        ssl crypto
-        gmp
-        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
-        Pson
-)
+set_target_properties(libprivmx PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmx.${file_extension})
 
 add_library(privmxendpointcore SHARED IMPORTED GLOBAL)
-set_target_properties(privmxendpointcore PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointcore.${file_extension}
-        INTERFACE_LINK_LIBRARIES
-        ssl crypto
-        gmp
-        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
-        Pson
-#        libprivmx
-)
+set_target_properties(privmxendpointcore PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointcore.${file_extension})
 
 add_library(privmxendpointcrypto SHARED IMPORTED GLOBAL)
-set_target_properties(privmxendpointcrypto PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointcrypto.${file_extension}
-        INTERFACE_LINK_LIBRARIES
-        ssl crypto
-        gmp
-        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
-        Pson
-#        libprivmx privmxendpointcore
-)
+set_target_properties(privmxendpointcrypto PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointcrypto.${file_extension})
 
 add_library(privmxendpointstore SHARED IMPORTED GLOBAL)
-set_target_properties(privmxendpointstore PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointstore.${file_extension}
-        INTERFACE_LINK_LIBRARIES
-        ssl crypto
-        gmp
-        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
-        Pson
-#        libprivmx privmxendpointcore privmxendpointcrypto
-)
+set_target_properties(privmxendpointstore PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointstore.${file_extension})
 
 add_library(privmxendpointthread SHARED IMPORTED GLOBAL)
-set_target_properties(privmxendpointthread PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointthread.${file_extension}
-        INTERFACE_LINK_LIBRARIES
-        ssl crypto
-        gmp
-        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
-        Pson
-#        libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore
-)
+set_target_properties(privmxendpointthread PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointthread.${file_extension})
 
 add_library(privmxendpointinbox SHARED IMPORTED GLOBAL)
-set_target_properties(privmxendpointinbox PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointinbox.${file_extension}
-        INTERFACE_LINK_LIBRARIES
-        ssl crypto
-        gmp
-        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
-        Pson
-#        libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointinbox
-)
+set_target_properties(privmxendpointinbox PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointinbox.${file_extension})
 
 add_library(privmxendpointevent SHARED IMPORTED GLOBAL)
-set_target_properties(privmxendpointevent PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointevent.${file_extension}
-        INTERFACE_LINK_LIBRARIES
-        ssl crypto
-        gmp
-        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
-        Pson
-#        libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointinbox privmxendpointevent
-)
+set_target_properties(privmxendpointevent PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointevent.${file_extension})
 
 add_library(privmxendpointkvdb SHARED IMPORTED GLOBAL)
-set_target_properties(privmxendpointkvdb PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointkvdb.${file_extension}
-        INTERFACE_LINK_LIBRARIES
-        ssl crypto
-        gmp
-        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
-        Pson
-#        libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointinbox privmxendpointevent privmxendpointkvdb
-)
+set_target_properties(privmxendpointkvdb PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointkvdb.${file_extension})
 
 add_library( privmxendpointstream SHARED IMPORTED GLOBAL)
-set_target_properties(privmxendpointstream PROPERTIES
-        IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointstream.${file_extension}
-#        INTERFACE_LINK_LIBRARIES
-#        ssl crypto
-#        gmp
-#        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
-#        Pson
-#        libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointinbox privmxendpointevent privmxendpointkvdb
-)
+set_target_properties(privmxendpointstream PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointstream.${file_extension})
 
 
 # Add the subdirectories that contain the libraries
-#if(BUILD_ENDPOINT)
+if(BUILD_ENDPOINT)
     add_subdirectory(privmx-endpoint)
-#endif ()
+endif ()
 
-#if(BUILD_ANDROID_STREAM)
+if(BUILD_ANDROID_STREAM)
     add_subdirectory(privmx-endpoint-streams/android)
-#endif ()
-#
-#if(BUILD_JVM_STREAM)
-#    add_subdirectory(privmx-endpoint-streams/jvm)
-#endif ()
+endif ()
+if(BUILD_JVM_STREAM)
+    add_subdirectory(privmx-endpoint-streams/jvm)
+endif ()
