@@ -11,20 +11,19 @@
 
 package com.simplito.java.privmx_endpoint_streams.modules;
 
-import com.simplito.java.privmx_endpoint_streams.Key;
 
 import java.util.List;
 
 public interface WebRTCInterface {
-    String createOfferAndSetLocalDescription(String streamRoomId);
-
-    String createAnswerAndSetDescriptions(String streamRoomId, String sdp, String type);
-
-    void setAnswerAndSetRemoteDescription(String streamRoomId, String sdp, String type);
-
-    void updateSessionId(String streamRoomId, Long sessionId, String connectionType);
-
-    void close(String streamRoomId);
-
-    void updateKeys(String streamRoomId, List<Key> keys);
+//    String createOfferAndSetLocalDescription(String streamRoomId);
+//
+//    String createAnswerAndSetDescriptions(String streamRoomId, String sdp, String type);
+//
+//    void setAnswerAndSetRemoteDescription(String streamRoomId, String sdp, String type);
+//
+//    void updateSessionId(String streamRoomId, Long sessionId, String connectionType);
+//
+//    void close(String streamRoomId);
+//
+//    void updateKeys(String streamRoomId, List<Key> keys);
 }

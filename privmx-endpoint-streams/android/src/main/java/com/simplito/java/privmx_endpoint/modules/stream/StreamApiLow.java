@@ -14,26 +14,28 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.SdpWithTypeModel;
+import com.simplito.java.privmx_endpoint.model.Settings;
+import com.simplito.java.privmx_endpoint.model.StreamHandle;
+import com.simplito.java.privmx_endpoint.model.StreamInfo;
+import com.simplito.java.privmx_endpoint.model.StreamPublishResult;
 import com.simplito.java.privmx_endpoint.model.StreamRoom;
+import com.simplito.java.privmx_endpoint.model.StreamSettings;
+import com.simplito.java.privmx_endpoint.model.StreamSubscription;
 import com.simplito.java.privmx_endpoint.model.TurnCredentials;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StreamEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StreamEventType;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
-import com.simplito.java.privmx_endpoint.model.StreamHandle;
-import com.simplito.java.privmx_endpoint.model.StreamInfo;
-import com.simplito.java.privmx_endpoint.model.StreamPublishResult;
-import com.simplito.java.privmx_endpoint.model.StreamSettings;
-import com.simplito.java.privmx_endpoint.model.StreamSubscription;
 
 import java.util.List;
 
 public class StreamApiLow implements AutoCloseable {
     static {
-        System.loadLibrary("crypto");
-        System.loadLibrary("ssl");
-        System.loadLibrary("privmx-endpoint-java");
+//        System.loadLibrary("crypto");
+//        System.loadLibrary("ssl");
+//        System.loadLibrary("privmx-endpoint-java");
+//        System.loadLibrary("privmx-endpoint-streams-android");
     }
 
     @SuppressWarnings("FieldCanBeLocal")
@@ -43,10 +45,34 @@ public class StreamApiLow implements AutoCloseable {
         this.api = api;
     }
 
+//    private native Long init(Connection connection, EventApi eventApi) throws IllegalStateException;
+
     public static native StreamApiLow create(
             Connection connection,
             EventApi eventApi
     );
+
+//    public StreamApiLow(
+//            Connection connection
+//    ) throws IllegalStateException {
+//        this(connection, null);
+//    }
+
+//    public StreamApiLow(
+//            Connection connection,
+//            EventApi eventApi
+//    ) throws IllegalStateException {
+//        Objects.requireNonNull(connection);
+//        EventApi tmpEventApi = eventApi == null ? new EventApi(connection) : null;
+//        this.api = init(
+//                connection,
+//                Optional.ofNullable(eventApi).orElse(tmpEventApi)
+//        );
+//        try {
+//            if (eventApi != null) tmpEventApi.close();
+//        } catch (Exception ignore) {
+//        }
+//    }
 
     public native List<TurnCredentials> getTurnCredentials();
 
@@ -101,8 +127,46 @@ public class StreamApiLow implements AutoCloseable {
             long limit,
             String sortOrder,
             String lastId,
-            String sortBy
+            String sortBy,
+            String queryAsJson
     );
+
+    public PagingList<StreamRoom> listStreamRooms(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
+            String sortBy
+    ){
+        return listStreamRooms(contextId, skip, limit, sortOrder, lastId, sortBy, null);
+    }
+    public PagingList<StreamRoom> listStreamRooms(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId
+    ){
+        return listStreamRooms(contextId, skip, limit, sortOrder, lastId, null, null);
+    }
+
+    public PagingList<StreamRoom> listStreamRooms(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder
+    ){
+        return listStreamRooms(contextId, skip, limit, sortOrder, null, null, null);
+    }
+
+    public PagingList<StreamRoom> listStreamRooms(
+            String contextId,
+            long skip,
+            long limit
+    ){
+        return listStreamRooms(contextId, skip, limit, "desc", null, null, null);
+    }
 
     public native StreamRoom getStreamRoom(String streamRoomId);
 
@@ -124,11 +188,17 @@ public class StreamApiLow implements AutoCloseable {
 
     public native StreamPublishResult publishStream(StreamHandle streamHandle);
 
-    public native StreamPublishResult updateStream(StreamHandle streamHandle);
+    // todo
+    // public native StreamPublishResult updateStream(
+    public StreamPublishResult updateStream(
+            StreamHandle streamHandle
+    ){
+     return new StreamPublishResult(false);
+    }
 
     public native void unpublishStream(StreamHandle streamHandle);
 
-    public native void subscribeToRemoteStreams(String streamRoomId, List<StreamSubscription> subscriptions, StreamSettings options);
+    public native void subscribeToRemoteStreams(String streamRoomId, List<StreamSubscription> subscriptions, Settings options);
 
     public native void modifyRemoteStreamsSubscriptions(String streamRoomId, List<StreamSubscription> subscriptionsToAdd, List<StreamSubscription> subscriptionsToRemove, StreamSettings options);
 
@@ -137,21 +207,31 @@ public class StreamApiLow implements AutoCloseable {
     public native void trickle(long sessionId, String candidateAsJson);
 
 
-    public native void acceptOfferOnReconfigure(
+    // todo
+    // public native void acceptOfferOnReconfigure(
+    public  void acceptOfferOnReconfigure(
             long sessionId,
             SdpWithTypeModel sdp
-    );
+    ){
+
+    }
 
     public native List<String> subscribeFor(List<String> subscriptionQueries);
 
     public native void unsubscribeFrom(List<String> subscriptionIds);
 
-    public native String buildSubscriptionQuery(StreamEventType eventType, StreamEventSelectorType selectorType, String selectorId);
+    // todo
+    // public native String buildSubscriptionQuery(
+    public String buildSubscriptionQuery (
+            StreamEventType eventType,
+            StreamEventSelectorType selectorType,
+            String selectorId
+    ){
+        return "";
+    }
 
 
     public native void keyManagement(String streamRoomId, boolean disable);
-
-//    public native void reconfigureStream(long localStreamId, String optionsJSON);
 
     private native void deinit() throws IllegalStateException;
 

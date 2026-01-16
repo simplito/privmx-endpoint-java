@@ -6,7 +6,8 @@ public class StreamSettings {
     public Settings settings;
     public boolean dropCorruptedFrames = true;
     public OnFrameCallback OnFrame = null;
-    public Consumer<String> OnVideo = null;
+    public Consumer<String> OnVideo = null;     //  _onVideoTrack.value()(_streamRoomId + "-" + receiver->track()->id().std_string());
+
     public Consumer<String> OnVideoRemove = null;
 
     public StreamSettings(Settings settings, boolean dropCorruptedFrames, OnFrameCallback onFrame, Consumer<String> onVideo, Consumer<String> onVideoRemove) {
