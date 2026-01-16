@@ -42,7 +42,10 @@ namespace privmx {
                 jmethodID initKeyMID = ctx->GetMethodID(
                         keyCls,
                         "<init>",
-                        "(Ljava/lang/String;[BLcom/simplito/java/privmx_endpoint/model/KeyType;)V"
+                        "(Ljava/lang/String;"
+                        "[B"
+                        "Lcom/simplito/java/privmx_endpoint/model/KeyType;"
+                        ")V"
                 );
 
                 jbyteArray jKey = ctx->NewByteArray(key_c.key.size());
@@ -180,7 +183,7 @@ namespace privmx {
             sdpWithTypeModel2Java(JniContextUtils &ctx,
                     privmx::endpoint::stream::SdpWithTypeModel sdpWithTypeModel_c) {
                 jclass sdpWithTypeModelCls = ctx.findClass(
-                        "com/simplito/java/privmx_endpoint/model/SdpWithTypeModel");
+                        "com/simplito/java/privmx_endpoint/model/stream/SdpWithTypeModel");
                 jmethodID initSdpWithTypeModelMID = ctx->GetMethodID(
                         sdpWithTypeModelCls,
                         "<init>",
@@ -438,7 +441,6 @@ namespace privmx {
                         "Ljava/lang/Long;"          // id
                         "Ljava/lang/String;"        // userId
                         "Ljava/util/List;"          // tracks
-                        "Ljava/lang/Long;"          // streamId
                         "Ljava/lang/String;"        // metadata
                         "Ljava/lang/Boolean;"       // dummy
                         "Ljava/lang/Boolean;"       // talking
@@ -458,12 +460,11 @@ namespace privmx {
                 }
 
                 if (streamInfo_c.talking.has_value()) {
-                    dummy = ctx.bool2jBoolean(streamInfo_c.talking.value());
+                    talking = ctx.bool2jBoolean(streamInfo_c.talking.value());
                 }
 
                 jobject tracks = ctx->NewObject(arrayCls, initArrayMID);
                 for (auto &track: streamInfo_c.tracks) {
-
                     ctx->CallBooleanMethod(
                             tracks,
                             addToArrayMID,

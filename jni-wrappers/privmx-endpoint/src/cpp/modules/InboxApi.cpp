@@ -10,7 +10,7 @@
 //
 
 #include <jni.h>
-#include "privmx/endpoint/inbox/InboxApi.hpp"
+#include <privmx/endpoint/inbox/InboxApi.hpp>
 #include "privmx/endpoint/core/Exception.hpp"
 #include "privmx/endpoint/wrapper/modules/Connection.h"
 #include "privmx/endpoint/wrapper/modules/ThreadApi.h"

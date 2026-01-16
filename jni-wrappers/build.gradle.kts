@@ -204,7 +204,7 @@ tasks.register<NativeBuild>("buildJNIStreamsJVM") {
 }
 
 tasks.register<NativeBuild>("buildJNIStreamsAndroid") {
-    dependsOn("buildJNIEndpoint")
+//    dependsOn("buildJNIEndpoint")
     setArchs(*NativeBuild.Arch.AndroidArch.values())
     setTarget(NativeBuild.NativePrivMXTarget.ANDROID_STREAM)
     androidAPILevel.set("24")

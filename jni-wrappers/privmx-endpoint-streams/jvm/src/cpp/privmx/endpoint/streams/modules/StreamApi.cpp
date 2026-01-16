@@ -1,4 +1,4 @@
-#include "privmx/endpoint/wrapper/modules/StreamApi.h"
+#include "privmx/endpoint/wrapper/modules/StoreApi.h"
 
 stream::StreamApi *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
     jclass cls = ctx->GetObjectClass(streamApiInstance);

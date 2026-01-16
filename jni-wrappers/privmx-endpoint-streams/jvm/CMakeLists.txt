@@ -13,7 +13,7 @@ project("privmx-endpoint-streams-jvm")
 set(CMAKE_PROJECT_NAME "privmx-endpoint-streams-jvm")
 
 add_library(${CMAKE_PROJECT_NAME} SHARED
-        src/cpp/privmx/endpoint/wrapper/streams/StreamApi.cpp
+        src/cpp/privmx/endpoint/streams/streams/StreamApi.cpp
 )
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 

@@ -10,6 +10,7 @@
 //
 
 #include "privmx/endpoint/wrapper/parsers/parser.h"
+#include "privmx/endpoint/wrapper/streams/modules/StreamSettingsJNI.h"
 
 using namespace privmx::endpoint;
 
@@ -60,23 +61,23 @@ privmx::endpoint::stream::Settings parseSettings(JniContextUtils &ctx, jobject s
 
 privmx::endpoint::stream::StreamSettings parseStreamSettings(JNIEnv *env,jobject streamSettings){
     privmx::endpoint::stream::StreamSettings result;
-    JniContextUtils ctx(env);
-    jclass cls = ctx->GetObjectClass(streamSettings);
-    StreamSettingsJNI streamSettingsJni (env, streamSettings);
-
-    jfieldID settingsFID = env->GetFieldID(
-            env->GetObjectClass(streamSettings),
-            "settings",
-            "Lcom/simplito/java/privmx_endpoint/model/streams/Settings;"
-    );
-
-    jobject jsettings = ctx->GetObjectField(streamSettings, settingsFID);
-
-    result.settings = parseSettings(ctx, jsettings);
-    result.OnFrame = streamSettingsJni.OnFrame;
-    result.OnVideo = streamSettingsJni.OnVideo;
-    result.OnVideoRemove = streamSettingsJni.OnVideoRemove;
-
+//    JniContextUtils ctx(env);
+//    jclass cls = ctx->GetObjectClass(streamSettings);
+////    StreamSettingsJNI streamSettingsJni (env, streamSettings);
+//
+//    jfieldID settingsFID = env->GetFieldID(
+//            env->GetObjectClass(streamSettings),
+//            "settings",
+//            "Lcom/simplito/java/privmx_endpoint/model/streams/Settings;"
+//    );
+//
+//    jobject jsettings = ctx->GetObjectField(streamSettings, settingsFID);
+//
+//    result.settings = parseSettings(ctx, jsettings);
+////    result.OnFrame = streamSettingsJni.OnFrame;
+////    result.OnVideo = streamSettingsJni.OnVideo;
+////    result.OnVideoRemove = streamSettingsJni.OnVideoRemove;
+//
     return result;
 }
 
@@ -95,10 +96,10 @@ privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextU
             "Ljava/lang/String;"
     );
 
-    jobject streamId = ctx->GetObjectField(streamSubscription, streamIdFID);
+    jlong streamId = ctx->GetLongField(streamSubscription, streamIdFID);
     jobject streamTrackId =  ctx->GetObjectField(streamSubscription, trackIdFID);
 
-    result.streamId = jobject2long(ctx, streamId);
+    result.streamId = streamId;
     if(streamTrackId != nullptr) result.streamTrackId = jobject2string(ctx, streamTrackId);
 
     return result;

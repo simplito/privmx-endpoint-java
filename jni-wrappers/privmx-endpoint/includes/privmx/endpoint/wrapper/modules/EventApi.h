@@ -9,6 +9,5 @@ using namespace privmx::endpoint;
 #ifndef PRIVMXENDPOINT_EVENTAPI_H
 #define PRIVMXENDPOINT_EVENTAPI_H
 
-privmx::endpoint::event::EventApi *getEventApi(JniContextUtils &ctx, jobject eventApiInstance);
-
 #endif //PRIVMXENDPOINT_EVENTAPI_H
+privmx::endpoint::event::EventApi *getEventApi(JNIEnv *env, jobject eventApiInstance);

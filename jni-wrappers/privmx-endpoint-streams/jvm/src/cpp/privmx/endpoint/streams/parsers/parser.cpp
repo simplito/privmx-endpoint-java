@@ -10,7 +10,6 @@
 //
 
 #include "privmx/endpoint/wrapper/parsers/parser.h"
-
 using namespace privmx::endpoint;
 
 // streams
@@ -59,25 +58,25 @@ privmx::endpoint::stream::Settings parseSettings(JniContextUtils &ctx, jobject s
 }
 
 privmx::endpoint::stream::StreamSettings parseStreamSettings(JNIEnv *env,jobject streamSettings){
-//    privmx::endpoint::stream::StreamSettings result = privmx::wrapper::streams::StreamSettingsJNI(env, streamSettings);;
-//    JniContextUtils ctx(env);
-//    jclass cls = ctx->GetObjectClass(streamSettings);
-////    StreamSettingsJNI streamSettingsJni (env, streamSettings);
-//
-//    jfieldID settingsFID = env->GetFieldID(
-//            env->GetObjectClass(streamSettings),
-//            "settings",
-//            "Lcom/simplito/java/privmx_endpoint/model/streams/Settings;"
-//    );
-//
-//    jobject jsettings = ctx->GetObjectField(streamSettings, settingsFID);
-//
-//    result.settings = parseSettings(ctx, jsettings);
-////    result.OnFrame = streamSettingsJni.OnFrame;
-////    result.OnVideo = streamSettingsJni.OnVideo;
-////    result.OnVideoRemove = streamSettingsJni.OnVideoRemove;
-//
-//    return result;
+    privmx::endpoint::stream::StreamSettings result;
+    JniContextUtils ctx(env);
+    jclass cls = ctx->GetObjectClass(streamSettings);
+//    StreamSettingsJNI streamSettingsJni (env, streamSettings);
+
+    jfieldID settingsFID = env->GetFieldID(
+            env->GetObjectClass(streamSettings),
+            "settings",
+            "Lcom/simplito/java/privmx_endpoint/model/streams/Settings;"
+    );
+
+    jobject jsettings = ctx->GetObjectField(streamSettings, settingsFID);
+
+    result.settings = parseSettings(ctx, jsettings);
+//    result.OnFrame = streamSettingsJni.OnFrame;
+//    result.OnVideo = streamSettingsJni.OnVideo;
+//    result.OnVideoRemove = streamSettingsJni.OnVideoRemove;
+
+    return result;
 }
 
 privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextUtils &ctx, jobject streamSubscription){

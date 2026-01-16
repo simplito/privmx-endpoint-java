@@ -42,15 +42,15 @@ message(DEBUG "CMAKE DEST PROCESSOR ${CMAKE_DESTINATION_ARCHITECTURE}")
 include_directories(${JAVA_HOME}/include ${JAVA_HOME}/include/darwin)
 
 # Add the subdirectories that contain the libraries
-if(BUILD_ENDPOINT)
+#if(BUILD_ENDPOINT)
     add_subdirectory(privmx-endpoint)
-endif ()
-
-if(BUILD_ANDROID_STREAM)
-    message("Build Android Streams")
-    add_subdirectory(privmx-endpoint-streams/android)
-endif ()
-
-if(BUILD_JVM_STREAM)
-    add_subdirectory(privmx-endpoint-streams/jvm)
-endif ()
+#endif ()
+#
+#if(BUILD_ANDROID_STREAM)
+#    message("Build Android Streams")
+#    add_subdirectory(privmx-endpoint-streams/android)
+#endif ()
+#
+#if(BUILD_JVM_STREAM)
+#    add_subdirectory(privmx-endpoint-streams/jvm)
+#endif ()

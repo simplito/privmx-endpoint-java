@@ -10,7 +10,7 @@
 #include "privmx/endpoint/wrapper/modules/EventApi.h"
 
 #include "privmx/endpoint/wrapper/streams/modules/WebRTCInterfaceJNI.h"
-#include <privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h>
+#include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
 #include "privmx/endpoint/wrapper/streams/parsers/parser.h"
 
 //#include <privmx-endpoint/includes/privmx/endpoint/wrapper/parsers/parser.h>
@@ -252,7 +252,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
         jlong limit,
         jstring sort_order,
         jstring last_id,
-        jstring sort_by         // todo - use in this impl.
+        jstring sort_by, // todo - use in this impl.
+        jstring query_as_json
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
@@ -272,7 +273,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                     &limit,
                     &sort_order,
                     &last_id,
-                    &sort_by
+                    &sort_by,
+                    &query_as_json
             ]() {
                 jclass pagingListCls = env->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PagingList");
@@ -296,6 +298,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                 if (sort_by != nullptr) {
                     query.sortBy = ctx.jString2string(sort_by);
                 }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
+                }
 
                 auto streamRooms_c(
                         getStreamApi(ctx, thiz)->listStreamRooms(
@@ -308,7 +313,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                     env->CallBooleanMethod(array,
                             addToArrayMID,
                             privmx::wrapper::streams::streamRoom2Java(
-                                    ctx, streamRoom_c)
+                                    ctx,
+                                    streamRoom_c
+                                    )
                     );
                 }
                 return ctx->NewObject(
@@ -445,9 +452,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_joinStreamRo
     }
 
     ctx.callVoidEndpointApi([&ctx, &env, &thiz, &stream_room_id, &web_rtc]() {
-        auto webrtc = std::make_shared<WebRTCInterfaceJNI>(
-                WebRTCInterfaceJNI(env, web_rtc)
-        );       // todo - protected destructor commented
+        auto webrtc = std::make_shared<WebRTCInterfaceJNI>(env, web_rtc);
         std::vector<int64_t> streams_id_c;
 
         getStreamApi(ctx, thiz)->joinStreamRoom(
@@ -807,7 +812,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeToR
             ctx.nullCheck(options, "Options")) {
         return;
     }
-
     ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id, &subscriptions, &options]() {
         auto subscriptions_arr = ctx.jObject2jArray(subscriptions);
         auto subscriptions_c = std::vector<StreamSubscription>();
@@ -825,6 +829,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeToR
                     )
             );
         }
+
         getStreamApi(ctx, thiz)->subscribeToRemoteStreams(
                 ctx.jString2string(stream_room_id),
                 subscriptions_c,
