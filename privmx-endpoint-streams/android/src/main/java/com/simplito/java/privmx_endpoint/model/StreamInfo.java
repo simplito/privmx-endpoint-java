@@ -17,29 +17,27 @@ public class StreamInfo {
     public Long id;
     public String userId;
     public List<StreamTrackInfo> tracks;
-    public Long streamId;
     public String metadata;     // optional
     public Boolean dummy;       // optional
     public Boolean talking;     // optional
 
 
-    public StreamInfo(Long id, String userId, List<StreamTrackInfo> tracks, Long streamId) {
-        this(id, userId, tracks, streamId, null, null, null);
+    public StreamInfo(Long id, String userId, List<StreamTrackInfo> tracks) {
+        this(id, userId, tracks, null, null, null);
     }
 
-    public StreamInfo(Long id, String userId, List<StreamTrackInfo> tracks, Long streamId, String metadata) {
-        this(id, userId, tracks, streamId, metadata, null, null);
+    public StreamInfo(Long id, String userId, List<StreamTrackInfo> tracks, String metadata) {
+        this(id, userId, tracks, metadata, null, null);
     }
 
-    public StreamInfo(Long id, String userId, List<StreamTrackInfo> tracks, Long streamId, String metadata, Boolean dummy) {
-        this(id, userId, tracks, streamId, metadata, dummy, null);
+    public StreamInfo(Long id, String userId, List<StreamTrackInfo> tracks, String metadata, Boolean dummy) {
+        this(id, userId, tracks, metadata, dummy, null);
     }
 
-    public StreamInfo(Long id, String userId, List<StreamTrackInfo> tracks, Long streamId, String metadata, Boolean dummy, Boolean talking) {
+    public StreamInfo(Long id, String userId, List<StreamTrackInfo> tracks, String metadata, Boolean dummy, Boolean talking) {
         this.id = id;
         this.userId = userId;
         this.tracks = tracks;
-        this.streamId = streamId;
         this.metadata = metadata;
         this.dummy = dummy;
         this.talking = talking;

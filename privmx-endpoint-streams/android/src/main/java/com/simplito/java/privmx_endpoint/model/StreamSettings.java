@@ -21,7 +21,7 @@ public class StreamSettings {
         this(settings, dropCorruptedFrames, onFrame, onVideo, null);
     }
 
-    public StreamSettings(Settings settings, OnFrameCallback onFrame, boolean dropCorruptedFrames) {
+    public StreamSettings(Settings settings, boolean dropCorruptedFrames, OnFrameCallback onFrame) {
         this(settings, dropCorruptedFrames, onFrame, null, null);
 
     }

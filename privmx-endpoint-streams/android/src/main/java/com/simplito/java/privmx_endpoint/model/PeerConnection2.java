@@ -1,5 +1,7 @@
 package com.simplito.java.privmx_endpoint.model;
 
+import com.simplito.java.privmx_endpoint.modules.stream.StreamApi;
+
 import org.webrtc.PeerConnection;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxKeyStore;
@@ -9,10 +11,14 @@ import java.util.Map;
 
 public class PeerConnection2 {
     public PeerConnection pc;
+//    public PcObserver observer;
     public PcObserver observer;
     public PmxKeyStore keys;
     public Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
     public Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
+
+//    public PeerConnection2() {
+//    }
 
     public PeerConnection2(PeerConnection pc, PcObserver observer, PmxKeyStore keys) {
         this.pc = pc;

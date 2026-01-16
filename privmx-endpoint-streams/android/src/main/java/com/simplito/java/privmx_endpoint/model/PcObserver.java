@@ -1,6 +1,8 @@
 package com.simplito.java.privmx_endpoint.model;
 
 
+import com.simplito.java.privmx_endpoint.modules.stream.StreamApi;
+
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
 import org.webrtc.MediaStream;
@@ -25,6 +27,7 @@ public class PcObserver implements PeerConnection.Observer {
     Map<String, PmxFrameCryptor> frameCryptorMap = new HashMap<>();
     PmxKeyStore keyStore;
     private PeerConnectionFactory peerConnectionFactory;
+    public StreamApi.TrackObserver trackObserver;
     private String streamRoomId;
     private PmxFrameCryptor.PmxFrameCryptorOptions options;
 
@@ -42,15 +45,21 @@ public class PcObserver implements PeerConnection.Observer {
     private Consumer<MediaStream> onRemoveStream;
     private Consumer<DataChannel> onDataChannel;
     private Runnable onRenegotiationNeeded;
-    private Consumer<RtpTransceiver> onTrack;
+    private Consumer<MediaStreamTrack> onTrack;
     private Consumer<RtpReceiver> onRemoveTrack;
 
-
-    public PcObserver(PeerConnectionFactory peerConnectionFactory, String streamRoomId, PmxKeyStore store, PmxFrameCryptor.PmxFrameCryptorOptions options) {
+    public PcObserver(
+            PeerConnectionFactory peerConnectionFactory,
+                      String streamRoomId,
+                      PmxKeyStore store,
+                      PmxFrameCryptor.PmxFrameCryptorOptions options,
+                      StreamApi.TrackObserver trackObserver
+) {
         this.peerConnectionFactory = peerConnectionFactory;
         this.streamRoomId = streamRoomId;
         this.keyStore = store;
         this.options = options;
+        this.trackObserver = trackObserver;
     }
 
     public void setOnAddTrack(BiConsumer<List<MediaStream>, RtpReceiver> onAddTrack) {
@@ -135,13 +144,13 @@ public class PcObserver implements PeerConnection.Observer {
     @Override
     public void onTrack(RtpTransceiver transceiver) {
         // todo -check
-//        RtpReceiver rtpReceiver = transceiver.getReceiver();
-//        MediaStreamTrack track = rtpReceiver.track();
-//        if (trackObserver != null) trackObserver.onTrack(track);
+        RtpReceiver rtpReceiver = transceiver.getReceiver();
+        MediaStreamTrack track = rtpReceiver.track();
+        if (onTrack != null) trackObserver.onTrack(track);
 //        // TODO: check if no duplication
-//        PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(peerConnectionFactory, rtpReceiver, store);
+        PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(peerConnectionFactory, rtpReceiver, keyStore);
 
-        onTrack.accept(transceiver);
+
     }
 
     public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {

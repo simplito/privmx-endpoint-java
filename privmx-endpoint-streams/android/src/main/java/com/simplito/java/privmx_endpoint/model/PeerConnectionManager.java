@@ -10,13 +10,15 @@ public class PeerConnectionManager {
 
     private Map<String, Map<ConnectionType, JanusConnection>> connections = new HashMap<>();
 
+    public PeerConnectionManager() {
+    }
+
     public PeerConnectionManager(
             Function<String, PeerConnection> peerConnectionCreator,
             Function<Long, String> onTrickle
     ) {
 
     }
-
     public void initialize (String streamRoomId, ConnectionType connectionType, Long sessionId){
         if(connections.containsKey(streamRoomId)) {
             Map<ConnectionType, JanusConnection> roomConnections = connections.get(streamRoomId);
@@ -45,11 +47,12 @@ public class PeerConnectionManager {
 //    }
 //
     public JanusConnection getConnectionWithSession(String streamRoomId, ConnectionType connectionType){
-
-        return new JanusConnection(null, 0, false);  // todo
+        return connections.get(streamRoomId).get(connectionType);
+//        return new JanusConnection(null, 0, false);  // todo
     }
 
     private PeerConnection createPeerConnection(String streamRoomId){
+
         return null;        // todo
     }
 }
