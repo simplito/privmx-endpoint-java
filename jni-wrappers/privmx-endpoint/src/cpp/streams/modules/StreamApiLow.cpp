@@ -424,11 +424,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_publishStrea
         auto result = getStreamApi(ctx, thiz)->publishStream(
                 parseStreamHandle(ctx, stream_handle)
         );
-
-        return privmx::wrapper::streams::streamPublishResult2Java(
-                ctx,
-                result
-        );
+        return nullptr;
+        //TODO: Return result
+//        return privmx::wrapper::streams::streamPublishResult2Java(
+//                ctx,
+//                result
+//        );
     });
     if (ctx->ExceptionCheck()) {
         return nullptr;

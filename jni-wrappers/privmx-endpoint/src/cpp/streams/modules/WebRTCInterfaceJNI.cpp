@@ -55,12 +55,12 @@ std::string WebRTCInterfaceJNI::createOfferAndSetLocalDescription(
 ) {
     JNIEnv *env = AttachCurrentThreadIfNeeded();
     JniContextUtils ctx(env);
-    env->ThrowNew(
-            env->FindClass("java/lang/NullPointerException"),
-            "createOfferAndSetLocalDescription"
-    );
-    env->ExceptionDescribe();
-    return  "";
+//    env->ThrowNew(
+//            env->FindClass("java/lang/NullPointerException"),
+//            "createOfferAndSetLocalDescription"
+//    );
+//    env->ExceptionDescribe();
+//    return  "";
     jclass jwebRTCInterfaceClass = env->GetObjectClass(jwebRTCInterface);
     jmethodID jmethodId = env->GetMethodID(
             jwebRTCInterfaceClass,
@@ -124,12 +124,12 @@ void WebRTCInterfaceJNI::setAnswerAndSetRemoteDescription(
 ) {
     JNIEnv *env = AttachCurrentThreadIfNeeded();
     JniContextUtils ctx(env);
-    env->ThrowNew(
-            env->FindClass("java/lang/NullPointerException"),
-            "setAnswerAndSetRemoteDescription"
-    );
-    env->ExceptionDescribe();
-    return;
+//    env->ThrowNew(
+//            env->FindClass("java/lang/NullPointerException"),
+//            "setAnswerAndSetRemoteDescription"
+//    );
+//    env->ExceptionDescribe();
+//    return;
     jclass jwebRTCInterfaceClass = env->GetObjectClass(jwebRTCInterface);
     jmethodID jmethodId = env->GetMethodID(
             jwebRTCInterfaceClass,

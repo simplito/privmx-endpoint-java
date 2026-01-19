@@ -14,6 +14,7 @@ import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.RtpReceiver;
 import org.webrtc.RtpTransceiver;
+import org.webrtc.VideoTrack;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -146,7 +147,7 @@ public class PcObserver implements PeerConnection.Observer {
         // todo -check
         RtpReceiver rtpReceiver = transceiver.getReceiver();
         MediaStreamTrack track = rtpReceiver.track();
-        if (onTrack != null) trackObserver.onTrack(track);
+        if (trackObserver != null) trackObserver.onTrack(track);
 //        // TODO: check if no duplication
         PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(peerConnectionFactory, rtpReceiver, keyStore);
 

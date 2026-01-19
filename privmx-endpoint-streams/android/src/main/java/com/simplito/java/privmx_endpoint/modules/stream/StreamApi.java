@@ -6,6 +6,7 @@ import static android.media.AudioManager.GET_DEVICES_OUTPUTS;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.AudioRecordingConfiguration;
+import android.view.SurfaceView;
 
 import androidx.annotation.Nullable;
 
@@ -39,6 +40,7 @@ import org.webrtc.CameraEnumerator;
 import org.webrtc.CameraVideoCapturer;
 import org.webrtc.EglBase;
 import org.webrtc.FrameCryptorKeyProvider;
+import org.webrtc.Logging;
 import org.webrtc.MediaConstraints;
 import org.webrtc.MediaStreamTrack;
 import org.webrtc.PeerConnection;
@@ -48,7 +50,9 @@ import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.RtpSender;
 import org.webrtc.SessionDescription;
+import org.webrtc.SurfaceTextureHelper;
 import org.webrtc.VideoCapturer;
+import org.webrtc.VideoSink;
 import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
 
@@ -89,6 +93,7 @@ public class StreamApi {
     private final EglBase rootEglBase;
     //    private final Connection connection;
     private final StreamApiLow api;
+//    private final VideoSink remoteSink;
 
     @Nullable
     private PeerConnectionFactory peerConnectionFactory;
@@ -101,11 +106,14 @@ public class StreamApi {
             EglBase rootEglBase,
             StreamApiLow api,
             @Nullable PeerConnectionFactory peerConnectionFactory
+//            VideoSink remoteSink
     ) {
         this.appContext = appContext;
         this.rootEglBase = rootEglBase;
         this.api = api;
         this.peerConnectionFactory = peerConnectionFactory;
+//        this.remoteSink = remoteSink;
+
     }
 
     private class WebRTCImpl implements WebRTCInterface {
@@ -131,9 +139,9 @@ public class StreamApi {
 
             @Override
             public void onCreateSuccess(SessionDescription sessionDescription) {
-                System.out.println("onCreateSuccess      " + sessionDescription);
+                System.out.println("onCreateSuccess      " + sessionDescription.description);
                 executor.execute(() -> {
-                    peerConnection2.pc.setRemoteDescription(this, sessionDescription);
+                    peerConnection2.pc.setLocalDescription(this, sessionDescription);
                 });
                 res.complete(sessionDescription.description);
             }
@@ -217,6 +225,14 @@ public class StreamApi {
                     trackObserver
             );
 
+//            observer.set
+//
+//            track.setEnabled(true);
+//            if(track.kind().equals("video")){
+//                VideoTrack trackV = (VideoTrack) track;
+//                trackV.addSink();
+//            }
+
             System.out.println("createPeerConnection: " + (this.peerConnection2 != null));
             this.peerConnection2 = new PeerConnection2(
                     peerConnectionFactory.createPeerConnection(
@@ -240,7 +256,7 @@ public class StreamApi {
 
         @Override
         public String createOfferAndSetLocalDescription(String streamRoomId) {
-
+            System.out.println("createOfferAndSetLocalDescription  1");
             CompletableFuture<String> res = new CompletableFuture<>();
             executor.execute(() -> {
 
@@ -250,6 +266,7 @@ public class StreamApi {
 //                ).peerConnection.pc;
                 System.out.println("createOfferAndSetLocalDescription  1");
 
+                System.out.println("peercoonnection " + peerConnection2.pc);
                 peerConnection2.pc.createOffer(
                         new SdpObserver(res),
                         new MediaConstraints()
@@ -259,13 +276,15 @@ public class StreamApi {
 
             });
             try {
-                System.out.println("createOfferAndSetLocalDescription  3");
 
-                return res.get();
+                String sdp = res.get();
+                System.out.println("createOfferAndSetLocalDescription  3 " + sdp);
+                return sdp;
             } catch (ExecutionException | InterruptedException ignored) {
             }
             return "";
         }
+
 
         @Override
         public String createAnswerAndSetDescriptions(String streamRoomId, String sdp, String type) {
@@ -297,6 +316,7 @@ public class StreamApi {
 
         @Override
         public void setAnswerAndSetRemoteDescription(String streamRoomId, String sdp, String type) {
+            System.out.println("setAnswerAndSetRemoteDescription");
             executor.execute(() -> {
                 peerConnection2.pc.setRemoteDescription(
                         new SdpObserver(null),
@@ -407,6 +427,7 @@ public class StreamApi {
                 org.webrtc.VideoTrack videoTrack,
                 String id
         ) {
+            System.out.println("peercoonnection " + peerConnection2.pc);
             if (peerConnectionFactory != null) {
                 RtpSender rtpSender = peerConnection2.pc.addTrack(videoTrack);
                 PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorFromRtpSender(
@@ -560,6 +581,7 @@ public class StreamApi {
                 streamData.streamHandle = handle;
                 streamData.webRTC = new WebRTCImpl(trackObserver);
                 streamData.webRTC.createPeerConnection(streamRoomId);
+                streamData.streamCapturers = new HashMap<>();
                 streamData.status = StreamStatus.Online;
                 streamData.streamRoomId = streamRoomId;
                 map.put(handle, streamData);
@@ -597,6 +619,7 @@ public class StreamApi {
 //                streamData.webRTC.createPeerConnection(StreamRoomId);
                 streamData.webRTC.createPeerConnection(streamRoomId);
                 streamData.status = StreamStatus.Online;
+                streamData.streamCapturers = new HashMap<>();
                 streamData.streamRoomId = streamRoomId;
                 map.put(streamHandle.getValue(), streamData);
                 return streamData;
@@ -684,7 +707,7 @@ public class StreamApi {
     // TODO ??
     public StreamHandle createStream(String streamRoomId) {
         StreamHandle handle = api.createStream(streamRoomId);
-        streamMap.create(handle, null, streamRoomId);
+//        streamMap.create(handle, null, streamRoomId);
 
         return handle;
     }
@@ -727,11 +750,45 @@ public class StreamApi {
         return result;
     }
 
+    private VideoCapturer createCameraCapturer(CameraEnumerator enumerator) {
+        final String[] deviceNames = enumerator.getDeviceNames();
+
+        // First, try to find front facing camera
+        Logging.d(TAG, "Looking for front facing cameras.");
+        for (String deviceName : deviceNames) {
+            if (enumerator.isFrontFacing(deviceName)) {
+                Logging.d(TAG, "Creating front facing camera capturer.");
+                VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
+
+                if (videoCapturer != null) {
+                    return videoCapturer;
+                }
+            }
+        }
+
+        // Front facing camera not found, try something else
+        Logging.d(TAG, "Looking for other cameras.");
+        for (String deviceName : deviceNames) {
+            if (!enumerator.isFrontFacing(deviceName)) {
+                Logging.d(TAG, "Creating other camera capturer.");
+                VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
+
+                if (videoCapturer != null) {
+                    return videoCapturer;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public void addTrack(
+            Context context,
+            VideoSink localSink,
             StreamHandle streamHandle,
             MediaDevice track
     ) {
-        StreamData streamData = streamMap.get(streamHandle.getValue());
+        StreamData streamData = streamMap.getFirst();//(streamHandle.getValue());
         if (peerConnectionFactory != null && streamData.webRTC != null) {
 
             switch (track.type) {
@@ -749,29 +806,37 @@ public class StreamApi {
                 }
 
                 case Video: {
+                    SurfaceTextureHelper surfaceTextureHelper =
+                            SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
                     VideoSource videoSource = peerConnectionFactory.createVideoSource(false, false);        // todo - zaimplementowac caly capturer?
+                    VideoCapturer capturer = createCameraCapturer(new Camera2Enumerator(context));
+                    capturer.initialize(surfaceTextureHelper, appContext, videoSource.getCapturerObserver());
+//                    capturer.startCapture(1920, 1080, 30);
                     VideoTrack videoTrack = peerConnectionFactory.createVideoTrack(track.name, videoSource);
-
+                    videoTrack.setEnabled(true);
+                    videoTrack.addSink(localSink);
+                    System.out.println("before webrtc addVideoTrack");
                     streamData.webRTC.addVideoTrack(
                             streamData.streamRoomId,
                             videoTrack,
                             track.id
                     );
-
-                    CameraVideoCapturer capturer;
-                    CameraEnumerator enumerator;
-
-                    if (Camera2Enumerator.isSupported(appContext)) {
-                        enumerator = new Camera2Enumerator(appContext);
-                    } else {
-                        enumerator = new Camera1Enumerator(true);
-                    }
-
-                    capturer = enumerator.createCapturer(track.name, null);
+                    System.out.println("after webrtc addVideoTrack");
+//                    if (Camera2Enumerator.isSupported(appContext)) {
+//                        enumerator = new Camera2Enumerator(appContext);
+//                    } else {
+//                        enumerator = new Camera1Enumerator(true);
+//                    }
+//                    System.out.println("after camera enumerator");
+//                    capturer = enumerator.createCapturer(track.name, null);
+//                    System.out.println("after create capturer");
+                    System.out.println("iamhere");
                     streamData.streamCapturers.put(String.valueOf(track.id), capturer);
-
+                    System.out.println("iamhere");
+                    System.out.println("before start capturer " + (streamData.status == StreamStatus.Online));
                     if (streamData.status == StreamStatus.Online)
                         capturer.startCapture(1280, 720, 30); // ???
+                    System.out.println("after start capturer");
                     break;
                 }
             }
@@ -827,7 +892,6 @@ public class StreamApi {
             streamData.webRTC.setOnRemoveVideoTrack(streamRoomId, options.OnVideoRemove);
         }
         System.out.println("subscribe to Remote Streams");
-
         api.subscribeToRemoteStreams(streamRoomId, subscriptions, options.settings);
     }
 
