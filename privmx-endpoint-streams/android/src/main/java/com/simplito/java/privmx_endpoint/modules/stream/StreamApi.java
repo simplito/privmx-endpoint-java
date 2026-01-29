@@ -8,9 +8,11 @@ import android.media.AudioManager;
 import android.media.AudioRecordingConfiguration;
 import android.view.SurfaceView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.simplito.java.privmx_endpoint.model.AudioTrackInfo;
+import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.DeviceType;
 import com.simplito.java.privmx_endpoint.model.Key;
@@ -19,7 +21,6 @@ import com.simplito.java.privmx_endpoint.model.MediaDevice;
 import com.simplito.java.privmx_endpoint.model.OnFrameCallback;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.PcObserver;
-import com.simplito.java.privmx_endpoint.model.PeerConnection2;
 import com.simplito.java.privmx_endpoint.model.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.StreamInfo;
 import com.simplito.java.privmx_endpoint.model.StreamPublishResult;
@@ -38,6 +39,8 @@ import org.webrtc.Camera1Enumerator;
 import org.webrtc.Camera2Enumerator;
 import org.webrtc.CameraEnumerator;
 import org.webrtc.CameraVideoCapturer;
+import org.webrtc.DefaultVideoDecoderFactory;
+import org.webrtc.DefaultVideoEncoderFactory;
 import org.webrtc.EglBase;
 import org.webrtc.FrameCryptorKeyProvider;
 import org.webrtc.Logging;
@@ -52,9 +55,13 @@ import org.webrtc.RtpSender;
 import org.webrtc.SessionDescription;
 import org.webrtc.SurfaceTextureHelper;
 import org.webrtc.VideoCapturer;
+import org.webrtc.VideoDecoderFactory;
+import org.webrtc.VideoEncoderFactory;
 import org.webrtc.VideoSink;
 import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
+import org.webrtc.audio.AudioDeviceModule;
+import org.webrtc.audio.JavaAudioDeviceModule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,574 +77,80 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import kotlin.NotImplementedError;
+
+//TODO: Good to remove context from StreamApi
 public class StreamApi {
     public static final String VIDEO_TRACK_ID = "ARDAMSv0";
     public static final String AUDIO_TRACK_ID = "ARDAMSa0";
     public static final String VIDEO_TRACK_TYPE = "video";
     private static final String TAG = "StreamApi";
 
-    public class TrackParams {
-        public String params_JSON;
-    }
-
-    public class StreamJoinSettings {
-
-    }
-
     public interface TrackObserver {
         void onTrack(MediaStreamTrack track);
     }
 
-
     private final Context appContext;
     private final EglBase rootEglBase;
-    //    private final Connection connection;
     private final StreamApiLow api;
-//    private final VideoSink remoteSink;
+    private final PeerConnectionManager pcManager;
 
-    @Nullable
-    private PeerConnectionFactory peerConnectionFactory;
-    private FrameCryptorKeyProvider frameCryptorKeyProvider;
+    private static PeerConnectionFactory DefaultPeerConnectionFactory(
+            Context appContext,
+            EglBase eglBase,
+            PeerConnectionFactory.Options options
+    ) {
+        AudioDeviceModule adm = JavaAudioDeviceModule
+                .builder(appContext)
+                .createAudioDeviceModule();
 
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+        boolean enableH264HighProfile = false;
+
+        VideoEncoderFactory encoderFactory = new DefaultVideoEncoderFactory(
+                eglBase.getEglBaseContext(),
+                true,  /* enableIntelVp8Encoder */
+                enableH264HighProfile
+        );
+
+        VideoDecoderFactory decoderFactory = new DefaultVideoDecoderFactory(
+                eglBase.getEglBaseContext()
+        );
+
+        PeerConnectionFactory factory = PeerConnectionFactory.builder()
+                .setVideoDecoderFactory(decoderFactory)
+                .setVideoEncoderFactory(encoderFactory)
+                .setOptions(options)
+                .setAudioDeviceModule(adm)
+                .createPeerConnectionFactory();
+
+        adm.release();
+        return factory;
+    }
 
     public StreamApi(
             Context appContext,
             EglBase rootEglBase,
-            StreamApiLow api,
-            @Nullable PeerConnectionFactory peerConnectionFactory
-//            VideoSink remoteSink
+            StreamApiLow api
+    ) {
+        this(appContext, rootEglBase, api, null);
+    }
+
+    public StreamApi(
+            @NonNull Context appContext,
+            @NonNull EglBase rootEglBase,
+            @NonNull StreamApiLow api,
+            @Nullable PeerConnectionFactory pcFactory
     ) {
         this.appContext = appContext;
         this.rootEglBase = rootEglBase;
         this.api = api;
-        this.peerConnectionFactory = peerConnectionFactory;
-//        this.remoteSink = remoteSink;
-
+        PeerConnectionFactory factory = pcFactory;
+        if (factory == null) {
+            //TODO: What should be passed to the options parameter
+            factory = DefaultPeerConnectionFactory(appContext, rootEglBase, new PeerConnectionFactory.Options());
+        }
+        pcManager = new PeerConnectionManager(factory);
     }
-
-    private class WebRTCImpl implements WebRTCInterface {
-
-        WebRTCImpl(TrackObserver trackObserver) {
-            this.trackObserver = trackObserver;
-        }
-
-        private PmxKeyStore store = PmxFrameCryptorFactory.createPmxKeyStore();
-        private PeerConnection2 peerConnection2;
-        private TrackObserver trackObserver;
-
-//        PeerConnectionManager peerConnectionManager = new PeerConnectionManager();
-
-
-        // --------------------------------------------------------------
-        class SdpObserver implements org.webrtc.SdpObserver {
-            private CompletableFuture<String> res;
-
-            SdpObserver(CompletableFuture<String> res) {
-                this.res = res;
-            }
-
-            @Override
-            public void onCreateSuccess(SessionDescription sessionDescription) {
-                System.out.println("onCreateSuccess      " + sessionDescription.description);
-                executor.execute(() -> {
-                    peerConnection2.pc.setLocalDescription(this, sessionDescription);
-                });
-                res.complete(sessionDescription.description);
-            }
-
-            @Override
-            public void onSetSuccess() {
-            }
-
-            @Override
-            public void onCreateFailure(String s) {
-            }
-
-            @Override
-            public void onSetFailure(String s) {
-            }
-        }
-
-        // --------------------------------------------------------------
-        class SdpObserver2 implements org.webrtc.SdpObserver {
-            private CompletableFuture<String> res;
-
-            SdpObserver2(CompletableFuture<String> res) {
-                this.res = res;
-            }
-
-            @Override
-            public void onCreateSuccess(SessionDescription sessionDescription) {
-                executor.execute(() -> {
-                    peerConnection2.pc.setLocalDescription(new SdpObserver(null), sessionDescription);
-                });
-                res.complete(sessionDescription.description);
-            }
-
-            @Override
-            public void onSetSuccess() {
-                executor.execute(() -> {
-                    peerConnection2.pc.createAnswer(this, new MediaConstraints());
-                });
-            }
-
-            @Override
-            public void onCreateFailure(String s) {
-            }
-
-            @Override
-            public void onSetFailure(String s) {
-            }
-        }
-
-
-        // --------------------------------------------------------------
-        // --------------------------------------------------------------
-
-
-//        void createPeerConnection() {
-//            executor.execute(() -> {
-//                ArrayList<PeerConnection.IceServer> iceServers = new ArrayList<>();
-//                PeerConnection.RTCConfiguration rtcConfig = new PeerConnection.RTCConfiguration(iceServers);
-//                peerConnection2.pc = peerConnectionFactory.createPeerConnection(rtcConfig, new PcObserverTmp());
-//                peerConnection = peerConnectionFactory.createPeerConnection(rtcConfig, new PcObserverTmp());
-//            });
-//        }
-
-
-        PeerConnection2 createPeerConnection(String streamRoomId) {
-//            executor.execute(() -> {
-            // TODO: get ice servers from Bridge using getTurnCredentials()
-//                PeerConnection2 peerConnection;
-            System.out.println("createPeerConnection: ");
-            ArrayList<PeerConnection.IceServer> iceServers = new ArrayList<>();
-            PeerConnection.RTCConfiguration rtcConfig = new PeerConnection.RTCConfiguration(iceServers);
-            assert peerConnectionFactory != null;
-            System.out.println("createPeerConnection: ");
-
-            // todo - store twice ??
-            PcObserver observer = new PcObserver(
-                    peerConnectionFactory,
-                    streamRoomId,
-                    store,
-                    new PmxFrameCryptor.PmxFrameCryptorOptions(),
-                    trackObserver
-            );
-
-//            observer.set
-//
-//            track.setEnabled(true);
-//            if(track.kind().equals("video")){
-//                VideoTrack trackV = (VideoTrack) track;
-//                trackV.addSink();
-//            }
-
-            System.out.println("createPeerConnection: " + (this.peerConnection2 != null));
-            this.peerConnection2 = new PeerConnection2(
-                    peerConnectionFactory.createPeerConnection(
-                            rtcConfig,
-                            observer
-                    ),
-                    observer,
-                    store
-            );
-
-            System.out.println("createPeerConnection: " + (this.peerConnection2 != null));
-//                peerConnection2.pc.createNativePeerConnectionObserver(peerConnection2.observer);      // todo - nie powinno sie samo robic w konstruktorze?
-//            });
-
-
-            // gdzies przechowywac?
-            return peerConnection2;
-        }
-//
-        // addAudio/Video
-
-        @Override
-        public String createOfferAndSetLocalDescription(String streamRoomId) {
-            System.out.println("createOfferAndSetLocalDescription  1");
-            CompletableFuture<String> res = new CompletableFuture<>();
-            executor.execute(() -> {
-
-//                PeerConnection pc = peerConnectionManager.getConnectionWithSession(
-//                        streamRoomId,
-//                        ConnectionType.Publisher
-//                ).peerConnection.pc;
-                System.out.println("createOfferAndSetLocalDescription  1");
-
-                System.out.println("peercoonnection " + peerConnection2.pc);
-                peerConnection2.pc.createOffer(
-                        new SdpObserver(res),
-                        new MediaConstraints()
-                );
-                System.out.println("createOfferAndSetLocalDescription  2");
-
-
-            });
-            try {
-
-                String sdp = res.get();
-                System.out.println("createOfferAndSetLocalDescription  3 " + sdp);
-                return sdp;
-            } catch (ExecutionException | InterruptedException ignored) {
-            }
-            return "";
-        }
-
-
-        @Override
-        public String createAnswerAndSetDescriptions(String streamRoomId, String sdp, String type) {
-            CompletableFuture<String> res = new CompletableFuture<>();
-//            assert peerConnection2 != null;
-            executor.execute(() -> {
-                System.out.println("createAnswerAndSetDescriptions 0");
-
-                System.out.println("createAnswerAndSetDescriptions 1");
-
-                // todo - idk czy type dobrze
-                peerConnection2.pc.setRemoteDescription(
-                        new SdpObserver2(res),
-                        new SessionDescription(
-                                SessionDescription.Type.OFFER,
-                                sdp
-                        )
-                );
-
-            });
-            try {
-                System.out.println("createAnswerAndSetDescriptions 2");
-
-                return res.get();
-            } catch (ExecutionException | InterruptedException ignored) {
-            }
-            return "";
-        }
-
-        @Override
-        public void setAnswerAndSetRemoteDescription(String streamRoomId, String sdp, String type) {
-            System.out.println("setAnswerAndSetRemoteDescription");
-            executor.execute(() -> {
-                peerConnection2.pc.setRemoteDescription(
-                        new SdpObserver(null),
-                        new SessionDescription(
-                                SessionDescription.Type.fromCanonicalForm(type),
-                                sdp
-                        )
-                );
-
-                System.out.println("setAnswerAndSetRemoteDescription");
-
-            });
-        }
-
-        @Override
-        public void close(String streamRoomId) {
-            executor.execute(() -> {
-                if (peerConnection2.pc == null) return;
-
-//                JanusConnection connection = peerConnectionManager.getConnectionWithSession(
-//                        streamRoomId,
-//                        ConnectionType.Subscriber
-//                );
-//                connection.peerConnection.audioTracks.clear();
-//                connection.peerConnection.videoTracks.clear();
-//                connection.peerConnection.pc.close();
-
-                peerConnection2.pc.close();
-            });
-            System.out.println("close");
-
-        }
-
-        @Override
-        public void updateKeys(String streamRoomId, List<Key> keys) {
-            // todo - check with c++
-            System.out.println("updateKeys before");
-            executor.execute(() -> {
-                ArrayList<PmxKeyStore.Key> list = new ArrayList<>();
-                for (Key key : keys) {
-                    System.out.println("keyInfo: " + key.keyId + " " + new String(key.key) + " " + key.type);
-                    list.add(
-                            new PmxKeyStore.Key(
-                                    key.keyId,
-                                    key.key,
-                                    key.type == KeyType.LOCAL ? PmxKeyStore.KeyType.LOCAL : PmxKeyStore.KeyType.REMOTE
-                            )
-                    );
-                }
-                store.setKeys(list);
-            });
-            System.out.println("updateKeys after");
-
-        }
-
-        @Override
-        public void updateSessionId(String streamRoomId, Long sessionId, String connectionType) {
-            System.out.println("updateSessionId");
-//            switch (connectionType) {
-//                case "subscriber":
-//                    peerConnectionManager.updateSessionForConnection(
-//                            streamRoomId,
-//                            ConnectionType.Subscriber,
-//                            sessionId
-//                    );
-//                    break;
-//
-//                case "publisher":
-//                    peerConnectionManager.updateSessionForConnection(
-//                            streamRoomId,
-//                            ConnectionType.Publisher,
-//                            sessionId
-//                    );
-//                    break;
-//            }
-        }
-
-        public void addAudioTrack(
-                String streamRoomId,
-                org.webrtc.AudioTrack audioTrack,
-                String id
-        ) {
-            if (peerConnectionFactory != null) {
-                RtpSender rtpSender2 = peerConnection2.pc.addTrack(audioTrack);
-                PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorFromRtpSender(
-                        peerConnectionFactory,
-                        rtpSender2,
-                        store
-                        // options ?
-                );
-//                peerConnectionManager
-//                        .getConnectionWithSession(streamRoomId, ConnectionType.Publisher)
-//                        .peerConnection
-                peerConnection2
-                        .addAudioTrack(
-                                id,
-                                new AudioTrackInfo(
-                                        audioTrack,
-                                        rtpSender2,
-                                        frameCryptor
-                                )
-                        );
-            }
-        }
-
-        public void addVideoTrack(
-                String streamRoomId,
-                org.webrtc.VideoTrack videoTrack,
-                String id
-        ) {
-            System.out.println("peercoonnection " + peerConnection2.pc);
-            if (peerConnectionFactory != null) {
-                RtpSender rtpSender = peerConnection2.pc.addTrack(videoTrack);
-                PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorFromRtpSender(
-                        peerConnectionFactory,
-                        rtpSender,
-                        store
-                        // options ?
-                );
-//                peerConnectionManager
-//                        .getConnectionWithSession(streamRoomId, ConnectionType.Publisher)
-//                        .peerConnection
-                peerConnection2.addVideoTrack(
-                        id,
-                        new VideoTrackInfo(
-                                videoTrack,
-                                rtpSender,
-                                frameCryptor
-                        )
-                );
-            }
-        }
-
-        public void removeAudioTrack(
-                String streamRoomId,
-                String id
-        ) {
-//            peerConnectionManager
-//                    .getConnectionWithSession(streamRoomId, ConnectionType.Publisher)
-//                    .peerConnection
-            peerConnection2
-                    .removeAudioTrack(id);
-        }
-
-        public void removeVideoTrack(
-                String streamRoomId,
-                String id
-        ) {
-//            peerConnectionManager
-//                    .getConnectionWithSession(streamRoomId, ConnectionType.Publisher)
-//                    .peerConnection
-            peerConnection2
-                    .removeVideoTrack(id);
-        }
-
-        // TODO !!
-        public void setFrameCryptorOptions(
-                String streamRoomId,
-                PmxFrameCryptor.PmxFrameCryptorOptions options
-        ) {
-//            peerConnectionManager
-//                    .getConnectionWithSession(streamRoomId, ConnectionType.Subscriber)
-//                    .peerConnection
-            peerConnection2
-                    .setFrameCryptorOptions(options);
-        }
-
-        public void setOnFrame(
-                String streamRoomId,
-                OnFrameCallback onFrame
-        ) {
-//            peerConnectionManager
-//                    .getConnectionWithSession(streamRoomId, ConnectionType.Subscriber)
-//                    .peerConnection
-            peerConnection2
-                    .observer
-                    .setOnFrame(onFrame);
-        }
-
-        public void setOnRemoveVideoTrack(String streamRoomId, Consumer<String> onVideoRemove) {
-//            peerConnectionManager
-//                    .getConnectionWithSession(streamRoomId, ConnectionType.Subscriber)
-//                    .peerConnection
-            peerConnection2
-                    .observer
-                    .setOnRemoveVideoTrack(onVideoRemove);
-        }
-
-        public void setOnVideoTrack(
-                String streamRoomId,
-                Consumer<String> onVideoTrack
-        ) {
-//            peerConnectionManager
-//                    .getConnectionWithSession(streamRoomId, ConnectionType.Subscriber)
-//                    .peerConnection
-            peerConnection2
-                    .observer
-                    .setOnVideoTrack(onVideoTrack);
-        }
-
-    }
-
-    // streamHandle  -  trackObserver  -  StreamRoomId
-    private class StreamData {
-        public long streamHandle;
-        public String streamRoomId;
-        StreamStatus status;
-        Map<String, VideoCapturer> streamCapturers;     // different from c++
-        @Nullable
-        public WebRTCImpl webRTC;
-    }
-
-    class StreamMap {
-        private Map<Long, StreamData> map = new HashMap<>();
-        private long currentId = 1;
-
-        //        StreamData get(long streamId) {
-        StreamData get(long streamId) {
-            synchronized (map) {
-                return map.get(streamId);
-            }
-        }
-
-        StreamData getFirst() {
-            synchronized (map) {
-                return map.values().stream().findFirst().orElse(null);
-            }
-        }
-
-        public long getRandomHandle() {
-            Random random = new Random(1024L);
-            long h = random.nextLong();
-            while (map.containsKey(h)) {
-                h = random.nextLong();
-            }
-            return h;
-        }
-
-        StreamData create(
-                TrackObserver trackObserver
-        ) {
-            synchronized (map) {
-                long handle = getRandomHandle();
-                StreamData streamData = new StreamData();
-                streamData.streamHandle = handle;
-                streamData.webRTC = new WebRTCImpl(trackObserver);
-//                streamData.webRTC.createPeerConnection();         // create without observer?
-                streamData.status = StreamStatus.Online;
-                streamData.streamCapturers = new HashMap<>();
-                map.put(handle, streamData);
-                return streamData;
-            }
-        }
-
-        StreamData create(
-                TrackObserver trackObserver,
-                String streamRoomId
-        ) {
-            synchronized (map) {
-                long handle = getRandomHandle();
-                StreamData streamData = new StreamData();
-                streamData.streamHandle = handle;
-                streamData.webRTC = new WebRTCImpl(trackObserver);
-                streamData.webRTC.createPeerConnection(streamRoomId);
-                streamData.streamCapturers = new HashMap<>();
-                streamData.status = StreamStatus.Online;
-                streamData.streamRoomId = streamRoomId;
-                map.put(handle, streamData);
-                return streamData;
-            }
-        }
-
-        StreamData create(
-                StreamHandle streamHandle,
-                TrackObserver trackObserver
-        ) {
-            synchronized (map) {
-//                long streamId = currentId++;
-                StreamData streamData = new StreamData();
-                streamData.streamHandle = streamHandle.getValue();
-                streamData.webRTC = new WebRTCImpl(trackObserver);
-//                streamData.webRTC.createPeerConnection();         // create without observer?
-                streamData.status = StreamStatus.Online;
-                streamData.streamCapturers = new HashMap<>();
-                map.put(streamHandle.getValue(), streamData);
-                return streamData;
-            }
-        }
-
-        StreamData create(
-                StreamHandle streamHandle,
-                TrackObserver trackObserver,
-                String streamRoomId
-        ) {
-            synchronized (map) {
-//                long streamId = currentId++;
-                StreamData streamData = new StreamData();
-                streamData.streamHandle = streamHandle.getValue();
-                streamData.webRTC = new WebRTCImpl(trackObserver);
-//                streamData.webRTC.createPeerConnection(StreamRoomId);
-                streamData.webRTC.createPeerConnection(streamRoomId);
-                streamData.status = StreamStatus.Online;
-                streamData.streamCapturers = new HashMap<>();
-                streamData.streamRoomId = streamRoomId;
-                map.put(streamHandle.getValue(), streamData);
-                return streamData;
-            }
-        }
-    }
-
-
-    private StreamMap streamMap = new StreamMap();
-
-//    StreamApi(Context appContext, EglBase rootEglBase, Connection connection, StreamApiLow api, PeerConnectionFactory peerConnectionFactory) {
-//        this.appContext = appContext;
-//        this.rootEglBase = rootEglBase;
-//        this.connection = connection;
-//        this.api = api;
-//        this.peerConnectionFactory = peerConnectionFactory;
-//    }
-
 
     public String createStreamRoom(
             String contextId,
@@ -691,24 +204,28 @@ public class StreamApi {
             String streamRoomId,
             TrackObserver trackObserver
     ) {
-        StreamData streamData = streamMap.create(trackObserver, streamRoomId);
-        api.joinStreamRoom(streamRoomId, streamData.webRTC);
+        RoomJanusSession session = pcManager.createSession(streamRoomId);
+        if(trackObserver != null) {
+            session.setTrackObserver(trackObserver);
+        }
+        api.joinStreamRoom(streamRoomId, session.webrtc);
     }
 
     // todo - probably wrong
     public void leaveStreamRoom(String streamRoomId) {
-        streamMap.map.forEach((k, v) -> {
-            if (Objects.equals(v.streamRoomId, streamRoomId))
-                streamMap.map.remove(k);
-        });
+        pcManager.leaveStreamRoom(streamRoomId);
         api.leaveStreamRoom(streamRoomId);
     }
 
     // TODO ??
     public StreamHandle createStream(String streamRoomId) {
+        RoomJanusSession session = pcManager.getSession(streamRoomId);
+        if(session == null) throw new IllegalStateException("Session to this room is not exsists. Call joinStreamRoom first");
+        session.createPublisher();
+        System.out.println("session " + session);
+        System.out.println("session publisher " + session.getPublisher());
         StreamHandle handle = api.createStream(streamRoomId);
-//        streamMap.create(handle, null, streamRoomId);
-
+        pcManager.createHandleToRoom(handle, streamRoomId);
         return handle;
     }
 
@@ -782,79 +299,83 @@ public class StreamApi {
         return null;
     }
 
+    /**
+     * @param context
+     * @param localSink
+     * @param streamHandle
+     * @param track
+     * @throws IllegalStateException if call addTrack before call createStream
+     */
     public void addTrack(
             Context context,
             VideoSink localSink,
             StreamHandle streamHandle,
             MediaDevice track
-    ) {
-        StreamData streamData = streamMap.getFirst();//(streamHandle.getValue());
-        if (peerConnectionFactory != null && streamData.webRTC != null) {
+    ) throws IllegalStateException {
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        System.out.println("session " + session);
+        System.out.println("session publisher " + session.getPublisher());
+        if (session == null)
+            throw new IllegalStateException("Stream not exists. Create stream first.");
+        JanusPublisher connection = session.getPublisher();
+        if (connection == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+        switch (track.type) {
+            case Audio: {
+                //TODO: Should use pcFactory from session or connection (maybe connection should not expose pcfactory)
+                AudioSource audioSource = connection.peerConnectionFactory.createAudioSource(new MediaConstraints());
+                AudioTrack audioTrack = connection.peerConnectionFactory.createAudioTrack(track.name, audioSource);
+                audioTrack.setVolume(10.0);
+                connection.addAudioTrack(audioTrack);
+                break;
+            }
 
-            switch (track.type) {
-                case Audio: {
-                    AudioSource audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
-                    AudioTrack audioTrack = peerConnectionFactory.createAudioTrack(track.name, audioSource);
-                    audioTrack.setVolume(10.0);
-
-                    streamData.webRTC.addAudioTrack(
-                            streamData.streamRoomId,
-                            audioTrack,
-                            track.id
-                    );
-                    break;
-                }
-
-                case Video: {
-                    SurfaceTextureHelper surfaceTextureHelper =
-                            SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
-                    VideoSource videoSource = peerConnectionFactory.createVideoSource(false, false);        // todo - zaimplementowac caly capturer?
-                    VideoCapturer capturer = createCameraCapturer(new Camera2Enumerator(context));
-                    capturer.initialize(surfaceTextureHelper, appContext, videoSource.getCapturerObserver());
+            case Video: {
+                //TODO: Should use pcFactory from session or connection (maybe connection should not expose pcfactory)
+                SurfaceTextureHelper surfaceTextureHelper =
+                        SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
+                VideoSource videoSource = connection.peerConnectionFactory.createVideoSource(false, false);        // todo - zaimplementowac caly capturer?
+                VideoCapturer capturer = createCameraCapturer(new Camera2Enumerator(context));
+                capturer.initialize(surfaceTextureHelper, appContext, videoSource.getCapturerObserver());
 //                    capturer.startCapture(1920, 1080, 30);
-                    VideoTrack videoTrack = peerConnectionFactory.createVideoTrack(track.name, videoSource);
-                    videoTrack.setEnabled(true);
-                    videoTrack.addSink(localSink);
-                    System.out.println("before webrtc addVideoTrack");
-                    streamData.webRTC.addVideoTrack(
-                            streamData.streamRoomId,
-                            videoTrack,
-                            track.id
-                    );
-                    System.out.println("after webrtc addVideoTrack");
+                VideoTrack videoTrack = connection.peerConnectionFactory.createVideoTrack(track.name, videoSource);
+                videoTrack.setEnabled(true);
+                videoTrack.addSink(localSink);
+                connection.addVideoTrack(videoTrack,capturer);
 //                    if (Camera2Enumerator.isSupported(appContext)) {
 //                        enumerator = new Camera2Enumerator(appContext);
 //                    } else {
 //                        enumerator = new Camera1Enumerator(true);
 //                    }
-//                    System.out.println("after camera enumerator");
 //                    capturer = enumerator.createCapturer(track.name, null);
-//                    System.out.println("after create capturer");
-                    System.out.println("iamhere");
-                    streamData.streamCapturers.put(String.valueOf(track.id), capturer);
-                    System.out.println("iamhere");
-                    System.out.println("before start capturer " + (streamData.status == StreamStatus.Online));
-                    if (streamData.status == StreamStatus.Online)
-                        capturer.startCapture(1280, 720, 30); // ???
-                    System.out.println("after start capturer");
-                    break;
-                }
+                //TODO: Store somewhere capturers
+
+                capturer.startCapture(1280, 720, 30); // ???
+                System.out.println("after start capturer");
+                break;
             }
         }
     }
 
+    /**
+     * @param streamHandle
+     * @param track
+     * @throws IllegalStateException when Stream with this StreamHandle doesn't exist.
+     */
     public void removeTrack(
             StreamHandle streamHandle,
             MediaStreamTrack track
-    ) {
-        StreamData streamData = streamMap.get(streamHandle.getValue());
-
-        if (streamData == null || streamData.webRTC == null) return;
-
+    ) throws IllegalStateException {
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("Stream with this StreamHandle doesn't exist.");
+        JanusPublisher publisher = session.getPublisher();
+        if (publisher == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
         if (track instanceof AudioTrack) {
-            streamData.webRTC.removeAudioTrack(streamData.streamRoomId, track.id());
+            publisher.removeAudioTrack(track.id());
         } else if (track instanceof VideoTrack) {
-            streamData.webRTC.removeVideoTrack(streamData.streamRoomId, track.id());
+            publisher.removeVideoTrack(track.id());
         }
     }
 
@@ -869,29 +390,29 @@ public class StreamApi {
     }
 
     public void unpublishStream(StreamHandle streamHandle) {
+        //TODO: Maybe should clear streamHandle in pcManager
         api.unpublishStream(streamHandle);
     }
 
-    // TODO ??
+    //TODO: To refactor
     public void subscribeToRemoteStreams(
             String streamRoomId,
             List<StreamSubscription> subscriptions,
             StreamSettings options
     ) {
-        //TODO: To refactor
-        StreamData streamData = streamMap.getFirst();
-        System.out.println("onframe");
-        if (options.OnFrame != null && streamData.webRTC != null) {
-            Objects.nonNull(streamData.webRTC);
-            streamData.webRTC.setOnFrame(streamRoomId, options.OnFrame);
-        }
-
-        System.out.println("onremoteVideoTrack");
-        if (options.OnVideoRemove != null) {
-            Objects.nonNull(streamData.webRTC);
-            streamData.webRTC.setOnRemoveVideoTrack(streamRoomId, options.OnVideoRemove);
-        }
-        System.out.println("subscribe to Remote Streams");
+        RoomJanusSession session = pcManager.getSession(streamRoomId);
+        //TODO: This method can be called few times and we should check if webrtc reconfigurations works correctly
+        session.createSubscriber();
+//        if (options.OnFrame != null) {
+//            streamData.webRTC.setOnFrame(streamRoomId, options.OnFrame);
+//        }
+//
+//        System.out.println("onremoteVideoTrack");
+//        if (options.OnVideoRemove != null) {
+//            Objects.nonNull(streamData.webRTC);
+//            streamData.webRTC.setOnRemoveVideoTrack(streamRoomId, options.OnVideoRemove);
+//        }
+//        System.out.println("subscribe to Remote Streams");
         api.subscribeToRemoteStreams(streamRoomId, subscriptions, options.settings);
     }
 
@@ -901,19 +422,20 @@ public class StreamApi {
             List<StreamSubscription> subscriptionsToRemove,
             StreamSettings options
     ) {
+        //TODO: Not implemented
         // todo - nie ma w c++, ale czy nie jest potrzebne ?
-        streamMap.map.forEach((k, v) -> {
-            if (Objects.equals(v.streamRoomId, streamRoomId)) {
-                assert v.webRTC != null;
-
-                if (options.OnFrame != null) {
-                    v.webRTC.setOnFrame(streamRoomId, options.OnFrame);
-                }
-                if (options.OnVideoRemove != null) {
-                    v.webRTC.setOnRemoveVideoTrack(streamRoomId, options.OnVideoRemove);
-                }
-            }
-        });
+//        streamMap.map.forEach((k, v) -> {
+//            if (Objects.equals(v.streamRoomId, streamRoomId)) {
+//                assert v.webRTC != null;
+//
+//                if (options.OnFrame != null) {
+//                    v.webRTC.setOnFrame(streamRoomId, options.OnFrame);
+//                }
+//                if (options.OnVideoRemove != null) {
+//                    v.webRTC.setOnRemoveVideoTrack(streamRoomId, options.OnVideoRemove);
+//                }
+//            }
+//        });
 
 
         api.modifyRemoteStreamsSubscriptions(
@@ -928,17 +450,18 @@ public class StreamApi {
             String streamRoomId,
             List<StreamSubscription> subscriptionsToRemove
     ) {
+        //TODO: Not implemented
         // todo - nie ma w c++, ale czy nie jest potrzebne ?
-        streamMap.map.forEach((k, v) -> {
-            if (Objects.equals(v.streamRoomId, streamRoomId)) {
-                assert v.webRTC != null;
-
-                streamMap.map.remove(k);    // ??
-
-                v.webRTC.setOnFrame(streamRoomId, null);
-                v.webRTC.setOnRemoveVideoTrack(streamRoomId, null);
-            }
-        });
+//        streamMap.map.forEach((k, v) -> {
+//            if (Objects.equals(v.streamRoomId, streamRoomId)) {
+//                assert v.webRTC != null;
+//
+//                streamMap.map.remove(k);    // ??
+//
+//                v.webRTC.setOnFrame(streamRoomId, null);
+//                v.webRTC.setOnRemoveVideoTrack(streamRoomId, null);
+//            }
+//        });
 
 
         api.unsubscribeFromRemoteStreams(
@@ -951,18 +474,21 @@ public class StreamApi {
             String streamRoomId,
             boolean enable
     ) {
-        streamMap.map.forEach((k, v) -> {
-            if (Objects.equals(v.streamRoomId, streamRoomId)) {
-                PmxFrameCryptor.PmxFrameCryptorOptions options = new PmxFrameCryptor.PmxFrameCryptorOptions();
-                options.dropFrameIfCryptionFailed = enable;
-
-                assert v.webRTC != null;
-                v.webRTC.setFrameCryptorOptions(
-                        streamRoomId,
-                        options
-                );
-            }
-        });
+        // TODO: Implement this methods
+        throw new UnsupportedOperationException("An operation is not implemented");
+//        RoomJanusSession session = pcManager.getSession(streamRoomId);
+//        streamMap.map.forEach((k, v) -> {
+//            if (Objects.equals(v.streamRoomId, streamRoomId)) {
+//                PmxFrameCryptor.PmxFrameCryptorOptions options = new PmxFrameCryptor.PmxFrameCryptorOptions();
+//                options.dropFrameIfCryptionFailed = enable;
+//
+//                assert v.webRTC != null;
+//                v.webRTC.setFrameCryptorOptions(
+//                        streamRoomId,
+//                        options
+//                );
+//            }
+//        });
     }
 
     public List<String> subscribeFor(List<String> subscriptionQueries) {
