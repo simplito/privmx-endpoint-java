@@ -842,6 +842,48 @@ public class StreamApi {
             }
         }
     }
+    public void addTrackAudio(
+            AudioTrack audioTrack,
+            StreamHandle streamHandle,
+            MediaDevice track
+    ) {
+        StreamData streamData = streamMap.getFirst();//(streamHandle.getValue());
+        if (peerConnectionFactory != null && streamData.webRTC != null) {
+
+            if (track.type == DeviceType.Audio) {
+                audioTrack.setEnabled(true);
+
+                streamData.webRTC.addAudioTrack(
+                        streamData.streamRoomId,
+                        audioTrack,
+                        track.id
+                );
+            }
+        }
+    }
+
+    public void addTrackAudio(
+            StreamHandle streamHandle,
+            MediaDevice track
+    ) {
+        StreamData streamData = streamMap.getFirst();//(streamHandle.getValue());
+        if (peerConnectionFactory != null && streamData.webRTC != null) {
+
+            if (track.type == DeviceType.Audio) {
+                AudioSource audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
+                AudioTrack audioTrack = peerConnectionFactory.createAudioTrack(track.name, audioSource);
+                audioTrack.setEnabled(true);
+
+                streamData.webRTC.addAudioTrack(
+                        streamData.streamRoomId,
+                        audioTrack,
+                        track.id
+                );
+
+                System.out.println("after webrtc audiotrack");
+            }
+        }
+    }
 
     public void removeTrack(
             StreamHandle streamHandle,
