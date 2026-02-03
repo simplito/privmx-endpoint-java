@@ -782,6 +782,37 @@ public class StreamApi {
         return null;
     }
 
+    private VideoCapturer createCameraCapturer(CameraEnumerator enumerator, boolean isBackFacing) {
+        final String[] deviceNames = enumerator.getDeviceNames();
+        // First, try to find front facing camera
+        Logging.d(TAG, "Looking for front facing cameras.");
+        for (String deviceName : deviceNames) {
+            if (enumerator.isFrontFacing(deviceName)) {
+                Logging.d(TAG, "Creating front facing camera capturer.");
+                VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
+
+                if (videoCapturer != null && !isBackFacing) {
+                    return videoCapturer;
+                }
+            }
+        }
+
+        // Front facing camera not found, try something else
+        Logging.d(TAG, "Looking for other cameras.");
+        for (String deviceName : deviceNames) {
+            if (!enumerator.isFrontFacing(deviceName)) {
+                Logging.d(TAG, "Creating other camera capturer.");
+                VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
+
+                if (videoCapturer != null && isBackFacing) {
+                    return videoCapturer;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public void addTrack(
             Context context,
             VideoSink localSink,
