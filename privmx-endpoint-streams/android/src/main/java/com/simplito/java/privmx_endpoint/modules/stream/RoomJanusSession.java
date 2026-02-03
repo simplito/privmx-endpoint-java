@@ -6,24 +6,19 @@ import androidx.annotation.Nullable;
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.Key;
 import com.simplito.java.privmx_endpoint.model.KeyType;
-import com.simplito.java.privmx_endpoint.model.PcObserver;
 
-import org.webrtc.MediaConstraints;
 import org.webrtc.MediaStreamTrack;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
-import org.webrtc.SessionDescription;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class RoomJanusSession {
@@ -37,21 +32,16 @@ public class RoomJanusSession {
     private JanusPublisher publisher = null;
     private final PmxKeyStore keyStore;
     public final WebRTCImpl webrtc = new WebRTCImpl();
-    public StreamApi.TrackObserver observer;
-    private final StreamApi.TrackObserver _observer = new StreamApi.TrackObserver() {
-        @Override
-        public void onTrack(MediaStreamTrack track) {
-            if(observer != null){
-                observer.onTrack(track);
-            }
-        }
-    };
+    private final BiConsumer<Long,String> onTrickle;
+    private final TrackObserver defaultTrackObserver;
 
     //TODO: Add error listener for catch errors from webrtcInterface
-    public RoomJanusSession(@NonNull String roomId, @NonNull PeerConnectionFactory pcFactory) {
+    public RoomJanusSession(@NonNull String roomId, @NonNull PeerConnectionFactory pcFactory, TrackObserver defaultTrackObserver, BiConsumer<Long,String> onTrickle) {
         this.pcFactory = pcFactory;
         this.roomID = roomId;
         this.keyStore = PmxFrameCryptorFactory.createPmxKeyStore();
+        this.defaultTrackObserver = defaultTrackObserver;
+        this.onTrickle = onTrickle;
     }
 
     @Nullable
@@ -65,34 +55,27 @@ public class RoomJanusSession {
     }
 
     public synchronized void createSubscriber() {
+        createSubscriber(defaultTrackObserver);
+    }
+
+    public synchronized void createSubscriber(TrackObserver observer) {
         if (subscriber == null) {
-            PeerConnection pc = createPeerConnection();
-            subscriber = new JanusSubscriber(pcFactory, keyStore, pc);
-        } else if (/*TODO: Check if current subscriber is disconnected*/false) {
+            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
+        }else if (/*TODO: Check if current subscriber is disconnected*/false) {
 
         }
     }
 
     public synchronized void createPublisher() {
-        if (publisher == null) {
-            PeerConnection pc = createPeerConnection();
-            publisher = new JanusPublisher(pcFactory, keyStore, pc);
+        createPublisher(defaultTrackObserver);
+    }
 
+    public synchronized void createPublisher(TrackObserver observer) {
+        if (publisher == null) {
+            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle);
         } else if (/*TODO: Check if current publisher is disconnected*/false) {
 
         }
-    }
-
-    //TODO: We need method to pass framecryptorOptions and TrackObserver
-    private PeerConnection createPeerConnection() {
-        return pcFactory.createPeerConnection(
-                new PeerConnection.RTCConfiguration(Collections.emptyList()),
-                new PcObserver(pcFactory, roomID, keyStore, new PmxFrameCryptor.PmxFrameCryptorOptions(),_observer)
-        );
-    }
-
-    public void setTrackObserver(StreamApi.TrackObserver observer){
-        this.observer = observer;
     }
 
     public class WebRTCImpl implements WebRTCInterface {
@@ -142,6 +125,7 @@ public class RoomJanusSession {
 
         @Override
         public void close(String streamRoomId) {
+            //TODO: Clean all objects correctly
             if (publisher != null) {
                 publisher.close();
             }
@@ -169,13 +153,13 @@ public class RoomJanusSession {
             switch (connectionType) {
                 case "subscriber":
                     if (subscriber != null) {
-                        subscriber.sessionId = sessionId;
+                        subscriber.updateSessionId(sessionId);
                     }
                     break;
 
                 case "publisher":
                     if (publisher != null) {
-                        publisher.sessionId = sessionId;
+                        publisher.updateSessionId(sessionId);
                     }
                     break;
             }
@@ -183,4 +167,12 @@ public class RoomJanusSession {
     }
 
 
+    public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {
+        if(subscriber != null){
+            subscriber.setFrameCryptorOptions(options);
+        }
+        if(publisher != null){
+            publisher.setFrameCryptorOptions(options);
+        }
+    }
 }

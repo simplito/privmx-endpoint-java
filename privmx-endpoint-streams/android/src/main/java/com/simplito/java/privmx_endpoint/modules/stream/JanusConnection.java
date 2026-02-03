@@ -1,42 +1,44 @@
 package com.simplito.java.privmx_endpoint.modules.stream;
 
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
-import com.simplito.java.privmx_endpoint.model.PcObserver;
 
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
+import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxKeyStore;
-import org.webrtc.SdpObserver;
 import org.webrtc.SessionDescription;
 
+import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class JanusConnection {
     protected final PeerConnection peerConnection;
     protected final PeerConnectionFactory peerConnectionFactory;
-    protected PcObserver observer;
     protected PmxKeyStore keyStore;
     public final ConnectionType connectionType;
-    long sessionId = 0L;
+    private long sessionId = -1L;
+    private final PcObserver pcObserver;
 
     public JanusConnection(
             PeerConnectionFactory pcFactory,
             PmxKeyStore keyStore,
-            PeerConnection peerConnection,
-            ConnectionType connectionType
+            ConnectionType connectionType,
+            TrackObserver trackObserver,
+            BiConsumer<Long,String> onTrickle
     ) {
-        this.peerConnection = peerConnection;
-        this.connectionType = connectionType;
         this.peerConnectionFactory = pcFactory;
+        this.connectionType = connectionType;
         this.keyStore = keyStore;
+        this.pcObserver = new PcObserver(
+                peerConnectionFactory,
+                keyStore,
+                trackObserver,
+                iceCandidate -> onTrickle.accept(sessionId,iceCandidate.sdp)
+        );
+        this.peerConnection = createPeerConnection(pcObserver);
     }
-
-    //TODO: Does sessionID is required here?
-//    public JanusConnection(PeerConnection peerConnection, long sessionId, boolean hasSubscriptions) {
-//        this.peerConnection = peerConnection;
-//        this.sessionId = sessionId;
-//        this.hasSubscriptions = hasSubscriptions;
-//    }
 
     static class SdpObserver implements org.webrtc.SdpObserver {
         private final CompletableFuture<SessionDescription> res;
@@ -64,6 +66,31 @@ public class JanusConnection {
         public void onSetFailure(String s) {
 
         }
+    }
+
+    //TODO: We need method to pass framecryptorOptions and TrackObserver
+    private PeerConnection createPeerConnection(PcObserver pcObserver) {
+        return peerConnectionFactory.createPeerConnection(
+                new PeerConnection.RTCConfiguration(Collections.emptyList()),
+                pcObserver
+        );
+    }
+
+    public PeerConnection.PeerConnectionState getConnectionState(){
+        return peerConnection.connectionState();
+    }
+
+    void updateSessionId(long sessionId){
+        this.sessionId = sessionId;
+    }
+
+    public long getSessionId(){
+        return this.sessionId;
+    }
+
+
+    public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {
+        pcObserver.setFrameCryptorOptions(options);
     }
 
     public void close(){

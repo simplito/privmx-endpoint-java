@@ -200,7 +200,7 @@ public class StreamApiLow implements AutoCloseable {
 
     public native void subscribeToRemoteStreams(String streamRoomId, List<StreamSubscription> subscriptions, Settings options);
 
-    public native void modifyRemoteStreamsSubscriptions(String streamRoomId, List<StreamSubscription> subscriptionsToAdd, List<StreamSubscription> subscriptionsToRemove, StreamSettings options);
+    public native void modifyRemoteStreamsSubscriptions(String streamRoomId, List<StreamSubscription> subscriptionsToAdd, List<StreamSubscription> subscriptionsToRemove, Settings options);
 
     public native void unsubscribeFromRemoteStreams(String streamRoomId, List<StreamSubscription> subscriptionsToRemove);
 

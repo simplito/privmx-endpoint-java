@@ -7,7 +7,6 @@ import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.VideoTrackInfo;
 
 import org.webrtc.MediaConstraints;
-import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxFrameCryptorFactory;
@@ -19,15 +18,17 @@ import org.webrtc.VideoCapturer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 
+//TODO: add synchronized keyword to method modificates track maps
 public class JanusPublisher extends JanusConnection{
-    public Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
-    public Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
-    public Map<String, VideoCapturer> videoCapturers = new HashMap<>();
+    public final Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
+    public final Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
+    public final Map<String, VideoCapturer> videoCapturers = new HashMap<>();
 
 
-    public JanusPublisher(PeerConnectionFactory pcFactory, PmxKeyStore keyStore, PeerConnection peerConnection) {
-        super(pcFactory, keyStore, peerConnection, ConnectionType.Publisher);
+    public JanusPublisher(PeerConnectionFactory pcFactory, PmxKeyStore keyStore, TrackObserver observer, BiConsumer<Long,String> onTrickle) {
+        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle);
     }
 
     //TODO: Maybe move it higher in class hierarchy to not store references in few places
