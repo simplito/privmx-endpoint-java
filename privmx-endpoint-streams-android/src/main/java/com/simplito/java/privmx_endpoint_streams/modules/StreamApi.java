@@ -218,7 +218,6 @@ public class StreamApi {
         }
 
         // addAudio/Video
-
         @Override
         public String createOfferAndSetLocalDescription(String streamRoomId) {
             CompletableFuture<String> res = new CompletableFuture<>();
