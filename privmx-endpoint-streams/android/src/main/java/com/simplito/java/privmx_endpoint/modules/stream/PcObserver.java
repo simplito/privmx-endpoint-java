@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+//TODO: Fix warnings
 public class PcObserver implements PeerConnection.Observer {
     Map<String, PmxFrameCryptor> frameCryptorMap = new HashMap<>();
     PmxKeyStore keyStore;
@@ -64,7 +65,6 @@ public class PcObserver implements PeerConnection.Observer {
 
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
-//            String streamRoomId,
             PmxKeyStore store
     ) {
         this(peerConnectionFactory, store, null,null);

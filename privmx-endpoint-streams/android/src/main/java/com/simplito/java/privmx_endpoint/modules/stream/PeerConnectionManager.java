@@ -17,8 +17,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class PeerConnectionManager {
-    private Map<String, RoomJanusSession> sessions = new HashMap<>();
-    private Map<Long, String> sessionHandles = new HashMap<>();
+    private final Map<String, RoomJanusSession> sessions = new HashMap<>();
+    private final Map<Long, String> sessionHandles = new HashMap<>();
     private final PeerConnectionFactory pcFactory;
     private final BiConsumer<Long,String> onTrickle;
 

@@ -93,7 +93,15 @@ public class JanusConnection {
         pcObserver.setFrameCryptorOptions(options);
     }
 
+    public boolean isEnded(){
+        return peerConnection.connectionState() == PeerConnection.PeerConnectionState.DISCONNECTED ||
+                peerConnection.connectionState() == PeerConnection.PeerConnectionState.CLOSED ||
+                peerConnection.connectionState() == PeerConnection.PeerConnectionState.FAILED;
+    }
+
     public void close(){
-        peerConnection.dispose();
+        if(peerConnection.connectionState() != PeerConnection.PeerConnectionState.CLOSED) {
+            peerConnection.dispose();
+        }
     }
 }

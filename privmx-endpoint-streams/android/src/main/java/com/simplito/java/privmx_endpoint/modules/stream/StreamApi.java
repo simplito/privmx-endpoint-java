@@ -134,7 +134,7 @@ public class StreamApi {
             List<UserWithPubKey> managers,
             byte[] publicMeta,
             byte[] privateMeta,
-            ContainerPolicy policies                // todo - can be null ??
+            ContainerPolicy policies
     ) {
         return api.createStreamRoom(contextId, users, managers, publicMeta, privateMeta, policies);
     }
@@ -192,7 +192,12 @@ public class StreamApi {
     public StreamHandle createStream(String streamRoomId) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
         if(session == null) throw new IllegalStateException("Session to this room is not exsists. Call joinStreamRoom first");
-        session.createPublisher();
+        try {
+            session.createPublisher();
+        }catch (IllegalStateException e){
+            throw new IllegalStateException("Publisher is now active, try use modifyRemoteStreamsSubscriptions");
+        }
+
         StreamHandle handle = api.createStream(streamRoomId);
         pcManager.createHandleToRoom(handle, streamRoomId);
         return handle;
@@ -289,7 +294,6 @@ public class StreamApi {
             throw new IllegalStateException("This StreamHandle has not created companion publisher.");
         switch (track.type) {
             case Audio: {
-                //TODO: Should use pcFactory from session or connection (maybe connection should not expose pcfactory)
                 AudioSource audioSource = connection.peerConnectionFactory.createAudioSource(new MediaConstraints());
                 AudioTrack audioTrack = connection.peerConnectionFactory.createAudioTrack(track.name, audioSource);
                 audioTrack.setVolume(10.0);
@@ -298,7 +302,6 @@ public class StreamApi {
             }
 
             case Video: {
-                //TODO: Should use pcFactory from session or connection (maybe connection should not expose pcfactory)
                 SurfaceTextureHelper surfaceTextureHelper =
                         SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
                 VideoSource videoSource = connection.peerConnectionFactory.createVideoSource(false, false);        // todo - zaimplementowac caly capturer?
@@ -354,7 +357,6 @@ public class StreamApi {
     }
 
     public void unpublishStream(StreamHandle streamHandle) {
-        //TODO: Maybe should clear streamHandle in pcManager
         api.unpublishStream(streamHandle);
     }
 
@@ -371,10 +373,13 @@ public class StreamApi {
             Settings options
     ) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
-        //TODO: This method can be called few times and we should check if webrtc reconfigurations works correctly
-        //TODO: Pass options to subsriber create
-        //TODO: if subscriber exists and is connected then we can't create new subscriber but throw illegalstate and go to call modifyRemoteStreams
-        session.createSubscriber();
+        if (session == null)
+            throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
+        try {
+            session.createSubscriber();
+        }catch (IllegalStateException e){
+            throw new IllegalStateException("Subscriber is now active, try use modifyRemoteStreamsSubscriptions");
+        }
         api.subscribeToRemoteStreams(streamRoomId, subscriptions, options);
     }
 

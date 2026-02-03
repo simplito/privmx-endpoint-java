@@ -61,8 +61,11 @@ public class RoomJanusSession {
     public synchronized void createSubscriber(TrackObserver observer) {
         if (subscriber == null) {
             subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
-        }else if (/*TODO: Check if current subscriber is disconnected*/false) {
-
+        }else if (subscriber.isEnded()) {
+            subscriber.close();
+            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
+        }else{
+            throw new IllegalStateException("Subscriber is currently active.");
         }
     }
 
@@ -73,8 +76,11 @@ public class RoomJanusSession {
     public synchronized void createPublisher(TrackObserver observer) {
         if (publisher == null) {
             publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle);
-        } else if (/*TODO: Check if current publisher is disconnected*/false) {
-
+        }else if (publisher.isEnded()) {
+            publisher.close();
+            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle);
+        }else{
+            throw new IllegalStateException("Publisher is currently active.");
         }
     }
 

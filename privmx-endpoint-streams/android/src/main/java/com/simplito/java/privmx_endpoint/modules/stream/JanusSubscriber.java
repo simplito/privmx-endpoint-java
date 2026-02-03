@@ -16,7 +16,6 @@ public class JanusSubscriber extends JanusConnection{
     }
 
     public String createAnswer(String offerSdp){
-        //TODO: Check if is in correct state
         CompletableFuture<SessionDescription> res = new CompletableFuture<>();
         peerConnection.setRemoteDescription(new SdpObserver(null), new SessionDescription(SessionDescription.Type.OFFER,offerSdp));
         peerConnection.createAnswer(new SdpObserver(res), new MediaConstraints());

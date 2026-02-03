@@ -20,10 +20,10 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
-//TODO: add synchronized keyword to method modificates track maps
 public class JanusPublisher extends JanusConnection{
     public final Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
     public final Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
+    //TODO: Add videoCapturer to VideoTrackInfo
     public final Map<String, VideoCapturer> videoCapturers = new HashMap<>();
 
 
@@ -31,50 +31,52 @@ public class JanusPublisher extends JanusConnection{
         super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle);
     }
 
-    //TODO: Maybe move it higher in class hierarchy to not store references in few places
     public void addAudioTrack(org.webrtc.AudioTrack audioTrack) {
-        RtpSender rtpSender2 = peerConnection.addTrack(audioTrack);
-        PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorFromRtpSender(
-                peerConnectionFactory,
-                rtpSender2,
-                keyStore
-                // options ?
-        );
+        synchronized (audioTracks) {
+            RtpSender rtpSender2 = peerConnection.addTrack(audioTrack);
+            PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorFromRtpSender(
+                    peerConnectionFactory,
+                    rtpSender2,
+                    keyStore
+                    // options ?
+            );
 
-        audioTracks.put(
-                audioTrack.id(),
-                new AudioTrackInfo(
-                        audioTrack,
-                        rtpSender2,
-                        frameCryptor
-                )
-        );
+            audioTracks.put(
+                    audioTrack.id(),
+                    new AudioTrackInfo(
+                            audioTrack,
+                            rtpSender2,
+                            frameCryptor
+                    )
+            );
+        }
     }
 
-    //TODO: Maybe move it higher in class hierarchy to not store references in few places
     public void addVideoTrack(
             org.webrtc.VideoTrack videoTrack,
             VideoCapturer videoCapturer
     ) {
         if (peerConnectionFactory != null) {
-            RtpSender rtpSender = peerConnection.addTrack(videoTrack);
-            PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorFromRtpSender(
-                    peerConnectionFactory,
-                    rtpSender,
-                    keyStore
-                    // options ?
-            );
+            synchronized (videoTracks) {
+                RtpSender rtpSender = peerConnection.addTrack(videoTrack);
+                PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorFromRtpSender(
+                        peerConnectionFactory,
+                        rtpSender,
+                        keyStore
+                        // options ?
+                );
 
-            videoTracks.put(
-                    videoTrack.id(),
-                    new VideoTrackInfo(
-                            videoTrack,
-                            rtpSender,
-                            frameCryptor
-                    )
-            );
-            if(videoCapturer != null){
-                videoCapturers.put(videoTrack.id(),videoCapturer);
+                videoTracks.put(
+                        videoTrack.id(),
+                        new VideoTrackInfo(
+                                videoTrack,
+                                rtpSender,
+                                frameCryptor
+                        )
+                );
+                if (videoCapturer != null) {
+                    videoCapturers.put(videoTrack.id(), videoCapturer);
+                }
             }
         }
     }
@@ -84,22 +86,25 @@ public class JanusPublisher extends JanusConnection{
     }
 
     public void removeAudioTrack(String id) {
-        AudioTrackInfo audioTrackInfo = audioTracks.get(id);
-        if(audioTrackInfo == null) return;
-        peerConnection.removeTrack(audioTrackInfo.sender);
-        audioTracks.remove(id);
+        synchronized (audioTracks) {
+            AudioTrackInfo audioTrackInfo = audioTracks.get(id);
+            if (audioTrackInfo == null) return;
+            peerConnection.removeTrack(audioTrackInfo.sender);
+            audioTracks.remove(id);
+        }
     }
 
     public void removeVideoTrack(String id) {
-        VideoTrackInfo videoTrackInfo = videoTracks.get(id);
-        if(videoTrackInfo == null) return;
-        peerConnection.removeTrack(videoTrackInfo.sender);
-        videoTracks.remove(id);
-        videoCapturers.remove(id);
+        synchronized (videoTracks) {
+            VideoTrackInfo videoTrackInfo = videoTracks.get(id);
+            if (videoTrackInfo == null) return;
+            peerConnection.removeTrack(videoTrackInfo.sender);
+            videoTracks.remove(id);
+            videoCapturers.remove(id);
+        }
     }
 
     public String createOffer(){
-        //TODO: Check if is in correct state
         CompletableFuture<SessionDescription> res = new CompletableFuture<>();
         peerConnection.createOffer(new SdpObserver(res), new MediaConstraints());
         try {
@@ -112,7 +117,6 @@ public class JanusPublisher extends JanusConnection{
     }
 
     public void setAnswer(String sdp){
-        //TODO: Check if is in correct state
         peerConnection.setRemoteDescription(new SdpObserver(null),new SessionDescription(SessionDescription.Type.ANSWER,sdp));
     }
 
@@ -127,5 +131,15 @@ public class JanusPublisher extends JanusConnection{
         audioTracks.clear();
         videoTracks.clear();
         videoCapturers.clear();
+    }
+
+    @Override
+    public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {
+        this.videoTracks.values().forEach(it ->{
+            it.frameCryptor.setOptions(options);
+        });
+        this.audioTracks.values().forEach(it ->{
+            it.frameCryptor.setOptions(options);
+        });
     }
 }
