@@ -6,6 +6,7 @@ import static android.media.AudioManager.GET_DEVICES_OUTPUTS;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.AudioRecordingConfiguration;
+import android.util.DisplayMetrics;
 import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
@@ -387,6 +388,67 @@ public class StreamApi {
                 break;
             }
         }
+    }
+
+    public void addTrackAudio(
+            AudioTrack audioTrack,
+            StreamHandle streamHandle,
+            MediaDevice track
+    ) {
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        JanusPublisher connection = session.getPublisher();
+        if (session == null)
+            throw new IllegalStateException("Stream not exists. Create stream first.");
+        if (connection == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+
+        if (track.type == DeviceType.Audio) {
+            audioTrack.setEnabled(true);
+            connection.addAudioTrack(audioTrack);
+        }
+    }
+
+    public void addTrackVideo(
+            Context context,
+            VideoSink localSink,
+            StreamHandle streamHandle,
+            MediaDevice track,
+            Boolean isScreenCast,
+            VideoCapturer capturer,
+            boolean isBackFacing
+    ) {
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        JanusPublisher connection = session.getPublisher();
+        SurfaceTextureHelper surfaceTextureHelper;
+
+        VideoCapturer currentCapturer;
+        if (isScreenCast) {
+            surfaceTextureHelper = SurfaceTextureHelper.create("ScreenCaptureThread", rootEglBase.getEglBaseContext());
+            currentCapturer = capturer;
+        } else {
+            surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
+            currentCapturer = createCameraCapturer(new Camera2Enumerator(context), isBackFacing);
+        }
+
+        VideoSource videoSource = connection.peerConnectionFactory.createVideoSource(isScreenCast);
+        currentCapturer.initialize(surfaceTextureHelper, appContext, videoSource.getCapturerObserver());
+
+        VideoTrack videoTrack = connection.peerConnectionFactory.createVideoTrack(track.name, videoSource);
+        videoTrack.setEnabled(true);
+        videoTrack.addSink(localSink);
+        connection.addVideoTrack(
+                videoTrack,
+                currentCapturer
+        );
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        Objects.requireNonNull(context.getDisplay()).getMetrics(metrics);
+
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+
+        currentCapturer.startCapture(width, height, 30);
+
     }
 
     /**
