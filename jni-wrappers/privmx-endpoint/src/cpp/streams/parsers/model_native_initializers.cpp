@@ -697,7 +697,7 @@ namespace privmx {
                     privmx::endpoint::stream::StreamPublishedEventData data
             ) {
                 jclass cls = ctx->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/events/PublishedStreamData");
+                        "com/simplito/java/privmx_endpoint/model/events/StreamPublishedEventData");
                 jmethodID ctor = ctx->GetMethodID(
                         cls,
                         "<init>",

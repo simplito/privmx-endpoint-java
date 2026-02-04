@@ -4,7 +4,7 @@ import com.simplito.java.privmx_endpoint.model.StreamInfo;
 
 // todo: which to choose
 // same as StreamPublishedEventData
-public class PublishedStreamData {
+public class StreamPublishedEventData {
 
     /**
      * StreamRoom ID
@@ -18,7 +18,7 @@ public class PublishedStreamData {
 
     public String  userId;
 
-    public PublishedStreamData(String streamRoomId, StreamInfo stream, String userId) {
+    public StreamPublishedEventData(String streamRoomId, StreamInfo stream, String userId) {
         this.streamRoomId = streamRoomId;
         this.stream = stream;
         this.userId = userId;
