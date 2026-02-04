@@ -66,6 +66,10 @@ namespace privmx {
             jobject
                     streamTrackModificationPair2Java(JniContextUtils & ctx, endpoint::stream::StreamTrackModificationPair
             streamTrackModificationPair);
+
+            jobject
+                    streamTrackModification2Java(JniContextUtils & ctx, endpoint::stream::StreamTrackModification
+            streamTrackModification);
         } // streams
     } // wrapper
 } // privmx

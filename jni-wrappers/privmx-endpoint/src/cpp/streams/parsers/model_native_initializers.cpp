@@ -604,6 +604,90 @@ namespace privmx {
                 );
             }
 
+            jobject
+            streamTrackModification2Java(
+                    JniContextUtils &ctx,
+                    endpoint::stream::StreamTrackModification streamTrackModification
+            ) {
+                jclass cls = ctx->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/StreamTrackModification");
+                jmethodID ctor = ctx->GetMethodID(
+                        cls,
+                        "<init>",
+                        "("
+                        "Ljava/lang/Long;"
+                        "Ljava/util/List;"
+                        ")V"
+                );
+
+                jobject tracksList = vectorTojArray(
+                        ctx,
+                        streamTrackModification.tracks,
+                        streamTrackModificationPair2Java
+                );
+
+                return ctx->NewObject(
+                        cls,
+                        ctor,
+                        ctx.long2jLong(streamTrackModification.streamId),
+                        tracksList
+                );
+            }
+
+            jobject
+            updatedStreamData2Java(
+                    JniContextUtils &ctx,
+                    endpoint::stream::UpdatedStreamData data
+            ) {
+                jclass cls = ctx->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/events/UpdatedStreamData");
+                jmethodID ctor = ctx->GetMethodID(
+                        cls,
+                        "<init>",
+                        "("
+                        "Ljava/lang/String;"
+                        "Ljava/lang/Long;"
+                        "Ljava/lang/String;"
+                        "Ljava/lang/Boolean;"
+                        "Ljava/lang/Boolean;"
+                        "Ljava/lang/String;"
+                        "Ljava/lang/Long;"
+                        "Ljava/lang/String;"
+                        "Ljava/lang/String;"
+                        ")V"
+                );
+
+                jobject jCodec = data.codec
+                        ? ctx->NewStringUTF(data.codec->c_str())
+                        : nullptr;
+
+                jobject jStreamId = data.streamId
+                        ? ctx.long2jLong(data.streamId.value())
+                        : nullptr;
+
+                jobject jStreamMid = data.streamMid
+                        ? ctx->NewStringUTF(data.streamMid->c_str())
+                        : nullptr;
+
+                jobject jStreamDisplay = data.stream_display
+                        ? ctx->NewStringUTF(data.stream_display->c_str())
+                        : nullptr;
+
+                return ctx->NewObject(
+                        cls,
+                        ctor,
+                        ctx->NewStringUTF(data.type.c_str()),
+                        ctx.long2jLong(data.mindex),
+                        ctx->NewStringUTF(data.mid.c_str()),
+                        ctx.bool2jBoolean(data.send),
+                        ctx.bool2jBoolean(data.ready),
+                        jCodec,
+                        jStreamId,
+                        jStreamMid,
+                        jStreamDisplay
+                );
+            }
+
         } // streams
     } // wrapper
 } // privmx
