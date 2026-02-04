@@ -63,6 +63,9 @@ namespace privmx {
 
             jobject
             sdpWithTypeModel2Java(JniContextUtils &ctx, privmx::endpoint::stream::SdpWithTypeModel sdpWithTypeModel_c);
+            jobject
+                    streamTrackModificationPair2Java(JniContextUtils & ctx, endpoint::stream::StreamTrackModificationPair
+            streamTrackModificationPair);
         } // streams
     } // wrapper
 } // privmx

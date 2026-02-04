@@ -1,5 +1,6 @@
 package com.simplito.java.privmx_endpoint.model;
 
+import org.webrtc.PmxFrameCryptor;
 import org.webrtc.RtpSender;
 import org.webrtc.VideoTrack;
 

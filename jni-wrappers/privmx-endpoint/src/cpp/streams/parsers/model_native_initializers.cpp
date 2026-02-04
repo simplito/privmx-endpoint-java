@@ -571,6 +571,39 @@ namespace privmx {
                         initItemMID
                 );
             }
+
+            jobject
+            streamTrackModificationPair2Java(
+                    JniContextUtils &ctx,
+                    endpoint::stream::StreamTrackModificationPair streamTrackModificationPair
+            ) {
+                jclass cls = ctx->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/StreamTrackModificationPair");
+                jmethodID ctor = ctx->GetMethodID(
+                        cls,
+                        "<init>",
+                        "("
+                        "Lcom/privmx/stream/StreamTrackInfo;"
+                        "Lcom/privmx/stream/StreamTrackInfo;"
+                        ")V"
+                );
+
+                jobject before = streamTrackModificationPair.before
+                        ? streamTrackInfo2Java(ctx, streamTrackModificationPair.before.value())
+                        : nullptr;
+
+                jobject after = streamTrackModificationPair.after
+                        ? streamTrackInfo2Java(ctx, streamTrackModificationPair.after.value())
+                        : nullptr;
+
+                return ctx->NewObject(
+                        cls,
+                        ctor,
+                        before,
+                        after
+                );
+            }
+
         } // streams
     } // wrapper
 } // privmx
