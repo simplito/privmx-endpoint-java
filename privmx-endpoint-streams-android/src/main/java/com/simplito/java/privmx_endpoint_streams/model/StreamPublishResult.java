@@ -1,15 +1,17 @@
 package com.simplito.java.privmx_endpoint_streams.model;
 
-import com.simplito.java.privmx_endpoint.model.PublishedStreamData;
-
 public class StreamPublishResult {
-public Boolean published;
-public PublishedStreamData data;
+    public Boolean published;
+    public PublishedStreamData data;
 
-    public StreamPublishResult(boolean published) {
+    public StreamPublishResult(Boolean published) {
         this(published, null);
     }
-    public StreamPublishResult(boolean published, PublishedStreamData data) {
+
+    public StreamPublishResult(
+            Boolean published,
+            PublishedStreamData data
+    ) {
         this.published = published;
         this.data = data;
     }
