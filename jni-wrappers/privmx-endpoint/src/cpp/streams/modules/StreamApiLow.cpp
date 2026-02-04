@@ -13,7 +13,7 @@
 #include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
 #include "privmx/endpoint/wrapper/streams/parsers/parser.h"
 
-//#include <privmx-endpoint/includes/privmx/endpoint/wrapper/parsers/parser.h>
+#include "privmx/endpoint/wrapper/modules/EventsList.h"
 
 using namespace privmx::endpoint::stream;
 using namespace privmx::endpoint;
@@ -74,6 +74,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_create(
     if (ctx.nullCheck(connection, "Connection")) {
         return nullptr;
     }
+
+    EventsList::instance().addParser(parseStreamEvent);
 
 //    jobject result;
 //    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &clazz, &connection, &eventApi] {

@@ -13,6 +13,7 @@
 #include <privmx/endpoint/core/EventQueue.hpp>
 #include "privmx/endpoint/wrapper/utils/utils.hpp"
 #include "privmx/endpoint/wrapper/parsers/parser.h"
+#include "privmx/endpoint/wrapper/modules/EventsList.h"
 
 using namespace privmx::endpoint::core;
 
@@ -36,7 +37,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_EventQueue_waitEvent(
     JniContextUtils ctx(env);
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx]() {
-        return parseEvent(ctx, EventQueue::getInstance().waitEvent().get());
+        return EventsList::instance().getEvent(ctx, EventQueue::getInstance().waitEvent().get());
     });
     if (ctx->ExceptionCheck()) {
         return nullptr;
@@ -54,8 +55,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_EventQueue_getEvent(
     ctx.callResultEndpointApi<jobject>(&result, [&ctx]() {
         auto eventHolder = EventQueue::getInstance().getEvent();
         return !eventHolder.has_value() ?
-               nullptr :
-               parseEvent(ctx, eventHolder.value().get());
+                nullptr :
+                EventsList::instance().getEvent(ctx, eventHolder.value().get());
     });
     if (ctx->ExceptionCheck()) {
         return nullptr;
