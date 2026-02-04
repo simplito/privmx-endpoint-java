@@ -688,6 +688,28 @@ namespace privmx {
                 );
             }
 
+            jobject
+            streamRoomDeletedEventData2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::StreamRoomDeletedEventData data
+            ) {
+                jclass cls = ctx->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/events/StreamRoomDeletedEventData");
+                jmethodID ctor = ctx->GetMethodID(
+                        cls,
+                        "<init>",
+                        "("
+                        "Ljava/lang/String;"
+                        ")V"
+                );
+
+                return ctx->NewObject(
+                        cls,
+                        ctor,
+                        ctx->NewStringUTF(data.streamRoomId.c_str())
+                );
+            }
+
             jobject streamUpdatedEventData2Java(
                     JniContextUtils &ctx,
                     privmx::endpoint::stream::StreamUpdatedEventData data

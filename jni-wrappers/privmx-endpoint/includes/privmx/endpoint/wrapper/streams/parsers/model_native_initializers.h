@@ -79,6 +79,10 @@ namespace privmx {
                     updatedStreamData2Java(JniContextUtils & ctx, endpoint::stream::UpdatedStreamData
             updatedStreamData);
 
+            jobject
+                    streamRoomDeleted2EventDataJava(JniContextUtils & ctx, privmx::endpoint::stream::StreamRoomDeletedEventData
+            data);
+
         } // streams
     } // wrapper
 } // privmx
