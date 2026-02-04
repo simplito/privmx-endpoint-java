@@ -74,6 +74,11 @@ namespace privmx {
             jobject
                     streamUpdatedEventData2Java(JniContextUtils & ctx, privmx::endpoint::stream::StreamUpdatedEventData
             data);
+
+            jobject
+                    updatedStreamData2Java(JniContextUtils & ctx, endpoint::stream::UpdatedStreamData
+            updatedStreamData);
+
         } // streams
     } // wrapper
 } // privmx
