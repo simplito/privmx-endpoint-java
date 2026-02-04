@@ -220,14 +220,18 @@ public class StreamApiLow implements AutoCloseable {
 
     public native void unsubscribeFrom(List<String> subscriptionIds);
 
-    // todo
-    // public native String buildSubscriptionQuery(
-    public String buildSubscriptionQuery (
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId);
+
+    public String buildSubscriptionQuery(
             StreamEventType eventType,
             StreamEventSelectorType selectorType,
             String selectorId
-    ){
-        return "";
+    ) {
+        return buildSubscriptionQuery(
+                eventType.ordinal(),
+                selectorType.ordinal(),
+                selectorId
+        );
     }
 
 

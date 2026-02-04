@@ -650,6 +650,38 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeF
 }
 
 extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_buildSubscriptionQuery(
+        JNIEnv *env,
+        jobject thiz,
+        jlong event_type,
+        jlong selector_type,
+        jstring selector_id
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(selector_id, "SelectorID")) {
+        return nullptr;
+    }
+
+    jstring result = nullptr;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &event_type, &selector_type, &selector_id]() {
+                std::string query_result_c = getStreamApi(ctx, thiz)->buildSubscriptionQuery(
+                        static_cast<stream::EventType>(event_type),
+                        static_cast<stream::EventSelectorType>(selector_type),
+                        ctx.jString2string(selector_id)
+                );
+                return ctx->NewStringUTF(query_result_c.c_str());
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_keyManagement(
         JNIEnv *env,
