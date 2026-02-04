@@ -32,3 +32,5 @@ privmx::endpoint::stream::StreamSettings parseStreamSettings(JNIEnv *env, jobjec
 privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextUtils &ctx, jobject streamSubscription);
 
 //#endif //PRIVMX_POCKET_LIB_PARSER_H
+    jobject parseStreamEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event);
+
