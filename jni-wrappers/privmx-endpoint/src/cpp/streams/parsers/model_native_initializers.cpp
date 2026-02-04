@@ -688,6 +688,51 @@ namespace privmx {
                 );
             }
 
+            jobject streamUpdatedEventData2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::StreamUpdatedEventData data
+            ) {
+                jclass cls = ctx->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/events/StreamUpdatedEventData");
+                jmethodID ctor = ctx->GetMethodID(
+                        cls,
+                        "<init>",
+                        "("
+                        "Ljava/lang/String;"
+                        "Ljava/util/List;"
+                        "Ljava/util/List;"
+                        "Ljava/util/List;"
+                        ")V"
+                );
+
+                jobject addedList = vectorTojArray(
+                        ctx,
+                        data.streamsAdded,
+                        streamInfo2Java
+                );
+
+                jobject removedList = vectorTojArray(
+                        ctx,
+                        data.streamsRemoved,
+                        streamInfo2Java
+                );
+
+                jobject modifiedList = vectorTojArray(
+                        ctx,
+                        data.streamsModified,
+                        streamTrackModification2Java
+                );
+
+                return ctx->NewObject(
+                        cls,
+                        ctor,
+                        ctx->NewStringUTF(data.streamRoomId.c_str()),
+                        addedList,
+                        removedList,
+                        modifiedList
+                );
+            }
+
         } // streams
     } // wrapper
 } // privmx
