@@ -18,6 +18,8 @@
 #include "privmx/endpoint/core/Types.hpp"
 #include "privmx/endpoint/core/Events.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
+#include "privmx/endpoint/stream/Events.hpp"
+#include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
 
 std::vector<privmx::endpoint::core::UserWithPubKey>
 usersToVector(JniContextUtils &ctx, jobjectArray users);
@@ -34,6 +36,9 @@ parseContainerPolicy(JniContextUtils &ctx, jobject containerPolicy);
 privmx::endpoint::core::ItemPolicy parseItemPolicy(JniContextUtils &ctx, jobject itemPolicy);
 
 privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobject filesConfig);
+
+jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, int64_t connectionId,
+        std::vector<std::string> &subscriptions, int64_t timestamp, jobject data_j) ;
 
 jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event);
 
