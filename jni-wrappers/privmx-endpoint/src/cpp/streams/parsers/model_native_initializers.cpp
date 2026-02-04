@@ -258,30 +258,6 @@ namespace privmx {
                         ctx.long2jLong(streamRoom_c.schemaVersion)
                 );
             }
-            //Stream
-//        jobject stream2Java(
-//                JniContextUtils &ctx,
-//                privmx::endpoint::stream::Stream stream_c
-//        ) {
-//            jclass itemCls = ctx->FindClass(
-//                    "com/simplito/java/privmx_endpoint/model/Stream");
-//
-//            jmethodID initItemMID = ctx->GetMethodID(
-//                    itemCls,
-//                    "<init>",
-//                    "("
-//                    "Ljava/lang/Long;"      // streamId
-//                    "Ljava/lang/String;"    // userId
-//                    ")V"
-//            );
-//
-//            return ctx->NewObject(
-//                    itemCls,
-//                    initItemMID,
-//                    ctx.long2jLong(stream_c.streamId),
-//                    ctx->NewStringUTF(stream_c.userId.c_str())
-//            );
-//        }
 
             jobject deviceType2Java(
                     JniContextUtils &ctx,
@@ -486,6 +462,7 @@ namespace privmx {
                 );
 
             }
+
             jobject publishedStreamData2Java(JniContextUtils &ctx, privmx::endpoint::stream::PublishedStreamData publishedStreamData_c) {
                 jclass itemCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/PublishedStreamData");
@@ -525,16 +502,20 @@ namespace privmx {
                 jobject data = nullptr;
                 if (streamPublishResult_c.data.has_value()) {
                     data = publishedStreamData2Java(ctx, streamPublishResult_c.data.value());
+                    return ctx->NewObject(
+                            itemCls,
+                            initItemMID,
+                            ctx.bool2jBoolean(streamPublishResult_c.published),
+                            data
+                    );
+                } else {
+                    return ctx->NewObject(
+                            itemCls,
+                            initItemMID,
+                            ctx.bool2jBoolean(streamPublishResult_c.published)
+                    );
                 }
-
-                return ctx->NewObject(
-                        itemCls,
-                        initItemMID,
-                        ctx.bool2jBoolean(streamPublishResult_c.published),
-                        data
-                );
             }
-
 
             jobject remoteStreamId2Java(JniContextUtils &ctx,
                     privmx::endpoint::stream::RemoteStreamId remoteStreamId_c) {
@@ -810,6 +791,30 @@ namespace privmx {
                         ctx->NewStringUTF(data.streamRoomId.c_str()),
                         streamIds,
                         ctx->NewStringUTF(data.userId.c_str())
+                );
+            }
+
+            jobject
+            streamUnpublishedEventData2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::StreamUnpublishedEventData data
+            ) {
+                jclass cls = ctx->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/events/StreamUnpublishedEventData");
+                jmethodID ctor = ctx->GetMethodID(
+                        cls,
+                        "<init>",
+                        "("
+                        "Ljava/lang/String;"
+                        "Ljava/lang/Long;"
+                        ")V"
+                );
+
+                return ctx->NewObject(
+                        cls,
+                        ctor,
+                        ctx->NewStringUTF(data.streamRoomId.c_str()),
+                        ctx.long2jLong(data.streamId)
                 );
             }
 

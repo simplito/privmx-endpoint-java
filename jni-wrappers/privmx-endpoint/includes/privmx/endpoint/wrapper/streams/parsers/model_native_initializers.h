@@ -91,6 +91,10 @@ namespace privmx {
                     streamEventData2Java(JniContextUtils & ctx, privmx::endpoint::stream::StreamEventData
             data);
 
+            jobject
+                    streamUnpublishedEventData2Java(JniContextUtils & ctx, privmx::endpoint::stream::StreamUnpublishedEventData
+            data);
+
 
         } // streams
     } // wrapper
