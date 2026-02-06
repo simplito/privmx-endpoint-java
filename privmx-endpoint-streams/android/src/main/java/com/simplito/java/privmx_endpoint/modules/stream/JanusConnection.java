@@ -2,6 +2,7 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
 
+import org.json.JSONObject;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
@@ -11,7 +12,6 @@ import org.webrtc.SessionDescription;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class JanusConnection {
     protected final PeerConnection peerConnection;
@@ -35,7 +35,23 @@ public class JanusConnection {
                 peerConnectionFactory,
                 keyStore,
                 trackObserver,
-                iceCandidate -> onTrickle.accept(sessionId,iceCandidate.sdp)
+                iceCandidate -> {
+                    if(sessionId > -1) {
+                        JSONObject obj = new JSONObject();
+                        try{
+                            obj.put("sdp",iceCandidate.sdp);
+                            obj.put("adapterType",iceCandidate.adapterType.ordinal());
+                            obj.put("sdpMid",iceCandidate.sdpMid);
+                            obj.put("sdpMLineIndex",iceCandidate.sdpMLineIndex);
+                            obj.put("serverUrl",iceCandidate.serverUrl);
+                        }catch (Exception ignore){
+                            System.out.println("Error with obj json");
+                        }
+                        //TODO: Uncomment trickle when update privmx streams compilation
+//                        onTrickle.accept(sessionId,obj.toString());
+//                        System.out.println("Trickle executed");
+                    }
+                }
         );
         this.peerConnection = createPeerConnection(pcObserver);
     }
