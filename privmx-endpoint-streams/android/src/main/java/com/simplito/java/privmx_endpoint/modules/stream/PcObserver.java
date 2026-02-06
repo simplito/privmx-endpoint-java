@@ -1,7 +1,5 @@
-package com.simplito.java.privmx_endpoint.model;
+package com.simplito.java.privmx_endpoint.modules.stream;
 
-
-import com.simplito.java.privmx_endpoint.modules.stream.StreamApi;
 
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
@@ -14,7 +12,6 @@ import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.RtpReceiver;
 import org.webrtc.RtpTransceiver;
-import org.webrtc.VideoTrack;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,18 +21,15 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+//TODO: Fix warnings
 public class PcObserver implements PeerConnection.Observer {
     Map<String, PmxFrameCryptor> frameCryptorMap = new HashMap<>();
     PmxKeyStore keyStore;
     private PeerConnectionFactory peerConnectionFactory;
-    public StreamApi.TrackObserver trackObserver;
-    private String streamRoomId;
-    private PmxFrameCryptor.PmxFrameCryptorOptions options;
+    public TrackObserver trackObserver;
 
     private BiConsumer<List<MediaStream>, RtpReceiver> onAddTrack;
     private Consumer<String> onVideoTrack;
-    private OnFrameCallback onFrameCallback = null;
-    private Consumer<String> onRemoveVideoTrack = null;
 
     private Consumer<PeerConnection.SignalingState> onSignalingState;
     private Consumer<PeerConnection.PeerConnectionState> onPeerConnectionState;
@@ -51,16 +45,29 @@ public class PcObserver implements PeerConnection.Observer {
 
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
-                      String streamRoomId,
-                      PmxKeyStore store,
-                      PmxFrameCryptor.PmxFrameCryptorOptions options,
-                      StreamApi.TrackObserver trackObserver
-) {
+            PmxKeyStore store,
+            TrackObserver observer,
+            Consumer<IceCandidate> onIceCandidate
+    ) {
         this.peerConnectionFactory = peerConnectionFactory;
-        this.streamRoomId = streamRoomId;
         this.keyStore = store;
-        this.options = options;
-        this.trackObserver = trackObserver;
+        this.trackObserver = observer;
+        this.onIceCandidate = onIceCandidate;
+    }
+
+    public PcObserver(
+            PeerConnectionFactory peerConnectionFactory,
+            PmxKeyStore store,
+            TrackObserver observer
+    ) {
+        this(peerConnectionFactory, store, observer,null);
+    }
+
+    public PcObserver(
+            PeerConnectionFactory peerConnectionFactory,
+            PmxKeyStore store
+    ) {
+        this(peerConnectionFactory, store, null,null);
     }
 
     public void setOnAddTrack(BiConsumer<List<MediaStream>, RtpReceiver> onAddTrack) {
@@ -93,7 +100,7 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onIceCandidate(IceCandidate iceCandidate) {
-
+        onIceCandidate.accept(iceCandidate);
     }
 
     @Override
@@ -144,26 +151,13 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onTrack(RtpTransceiver transceiver) {
-        // todo -check
         RtpReceiver rtpReceiver = transceiver.getReceiver();
         MediaStreamTrack track = rtpReceiver.track();
         if (trackObserver != null) trackObserver.onTrack(track);
-//        // TODO: check if no duplication
         PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(peerConnectionFactory, rtpReceiver, keyStore);
-
-
     }
 
     public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {
-        this.options = options;
         frameCryptorMap.forEach((k, v) -> v.setOptions(options));
-    }
-
-    public void setOnFrame(OnFrameCallback onFrame) {
-        this.onFrameCallback = onFrame;
-    }
-
-    public void setOnRemoveVideoTrack(Consumer<String> onRemoveVideoTrack) {
-        this.onRemoveVideoTrack = onRemoveVideoTrack;
     }
 }

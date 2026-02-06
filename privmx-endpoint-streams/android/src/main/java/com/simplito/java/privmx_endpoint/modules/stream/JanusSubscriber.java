@@ -3,20 +3,19 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
 
 import org.webrtc.MediaConstraints;
-import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.SessionDescription;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 
 public class JanusSubscriber extends JanusConnection{
-    public JanusSubscriber(PeerConnectionFactory pcFactory, PmxKeyStore keyStore, PeerConnection peerConnection) {
-        super(pcFactory, keyStore, peerConnection, ConnectionType.Subscriber);
+    public JanusSubscriber(PeerConnectionFactory pcFactory, PmxKeyStore keyStore, TrackObserver observer, BiConsumer<Long,String> onTrickle) {
+        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle);
     }
 
     public String createAnswer(String offerSdp){
-        //TODO: Check if is in correct state
         CompletableFuture<SessionDescription> res = new CompletableFuture<>();
         peerConnection.setRemoteDescription(new SdpObserver(null), new SessionDescription(SessionDescription.Type.OFFER,offerSdp));
         peerConnection.createAnswer(new SdpObserver(res), new MediaConstraints());
