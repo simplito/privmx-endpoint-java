@@ -647,6 +647,135 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.timestamp,
                     privmx::wrapper::kvdbDeletedEntryEventData2Java(ctx, event_cast.data)
             );
+        } else  if (stream::Events::isStreamRoomCreatedEvent(event)) {
+            privmx::endpoint::stream::StreamRoomCreatedEvent event_cast = stream::Events::extractStreamRoomCreatedEvent(
+                    event);
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::streams::streamRoom2Java(ctx, event_cast.data)
+            );
+        } else if (stream::Events::isStreamRoomUpdatedEvent(event)) {
+            privmx::endpoint::stream::StreamRoomUpdatedEvent event_cast =
+                    stream::Events::extractStreamRoomUpdatedEvent(event);
+
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::streams::streamRoom2Java(ctx, event_cast.data)
+            );
+        } else if (stream::Events::isStreamRoomDeletedEvent(event)) {
+            privmx::endpoint::stream::StreamRoomDeletedEvent event_cast =
+                    stream::Events::extractStreamRoomDeletedEvent(event);
+
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::streams::streamRoomDeletedEventData2Java(ctx, event_cast.data)
+            );
+        } else if (stream::Events::isStreamPublishedEvent(event)) {
+            privmx::endpoint::stream::StreamPublishedEvent event_cast =
+                    stream::Events::extractStreamPublishedEvent(event);
+
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::streams::streamPublishedEventData2Java(ctx, event_cast.data)
+            );
+        } else if (stream::Events::isStreamUpdatedEvent(event)) {
+            privmx::endpoint::stream::StreamUpdatedEvent event_cast =
+                    stream::Events::extractStreamUpdatedEvent(event);
+
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::streams::streamUpdatedEventData2Java(ctx, event_cast.data)
+            );
+        } else if (stream::Events::isStreamJoinedEvent(event)) {
+            privmx::endpoint::stream::StreamJoinedEvent event_cast =
+                    stream::Events::extractStreamJoinedEvent(event);
+
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::streams::streamEventData2Java(ctx, event_cast.data)
+            );
+        } else if (stream::Events::isStreamUnpublishedEvent(event)) {
+            privmx::endpoint::stream::StreamUnpublishedEvent event_cast =
+                    stream::Events::extractStreamUnpublishedEvent(event);
+
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::streams::streamUnpublishedEventData2Java(ctx, event_cast.data)
+            );
+        } else if (stream::Events::isStreamLeftEvent(event)) {
+            privmx::endpoint::stream::StreamLeftEvent event_cast =
+                    stream::Events::extractStreamLeftEvent(event);
+
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::streams::streamEventData2Java(ctx, event_cast.data)
+            );
+        } else if (stream::Events::isStreamNewStreamsEvent(event)) {
+            privmx::endpoint::stream::StreamNewStreamsEvent event_cast =
+                    stream::Events::extractStreamNewStreamsEvent(event);
+
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::streams::newStreams2Java(ctx, event_cast.data)
+            );
+        } else if (stream::Events::isStreamsUpdatedEvent(event)) {
+            privmx::endpoint::stream::StreamsUpdatedEvent event_cast =
+                    stream::Events::extractStreamsUpdatedEvent(event);
+
+            return initEvent(
+                    ctx,
+                    event_cast.type,
+                    event_cast.channel,
+                    event_cast.connectionId,
+                    event_cast.subscriptions,
+                    event_cast.timestamp,
+                    privmx::wrapper::streams::streamsUpdated2Java(ctx, event_cast.data)
+            );
         } else {
             return initEvent(
                     ctx,

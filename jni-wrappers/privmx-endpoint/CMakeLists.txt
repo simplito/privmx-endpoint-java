@@ -29,7 +29,6 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/modules/ExtKey.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/modules/Utils.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/modules/KvdbApi.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/modules/EventsList.cpp
         src/cpp/streams/modules/StreamApiLow.cpp
         src/cpp/streams/modules/WebRTCInterfaceJNI.cpp
         src/cpp/streams/modules/StreamSettingsJNI.cpp

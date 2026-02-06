@@ -37,9 +37,6 @@ privmx::endpoint::core::ItemPolicy parseItemPolicy(JniContextUtils &ctx, jobject
 
 privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobject filesConfig);
 
-jobject initEvent(JniContextUtils &ctx, std::string type, std::string channel, int64_t connectionId,
-        std::vector<std::string> &subscriptions, int64_t timestamp, jobject data_j) ;
-
 jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> event);
 
 privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery);
