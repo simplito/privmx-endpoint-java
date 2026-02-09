@@ -208,13 +208,11 @@ public class StreamApiLow implements AutoCloseable {
 
 
     // todo
-    // public native void acceptOfferOnReconfigure(
-    public  void acceptOfferOnReconfigure(
+     public native void acceptOfferOnReconfigure(
+//    public  void acceptOfferOnReconfigure(
             long sessionId,
             SdpWithTypeModel sdp
-    ){
-
-    }
+    );
 
     public native List<String> subscribeFor(List<String> subscriptionQueries);
 
