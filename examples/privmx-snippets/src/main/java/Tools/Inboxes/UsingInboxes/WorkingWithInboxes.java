@@ -1,7 +1,8 @@
-package Tools.Threads.UsingThreads;
+package Tools.Inboxes.UsingInboxes;
 
+import com.simplito.java.privmx_endpoint.model.Inbox;
+import com.simplito.java.privmx_endpoint.model.InboxPublicView;
 import com.simplito.java.privmx_endpoint.model.PagingList;
-import com.simplito.java.privmx_endpoint.model.Thread;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint;
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer;
@@ -12,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 
-public class ManagingThreads {
+public class WorkingWithInboxes {
     // START: Initial Assumptions Snippets
     /*
         All the values below like BRIDGE_URL, SOLUTION_ID, CONTEXT_ID
@@ -39,7 +40,7 @@ public class ManagingThreads {
 
     PrivmxEndpointContainer endpointContainer = new PrivmxEndpointContainer();
 
-    Set<Modules> initModules = Set.of(Modules.THREAD);
+    Set<Modules> initModules = Set.of(Modules.INBOX);
     PrivmxEndpoint endpointSession = endpointContainer.connect(
             initModules,
             user1PrivateKey,
@@ -48,7 +49,7 @@ public class ManagingThreads {
     );
     // END: Initial Assumptions Snippets
 
-    void creatingThreads() {
+    void creatingInboxes() {
         byte[] privateMeta = "My private data".getBytes(StandardCharsets.UTF_8);
         byte[] publicMeta = "My public data".getBytes(StandardCharsets.UTF_8);
         List<UserWithPubKey> users = List.of(
@@ -59,7 +60,7 @@ public class ManagingThreads {
                 new UserWithPubKey(user1Id, user1PublicKey)
         );
 
-        String threadID = endpointSession.threadApi.createThread(
+        String inboxID = endpointSession.inboxApi.createInbox(
                 contextId,
                 users,
                 managers,
@@ -68,11 +69,11 @@ public class ManagingThreads {
         );
     }
 
-    void listingThreads() {
+    void listingInboxes() {
         long limit = 30L;
         long skip = 0L;
 
-        PagingList<Thread> threads = endpointSession.threadApi.listThreads(
+        PagingList<Inbox> inboxes = endpointSession.inboxApi.listInboxes(
                 contextId,
                 skip,
                 limit,
@@ -80,9 +81,9 @@ public class ManagingThreads {
         );
     }
 
-    void modifyingThreads() {
-        String threadID = "THREAD_ID";
-        Thread thread = endpointSession.threadApi.getThread(threadID);
+    void modifyingInboxes() {
+        String inboxID = "INBOX_ID";
+        Inbox inbox = endpointSession.inboxApi.getInbox(inboxID);
         List<UserWithPubKey> newUsers = List.of(
                 new UserWithPubKey(user1Id, user1PublicKey),
                 new UserWithPubKey(user2Id, user2PublicKey),
@@ -92,23 +93,32 @@ public class ManagingThreads {
                 new UserWithPubKey(user1Id, user1PublicKey),
                 new UserWithPubKey(user2Id, user2PublicKey)
         );
-        byte[] newPrivateMeta = "New thread name".getBytes(StandardCharsets.UTF_8);
+        byte[] newPrivateMeta = "New inbox name".getBytes(StandardCharsets.UTF_8);
 
-        endpointSession.threadApi.updateThread(
-                threadID,
+        endpointSession.inboxApi.updateInbox(
+                inboxID,
                 newUsers,
                 newManagers,
-                thread.publicMeta,
+                inbox.publicMeta,
                 newPrivateMeta,
-                thread.version,
-                false,       // force
-                false,             // forceGenerateNewKey
-                thread.policy
+                null,     // filesConfig
+                inbox.version,
+                false,        // force
+                false,              // forceGenerateNewKey
+                inbox.policy
         );
     }
 
-    void deletingThreads() {
-        String threadID = "THREAD_ID";
-        endpointSession.threadApi.deleteThread(threadID);
+    void deletingInboxes() {
+        String inboxID = "INBOX_ID";
+        endpointSession.inboxApi.deleteInbox(inboxID);
+    }
+
+    void usingPublicView() {
+        String inboxID = "INBOX_ID";
+
+        InboxPublicView inboxPublicView = endpointSession.inboxApi.getInboxPublicView(inboxID);
+        String publicMeta = new String(inboxPublicView.publicMeta, StandardCharsets.UTF_8);
+        System.out.println(publicMeta);
     }
 }

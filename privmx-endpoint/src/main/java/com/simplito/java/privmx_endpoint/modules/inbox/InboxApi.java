@@ -19,6 +19,8 @@ import com.simplito.java.privmx_endpoint.model.InboxEntry;
 import com.simplito.java.privmx_endpoint.model.InboxPublicView;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
+import com.simplito.java.privmx_endpoint.model.events.InboxDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.InboxEntryDeletedEventData;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.InboxEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
@@ -709,7 +711,7 @@ public class InboxApi implements AutoCloseable {
      * @param eventType    type of event you listen for
      * @param selectorType scope on which you listen for events
      * @param selectorId   ID of the selector
-     * @return // todo - add return description
+     * @return Query for subscribing event
      * @throws IllegalStateException thrown when instance is closed.
      * @throws PrivmxException       thrown when method encounters an exception.
      * @throws NativeException       thrown when method encounters an unknown exception.
