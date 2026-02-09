@@ -443,6 +443,24 @@ public class StreamApi {
         }
     }
 
+    public void removeTrack(
+            StreamHandle streamHandle,
+            MediaDevice track
+    ) throws IllegalStateException {
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("Stream with this StreamHandle doesn't exist.");
+        JanusPublisher publisher = session.getPublisher();
+
+        if (publisher == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+        if (track.type == DeviceType.Audio) {
+            publisher.removeAudioTrack(track.name);
+        } else if (track.type == DeviceType.Video) {
+            publisher.removeVideoTrack(track.name);
+        }
+    }
+
     public StreamPublishResult publishStream(StreamHandle streamHandle) {
         return api.publishStream(streamHandle);
     }
