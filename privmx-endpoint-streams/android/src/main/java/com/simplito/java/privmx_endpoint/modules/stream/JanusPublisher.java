@@ -92,9 +92,24 @@ public class JanusPublisher extends JanusConnection{
     public void removeVideoTrack(String id) {
         VideoTrackInfo videoTrackInfo = videoTracks.get(id);
         if(videoTrackInfo == null) return;
+//        peerConnection.removeTrack(videoTrackInfo.sender);
+//        videoTracks.remove(id);
+//        videoCapturers.remove(id);
+
+        videoTrackInfo.track.setEnabled(false);
+        VideoCapturer videoCapturer = videoCapturers.get(id);
+
+        if (videoCapturer != null) {
+            try {
+                videoCapturer.stopCapture();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+//            videoCapturer.dispose();
+        }
         peerConnection.removeTrack(videoTrackInfo.sender);
-        videoTracks.remove(id);
-        videoCapturers.remove(id);
+
+        System.out.println("track video removed");
     }
 
     public String createOffer(){
