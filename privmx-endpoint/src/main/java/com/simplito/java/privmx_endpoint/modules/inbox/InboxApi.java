@@ -26,6 +26,8 @@ import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.store.StoreApi;
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi;
+import com.simplito.java.privmx_endpoint.model.events.InboxDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.events.InboxEntryDeletedEventData;
 
 import java.util.Collections;
 import java.util.List;

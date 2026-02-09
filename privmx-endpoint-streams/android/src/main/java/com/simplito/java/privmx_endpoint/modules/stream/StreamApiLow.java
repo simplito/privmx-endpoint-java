@@ -189,12 +189,7 @@ public class StreamApiLow implements AutoCloseable {
     public native StreamPublishResult publishStream(StreamHandle streamHandle);
 
     // todo
-    // public native StreamPublishResult updateStream(
-    public StreamPublishResult updateStream(
-            StreamHandle streamHandle
-    ){
-     return new StreamPublishResult(false);
-    }
+    public native StreamPublishResult updateStream(StreamHandle streamHandle);
 
     public native void unpublishStream(StreamHandle streamHandle);
 
@@ -208,8 +203,7 @@ public class StreamApiLow implements AutoCloseable {
 
 
     // todo
-     public native void acceptOfferOnReconfigure(
-//    public  void acceptOfferOnReconfigure(
+    public native void acceptOfferOnReconfigure(
             long sessionId,
             SdpWithTypeModel sdp
     );
