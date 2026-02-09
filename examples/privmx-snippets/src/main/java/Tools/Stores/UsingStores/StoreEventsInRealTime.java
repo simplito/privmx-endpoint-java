@@ -1,31 +1,42 @@
 package Tools.Stores.UsingStores;
 
+import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StoreEventSelectorType;
+import com.simplito.java.privmx_endpoint_extra.events.CallbackRegistration;
 import com.simplito.java.privmx_endpoint_extra.events.EventType;
 
-public class StoreEventsInRealTime extends ManagingStores{
+public class StoreEventsInRealTime extends ManagingStores {
     void handlingStoreEvents() {
-        String callbacksID = "CALLBACK_ID";
+        String storeCallbacksGroup = "STORE_CALLBACKS_GROUP";
+        String fileCallbacksGroup = "FILE_CALLBACKS_GROUP";
         String storeID = "STORE_ID";
 
         // Starting the Event Loop
         endpointContainer.startListening();
 
-        // Handling Store Events
-        endpointSession.registerCallback(
-                callbacksID,
-                EventType.StoreCreatedEvent,
-                newStore -> {
-                    System.out.println(newStore.storeId);
-                }
+        endpointSession.registerManyCallbacks(
+
+                // Handling Store Events
+                new CallbackRegistration<>(
+                        storeCallbacksGroup,
+                        EventType.StoreCreatedEvent(contextId),
+                        newStore -> {
+                            System.out.println(newStore.storeId);
+                        }
+                ),
+
+                // Handling File Events
+                new CallbackRegistration<>(
+                        fileCallbacksGroup,
+                        EventType.StoreFileCreatedEvent(
+                                StoreEventSelectorType.STORE_ID,
+                                storeID
+                        ),
+                        newFile -> {
+                            System.out.println(newFile.info.fileId);
+                        }
+                )
         );
 
-        // Handling File Events
-        endpointSession.registerCallback(
-                callbacksID,
-                EventType.StoreFileCreatedEvent(storeID),
-                newFile -> {
-                    System.out.println(newFile.info.fileId);
-                }
-        );
+        endpointSession.unregisterCallbacks(storeCallbacksGroup, fileCallbacksGroup);
     }
 }

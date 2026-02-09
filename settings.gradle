@@ -42,7 +42,7 @@ include ':examples:privmx-snippets'
 include ":jni-wrappers"
 
 // streams
-include ':privmx-endpoint-streams:android'
-//include ':privmx-endpoint-streams:jvm'
+include ':privmx-endpoint-streams-android'
+include ':privmx-endpoint-streams:jvm'
 
 project(':privmx-endpoint-jni').projectDir = file("privmx-endpoint/src/main/cpp")

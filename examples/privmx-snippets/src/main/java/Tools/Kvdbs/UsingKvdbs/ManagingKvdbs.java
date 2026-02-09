@@ -1,7 +1,6 @@
-package Tools.Threads.UsingThreads;
+package Tools.Kvdbs.UsingKvdbs;
 
-import com.simplito.java.privmx_endpoint.model.PagingList;
-import com.simplito.java.privmx_endpoint.model.Thread;
+import com.simplito.java.privmx_endpoint.model.Kvdb;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint;
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer;
@@ -12,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 
-public class ManagingThreads {
+public class ManagingKvdbs {
     // START: Initial Assumptions Snippets
     /*
         All the values below like BRIDGE_URL, SOLUTION_ID, CONTEXT_ID
@@ -39,7 +38,7 @@ public class ManagingThreads {
 
     PrivmxEndpointContainer endpointContainer = new PrivmxEndpointContainer();
 
-    Set<Modules> initModules = Set.of(Modules.THREAD);
+    Set<Modules> initModules = Set.of(Modules.KVDB);
     PrivmxEndpoint endpointSession = endpointContainer.connect(
             initModules,
             user1PrivateKey,
@@ -48,9 +47,10 @@ public class ManagingThreads {
     );
     // END: Initial Assumptions Snippets
 
-    void creatingThreads() {
-        byte[] privateMeta = "My private data".getBytes(StandardCharsets.UTF_8);
-        byte[] publicMeta = "My public data".getBytes(StandardCharsets.UTF_8);
+    // START: Creating KVDBs
+    void creatingKvdbs() {
+        byte[] privateMeta = "KVDB's private data".getBytes(StandardCharsets.UTF_8);
+        byte[] publicMeta = "KVDB's public data".getBytes(StandardCharsets.UTF_8);
         List<UserWithPubKey> users = List.of(
                 new UserWithPubKey(user1Id, user1PublicKey),
                 new UserWithPubKey(user2Id, user2PublicKey)
@@ -59,7 +59,7 @@ public class ManagingThreads {
                 new UserWithPubKey(user1Id, user1PublicKey)
         );
 
-        String threadID = endpointSession.threadApi.createThread(
+        endpointSession.kvdbApi.createKvdb(
                 contextId,
                 users,
                 managers,
@@ -67,48 +67,55 @@ public class ManagingThreads {
                 privateMeta
         );
     }
+    // END: Creating KVDBs
 
-    void listingThreads() {
-        long limit = 30L;
-        long skip = 0L;
+    // START: Listing KVDBs
+    void listingKvdbs() {
+        long startIndex = 0;
+        long pageSize = 30;
 
-        PagingList<Thread> threads = endpointSession.threadApi.listThreads(
+        List<Kvdb> kvdbs = endpointSession.kvdbApi.listKvdbs(
                 contextId,
-                skip,
-                limit,
+                startIndex,
+                pageSize,
                 SortOrder.DESC
-        );
+        ).readItems;
     }
+    // END: Listing KVDBs
 
-    void modifyingThreads() {
-        String threadID = "THREAD_ID";
-        Thread thread = endpointSession.threadApi.getThread(threadID);
-        List<UserWithPubKey> newUsers = List.of(
+    // START: Modifying KVDBs
+    void updatingKvdbs() {
+        String kvdbID = "KVDB_ID";
+        byte[] privateMeta = "New KVDB's private data".getBytes(StandardCharsets.UTF_8);
+        byte[] publicMeta = "New KVDB's public data".getBytes(StandardCharsets.UTF_8);
+        List<UserWithPubKey> newUsersList = List.of(
                 new UserWithPubKey(user1Id, user1PublicKey),
-                new UserWithPubKey(user2Id, user2PublicKey),
+                new UserWithPubKey(user2Id, user3PublicKey),
                 new UserWithPubKey(user3Id, user3PublicKey)
         );
-        List<UserWithPubKey> newManagers = List.of(
-                new UserWithPubKey(user1Id, user1PublicKey),
-                new UserWithPubKey(user2Id, user2PublicKey)
+        List<UserWithPubKey> managers = List.of(
+                new UserWithPubKey(user1Id, user1PublicKey)
         );
-        byte[] newPrivateMeta = "New thread name".getBytes(StandardCharsets.UTF_8);
+        Kvdb kvdb = endpointSession.kvdbApi.getKvdb(kvdbID);
 
-        endpointSession.threadApi.updateThread(
-                threadID,
-                newUsers,
-                newManagers,
-                thread.publicMeta,
-                newPrivateMeta,
-                thread.version,
-                false,       // force
-                false,             // forceGenerateNewKey
-                thread.policy
+        endpointSession.kvdbApi.updateKvdb(
+                kvdbID,
+                newUsersList,
+                managers,
+                publicMeta,
+                privateMeta,
+                kvdb.version,
+                false,     // force
+                false,           // forceGenerateNewKey
+                kvdb.policy
         );
     }
+    // END: Modifying KVDBs
 
-    void deletingThreads() {
-        String threadID = "THREAD_ID";
-        endpointSession.threadApi.deleteThread(threadID);
+    // START: Deleting KVDBs
+    void deletingKvdb() {
+        String kvdbID = "KVDB_ID";
+        endpointSession.kvdbApi.deleteKvdb(kvdbID);
     }
+    // END: Deleting KVDBs
 }
