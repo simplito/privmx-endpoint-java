@@ -14,8 +14,8 @@ package com.simplito.java.privmx_endpoint.streams;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
-import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StreamEventSelectorType;
-import com.simplito.java.privmx_endpoint.model.events.eventTypes.StreamEventType;
+import com.simplito.java.privmx_endpoint.streams.model.events.eventSelectorTypes.StreamEventSelectorType;
+import com.simplito.java.privmx_endpoint.streams.model.events.eventTypes.StreamEventType;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 import com.simplito.java.privmx_endpoint.streams.model.SdpWithTypeModel;
@@ -28,6 +28,8 @@ import com.simplito.java.privmx_endpoint.streams.model.StreamSubscription;
 import com.simplito.java.privmx_endpoint.streams.model.TurnCredentials;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class StreamApiLow implements AutoCloseable {
     static {
@@ -46,32 +48,34 @@ public class StreamApiLow implements AutoCloseable {
 
 //    private native Long init(Connection connection, EventApi eventApi) throws IllegalStateException;
 
-    public static native StreamApiLow create(
+    private static native StreamApiLow create(
             Connection connection,
             EventApi eventApi
     );
 
-//    public StreamApiLow(
-//            Connection connection
-//    ) throws IllegalStateException {
-//        this(connection, null);
-//    }
+    public StreamApiLow(
+            Connection connection
+    ) throws IllegalStateException {
+        this(connection, null);
+    }
 
-//    public StreamApiLow(
-//            Connection connection,
-//            EventApi eventApi
-//    ) throws IllegalStateException {
-//        Objects.requireNonNull(connection);
-//        EventApi tmpEventApi = eventApi == null ? new EventApi(connection) : null;
-//        this.api = init(
-//                connection,
-//                Optional.ofNullable(eventApi).orElse(tmpEventApi)
-//        );
-//        try {
-//            if (eventApi != null) tmpEventApi.close();
-//        } catch (Exception ignore) {
-//        }
-//    }
+    public StreamApiLow(
+            Connection connection,
+            EventApi eventApi
+    ) throws IllegalStateException {
+        Objects.requireNonNull(connection);
+        EventApi tmpEventApi = eventApi == null ? new EventApi(connection) : null;
+        StreamApiLow streamApiLow = create(
+                connection,
+                Optional.ofNullable(eventApi).orElse(tmpEventApi)
+        );
+//        api = streamApiLow.api;
+
+        try {
+            if (eventApi != null) tmpEventApi.close();
+        } catch (Exception ignore) {
+        }
+    }
 
     public native List<TurnCredentials> getTurnCredentials();
 
@@ -140,6 +144,7 @@ public class StreamApiLow implements AutoCloseable {
     ){
         return listStreamRooms(contextId, skip, limit, sortOrder, lastId, sortBy, null);
     }
+
     public PagingList<StreamRoom> listStreamRooms(
             String contextId,
             long skip,
