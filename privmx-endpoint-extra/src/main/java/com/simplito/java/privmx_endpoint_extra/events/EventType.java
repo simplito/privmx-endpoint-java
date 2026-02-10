@@ -47,6 +47,16 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
+import com.simplito.java.privmx_endpoint.streams.model.StreamRoom;
+import com.simplito.java.privmx_endpoint.streams.model.events.NewStreams;
+import com.simplito.java.privmx_endpoint.streams.model.events.StreamEventData;
+import com.simplito.java.privmx_endpoint.streams.model.events.StreamPublishedEventData;
+import com.simplito.java.privmx_endpoint.streams.model.events.StreamRoomDeletedEventData;
+import com.simplito.java.privmx_endpoint.streams.model.events.StreamUnpublishedEventData;
+import com.simplito.java.privmx_endpoint.streams.model.events.StreamUpdatedEventData;
+import com.simplito.java.privmx_endpoint.streams.model.events.StreamsUpdatedData;
+import com.simplito.java.privmx_endpoint.streams.model.events.eventSelectorTypes.StreamEventSelectorType;
+import com.simplito.java.privmx_endpoint.streams.model.events.eventTypes.StreamEventType;
 
 import java.util.Objects;
 
@@ -715,4 +725,103 @@ public class EventType<T> {
         );
     }
 
+    public static EventType<StreamRoom> StreamRoomCreatedEvent(String contextId) {
+        return new EventType<>(
+                "streamRoomCreated",
+                StreamEventType.STREAMROOM_CREATE,
+                StreamEventSelectorType.CONTEXT_ID,
+                contextId,
+                StreamRoom.class
+        );
+    }
+
+    public static EventType<StreamRoom> StreamRoomUpdatedEvent(StreamEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "streamRoomUpdated",
+                StreamEventType.STREAMROOM_UPDATE,
+                selectorType,
+                selectorId,
+                StreamRoom.class
+        );
+    }
+
+    public static EventType<StreamRoomDeletedEventData> StreamRoomDeletedEvent(StreamEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "streamRoomDeleted",
+                StreamEventType.STREAMROOM_DELETE,
+                StreamEventSelectorType.CONTEXT_ID,
+                selectorId,
+                StreamRoomDeletedEventData.class
+        );
+    }
+
+    public static EventType<StreamPublishedEventData> StreamPublishedEvent(StreamEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "streamPublished",
+                StreamEventType.STREAM_PUBLISH,
+                selectorType,
+                selectorId,
+                StreamPublishedEventData.class
+        );
+    }
+
+    public static EventType<StreamUpdatedEventData> StreamUpdatedEvent(StreamEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "streamUpdated",
+                StreamEventType.STREAMROOM_UPDATE,
+                selectorType,
+                selectorId,
+                StreamUpdatedEventData.class
+        );
+    }
+
+    public static EventType<StreamEventData> StreamJoinedEvent(StreamEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "streamJoined",
+                StreamEventType.STREAM_JOIN,
+                selectorType,
+                selectorId,
+                StreamEventData.class
+        );
+    }
+
+    public static EventType<StreamUnpublishedEventData> StreamUnpublishedEvent(StreamEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "streamUnpublished",
+                StreamEventType.STREAM_UNPUBLISH,
+                selectorType,
+                selectorId,
+                StreamUnpublishedEventData.class
+        );
+    }
+
+    public static EventType<StreamEventData> StreamLeftEvent(StreamEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "streamLeft",
+                StreamEventType.STREAM_LEAVE,
+                selectorType,
+                selectorId,
+                StreamEventData.class
+        );
+    }
+
+    public static EventType<NewStreams> StreamNewStreamsEvent(StreamEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "StreamNewStreams",
+                StreamEventType.STREAMROOM_UPDATE,
+                selectorType,
+                selectorId,
+                NewStreams.class
+        );
+    }
+
+    public static EventType<StreamsUpdatedData> StreamsUpdatedEvent(StreamEventSelectorType selectorType, String selectorId) {
+        return new EventType<>(
+                "streamsUpdated",
+                StreamEventType.STREAMROOM_UPDATE,
+                selectorType,
+                selectorId,
+                StreamsUpdatedData.class
+        );
+    }
 }

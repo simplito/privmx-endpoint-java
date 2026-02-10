@@ -21,6 +21,7 @@ import com.simplito.java.privmx_endpoint.modules.inbox.InboxApi;
 import com.simplito.java.privmx_endpoint.modules.kvdb.KvdbApi;
 import com.simplito.java.privmx_endpoint.modules.store.StoreApi;
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi;
+import com.simplito.java.privmx_endpoint.streams.StreamApiLow;
 import com.simplito.java.privmx_endpoint_extra.model.Modules;
 
 import java.util.Set;
@@ -62,6 +63,10 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
      */
     public final Connection connection;
 
+    /**
+     * Reference to STREAM module.
+     */
+    public final StreamApiLow streamApiLow;
 
     /**
      * Initializes modules and connects to PrivMX Bridge server using given parameters.
@@ -95,6 +100,7 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
         ) : null;
         eventApi = enableModule.contains(Modules.CUSTOM_EVENT) ? new EventApi(connection) : null;
         kvdbApi = enableModule.contains(Modules.KVDB) ? new KvdbApi(connection) : null;
+        streamApiLow = enableModule.contains(Modules.KVDB) ? new StreamApiLow(connection, eventApi) : null;
     }
 
     /**
@@ -133,5 +139,6 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
         if (eventApi != null) eventApi.close();
         if (kvdbApi != null) kvdbApi.close();
         if (connection != null) connection.close();
+        if (streamApiLow != null) streamApiLow.close();
     }
 }
