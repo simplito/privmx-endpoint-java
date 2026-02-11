@@ -68,7 +68,8 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_create(
         JNIEnv *env,
         jclass clazz,
         jobject connection,
-        jobject eventApi
+        jobject eventApi,
+        jobject stream_encryption_mode
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(connection, "Connection")) {
