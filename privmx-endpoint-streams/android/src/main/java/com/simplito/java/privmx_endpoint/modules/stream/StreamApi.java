@@ -203,124 +203,28 @@ public class StreamApi {
         return handle;
     }
 
-    //
-    public List<MediaDevice> getMediaDevices() {
-        List<MediaDevice> result = new ArrayList<>();
-
-        AudioManager audioManager = (AudioManager) appContext.getSystemService(Context.AUDIO_SERVICE);
-        CameraEnumerator videoManager;
-
-        android.media.AudioDeviceInfo[] audioDevices = audioManager.getDevices(GET_DEVICES_OUTPUTS);
-        if (Camera2Enumerator.isSupported(appContext)) {
-            videoManager = new Camera2Enumerator(appContext);
-        } else {
-            videoManager = new Camera1Enumerator(true);
-        }
-        String[] videoDevices = videoManager.getDeviceNames();
-
-        audioManager.getActiveRecordingConfigurations().forEach(AudioRecordingConfiguration::getAudioDevice);
-
-        List<MediaDevice> audio = Arrays.stream(audioDevices).map(it ->
-                new MediaDevice(
-                        it.getProductName().toString(),
-                        String.valueOf(it.getId()),
-                        DeviceType.Audio
-                )
-        ).collect(Collectors.toList());
-        result.addAll(audio);
-
-        List<MediaDevice> video = Arrays.stream(videoDevices).map(it ->
-                new MediaDevice(
-                        it,
-                        it,                 // todo: what else can it be?
-                        DeviceType.Audio
-                )
-        ).collect(Collectors.toList());
-        result.addAll(video);
-
-        return result;
-    }
-
-    private VideoCapturer createCameraCapturer(CameraEnumerator enumerator) {
-        final String[] deviceNames = enumerator.getDeviceNames();
-
-        // First, try to find front facing camera
-        Logging.d(TAG, "Looking for front facing cameras.");
-        for (String deviceName : deviceNames) {
-            if (enumerator.isFrontFacing(deviceName)) {
-                Logging.d(TAG, "Creating front facing camera capturer.");
-                VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
-
-                if (videoCapturer != null) {
-                    return videoCapturer;
-                }
-            }
-        }
-
-        // Front facing camera not found, try something else
-        Logging.d(TAG, "Looking for other cameras.");
-        for (String deviceName : deviceNames) {
-            if (!enumerator.isFrontFacing(deviceName)) {
-                Logging.d(TAG, "Creating other camera capturer.");
-                VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
-
-                if (videoCapturer != null) {
-                    return videoCapturer;
-                }
-            }
-        }
-
-        return null;
-    }
-
     /**
-     * @param context
-     * @param localSink
      * @param streamHandle
      * @param track
      * @throws IllegalStateException if call addTrack before call createStream
      */
     public void addTrack(
-            Context context,
-            VideoSink localSink,
             StreamHandle streamHandle,
-            MediaDevice track
+            MediaStreamTrack track
     ) throws IllegalStateException {
         RoomJanusSession session = pcManager.getSession(streamHandle);
         if (session == null)
             throw new IllegalStateException("Stream not exists. Create stream first.");
-        JanusPublisher connection = session.getPublisher();
-        if (connection == null)
+        JanusPublisher publisher = session.getPublisher();
+        if (publisher == null)
             throw new IllegalStateException("This StreamHandle has not created companion publisher.");
-        switch (track.type) {
-            case Audio: {
-                AudioSource audioSource = connection.peerConnectionFactory.createAudioSource(new MediaConstraints());
-                AudioTrack audioTrack = connection.peerConnectionFactory.createAudioTrack(track.name, audioSource);
-                audioTrack.setVolume(10.0);
-                connection.addAudioTrack(audioTrack);
+        switch (track.kind()){
+            case MediaStreamTrack.VIDEO_TRACK_KIND: {
+                publisher.addAudioTrack((AudioTrack) track);
                 break;
             }
-
-            case Video: {
-                SurfaceTextureHelper surfaceTextureHelper =
-                        SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
-                VideoSource videoSource = connection.peerConnectionFactory.createVideoSource(false, false);        // todo - zaimplementowac caly capturer?
-                VideoCapturer capturer = createCameraCapturer(new Camera2Enumerator(context));
-                capturer.initialize(surfaceTextureHelper, appContext, videoSource.getCapturerObserver());
-//                    capturer.startCapture(1920, 1080, 30);
-                VideoTrack videoTrack = connection.peerConnectionFactory.createVideoTrack(track.name, videoSource);
-                videoTrack.setEnabled(true);
-                videoTrack.addSink(localSink);
-                connection.addVideoTrack(videoTrack,capturer);
-//                    if (Camera2Enumerator.isSupported(appContext)) {
-//                        enumerator = new Camera2Enumerator(appContext);
-//                    } else {
-//                        enumerator = new Camera1Enumerator(true);
-//                    }
-//                    capturer = enumerator.createCapturer(track.name, null);
-
-                capturer.startCapture(1280, 720, 30); // ???
-                System.out.println("after start capturer");
+            case MediaStreamTrack.AUDIO_TRACK_KIND:{
+                publisher.addVideoTrack((VideoTrack) track);
                 break;
             }
         }
