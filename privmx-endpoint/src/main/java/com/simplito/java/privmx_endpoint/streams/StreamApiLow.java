@@ -74,7 +74,7 @@ public class StreamApiLow implements AutoCloseable {
             Connection connection,
             EventApi eventApi
     ) throws IllegalStateException {
-         this(connection, eventApi, StreamEncryptionMode.SINGLE_KEY);
+        this(connection, eventApi, StreamEncryptionMode.SINGLE_KEY);
     }
 
     public StreamApiLow(
@@ -103,6 +103,27 @@ public class StreamApiLow implements AutoCloseable {
             byte[] privateMeta,
             ContainerPolicy policies
     );
+
+    public native String createStreamRoomEx(
+            String contextId,
+            List<UserWithPubKey> users,
+            List<UserWithPubKey> managers,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            String type,
+            ContainerPolicy policies
+    );
+
+    public String createStreamRoomEx(
+            String contextId,
+            List<UserWithPubKey> users,
+            List<UserWithPubKey> managers,
+            byte[] publicMeta,
+            byte[] privateMeta,
+            String type
+    ) {
+        return this.createStreamRoomEx(contextId, users, managers, publicMeta, privateMeta, type, null);
+    }
 
     //TODO: write methods with default values for force and forceGenerateNewKey parameters
     public void updateStreamRoom(
