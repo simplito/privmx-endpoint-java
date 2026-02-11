@@ -199,6 +199,50 @@ public class StreamApiLow implements AutoCloseable {
         return listStreamRooms(contextId, skip, limit, "desc", null, null, null);
     }
 
+    public native PagingList<StreamRoom> listStreamRoomsEx(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String type,
+            String lastId,
+            String sortBy,
+            String queryAsJson
+    );
+
+    public PagingList<StreamRoom> listStreamRoomsEx(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String type,
+            String lastId,
+            String sortBy
+    ) {
+        return listStreamRoomsEx(contextId, skip, limit, sortOrder, type, lastId, sortBy, null);
+    }
+
+    public PagingList<StreamRoom> listStreamRoomsEx(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String type,
+            String lastId
+    ) {
+        return listStreamRoomsEx(contextId, skip, limit, sortOrder, type, lastId, null, null);
+    }
+
+    public PagingList<StreamRoom> listStreamRoomsEx(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String type
+    ) {
+        return listStreamRoomsEx(contextId, skip, limit, sortOrder, type, null, null, null);
+    }
+
     public native StreamRoom getStreamRoom(String streamRoomId);
 
     public native StreamRoom getStreamRoomEx(String streamRoomId, String type);
