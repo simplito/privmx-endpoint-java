@@ -189,12 +189,7 @@ public class StreamApiLow implements AutoCloseable {
     public native StreamPublishResult publishStream(StreamHandle streamHandle);
 
     // todo
-    // public native StreamPublishResult updateStream(
-    public StreamPublishResult updateStream(
-            StreamHandle streamHandle
-    ){
-     return new StreamPublishResult(false);
-    }
+    public native StreamPublishResult updateStream(StreamHandle streamHandle);
 
     public native void unpublishStream(StreamHandle streamHandle);
 
