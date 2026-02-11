@@ -14,9 +14,11 @@
 namespace privmx {
     namespace wrapper {
         namespace streams {
-
             //Streams
-            jobject keyType2Java(JniContextUtils &ctx, privmx::endpoint::stream::KeyType keyType_c) {
+            jobject keyType2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::KeyType keyType_c
+            ) {
                 jclass keyTypeClass = ctx.findClass("com/simplito/java/privmx_endpoint/streams/model/KeyType");
                 jfieldID caseFieldId = nullptr;
                 switch (keyType_c) {
@@ -36,7 +38,10 @@ namespace privmx {
                 return ctx->GetStaticObjectField(keyTypeClass, caseFieldId);
             }
 
-            jobject key2Java(JniContextUtils &ctx, privmx::endpoint::stream::Key key_c) {
+            jobject key2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::Key key_c
+            ) {
                 jclass keyCls = ctx.findClass(
                         "com/simplito/java/privmx_endpoint/streams/model/Key");
                 jmethodID initKeyMID = ctx->GetMethodID(
@@ -60,7 +65,10 @@ namespace privmx {
                 );
             }
 
-            jobject stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c) {
+            jobject stream2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::Stream stream_c
+            ) {
                 jclass streamCls = ctx.findClass(
                         "com/simplito/java/privmx_endpoint/model/Stream");
                 jmethodID initStreamMID = ctx->GetMethodID(
@@ -79,9 +87,10 @@ namespace privmx {
                 );
             }
 
-            jobject
-            turnCredentials2Java(JniContextUtils &ctx,
-                    privmx::endpoint::stream::TurnCredentials turnCredentials_c) {
+            jobject turnCredentials2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::TurnCredentials turnCredentials_c
+            ) {
                 jclass turnCredentialsCls = ctx.findClass(
                         "com/simplito/java/privmx_endpoint/streams/model/TurnCredentials");
                 jmethodID initTurnCredentialsMID = ctx->GetMethodID(
@@ -104,9 +113,10 @@ namespace privmx {
                 );
             }
 
-            jobject
-            sdpWithTypeModel2Java(JniContextUtils &ctx,
-                    privmx::endpoint::stream::SdpWithTypeModel sdpWithTypeModel_c) {
+            jobject sdpWithTypeModel2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::SdpWithTypeModel sdpWithTypeModel_c
+            ) {
                 jclass sdpWithTypeModelCls = ctx.findClass(
                         "com/simplito/java/privmx_endpoint/streams/model/SdpWithTypeModel");
                 jmethodID initSdpWithTypeModelMID = ctx->GetMethodID(
@@ -319,8 +329,10 @@ namespace privmx {
                 );
             }
 
-            jobject
-            streamInfo2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamInfo streamInfo_c) {
+            jobject streamInfo2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::StreamInfo streamInfo_c
+            ) {
                 jclass arrayCls = ctx->FindClass("java/util/ArrayList");
                 jmethodID initArrayMID = ctx->GetMethodID(
                         arrayCls,
@@ -387,7 +399,11 @@ namespace privmx {
                 );
 
             }
-            jobject publishedStreamData2Java(JniContextUtils &ctx, privmx::endpoint::stream::PublishedStreamData publishedStreamData_c) {
+
+            jobject publishedStreamData2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::PublishedStreamData publishedStreamData_c
+            ) {
                 jclass itemCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/streams/model/PublishedStreamData");
 
@@ -410,7 +426,10 @@ namespace privmx {
                 );
             }
 
-            jobject streamPublishResult2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamPublishResult streamPublishResult_c) {
+            jobject streamPublishResult2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::StreamPublishResult streamPublishResult_c
+            ) {
                 jclass itemCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/streams/model/StreamPublishResult");
 
@@ -437,8 +456,10 @@ namespace privmx {
             }
 
 
-            jobject remoteStreamId2Java(JniContextUtils &ctx,
-                    privmx::endpoint::stream::RemoteStreamId remoteStreamId_c) {
+            jobject remoteStreamId2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::RemoteStreamId remoteStreamId_c
+            ) {
                 jclass itemCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/RemoteStreamId");
 
@@ -457,7 +478,10 @@ namespace privmx {
                 );
             }
 
-            jobject frame2Java(JniContextUtils &ctx, privmx::endpoint::stream::Frame &frame_c) {
+            jobject frame2Java(
+                    JniContextUtils &ctx,
+                    privmx::endpoint::stream::Frame &frame_c
+            ) {
                 jclass itemCls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/Frame");
 
