@@ -201,6 +201,8 @@ public class StreamApiLow implements AutoCloseable {
 
     public native StreamRoom getStreamRoom(String streamRoomId);
 
+    public native StreamRoom getStreamRoomEx(String streamRoomId, String type);
+
     public native void deleteStreamRoom(String streamRoomId);
 
     // Stream
