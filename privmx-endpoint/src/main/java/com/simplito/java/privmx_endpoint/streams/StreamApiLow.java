@@ -193,7 +193,7 @@ public class StreamApiLow implements AutoCloseable {
     public native StreamPublishResult publishStream(StreamHandle streamHandle);
 
     // todo
-    public native StreamPublishResult updateStream(StreamHandle streamHandle);
+//    public native StreamPublishResult updateStream(StreamHandle streamHandle);
 
     public native void unpublishStream(StreamHandle streamHandle);
 
@@ -207,28 +207,28 @@ public class StreamApiLow implements AutoCloseable {
 
 
     // todo
-    public native void acceptOfferOnReconfigure(
-            long sessionId,
-            SdpWithTypeModel sdp
-    );
+//    public native void acceptOfferOnReconfigure(
+//            long sessionId,
+//            SdpWithTypeModel sdp
+//    );
 
     public native List<String> subscribeFor(List<String> subscriptionQueries);
 
     public native void unsubscribeFrom(List<String> subscriptionIds);
 
-    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId);
-
-    public String buildSubscriptionQuery(
-            StreamEventType eventType,
-            StreamEventSelectorType selectorType,
-            String selectorId
-    ) {
-        return buildSubscriptionQuery(
-                eventType.ordinal(),
-                selectorType.ordinal(),
-                selectorId
-        );
-    }
+//    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId);
+//
+//    public String buildSubscriptionQuery(
+//            StreamEventType eventType,
+//            StreamEventSelectorType selectorType,
+//            String selectorId
+//    ) {
+//        return buildSubscriptionQuery(
+//                eventType.ordinal(),
+//                selectorType.ordinal(),
+//                selectorId
+//        );
+//    }
 
 
     public native void keyManagement(String streamRoomId, boolean disable);
