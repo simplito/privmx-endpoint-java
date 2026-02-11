@@ -316,7 +316,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreamRooms(
                             privmx::wrapper::streams::streamRoom2Java(
                                     ctx,
                                     streamRoom_c
-                                    )
+                            )
                     );
                 }
                 return ctx->NewObject(
@@ -1023,4 +1023,23 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreamRoomsEx(
         return nullptr;
     }
     return result;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_enableStreamRoomRecording(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room ID")) {
+        return;
+    }
+
+    ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id]() {
+        getStreamApi(ctx, thiz)->enableStreamRoomRecording(
+                ctx.jString2string(stream_room_id)
+        );
+    });
 }

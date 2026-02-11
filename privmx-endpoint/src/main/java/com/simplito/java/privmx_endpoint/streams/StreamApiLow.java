@@ -306,6 +306,8 @@ public class StreamApiLow implements AutoCloseable {
 
     public native void keyManagement(String streamRoomId, boolean disable);
 
+    public native void enableStreamRoomRecording(String streamRoomId);
+
     private native void deinit() throws IllegalStateException;
 
     @Override
