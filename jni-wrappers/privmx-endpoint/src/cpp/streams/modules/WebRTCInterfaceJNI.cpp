@@ -37,7 +37,7 @@ JNIEnv *WebRTCInterfaceJNI::AttachCurrentThreadIfNeeded() {
 
 WebRTCInterfaceJNI::WebRTCInterfaceJNI(JNIEnv *env, jobject jwebRTCInterface) {
     jclass jwebRTCInterfaceClass = env->FindClass(
-            "com/simplito/java/privmx_endpoint/modules/stream/WebRTCInterface");
+            "com/simplito/java/privmx_endpoint/streams/WebRTCInterface");
     javaVM = nullptr;
     if (!env->IsInstanceOf(jwebRTCInterface, jwebRTCInterfaceClass)) {
         env->ThrowNew(

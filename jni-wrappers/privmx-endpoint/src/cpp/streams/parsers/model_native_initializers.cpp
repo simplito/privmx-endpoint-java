@@ -17,20 +17,20 @@ namespace privmx {
 
             //Streams
             jobject keyType2Java(JniContextUtils &ctx, privmx::endpoint::stream::KeyType keyType_c) {
-                jclass keyTypeClass = ctx.findClass("com/simplito/java/privmx_endpoint/model/KeyType");
+                jclass keyTypeClass = ctx.findClass("com/simplito/java/privmx_endpoint/streams/model/KeyType");
                 jfieldID caseFieldId = nullptr;
                 switch (keyType_c) {
                     case privmx::endpoint::stream::KeyType::LOCAL:
                         caseFieldId = ctx->GetStaticFieldID(
                                 keyTypeClass,
                                 "LOCAL",
-                                "Lcom/simplito/java/privmx_endpoint/model/KeyType;");
+                                "Lcom/simplito/java/privmx_endpoint/streams/model/KeyType;");
                         break;
                     default:
                         caseFieldId = ctx->GetStaticFieldID(
                                 keyTypeClass,
                                 "REMOTE",
-                                "Lcom/simplito/java/privmx_endpoint/model/KeyType;");
+                                "Lcom/simplito/java/privmx_endpoint/streams/model/KeyType;");
                         break;
                 }
                 return ctx->GetStaticObjectField(keyTypeClass, caseFieldId);
@@ -38,13 +38,13 @@ namespace privmx {
 
             jobject key2Java(JniContextUtils &ctx, privmx::endpoint::stream::Key key_c) {
                 jclass keyCls = ctx.findClass(
-                        "com/simplito/java/privmx_endpoint/model/Key");
+                        "com/simplito/java/privmx_endpoint/streams/model/Key");
                 jmethodID initKeyMID = ctx->GetMethodID(
                         keyCls,
                         "<init>",
                         "(Ljava/lang/String;"
                         "[B"
-                        "Lcom/simplito/java/privmx_endpoint/model/KeyType;"
+                        "Lcom/simplito/java/privmx_endpoint/streams/model/KeyType;"
                         ")V"
                 );
 
@@ -158,7 +158,7 @@ namespace privmx {
             turnCredentials2Java(JniContextUtils &ctx,
                     privmx::endpoint::stream::TurnCredentials turnCredentials_c) {
                 jclass turnCredentialsCls = ctx.findClass(
-                        "com/simplito/java/privmx_endpoint/model/TurnCredentials");
+                        "com/simplito/java/privmx_endpoint/streams/model/TurnCredentials");
                 jmethodID initTurnCredentialsMID = ctx->GetMethodID(
                         turnCredentialsCls,
                         "<init>",
@@ -183,7 +183,7 @@ namespace privmx {
             sdpWithTypeModel2Java(JniContextUtils &ctx,
                     privmx::endpoint::stream::SdpWithTypeModel sdpWithTypeModel_c) {
                 jclass sdpWithTypeModelCls = ctx.findClass(
-                        "com/simplito/java/privmx_endpoint/model/stream/SdpWithTypeModel");
+                        "com/simplito/java/privmx_endpoint/streams/model/SdpWithTypeModel");
                 jmethodID initSdpWithTypeModelMID = ctx->GetMethodID(
                         sdpWithTypeModelCls,
                         "<init>",
@@ -206,7 +206,7 @@ namespace privmx {
                     privmx::endpoint::stream::StreamRoom streamRoom_c
             ) {
                 jclass itemCls = ctx->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/StreamRoom");
+                        "com/simplito/java/privmx_endpoint/streams/model/StreamRoom");
                 jmethodID initItemMID = ctx->GetMethodID(
                         itemCls,
                         "<init>",
@@ -332,7 +332,7 @@ namespace privmx {
                     privmx::endpoint::stream::StreamHandle streamHandle_c
             ) {
                 jclass itemCls = ctx->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/StreamHandle");
+                        "com/simplito/java/privmx_endpoint/streams/model/StreamHandle");
 
                 jmethodID initItemMID = ctx->GetMethodID(
                         itemCls,
@@ -354,7 +354,7 @@ namespace privmx {
                     privmx::endpoint::stream::StreamTrackInfo streamTrackInfo_c
             ) {
                 jclass itemCls = ctx->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/StreamTrackInfo");
+                        "com/simplito/java/privmx_endpoint/streams/model/StreamTrackInfo");
 
                 jmethodID initItemMID = ctx->GetMethodID(
                         itemCls,
@@ -432,7 +432,7 @@ namespace privmx {
                 );
 
                 jclass itemCls = ctx->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/StreamInfo");
+                        "com/simplito/java/privmx_endpoint/streams/model/StreamInfo");
 
                 jmethodID initItemMID = ctx->GetMethodID(
                         itemCls,
@@ -488,14 +488,14 @@ namespace privmx {
             }
             jobject publishedStreamData2Java(JniContextUtils &ctx, privmx::endpoint::stream::PublishedStreamData publishedStreamData_c) {
                 jclass itemCls = ctx->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/PublishedStreamData");
+                        "com/simplito/java/privmx_endpoint/streams/model/PublishedStreamData");
 
                 jmethodID initItemMID = ctx->GetMethodID(
                         itemCls,
                         "<init>",
                         "("
                         "Ljava/lang/String;"      // streamRoomId
-                        "Lcom/simplito/java/privmx_endpoint/model/StreamInfo;"      // stream
+                        "Lcom/simplito/java/privmx_endpoint/streams/model/StreamInfo;"      // stream
                         "Ljava/lang/String;"      //userId
                         ")V"
                 );
@@ -511,14 +511,14 @@ namespace privmx {
 
             jobject streamPublishResult2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamPublishResult streamPublishResult_c) {
                 jclass itemCls = ctx->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/StreamPublishResult");
+                        "com/simplito/java/privmx_endpoint/streams/model/StreamPublishResult");
 
                 jmethodID initItemMID = ctx->GetMethodID(
                         itemCls,
                         "<init>",
                         "("
                         "Ljava/lang/Boolean;"      // published
-                        "Lcom/simplito/java/privmx_endpoint/model/PublishedStreamData;"      // data
+                        "Lcom/simplito/java/privmx_endpoint/streams/model/PublishedStreamData;"      // data
                         ")V"
                 );
 
