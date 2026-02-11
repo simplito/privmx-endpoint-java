@@ -17,6 +17,7 @@
 #include "privmx/endpoint/wrapper/streams/modules/StreamSettingsJNI.h"
 #include <jni.h>
 #include "model_native_initializers.h"
+#include "privmx/endpoint/stream/Types.hpp"
 
 // streams
 privmx::endpoint::stream::DeviceType parseDeviceType(JniContextUtils &ctx, jobject type);
@@ -30,5 +31,7 @@ privmx::endpoint::stream::Settings parseSettings(JniContextUtils &ctx, jobject s
 privmx::endpoint::stream::StreamSettings parseStreamSettings(JNIEnv *env, jobject streamSettings);
 
 privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextUtils &ctx, jobject streamSubscription);
+
+privmx::endpoint::stream::StreamEncryptionMode parseStreamEncryptionMode(JniContextUtils &ctx, jobject streamEncryptionMode);
 
 //#endif //PRIVMX_POCKET_LIB_PARSER_H
