@@ -1043,3 +1043,30 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_enableStreamRoomRec
         );
     });
 }
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_getStreamRoomRecordingKeys(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id
+) {
+    JniContextUtils ctx(env);
+    jobject result;
+
+    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &thiz, &stream_room_id] {
+        auto keys = getStreamApi(ctx, thiz)->getStreamRoomRecordingKeys(
+                ctx.jString2string(stream_room_id)
+        );
+
+        return vectorTojArray(
+                ctx,
+                keys,
+                privmx::wrapper::streams::recordingEncKey2Java
+        );
+    });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}

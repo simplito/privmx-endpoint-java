@@ -16,6 +16,7 @@ import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
+import com.simplito.java.privmx_endpoint.streams.model.RecordingEncKey;
 import com.simplito.java.privmx_endpoint.streams.model.Settings;
 import com.simplito.java.privmx_endpoint.streams.model.StreamEncryptionMode;
 import com.simplito.java.privmx_endpoint.streams.model.StreamHandle;
@@ -307,6 +308,8 @@ public class StreamApiLow implements AutoCloseable {
     public native void keyManagement(String streamRoomId, boolean disable);
 
     public native void enableStreamRoomRecording(String streamRoomId);
+
+    public native List<RecordingEncKey> getStreamRoomRecordingKeys(String streamRoomId);
 
     private native void deinit() throws IllegalStateException;
 
