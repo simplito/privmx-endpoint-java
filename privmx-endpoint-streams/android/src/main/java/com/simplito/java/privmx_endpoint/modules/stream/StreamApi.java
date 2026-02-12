@@ -1,57 +1,37 @@
 package com.simplito.java.privmx_endpoint.modules.stream;
 
 
-import static android.media.AudioManager.GET_DEVICES_OUTPUTS;
-
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.AudioRecordingConfiguration;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
-import com.simplito.java.privmx_endpoint.model.DeviceType;
-import com.simplito.java.privmx_endpoint.model.MediaDevice;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.Settings;
 import com.simplito.java.privmx_endpoint.model.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.StreamInfo;
 import com.simplito.java.privmx_endpoint.model.StreamPublishResult;
 import com.simplito.java.privmx_endpoint.model.StreamRoom;
-import com.simplito.java.privmx_endpoint.model.StreamSettings;
 import com.simplito.java.privmx_endpoint.model.StreamSubscription;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StreamEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StreamEventType;
 
-import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
-import org.webrtc.Camera1Enumerator;
-import org.webrtc.Camera2Enumerator;
-import org.webrtc.CameraEnumerator;
 import org.webrtc.DefaultVideoDecoderFactory;
 import org.webrtc.DefaultVideoEncoderFactory;
 import org.webrtc.EglBase;
-import org.webrtc.Logging;
-import org.webrtc.MediaConstraints;
 import org.webrtc.MediaStreamTrack;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
-import org.webrtc.SurfaceTextureHelper;
-import org.webrtc.VideoCapturer;
 import org.webrtc.VideoDecoderFactory;
 import org.webrtc.VideoEncoderFactory;
-import org.webrtc.VideoSink;
-import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
 import org.webrtc.audio.AudioDeviceModule;
 import org.webrtc.audio.JavaAudioDeviceModule;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 //TODO: Good to remove context from StreamApi
 public class StreamApi {
@@ -191,7 +171,7 @@ public class StreamApi {
 
     public StreamHandle createStream(String streamRoomId) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
-        if(session == null) throw new IllegalStateException("Session to this room is not exsists. Call joinStreamRoom first");
+        if(session == null) throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first");
         try {
             session.createPublisher();
         }catch (IllegalStateException e){
@@ -201,6 +181,16 @@ public class StreamApi {
         StreamHandle handle = api.createStream(streamRoomId);
         pcManager.createHandleToRoom(handle, streamRoomId);
         return handle;
+    }
+
+    public TrackFactory getTrackFactory(StreamHandle streamHandle){
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("Stream not exists. Create stream first.");
+        JanusPublisher publisher = session.getPublisher();
+        if (publisher == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+        return new TrackFactory(publisher);
     }
 
     /**
@@ -220,11 +210,11 @@ public class StreamApi {
             throw new IllegalStateException("This StreamHandle has not created companion publisher.");
         switch (track.kind()){
             case MediaStreamTrack.VIDEO_TRACK_KIND: {
-                publisher.addAudioTrack((AudioTrack) track);
+                publisher.addVideoTrack((VideoTrack) track);
                 break;
             }
             case MediaStreamTrack.AUDIO_TRACK_KIND:{
-                publisher.addVideoTrack((VideoTrack) track);
+                publisher.addAudioTrack((AudioTrack) track);
                 break;
             }
         }
