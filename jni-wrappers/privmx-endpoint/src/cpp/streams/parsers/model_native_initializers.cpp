@@ -160,6 +160,7 @@ namespace privmx {
                         "Lcom/simplito/java/privmx_endpoint/model/ContainerPolicy;" // policy
                         "Ljava/lang/Long;"      // statusCode
                         "Ljava/lang/Long;"      // schemaVersion
+                        "Z"                     // closed
                         ")V"
                 );
 
@@ -190,7 +191,8 @@ namespace privmx {
                         privateMeta,
                         privmx::wrapper::containerPolicy2Java(ctx, streamRoom_c.policy),
                         ctx.long2jLong(streamRoom_c.statusCode),
-                        ctx.long2jLong(streamRoom_c.schemaVersion)
+                        ctx.long2jLong(streamRoom_c.schemaVersion),
+                        (jboolean) streamRoom_c.closed
                 );
             }
 
