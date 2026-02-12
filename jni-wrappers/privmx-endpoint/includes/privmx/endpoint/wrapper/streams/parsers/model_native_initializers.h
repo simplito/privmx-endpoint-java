@@ -53,12 +53,6 @@ namespace privmx {
             jobject key2Java(JniContextUtils &ctx, privmx::endpoint::stream::Key key_c);
 
             jobject
-            streamRoom2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamRoom streamRoom_c);
-
-            jobject
-            stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
-
-            jobject
             turnCredentials2Java(JniContextUtils &ctx, privmx::endpoint::stream::TurnCredentials turnCredentials_c);
 
             jobject
