@@ -63,6 +63,9 @@ namespace privmx {
 
             jobject
             sdpWithTypeModel2Java(JniContextUtils &ctx, privmx::endpoint::stream::SdpWithTypeModel sdpWithTypeModel_c);
+
+            jobject
+            recordingEncKey2Java(JniContextUtils &ctx, privmx::endpoint::stream::RecordingEncKey recordingEncKey_c);
         } // streams
     } // wrapper
 } // privmx
