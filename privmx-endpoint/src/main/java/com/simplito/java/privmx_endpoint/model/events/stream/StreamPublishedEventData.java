@@ -1,7 +1,7 @@
-package com.simplito.java.privmx_endpoint.streams.model.events;
+package com.simplito.java.privmx_endpoint.model.events.stream;
 
 
-import com.simplito.java.privmx_endpoint.streams.model.StreamInfo;
+import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
 
 // todo: which to choose
 // same as StreamPublishedEventData

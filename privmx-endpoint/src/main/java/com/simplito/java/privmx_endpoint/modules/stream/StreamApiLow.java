@@ -9,23 +9,20 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.streams;
+package com.simplito.java.privmx_endpoint.modules.stream;
 
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
-import com.simplito.java.privmx_endpoint.streams.model.events.eventSelectorTypes.StreamEventSelectorType;
-import com.simplito.java.privmx_endpoint.streams.model.events.eventTypes.StreamEventType;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
-import com.simplito.java.privmx_endpoint.streams.model.SdpWithTypeModel;
-import com.simplito.java.privmx_endpoint.streams.model.Settings;
-import com.simplito.java.privmx_endpoint.streams.model.StreamHandle;
-import com.simplito.java.privmx_endpoint.streams.model.StreamInfo;
-import com.simplito.java.privmx_endpoint.streams.model.StreamPublishResult;
-import com.simplito.java.privmx_endpoint.streams.model.StreamRoom;
-import com.simplito.java.privmx_endpoint.streams.model.StreamSubscription;
-import com.simplito.java.privmx_endpoint.streams.model.TurnCredentials;
+import com.simplito.java.privmx_endpoint.model.stream.Settings;
+import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
+import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
+import com.simplito.java.privmx_endpoint.model.stream.StreamPublishResult;
+import com.simplito.java.privmx_endpoint.model.stream.StreamRoom;
+import com.simplito.java.privmx_endpoint.model.stream.StreamSubscription;
+import com.simplito.java.privmx_endpoint.model.stream.TurnCredentials;
 
 import java.util.List;
 import java.util.Objects;

@@ -9,9 +9,9 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.streams;
+package com.simplito.java.privmx_endpoint.modules.stream;
 
-import com.simplito.java.privmx_endpoint.streams.model.Key;
+import com.simplito.java.privmx_endpoint.model.stream.Key;
 
 import java.util.List;
 

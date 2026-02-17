@@ -1,4 +1,4 @@
-package com.simplito.java.privmx_endpoint.streams.model;
+package com.simplito.java.privmx_endpoint.model.stream;
 
 public class StreamHandle {
     private final Long value;

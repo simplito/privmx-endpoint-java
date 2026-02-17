@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.streams.model;
+package com.simplito.java.privmx_endpoint.model.stream;
 
 public enum KeyType {
     LOCAL,
