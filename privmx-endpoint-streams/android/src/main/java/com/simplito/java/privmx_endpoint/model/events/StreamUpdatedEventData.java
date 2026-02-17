@@ -6,10 +6,10 @@ import com.simplito.java.privmx_endpoint.model.StreamTrackModification;
 import java.util.List;
 
 public class StreamUpdatedEventData {
-    public String streamRoomId;
-    public List<StreamInfo> streamsAdded;
-    public List<StreamInfo> streamsRemoved;
-    public List<StreamTrackModification> streamsModified;
+    public final String streamRoomId;
+    public final List<StreamInfo> streamsAdded;
+    public final List<StreamInfo> streamsRemoved;
+    public final List<StreamTrackModification> streamsModified;
 
     public StreamUpdatedEventData(String streamRoomId, List<StreamInfo> streamsAdded, List<StreamInfo> streamsRemoved, List<StreamTrackModification> streamsModified) {
         this.streamRoomId = streamRoomId;

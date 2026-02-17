@@ -1,15 +1,15 @@
 package com.simplito.java.privmx_endpoint.model.events;
 
 public class UpdatedStreamData {
-    public String type;
-    public String codec = null;                // optional
-    public Long streamId = null;               // optional
-    public String streamMid = null;            // optional
-    public String streamDisplay = null;        // optional
-    public Long mindex;
-    public String mid;
-    Boolean send;
-    Boolean ready;
+    public final String type;
+    public final String codec;               // optional
+    public final Long streamId;               // optional
+    public final String streamMid;            // optional
+    public final String streamDisplay;        // optional
+    public final Long mindex;
+    public final String mid;
+    public final Boolean send;
+    public final Boolean ready;
 
     public UpdatedStreamData(String type, Long mindex, String mid, Boolean send, Boolean ready, String codec, Long streamId, String streamMid, String streamDisplay) {
         this.type = type;

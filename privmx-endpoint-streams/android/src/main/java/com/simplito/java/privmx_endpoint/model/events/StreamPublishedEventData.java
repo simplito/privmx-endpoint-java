@@ -9,14 +9,14 @@ public class StreamPublishedEventData {
     /**
      * StreamRoom ID
      */
-    public String streamRoomId;
+    public final String streamRoomId;
 
     /**
      * Stream ID's
      */
-    public StreamInfo stream;
+    public final StreamInfo stream;
 
-    public String  userId;
+    public final String userId;
 
     public StreamPublishedEventData(String streamRoomId, StreamInfo stream, String userId) {
         this.streamRoomId = streamRoomId;
