@@ -485,7 +485,7 @@ namespace privmx {
             ) {
                 jclass cls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/StreamTrackModificationPair");
-                jmethodID ctor = ctx->GetMethodID(
+                jmethodID initItemMID = ctx->GetMethodID(
                         cls,
                         "<init>",
                         "("
@@ -504,7 +504,7 @@ namespace privmx {
 
                 return ctx->NewObject(
                         cls,
-                        ctor,
+                        initItemMID,
                         before,
                         after
                 );
@@ -517,7 +517,7 @@ namespace privmx {
             ) {
                 jclass cls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/StreamTrackModification");
-                jmethodID ctor = ctx->GetMethodID(
+                jmethodID initItemMID = ctx->GetMethodID(
                         cls,
                         "<init>",
                         "("
@@ -534,7 +534,7 @@ namespace privmx {
 
                 return ctx->NewObject(
                         cls,
-                        ctor,
+                        initItemMID,
                         ctx.long2jLong(streamTrackModification.streamId),
                         tracksList
                 );
@@ -547,7 +547,7 @@ namespace privmx {
             ) {
                 jclass cls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/events/UpdatedStreamData");
-                jmethodID ctor = ctx->GetMethodID(
+                jmethodID initItemMID = ctx->GetMethodID(
                         cls,
                         "<init>",
                         "("
@@ -581,7 +581,7 @@ namespace privmx {
 
                 return ctx->NewObject(
                         cls,
-                        ctor,
+                        initItemMID,
                         ctx->NewStringUTF(data.type.c_str()),
                         ctx.long2jLong(data.mindex),
                         ctx->NewStringUTF(data.mid.c_str()),
@@ -601,7 +601,7 @@ namespace privmx {
             ) {
                 jclass cls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/events/StreamRoomDeletedEventData");
-                jmethodID ctor = ctx->GetMethodID(
+                jmethodID initItemMID = ctx->GetMethodID(
                         cls,
                         "<init>",
                         "("
@@ -611,7 +611,7 @@ namespace privmx {
 
                 return ctx->NewObject(
                         cls,
-                        ctor,
+                        initItemMID,
                         ctx->NewStringUTF(data.streamRoomId.c_str())
                 );
             }
@@ -623,7 +623,7 @@ namespace privmx {
             ) {
                 jclass cls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/events/StreamPublishedEventData");
-                jmethodID ctor = ctx->GetMethodID(
+                jmethodID initItemMID = ctx->GetMethodID(
                         cls,
                         "<init>",
                         "("
@@ -635,7 +635,7 @@ namespace privmx {
 
                 return ctx->NewObject(
                         cls,
-                        ctor,
+                        initItemMID,
                         ctx->NewStringUTF(data.streamRoomId.c_str()),
                         streamInfo2Java(ctx, data.stream),
                         ctx->NewStringUTF(data.userId.c_str())
@@ -648,7 +648,7 @@ namespace privmx {
             ) {
                 jclass cls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/events/StreamUpdatedEventData");
-                jmethodID ctor = ctx->GetMethodID(
+                jmethodID initItemMID = ctx->GetMethodID(
                         cls,
                         "<init>",
                         "("
@@ -679,7 +679,7 @@ namespace privmx {
 
                 return ctx->NewObject(
                         cls,
-                        ctor,
+                        initItemMID,
                         ctx->NewStringUTF(data.streamRoomId.c_str()),
                         addedList,
                         removedList,
@@ -694,7 +694,7 @@ namespace privmx {
             ) {
                 jclass cls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/events/StreamEventData");
-                jmethodID ctor = ctx->GetMethodID(
+                jmethodID initItemMID = ctx->GetMethodID(
                         cls,
                         "<init>",
                         "("
@@ -712,7 +712,7 @@ namespace privmx {
 
                 return ctx->NewObject(
                         cls,
-                        ctor,
+                        initItemMID,
                         ctx->NewStringUTF(data.streamRoomId.c_str()),
                         streamIds,
                         ctx->NewStringUTF(data.userId.c_str())
@@ -726,7 +726,7 @@ namespace privmx {
             ) {
                 jclass cls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/events/StreamUnpublishedEventData");
-                jmethodID ctor = ctx->GetMethodID(
+                jmethodID initItemMID = ctx->GetMethodID(
                         cls,
                         "<init>",
                         "("
@@ -737,7 +737,7 @@ namespace privmx {
 
                 return ctx->NewObject(
                         cls,
-                        ctor,
+                        initItemMID,
                         ctx->NewStringUTF(data.streamRoomId.c_str()),
                         ctx.long2jLong(data.streamId)
                 );
@@ -750,7 +750,7 @@ namespace privmx {
             ) {
                 jclass cls = ctx->FindClass(
                         "com/simplito/java/privmx_endpoint/model/events/NewStreams");
-                jmethodID ctor = ctx->GetMethodID(
+                jmethodID initItemMID = ctx->GetMethodID(
                         cls,
                         "<init>",
                         "("
@@ -767,7 +767,7 @@ namespace privmx {
 
                 return ctx->NewObject(
                         cls,
-                        ctor,
+                        initItemMID,
                         ctx->NewStringUTF(data.room.c_str()),
                         streamsList
                 );
@@ -779,7 +779,7 @@ namespace privmx {
                     privmx::endpoint::stream::StreamsUpdatedData data
             ) {
                 jclass cls = ctx->FindClass("com/simplito/java/privmx_endpoint/model/events/StreamsUpdatedData");
-                jmethodID ctor = ctx->GetMethodID(
+                jmethodID initItemMID = ctx->GetMethodID(
                         cls,
                         "<init>",
                         "("
@@ -796,7 +796,7 @@ namespace privmx {
 
                 return ctx->NewObject(
                         cls,
-                        ctor,
+                        initItemMID,
                         ctx->NewStringUTF(data.room.c_str()),
                         streamsList
                 );
