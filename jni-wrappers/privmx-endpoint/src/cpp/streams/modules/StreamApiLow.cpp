@@ -874,6 +874,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_updateStream
         jobject stream_handle
 ) {
     JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_handle, "Stream Handle")) {
+        return nullptr;
+    }
+
     jobject result;
 
     ctx.callResultEndpointApi<jobject>(
