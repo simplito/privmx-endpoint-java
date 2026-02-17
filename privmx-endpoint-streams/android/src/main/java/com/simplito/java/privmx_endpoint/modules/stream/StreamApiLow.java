@@ -13,18 +13,17 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
-import com.simplito.java.privmx_endpoint.model.SdpWithTypeModel;
-import com.simplito.java.privmx_endpoint.model.Settings;
-import com.simplito.java.privmx_endpoint.model.StreamHandle;
-import com.simplito.java.privmx_endpoint.model.StreamInfo;
-import com.simplito.java.privmx_endpoint.model.StreamPublishResult;
-import com.simplito.java.privmx_endpoint.model.StreamRoom;
-import com.simplito.java.privmx_endpoint.model.StreamSettings;
-import com.simplito.java.privmx_endpoint.model.StreamSubscription;
-import com.simplito.java.privmx_endpoint.model.TurnCredentials;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StreamEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StreamEventType;
+import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
+import com.simplito.java.privmx_endpoint.model.stream.Settings;
+import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
+import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
+import com.simplito.java.privmx_endpoint.model.stream.StreamPublishResult;
+import com.simplito.java.privmx_endpoint.model.stream.StreamRoom;
+import com.simplito.java.privmx_endpoint.model.stream.StreamSubscription;
+import com.simplito.java.privmx_endpoint.model.stream.TurnCredentials;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 
@@ -188,8 +187,8 @@ public class StreamApiLow implements AutoCloseable {
 
     public native StreamPublishResult publishStream(StreamHandle streamHandle);
 
-    // todo
-    public native StreamPublishResult updateStream(StreamHandle streamHandle);
+    // todo - add jni
+//    public native StreamPublishResult updateStream(StreamHandle streamHandle);
 
     public native void unpublishStream(StreamHandle streamHandle);
 
