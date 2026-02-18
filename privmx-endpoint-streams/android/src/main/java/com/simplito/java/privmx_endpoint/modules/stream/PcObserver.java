@@ -104,23 +104,27 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onAddTrack(RtpReceiver receiver, MediaStream[] mediaStreams) {
-        if (peerConnectionFactory != null && receiver.track() != null && receiver.track().id().equals(null)) {
-            frameCryptorMap.put(
-                    receiver.track().id(),
-                    PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
-                            peerConnectionFactory,
-                            receiver,
-                            keyStore
-                    )
-            );
-        }
         if (trackObserver != null) {
             trackObserver.OnRemoteTrack(mediaStreams[0].getId(),receiver.track());
         }
     }
 
     @Override
-    public void onTrack(RtpTransceiver transceiver) {}
+    public void onTrack(RtpTransceiver transceiver) {
+        RtpReceiver rtpReceiver = transceiver.getReceiver();
+        if (peerConnectionFactory != null && rtpReceiver.track() != null && rtpReceiver.track().id() != null) {
+
+            PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(peerConnectionFactory, rtpReceiver, keyStore);
+            frameCryptorMap.put(
+                    rtpReceiver.track().id(),
+                    PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
+                            peerConnectionFactory,
+                            rtpReceiver,
+                            keyStore
+                    )
+            );
+        }
+    }
 
     @Override
     public void onRemoveTrack(RtpReceiver receiver) {
