@@ -1,4 +1,4 @@
-package com.simplito.java.privmx_endpoint.model.events.stream;
+package com.simplito.java.privmx_endpoint.model.stream.events;
 
 
 import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
