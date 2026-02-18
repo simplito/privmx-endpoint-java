@@ -114,12 +114,8 @@ public class PcObserver implements PeerConnection.Observer {
                     )
             );
         }
-        if (onAddTrack != null) {
-            onAddTrack.accept(Arrays.asList(mediaStreams), receiver);
-
-            if (Objects.equals(receiver.track().kind(), MediaStreamTrack.VIDEO_TRACK_KIND)) {
-                onVideoTrack.accept(receiver.track().id());
-            }
+        if (trackObserver != null) {
+            trackObserver.OnRemoteTrack(mediaStreams[0].getId(),receiver.track());
         }
     }
 
