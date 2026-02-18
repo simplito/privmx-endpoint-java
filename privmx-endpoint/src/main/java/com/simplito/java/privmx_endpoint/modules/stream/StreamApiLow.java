@@ -14,8 +14,6 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
-import com.simplito.java.privmx_endpoint.modules.core.Connection;
-import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 import com.simplito.java.privmx_endpoint.model.stream.Settings;
 import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
@@ -23,6 +21,8 @@ import com.simplito.java.privmx_endpoint.model.stream.StreamPublishResult;
 import com.simplito.java.privmx_endpoint.model.stream.StreamRoom;
 import com.simplito.java.privmx_endpoint.model.stream.StreamSubscription;
 import com.simplito.java.privmx_endpoint.model.stream.TurnCredentials;
+import com.simplito.java.privmx_endpoint.modules.core.Connection;
+import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 
 import java.util.List;
 import java.util.Objects;
@@ -43,17 +43,12 @@ public class StreamApiLow implements AutoCloseable {
         this.api = api;
     }
 
-//    private native Long init(Connection connection, EventApi eventApi) throws IllegalStateException;
-
-    private static native StreamApiLow create(
-            Connection connection,
-            EventApi eventApi
-    );
+    private native Long init(Connection connection, EventApi eventApi) throws IllegalStateException;
 
     public StreamApiLow(
             Connection connection
     ) throws IllegalStateException {
-        this(connection, null);
+        this.api = init(connection, null);
     }
 
     public StreamApiLow(
@@ -62,11 +57,10 @@ public class StreamApiLow implements AutoCloseable {
     ) throws IllegalStateException {
         Objects.requireNonNull(connection);
         EventApi tmpEventApi = eventApi == null ? new EventApi(connection) : null;
-        StreamApiLow streamApiLow = create(
+        this.api = init(
                 connection,
                 Optional.ofNullable(eventApi).orElse(tmpEventApi)
         );
-//        api = streamApiLow.api;
 
         try {
             if (eventApi != null) tmpEventApi.close();
@@ -138,7 +132,7 @@ public class StreamApiLow implements AutoCloseable {
             String sortOrder,
             String lastId,
             String sortBy
-    ){
+    ) {
         return listStreamRooms(contextId, skip, limit, sortOrder, lastId, sortBy, null);
     }
 
@@ -148,7 +142,7 @@ public class StreamApiLow implements AutoCloseable {
             long limit,
             String sortOrder,
             String lastId
-    ){
+    ) {
         return listStreamRooms(contextId, skip, limit, sortOrder, lastId, null, null);
     }
 
@@ -157,7 +151,7 @@ public class StreamApiLow implements AutoCloseable {
             long skip,
             long limit,
             String sortOrder
-    ){
+    ) {
         return listStreamRooms(contextId, skip, limit, sortOrder, null, null, null);
     }
 
@@ -165,7 +159,7 @@ public class StreamApiLow implements AutoCloseable {
             String contextId,
             long skip,
             long limit
-    ){
+    ) {
         return listStreamRooms(contextId, skip, limit, "desc", null, null, null);
     }
 
