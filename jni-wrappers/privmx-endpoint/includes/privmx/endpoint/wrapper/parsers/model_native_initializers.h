@@ -37,191 +37,283 @@
 #include "privmx/endpoint/kvdb/Events.hpp"
 #include "privmx/endpoint/stream/Types.hpp"
 #include "privmx/endpoint/stream/WebRTCInterface.hpp"
+#include "privmx/endpoint/stream/Events.hpp"
 
 namespace privmx {
     namespace wrapper {
 
-            //Core
-            jobject
-            itemPolicy2Java(
-                    JniContextUtils &ctx,
-                    privmx::endpoint::core::ItemPolicy itemPolicy
-            );
+        //Core
+        jobject
+        itemPolicy2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ItemPolicy itemPolicy
+        );
 
-            jobject containerPolicyWithoutItem2Java(
-                    JniContextUtils &ctx,
-                    privmx::endpoint::core::ContainerPolicyWithoutItem containerPolicyWithoutItem
-            );
+        jobject containerPolicyWithoutItem2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContainerPolicyWithoutItem containerPolicyWithoutItem
+        );
 
-            jobject containerPolicy2Java(
-                    JniContextUtils &ctx,
-                    privmx::endpoint::core::ContainerPolicy containerPolicy
-            );
+        jobject containerPolicy2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContainerPolicy containerPolicy
+        );
 
-            // CollectionItemChange
-            jobject collectionItemChange2Java(JniContextUtils &ctx, privmx::endpoint::core::CollectionItemChange collectionItemChange_c);
+        // CollectionItemChange
+        jobject collectionItemChange2Java(JniContextUtils &ctx, privmx::endpoint::core::CollectionItemChange collectionItemChange_c);
 
-            //Context
-            jobject context2Java(JniContextUtils &ctx, privmx::endpoint::core::Context context_c);
+        //Context
+        jobject context2Java(JniContextUtils &ctx, privmx::endpoint::core::Context context_c);
 
-            // UserWithPubKey
-            jobject userWithPubKey2Java(JniContextUtils &ctx,
-                    privmx::endpoint::core::UserWithPubKey userWithPubKey);
+        // UserWithPubKey
+        jobject userWithPubKey2Java(JniContextUtils &ctx,
+                privmx::endpoint::core::UserWithPubKey userWithPubKey);
 
-            //UserInfo
-            jobject userInfo2Java(JniContextUtils &ctx, privmx::endpoint::core::UserInfo userInfo);
+        //UserInfo
+        jobject userInfo2Java(JniContextUtils &ctx, privmx::endpoint::core::UserInfo userInfo);
 
-            jobject userStatusChange2Java(JniContextUtils &ctx,
-                    privmx::endpoint::core::UserStatusChange userStatusChange);
+        jobject userStatusChange2Java(JniContextUtils &ctx,
+                privmx::endpoint::core::UserStatusChange userStatusChange);
 
-            // UserWithAction
-            jobject userWithAction2Java(JniContextUtils &ctx, privmx::endpoint::core::UserWithAction userWithAction);
+        // UserWithAction
+        jobject userWithAction2Java(JniContextUtils &ctx, privmx::endpoint::core::UserWithAction userWithAction);
 
-            jobject bridgeIdentity2Java(JniContextUtils &ctx,
-                    privmx::endpoint::core::BridgeIdentity bridgeIdentity_c);
+        jobject bridgeIdentity2Java(JniContextUtils &ctx,
+                privmx::endpoint::core::BridgeIdentity bridgeIdentity_c);
 
-            jobject verificationRequest2Java(JniContextUtils &ctx,
-                    privmx::endpoint::core::VerificationRequest verificationRequest_c);
+        jobject verificationRequest2Java(JniContextUtils &ctx,
+                privmx::endpoint::core::VerificationRequest verificationRequest_c);
 
-            //Crypto
-            jobject extKey2Java(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey extKey_c);
+        //Crypto
+        jobject extKey2Java(JniContextUtils &ctx, privmx::endpoint::crypto::ExtKey extKey_c);
 
-            jobject BIP392Java(JniContextUtils &ctx, privmx::endpoint::crypto::BIP39_t BIP39_c);
+        jobject BIP392Java(JniContextUtils &ctx, privmx::endpoint::crypto::BIP39_t BIP39_c);
 
-            //Threads
-            jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c);
+        //Threads
+        jobject thread2Java(JniContextUtils &ctx, privmx::endpoint::thread::Thread thread_c);
 
-            //Messages
-            jobject serverMessageInfo2Java(JniContextUtils &ctx,
-                    privmx::endpoint::thread::ServerMessageInfo serverMessageInfo_c);
+        //Messages
+        jobject serverMessageInfo2Java(JniContextUtils &ctx,
+                privmx::endpoint::thread::ServerMessageInfo serverMessageInfo_c);
 
-            jobject message2Java(JniContextUtils &ctx, privmx::endpoint::thread::Message message_c);
+        jobject message2Java(JniContextUtils &ctx, privmx::endpoint::thread::Message message_c);
 
-            //Store
-            jobject store2Java(JniContextUtils &ctx, privmx::endpoint::store::Store store_c);
+        //Store
+        jobject store2Java(JniContextUtils &ctx, privmx::endpoint::store::Store store_c);
 
-            //Inbox
-            jobject
-            filesConfig2Java(JniContextUtils &ctx, privmx::endpoint::inbox::FilesConfig filesConfig_c);
+        //Inbox
+        jobject
+        filesConfig2Java(JniContextUtils &ctx, privmx::endpoint::inbox::FilesConfig filesConfig_c);
 
-            jobject inbox2Java(JniContextUtils &ctx, privmx::endpoint::inbox::Inbox inbox_c);
+        jobject inbox2Java(JniContextUtils &ctx, privmx::endpoint::inbox::Inbox inbox_c);
 
-            jobject
-            inboxEntry2Java(JniContextUtils &ctx, privmx::endpoint::inbox::InboxEntry inboxEntry_c);
+        jobject
+        inboxEntry2Java(JniContextUtils &ctx, privmx::endpoint::inbox::InboxEntry inboxEntry_c);
 
-            jobject inboxPublicView2Java(JniContextUtils &ctx,
-                    privmx::endpoint::inbox::InboxPublicView inboxPublicView_c);
+        jobject inboxPublicView2Java(JniContextUtils &ctx,
+                privmx::endpoint::inbox::InboxPublicView inboxPublicView_c);
 
-            //Files
-            jobject serverFileInfo2Java(JniContextUtils &ctx,
-                    privmx::endpoint::store::ServerFileInfo serverFileInfo_c);
+        //Files
+        jobject serverFileInfo2Java(JniContextUtils &ctx,
+                privmx::endpoint::store::ServerFileInfo serverFileInfo_c);
 
-            jobject file2Java(JniContextUtils &ctx, privmx::endpoint::store::File file_c);
+        jobject file2Java(JniContextUtils &ctx, privmx::endpoint::store::File file_c);
 
-            jobject fileChange2Java(JniContextUtils &ctx, privmx::endpoint::store::FileChange file_change_c);
+        jobject fileChange2Java(JniContextUtils &ctx, privmx::endpoint::store::FileChange file_change_c);
 
-            //Event
-            jobject contextUsersStatusChangedEventData2Java(
-                    JniContextUtils &ctx,
-                    privmx::endpoint::core::ContextUsersStatusChangedEventData contextUsersStatusChangedEventData_c
-            );
+        //Event
+        jobject contextUsersStatusChangedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::core::ContextUsersStatusChangedEventData contextUsersStatusChangedEventData_c
+        );
 
-            jobject contextUserEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::core::ContextUserEventData contextUserEventData_c);
+        jobject contextUserEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::core::ContextUserEventData contextUserEventData_c);
 
-            jobject collectionChangedEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::core::CollectionChangedEventData collectionChangedEventData_c);
+        jobject collectionChangedEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::core::CollectionChangedEventData collectionChangedEventData_c);
 
-            jobject storeDeletedEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::store::StoreDeletedEventData storeDeletedEventData_c);
+        jobject storeDeletedEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::store::StoreDeletedEventData storeDeletedEventData_c);
 
-            jobject storeFileUpdatedEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::store::StoreFileUpdatedEventData storeFileUpdatedEventData_c);
+        jobject storeFileUpdatedEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::store::StoreFileUpdatedEventData storeFileUpdatedEventData_c);
 
-            jobject storeFileDeletedEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::store::StoreFileDeletedEventData storeFileDeletedEventData_c);
+        jobject storeFileDeletedEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::store::StoreFileDeletedEventData storeFileDeletedEventData_c);
 
-            jobject storeStatsChangedEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::store::StoreStatsChangedEventData storeStatsChangedEventData_c);
+        jobject storeStatsChangedEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::store::StoreStatsChangedEventData storeStatsChangedEventData_c);
 
-            jobject threadDeletedEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::thread::ThreadDeletedEventData threadDeletedEventData_c);
+        jobject threadDeletedEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::thread::ThreadDeletedEventData threadDeletedEventData_c);
 
-            jobject threadDeletedMessageEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::thread::ThreadDeletedMessageEventData threadDeletedMessageEventData_c);
+        jobject threadDeletedMessageEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::thread::ThreadDeletedMessageEventData threadDeletedMessageEventData_c);
 
-            jobject threadStatsEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::thread::ThreadStatsEventData threadStatsEventData_c);
+        jobject threadStatsEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::thread::ThreadStatsEventData threadStatsEventData_c);
 
-            jobject inboxDeletedEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::inbox::InboxDeletedEventData inboxDeletedEventData_c);
+        jobject inboxDeletedEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::inbox::InboxDeletedEventData inboxDeletedEventData_c);
 
-            jobject inboxEntryDeletedEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
+        jobject inboxEntryDeletedEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::inbox::InboxEntryDeletedEventData inboxEntryDeletedEventData_c);
 
-            jobject contextCustomEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::event::ContextCustomEventData contextCustomEventData_c
-            );
+        jobject contextCustomEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::event::ContextCustomEventData contextCustomEventData_c
+        );
 
-            jobject kvdbDeletedEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::kvdb::KvdbDeletedEventData kvdbDeletedEventData_c
-            );
+        jobject kvdbDeletedEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::kvdb::KvdbDeletedEventData kvdbDeletedEventData_c
+        );
 
-            jobject kvdbStatsEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::kvdb::KvdbStatsEventData kvdbStatsEventData_c
-            );
+        jobject kvdbStatsEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::kvdb::KvdbStatsEventData kvdbStatsEventData_c
+        );
 
-            jobject kvdbDeletedEntryEventData2Java(JniContextUtils &ctx,
-                    privmx::endpoint::kvdb::KvdbDeletedEntryEventData kvdbDeletedEntryEventData_c
-            );
+        jobject kvdbDeletedEntryEventData2Java(JniContextUtils &ctx,
+                privmx::endpoint::kvdb::KvdbDeletedEntryEventData kvdbDeletedEntryEventData_c
+        );
 
-            //Kvdb
-            jobject kvdb2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Kvdb kvdb_c);
+        //Kvdb
+        jobject kvdb2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::Kvdb kvdb_c);
 
-            jobject serverKvdbEntryInfo2Java(JniContextUtils &ctx,
-                    privmx::endpoint::kvdb::ServerKvdbEntryInfo serverItemInfo_c);
+        jobject serverKvdbEntryInfo2Java(JniContextUtils &ctx,
+                privmx::endpoint::kvdb::ServerKvdbEntryInfo serverItemInfo_c);
 
-            jobject kvdbEntry2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::KvdbEntry entry_c);
+        jobject kvdbEntry2Java(JniContextUtils &ctx, privmx::endpoint::kvdb::KvdbEntry entry_c);
 
-            //Stream
-//        jobject streamRoom2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamRoom streamRoom_c);
-//
-//        jobject stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
-//
-//        jobject deviceType2Java(JniContextUtils &ctx,privmx::endpoint::stream::DeviceType deviceType_c);
-//
-//        jobject mediaDevice2Java(JniContextUtils &ctx, privmx::endpoint::stream::MediaDevice mediaDevice_c);
-//
-//        jobject streamHandle2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamHandle streamHandle_c);
-//
-//        jobject streamInfo2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamInfo streamInfo_c);
-//
-//        jobject streamTrackInfo2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamTrackInfo streamTrackInfo_c);
-//
-//        jobject streamPublishResult2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamPublishResult streamPublishResult_c);
-//
-//        jobject publishedStreamData2Java(JniContextUtils &ctx, privmx::endpoint::stream::PublishedStreamData publishedStreamData_c);
-//
-//        jobject remoteStreamId2Java(JniContextUtils &ctx, privmx::endpoint::stream::RemoteStreamId remoteStreamId_c);
-//
-//        jobject frame2Java(JniContextUtils &ctx, privmx::endpoint::stream::Frame &frame_c);
-//
-//        jobject keyType2Java(JniContextUtils &ctx, privmx::endpoint::stream::KeyType keyType_c);
-//
-//        jobject key2Java(JniContextUtils &ctx, privmx::endpoint::stream::Key key_c);
-//
-//        jobject
-//        streamRoom2Java(JniContextUtils &ctx, privmx::endpoint::stream::StreamRoom streamRoom_c);
-//
-//        jobject
-//        stream2Java(JniContextUtils &ctx, privmx::endpoint::stream::Stream stream_c);
-//
-//        jobject
-//        turnCredentials2Java(JniContextUtils &ctx, privmx::endpoint::stream::TurnCredentials turnCredentials_c);
-//
-//        jobject
-//        sdpWithTypeModel2Java(JniContextUtils &ctx, privmx::endpoint::stream::SdpWithTypeModel sdpWithTypeModel_c);
+        //Streams
+        jobject streamRoom2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamRoom streamRoom_c
+        );
 
+        jobject stream2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::Stream stream_c
+        );
+
+        jobject deviceType2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::DeviceType deviceType_c
+        );
+
+        jobject mediaDevice2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::MediaDevice mediaDevice_c
+        );
+
+        jobject streamHandle2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamHandle streamHandle_c
+        );
+
+        jobject streamTrackInfo2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamTrackInfo streamTrackInfo_c
+        );
+
+        jobject streamInfo2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamInfo streamInfo_c
+        );
+
+        jobject publishedStreamData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::PublishedStreamData publishedStreamData_c
+        );
+
+        jobject streamPublishResult2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamPublishResult streamPublishResult_c
+        );
+
+        jobject remoteStreamId2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::RemoteStreamId remoteStreamId_c
+        );
+
+        jobject frame2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::Frame &frame_c
+        );
+
+        jobject keyType2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::KeyType keyType_c
+        );
+
+        jobject key2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::Key key_c
+        );
+
+        jobject streamRoom2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamRoom streamRoom_c
+        );
+
+        jobject turnCredentials2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::TurnCredentials turnCredentials_c
+        );
+
+        jobject sdpWithTypeModel2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::SdpWithTypeModel sdpWithTypeModel_c
+        );
+
+        jobject streamTrackModificationPair2Java(
+                JniContextUtils &ctx,
+                endpoint::stream::StreamTrackModificationPair streamTrackModificationPair
+        );
+
+        jobject streamTrackModification2Java(
+                JniContextUtils &ctx,
+                endpoint::stream::StreamTrackModification streamTrackModification
+        );
+
+        jobject streamUpdatedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamUpdatedEventData data
+        );
+
+        jobject updatedStreamData2Java(
+                JniContextUtils &ctx,
+                endpoint::stream::UpdatedStreamData updatedStreamData
+        );
+
+        jobject streamRoomDeletedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamRoomDeletedEventData data
+        );
+
+        jobject streamPublishedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamPublishedEventData data
+        );
+
+        jobject streamEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamEventData data
+        );
+
+        jobject streamUnpublishedEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamUnpublishedEventData data
+        );
+
+        jobject newStreams2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::NewStreams data
+        );
+
+        jobject streamsUpdated2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamsUpdatedData data
+        );
 
     } // wrapper
 } // privmx

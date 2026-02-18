@@ -9,9 +9,8 @@
 #include "privmx/endpoint/wrapper/modules/Connection.h"
 #include "privmx/endpoint/wrapper/modules/EventApi.h"
 
-#include "privmx/endpoint/wrapper/streams/modules/WebRTCInterfaceJNI.h"
-#include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
-#include "privmx/endpoint/wrapper/streams/parsers/parser.h"
+#include "privmx/endpoint/wrapper/modules/WebRTCInterfaceJNI.h"
+#include "privmx/endpoint/stream/StreamApiLow.hpp"
 
 using namespace privmx::endpoint::stream;
 using namespace privmx::endpoint;
@@ -310,7 +309,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                 for (auto &streamRoom_c: streamRooms_c.readItems) {
                     env->CallBooleanMethod(array,
                             addToArrayMID,
-                            privmx::wrapper::streams::streamRoom2Java(
+                            privmx::wrapper::streamRoom2Java(
                                     ctx,
                                     streamRoom_c
                                     )
@@ -344,7 +343,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getStreamRoo
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &thiz, &stream_room_id] {
 
-        return privmx::wrapper::streams::streamRoom2Java(
+        return privmx::wrapper::streamRoom2Java(
                 ctx,
                 getStreamApi(ctx, thiz)->getStreamRoom(
                         ctx.jString2string(stream_room_id)
@@ -390,7 +389,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_createStream
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &thiz, &stream_room_id] {
 
-        return privmx::wrapper::streams::streamHandle2Java(
+        return privmx::wrapper::streamHandle2Java(
                 ctx,
                 getStreamApi(ctx, thiz)->createStream(
                         ctx.jString2string(stream_room_id)
@@ -422,7 +421,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_publishStrea
         auto result = getStreamApi(ctx, thiz)->publishStream(
                 parseStreamHandle(ctx, stream_handle)
         );
-        return privmx::wrapper::streams::streamPublishResult2Java(
+        return privmx::wrapper::streamPublishResult2Java(
                 ctx,
                 result
         );
@@ -485,7 +484,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreams(
             env->CallBooleanMethod(
                     array,
                     addToArrayMID,
-                    privmx::wrapper::streams::streamInfo2Java(ctx, info_c)
+                    privmx::wrapper::streamInfo2Java(ctx, info_c)
             );
         }
         return array;
@@ -556,7 +555,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getTurnCrede
             env->CallBooleanMethod(
                     array,
                     addToArrayMID,
-                    privmx::wrapper::streams::turnCredentials2Java(ctx, turnCredentials_c)
+                    privmx::wrapper::turnCredentials2Java(ctx, turnCredentials_c)
             );
         }
 
@@ -893,7 +892,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_updateStream
                         stream_handle_c
                 );
 
-                return privmx::wrapper::streams::streamPublishResult2Java(
+                return privmx::wrapper::streamPublishResult2Java(
                         ctx,
                         stream_result
                 );
