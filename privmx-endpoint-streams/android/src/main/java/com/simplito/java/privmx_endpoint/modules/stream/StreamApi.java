@@ -44,6 +44,7 @@ public class StreamApi {
     private final EglBase rootEglBase;
     private final StreamApiLow api;
     private final PeerConnectionManager pcManager;
+    public final TrackFactory trackFactory;
 
     private static PeerConnectionFactory DefaultPeerConnectionFactory(
             Context appContext,
@@ -106,6 +107,7 @@ public class StreamApi {
                         this.api.trickle(sessionId, rtcConfiguration);
                     }
                 });
+        trackFactory = new TrackFactory(pcManager);
     }
 
     public String createStreamRoom(
@@ -181,16 +183,6 @@ public class StreamApi {
         StreamHandle handle = api.createStream(streamRoomId);
         pcManager.createHandleToRoom(handle, streamRoomId);
         return handle;
-    }
-
-    public TrackFactory getTrackFactory(StreamHandle streamHandle){
-        RoomJanusSession session = pcManager.getSession(streamHandle);
-        if (session == null)
-            throw new IllegalStateException("Stream not exists. Create stream first.");
-        JanusPublisher publisher = session.getPublisher();
-        if (publisher == null)
-            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
-        return new TrackFactory(publisher);
     }
 
     /**

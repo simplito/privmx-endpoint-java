@@ -16,13 +16,13 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class PeerConnectionManager {
+class PeerConnectionManager {
     private final Map<String, RoomJanusSession> sessions = new HashMap<>();
     private final Map<Long, String> sessionHandles = new HashMap<>();
-    private final PeerConnectionFactory pcFactory;
+    protected final PeerConnectionFactory pcFactory;
     private final BiConsumer<Long,String> onTrickle;
 
-    public PeerConnectionManager(
+    PeerConnectionManager(
             PeerConnectionFactory pcFactory,
             BiConsumer<Long,String> onTrickle
     ) {

@@ -9,8 +9,8 @@ import org.webrtc.VideoTrack;
 
 public class TrackFactory {
     private final PeerConnectionFactory factory;
-    TrackFactory(JanusPublisher publisher){
-        factory = publisher.peerConnectionFactory;
+    TrackFactory(PeerConnectionManager pcManager){
+        factory = pcManager.pcFactory;
     }
 
     //TODO: Maybe creating sources should be hidden
