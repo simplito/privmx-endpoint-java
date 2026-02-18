@@ -31,7 +31,10 @@ import org.webrtc.VideoTrack;
 import org.webrtc.audio.AudioDeviceModule;
 import org.webrtc.audio.JavaAudioDeviceModule;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 //TODO: Good to remove context from StreamApi
 public class StreamApi {
@@ -102,8 +105,8 @@ public class StreamApi {
         }
         pcManager = new PeerConnectionManager(
                 factory,
-                (sessionId, rtcConfiguration)->{
-                    if(sessionId != null) {
+                (sessionId, rtcConfiguration) -> {
+                    if (sessionId != null) {
                         this.api.trickle(sessionId, rtcConfiguration);
                     }
                 });
@@ -159,10 +162,10 @@ public class StreamApi {
     }
 
     public void joinStreamRoom(
-            String streamRoomId,
-            TrackObserver trackObserver
+            String streamRoomId
     ) {
-        RoomJanusSession session = pcManager.createSession(streamRoomId,trackObserver);
+        //TODO: Rollback this change, it is do only for run test
+        RoomJanusSession session = pcManager.createSession(streamRoomId);
         api.joinStreamRoom(streamRoomId, session.webrtc);
     }
 
@@ -173,10 +176,11 @@ public class StreamApi {
 
     public StreamHandle createStream(String streamRoomId) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
-        if(session == null) throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first");
+        if (session == null)
+            throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first");
         try {
             session.createPublisher();
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             throw new IllegalStateException("Publisher is now active, try use modifyRemoteStreamsSubscriptions");
         }
 
@@ -194,22 +198,42 @@ public class StreamApi {
             StreamHandle streamHandle,
             MediaStreamTrack track
     ) throws IllegalStateException {
+        Objects.requireNonNull(streamHandle);
         RoomJanusSession session = pcManager.getSession(streamHandle);
         if (session == null)
             throw new IllegalStateException("Stream not exists. Create stream first.");
         JanusPublisher publisher = session.getPublisher();
         if (publisher == null)
             throw new IllegalStateException("This StreamHandle has not created companion publisher.");
-        switch (track.kind()){
+        switch (track.kind()) {
             case MediaStreamTrack.VIDEO_TRACK_KIND: {
                 publisher.addVideoTrack((VideoTrack) track);
                 break;
             }
-            case MediaStreamTrack.AUDIO_TRACK_KIND:{
+            case MediaStreamTrack.AUDIO_TRACK_KIND: {
                 publisher.addAudioTrack((AudioTrack) track);
                 break;
             }
         }
+    }
+
+    public void setTrackObserver(
+            String roomId,
+            TrackObserver observer,
+            String streamId
+    ) {
+        Objects.requireNonNull(roomId);
+        RoomJanusSession session = pcManager.getSession(roomId);
+        if (session == null)
+            throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first.");
+        session.setTrackObserver(streamId, observer);
+    }
+
+    public void setTrackObserver(
+            String roomId,
+            TrackObserver observer
+    ) {
+        setTrackObserver(roomId, observer, null);
     }
 
     /**
@@ -221,6 +245,7 @@ public class StreamApi {
             StreamHandle streamHandle,
             MediaStreamTrack track
     ) throws IllegalStateException {
+        Objects.requireNonNull(streamHandle);
         RoomJanusSession session = pcManager.getSession(streamHandle);
         if (session == null)
             throw new IllegalStateException("Stream with this StreamHandle doesn't exist.");
@@ -235,14 +260,17 @@ public class StreamApi {
     }
 
     public StreamPublishResult publishStream(StreamHandle streamHandle) {
+        Objects.requireNonNull(streamHandle);
         return api.publishStream(streamHandle);
     }
 
     public StreamPublishResult updateStream(StreamHandle streamHandle) {
+        Objects.requireNonNull(streamHandle);
         return api.updateStream(streamHandle);
     }
 
     public void unpublishStream(StreamHandle streamHandle) {
+        Objects.requireNonNull(streamHandle);
         api.unpublishStream(streamHandle);
     }
 
@@ -263,7 +291,7 @@ public class StreamApi {
             throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
         try {
             session.createSubscriber();
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             throw new IllegalStateException("Subscriber is now active, try use modifyRemoteStreamsSubscriptions");
         }
         api.subscribeToRemoteStreams(streamRoomId, subscriptions, options);
@@ -311,7 +339,7 @@ public class StreamApi {
             boolean enable
     ) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
-        if(session != null){
+        if (session != null) {
             PmxFrameCryptor.PmxFrameCryptorOptions options = new PmxFrameCryptor.PmxFrameCryptorOptions();
             options.dropFrameIfCryptionFailed = enable;
             session.setFrameCryptorOptions(options);

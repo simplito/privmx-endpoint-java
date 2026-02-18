@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 //TODO: Fix warnings
 public class PcObserver implements PeerConnection.Observer {
@@ -31,17 +32,7 @@ public class PcObserver implements PeerConnection.Observer {
     private BiConsumer<List<MediaStream>, RtpReceiver> onAddTrack;
     private Consumer<String> onVideoTrack;
 
-    private Consumer<PeerConnection.SignalingState> onSignalingState;
-    private Consumer<PeerConnection.PeerConnectionState> onPeerConnectionState;
-    private Consumer<PeerConnection.IceGatheringState> onIceGatheringState;
-    private Consumer<PeerConnection.IceConnectionState> onIceConnectionState;
     private Consumer<IceCandidate> onIceCandidate;
-    private Consumer<MediaStream> onAddStream;
-    private Consumer<MediaStream> onRemoveStream;
-    private Consumer<DataChannel> onDataChannel;
-    private Runnable onRenegotiationNeeded;
-    private Consumer<MediaStreamTrack> onTrack;
-    private Consumer<RtpReceiver> onRemoveTrack;
 
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
@@ -53,21 +44,6 @@ public class PcObserver implements PeerConnection.Observer {
         this.keyStore = store;
         this.trackObserver = observer;
         this.onIceCandidate = onIceCandidate;
-    }
-
-    public PcObserver(
-            PeerConnectionFactory peerConnectionFactory,
-            PmxKeyStore store,
-            TrackObserver observer
-    ) {
-        this(peerConnectionFactory, store, observer,null);
-    }
-
-    public PcObserver(
-            PeerConnectionFactory peerConnectionFactory,
-            PmxKeyStore store
-    ) {
-        this(peerConnectionFactory, store, null,null);
     }
 
     public void setOnAddTrack(BiConsumer<List<MediaStream>, RtpReceiver> onAddTrack) {
@@ -109,9 +85,7 @@ public class PcObserver implements PeerConnection.Observer {
     }
 
     @Override
-    public void onAddStream(MediaStream mediaStream) {
-
-    }
+    public void onAddStream(MediaStream mediaStream) {}
 
     @Override
     public void onRemoveStream(MediaStream mediaStream) {
@@ -150,11 +124,13 @@ public class PcObserver implements PeerConnection.Observer {
     }
 
     @Override
-    public void onTrack(RtpTransceiver transceiver) {
-        RtpReceiver rtpReceiver = transceiver.getReceiver();
-        MediaStreamTrack track = rtpReceiver.track();
-        if (trackObserver != null) trackObserver.onTrack(track);
-        PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(peerConnectionFactory, rtpReceiver, keyStore);
+    public void onTrack(RtpTransceiver transceiver) {}
+
+    @Override
+    public void onRemoveTrack(RtpReceiver receiver) {
+        //TODO: cleanup track cryptors (?)
+//        onRemoveTrack.accept(receiver.track());
+        receiver.dispose();
     }
 
     public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {

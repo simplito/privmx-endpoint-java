@@ -15,7 +15,10 @@ import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
@@ -33,14 +36,14 @@ public class RoomJanusSession {
     private final PmxKeyStore keyStore;
     public final WebRTCImpl webrtc = new WebRTCImpl();
     private final BiConsumer<Long,String> onTrickle;
-    private final TrackObserver defaultTrackObserver;
+    private final Map<String, TrackObserver> trackObserversByStreamId = new HashMap<>();
+    private final TrackObserver trackObserver = new TrackObserverImpl();
 
     //TODO: Add error listener for catch errors from webrtcInterface
-    public RoomJanusSession(@NonNull String roomId, @NonNull PeerConnectionFactory pcFactory, TrackObserver defaultTrackObserver, BiConsumer<Long,String> onTrickle) {
+    public RoomJanusSession(@NonNull String roomId, @NonNull PeerConnectionFactory pcFactory, BiConsumer<Long,String> onTrickle) {
         this.pcFactory = pcFactory;
         this.roomID = roomId;
         this.keyStore = PmxFrameCryptorFactory.createPmxKeyStore();
-        this.defaultTrackObserver = defaultTrackObserver;
         this.onTrickle = onTrickle;
     }
 
@@ -55,7 +58,7 @@ public class RoomJanusSession {
     }
 
     public synchronized void createSubscriber() {
-        createSubscriber(defaultTrackObserver);
+        createSubscriber(trackObserver);
     }
 
     public synchronized void createSubscriber(TrackObserver observer) {
@@ -70,7 +73,7 @@ public class RoomJanusSession {
     }
 
     public synchronized void createPublisher() {
-        createPublisher(defaultTrackObserver);
+        createPublisher(null);
     }
 
     public synchronized void createPublisher(TrackObserver observer) {
@@ -81,6 +84,30 @@ public class RoomJanusSession {
             publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle);
         }else{
             throw new IllegalStateException("Publisher is currently active.");
+        }
+    }
+
+    public void setTrackObserver(
+            TrackObserver trackObserver
+    ){
+        setTrackObserver(null,trackObserver);
+    }
+
+    public void setTrackObserver(
+            String streamId,
+            TrackObserver trackObserver
+    ){
+        synchronized (trackObserversByStreamId) {
+            trackObserversByStreamId.put(streamId, trackObserver);
+        }
+    }
+
+    public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {
+        if(subscriber != null){
+            subscriber.setFrameCryptorOptions(options);
+        }
+        if(publisher != null){
+            publisher.setFrameCryptorOptions(options);
         }
     }
 
@@ -171,14 +198,18 @@ public class RoomJanusSession {
             }
         }
     }
+    private class TrackObserverImpl implements TrackObserver{
+        @Override
+        public void OnRemoteTrack(String streamId, MediaStreamTrack track) {
+            synchronized (trackObserversByStreamId){
+                Optional.ofNullable(trackObserversByStreamId.get(streamId)).ifPresent(observer->{
+                    observer.OnRemoteTrack(streamId,track);
+                });
 
-
-    public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {
-        if(subscriber != null){
-            subscriber.setFrameCryptorOptions(options);
-        }
-        if(publisher != null){
-            publisher.setFrameCryptorOptions(options);
+                Optional.ofNullable(trackObserversByStreamId.get(null)).ifPresent(observer->{
+                    observer.OnRemoteTrack(streamId,track);
+                });
+            }
         }
     }
 }

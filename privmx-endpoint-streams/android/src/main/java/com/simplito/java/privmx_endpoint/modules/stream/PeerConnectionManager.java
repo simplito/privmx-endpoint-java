@@ -31,9 +31,9 @@ class PeerConnectionManager {
     }
 
     @NonNull
-    public RoomJanusSession createSession(@NonNull String streamRoomId, TrackObserver defaultTrackObserver) {
+    public RoomJanusSession createSession(@NonNull String streamRoomId) {
         return Optional.ofNullable(
-                sessions.putIfAbsent(streamRoomId, new RoomJanusSession(streamRoomId, pcFactory, defaultTrackObserver, onTrickle))
+                sessions.putIfAbsent(streamRoomId, new RoomJanusSession(streamRoomId, pcFactory, onTrickle))
         ).orElse(Objects.requireNonNull(sessions.get(streamRoomId)));
     }
 
