@@ -54,8 +54,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_core_EventQueue_getEvent(
     ctx.callResultEndpointApi<jobject>(&result, [&ctx]() {
         auto eventHolder = EventQueue::getInstance().getEvent();
         return !eventHolder.has_value() ?
-               nullptr :
-               parseEvent(ctx, eventHolder.value().get());
+                nullptr :
+                parseEvent(ctx, eventHolder.value().get());
     });
     if (ctx->ExceptionCheck()) {
         return nullptr;
