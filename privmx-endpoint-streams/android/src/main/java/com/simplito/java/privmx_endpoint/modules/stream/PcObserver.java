@@ -33,6 +33,7 @@ public class PcObserver implements PeerConnection.Observer {
     private Consumer<String> onVideoTrack;
 
     private Consumer<IceCandidate> onIceCandidate;
+    private final Map<String,String> streamIdsByTracks = new HashMap<>();
 
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
@@ -104,25 +105,33 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onAddTrack(RtpReceiver receiver, MediaStream[] mediaStreams) {
-        if (trackObserver != null) {
-            trackObserver.OnRemoteTrack(mediaStreams[0].getId(),receiver.track());
+        MediaStreamTrack track = receiver.track();
+        if(track != null && mediaStreams.length > 0) {
+            streamIdsByTracks.put(track.id(), mediaStreams[0].getId());
         }
     }
 
     @Override
     public void onTrack(RtpTransceiver transceiver) {
         RtpReceiver rtpReceiver = transceiver.getReceiver();
-        if (peerConnectionFactory != null && rtpReceiver.track() != null && rtpReceiver.track().id() != null) {
+        MediaStreamTrack track = rtpReceiver.track();
+        if (peerConnectionFactory != null && track != null && track.id() != null) {
 
             PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(peerConnectionFactory, rtpReceiver, keyStore);
             frameCryptorMap.put(
-                    rtpReceiver.track().id(),
+                    track.id(),
                     PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
                             peerConnectionFactory,
                             rtpReceiver,
                             keyStore
                     )
             );
+            if(trackObserver != null){
+                String streamId = streamIdsByTracks.get(track.id());
+                if(streamId != null) {
+                    trackObserver.OnRemoteTrack(streamId, track);
+                }
+            }
         }
     }
 
