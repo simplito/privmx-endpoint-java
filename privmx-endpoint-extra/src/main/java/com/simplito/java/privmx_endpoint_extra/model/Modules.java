@@ -37,8 +37,4 @@ public enum Modules {
      * KVDB module case.
      */
     KVDB,
-    /**
-     * STREAM module case.
-     */
-    STREAM,
 }

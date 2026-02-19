@@ -27,6 +27,7 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
 import com.simplito.java.privmx_endpoint.modules.crypto.CryptoApi;
+import com.simplito.java.privmx_endpoint.streams.StreamApiLow;
 import com.simplito.java.privmx_endpoint.streams.model.events.eventSelectorTypes.StreamEventSelectorType;
 import com.simplito.java.privmx_endpoint.streams.model.events.eventTypes.StreamEventType;
 import com.simplito.java.privmx_endpoint_extra.events.CallbackRegistration;
@@ -94,6 +95,11 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
      */
     public PrivmxEndpoint(Set<Modules> enableModule, String userPrivateKey, String solutionId, String bridgeUrl) throws IllegalStateException, PrivmxException, NativeException {
         this(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
+    }
+
+    public StreamApiLow initializeStreamApi() {
+        // todo - inform that eventApi is required?
+        return super.initializeStreamApi();
     }
 
     /**
@@ -215,12 +221,16 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                             eventType.eventSelectorId
                     );
                 } else if (eventType.libEventType instanceof StreamEventType) {
-                    module = EventDispatcher.SubscriptionModule.STREAM;
-                    query = streamApiLow.buildSubscriptionQuery(
-                            (StreamEventType) eventType.libEventType,
-                            (StreamEventSelectorType) eventType.eventSelectorType,
-                            eventType.eventSelectorId
-                    );
+                    if (streamApiLow != null) {
+                        module = EventDispatcher.SubscriptionModule.STREAM;
+                        query = streamApiLow.buildSubscriptionQuery(
+                                (StreamEventType) eventType.libEventType,
+                                (StreamEventSelectorType) eventType.eventSelectorType,
+                                eventType.eventSelectorId
+                        );
+                    } else {
+                        throw new IllegalStateException("streamApi is not initialized. Try to initialize it first by calling the initializeStreamApi method.");
+                    }
                 }
                 EventsToSubscribe eventsToSubscribe = eventsToSubscribeByModule.getOrDefault(
                         module,

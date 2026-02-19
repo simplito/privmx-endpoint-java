@@ -66,7 +66,7 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
     /**
      * Reference to STREAM module.
      */
-    public final StreamApiLow streamApiLow;
+    protected StreamApiLow streamApiLow;
 
     /**
      * Initializes modules and connects to PrivMX Bridge server using given parameters.
@@ -100,7 +100,6 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
         ) : null;
         eventApi = enableModule.contains(Modules.CUSTOM_EVENT) ? new EventApi(connection) : null;
         kvdbApi = enableModule.contains(Modules.KVDB) ? new KvdbApi(connection) : null;
-        streamApiLow = enableModule.contains(Modules.KVDB) ? new StreamApiLow(connection, eventApi) : null;
     }
 
     /**
@@ -124,6 +123,15 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
             String bridgeUrl
     ) throws IllegalStateException, PrivmxException, NativeException {
         this(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
+    }
+
+    public StreamApiLow initializeStreamApi() throws IllegalStateException, PrivmxException {
+        if (streamApiLow == null) {
+            streamApiLow = new StreamApiLow(connection, eventApi);
+            return streamApiLow;
+        }
+
+        return streamApiLow;
     }
 
     /**
