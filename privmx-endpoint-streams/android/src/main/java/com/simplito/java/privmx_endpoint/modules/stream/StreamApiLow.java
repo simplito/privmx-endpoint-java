@@ -19,7 +19,6 @@ import com.simplito.java.privmx_endpoint.model.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.StreamInfo;
 import com.simplito.java.privmx_endpoint.model.StreamPublishResult;
 import com.simplito.java.privmx_endpoint.model.StreamRoom;
-import com.simplito.java.privmx_endpoint.model.StreamSettings;
 import com.simplito.java.privmx_endpoint.model.StreamSubscription;
 import com.simplito.java.privmx_endpoint.model.TurnCredentials;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
@@ -188,7 +187,6 @@ public class StreamApiLow implements AutoCloseable {
 
     public native StreamPublishResult publishStream(StreamHandle streamHandle);
 
-    // todo
     public native StreamPublishResult updateStream(StreamHandle streamHandle);
 
     public native void unpublishStream(StreamHandle streamHandle);
@@ -201,8 +199,6 @@ public class StreamApiLow implements AutoCloseable {
 
     public native void trickle(long sessionId, String candidateAsJson);
 
-
-    // todo
     public native void acceptOfferOnReconfigure(
             long sessionId,
             SdpWithTypeModel sdp

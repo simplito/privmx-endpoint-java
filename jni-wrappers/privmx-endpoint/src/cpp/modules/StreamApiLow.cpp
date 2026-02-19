@@ -9,9 +9,8 @@
 #include "privmx/endpoint/wrapper/modules/Connection.h"
 #include "privmx/endpoint/wrapper/modules/EventApi.h"
 
-#include "privmx/endpoint/wrapper/streams/modules/WebRTCInterfaceJNI.h"
-#include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
-#include "privmx/endpoint/wrapper/streams/parsers/parser.h"
+#include "privmx/endpoint/wrapper/modules/WebRTCInterfaceJNI.h"
+#include "privmx/endpoint/stream/StreamApiLow.hpp"
 
 using namespace privmx::endpoint::stream;
 using namespace privmx::endpoint;
@@ -62,7 +61,7 @@ StreamApiLow *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_create(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_create(
         JNIEnv *env,
         jclass clazz,
         jobject connection,
@@ -102,7 +101,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_create(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_deinit(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_deinit(
         JNIEnv *env,
         jobject thiz
 ) {
@@ -124,7 +123,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_deinit(
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_createStreamRoom(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_createStreamRoom(
         JNIEnv *env,
         jobject thiz,
         jstring context_id,
@@ -182,7 +181,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_createStreamRoom(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_updateStreamRoom(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_updateStreamRoom(
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id,
@@ -242,7 +241,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_updateStreamRoom(
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreamRooms(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRooms(
         JNIEnv *env,
         jobject thiz,
         jstring context_id,
@@ -310,7 +309,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreamRooms(
                 for (auto &streamRoom_c: streamRooms_c.readItems) {
                     env->CallBooleanMethod(array,
                             addToArrayMID,
-                            privmx::wrapper::streams::streamRoom2Java(
+                            privmx::wrapper::streamRoom2Java(
                                     ctx,
                                     streamRoom_c
                                     )
@@ -332,7 +331,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreamRooms(
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_getStreamRoom(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getStreamRoom(
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id
@@ -344,7 +343,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_getStreamRoom(
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &thiz, &stream_room_id] {
 
-        return privmx::wrapper::streams::streamRoom2Java(
+        return privmx::wrapper::streamRoom2Java(
                 ctx,
                 getStreamApi(ctx, thiz)->getStreamRoom(
                         ctx.jString2string(stream_room_id)
@@ -359,7 +358,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_getStreamRoom(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_deleteStreamRoom(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_deleteStreamRoom(
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id
@@ -377,7 +376,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_deleteStreamRoom(
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_createStream(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_createStream(
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id
@@ -390,7 +389,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_createStream(
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &thiz, &stream_room_id] {
 
-        return privmx::wrapper::streams::streamHandle2Java(
+        return privmx::wrapper::streamHandle2Java(
                 ctx,
                 getStreamApi(ctx, thiz)->createStream(
                         ctx.jString2string(stream_room_id)
@@ -406,7 +405,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_createStream(
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_publishStream(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_publishStream(
         JNIEnv *env,
         jobject thiz,
         jobject stream_handle
@@ -422,7 +421,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_publishStream(
         auto result = getStreamApi(ctx, thiz)->publishStream(
                 parseStreamHandle(ctx, stream_handle)
         );
-        return privmx::wrapper::streams::streamPublishResult2Java(
+        return privmx::wrapper::streamPublishResult2Java(
                 ctx,
                 result
         );
@@ -435,7 +434,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_publishStream(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_joinStreamRoom(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_joinStreamRoom(
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id,
@@ -461,7 +460,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_joinStreamRoom(
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreams(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreams(
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id
@@ -485,7 +484,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreams(
             env->CallBooleanMethod(
                     array,
                     addToArrayMID,
-                    privmx::wrapper::streams::streamInfo2Java(ctx, info_c)
+                    privmx::wrapper::streamInfo2Java(ctx, info_c)
             );
         }
         return array;
@@ -498,7 +497,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreams(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_unpublishStream(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unpublishStream(
         JNIEnv *env,
         jobject thiz,
         jobject stream_handle
@@ -518,7 +517,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_unpublishStream(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_leaveStreamRoom(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_leaveStreamRoom(
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id
@@ -538,7 +537,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_leaveStreamRoom(
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_getTurnCredentials(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getTurnCredentials(
         JNIEnv *env,
         jobject thiz
 ) {
@@ -556,7 +555,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_getTurnCredentials(
             env->CallBooleanMethod(
                     array,
                     addToArrayMID,
-                    privmx::wrapper::streams::turnCredentials2Java(ctx, turnCredentials_c)
+                    privmx::wrapper::turnCredentials2Java(ctx, turnCredentials_c)
             );
         }
 
@@ -570,7 +569,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_getTurnCredentials(
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_subscribeFor(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeFor(
         JNIEnv *env,
         jobject thiz,
         jobject subscription_queries
@@ -616,7 +615,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_subscribeFor(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_unsubscribeFrom(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeFrom(
         JNIEnv *env,
         jobject thiz,
         jobject subscription_ids
@@ -647,7 +646,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_unsubscribeFrom(
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_buildSubscriptionQuery(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_buildSubscriptionQuery(
         JNIEnv *env,
         jobject thiz,
         jlong event_type,
@@ -679,7 +678,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_buildSubscriptionQu
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_keyManagement(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_keyManagement(
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id,
@@ -704,7 +703,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_keyManagement(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_trickle(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_trickle(
         JNIEnv *env,
         jobject thiz,
         jlong session_id,
@@ -725,7 +724,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_trickle(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_unsubscribeFromRemoteStreams(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeFromRemoteStreams(
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id,
@@ -764,7 +763,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_unsubscribeFromRemo
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_modifyRemoteStreamsSubscriptions(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_modifyRemoteStreamsSubscriptions(
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id,
@@ -828,7 +827,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_modifyRemoteStreams
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_subscribeToRemoteStreams(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeToRemoteStreams(
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id,
@@ -868,12 +867,16 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_subscribeToRemoteSt
 }
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_updateStream(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_updateStream(
         JNIEnv *env,
         jobject thiz,
         jobject stream_handle
 ) {
     JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_handle, "Stream Handle")) {
+        return nullptr;
+    }
+
     jobject result;
 
     ctx.callResultEndpointApi<jobject>(
@@ -889,7 +892,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_updateStream(
                         stream_handle_c
                 );
 
-                return privmx::wrapper::streams::streamPublishResult2Java(
+                return privmx::wrapper::streamPublishResult2Java(
                         ctx,
                         stream_result
                 );
@@ -902,7 +905,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_updateStream(
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_acceptOfferOnReconfigure(
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_acceptOfferOnReconfigure(
         JNIEnv *env,
         jobject thiz,
         jlong session_id,
