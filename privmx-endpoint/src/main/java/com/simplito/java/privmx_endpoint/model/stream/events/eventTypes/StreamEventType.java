@@ -1,4 +1,6 @@
-package com.simplito.java.privmx_endpoint.model.events.eventTypes;
+package com.simplito.java.privmx_endpoint.model.stream.events.eventTypes;
+
+import com.simplito.java.privmx_endpoint.model.events.eventTypes.EventType;
 
 public enum StreamEventType implements EventType {
     STREAMROOM_CREATE,
