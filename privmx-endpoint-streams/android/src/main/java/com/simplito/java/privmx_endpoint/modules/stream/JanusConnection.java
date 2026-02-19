@@ -51,7 +51,8 @@ public class JanusConnection {
 //                        onTrickle.accept(sessionId,obj.toString());
 //                        System.out.println("Trickle executed");
                     }
-                }
+                },
+                this::onRenegotiationNeeded
         );
         this.peerConnection = createPeerConnection(pcObserver);
     }
@@ -120,4 +121,6 @@ public class JanusConnection {
             peerConnection.dispose();
         }
     }
+
+    public void onRenegotiationNeeded(){}
 }

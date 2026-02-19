@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 
 import com.simplito.java.privmx_endpoint.model.AudioTrackInfo;
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
+import com.simplito.java.privmx_endpoint.model.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.VideoTrackInfo;
 
 import org.webrtc.MediaConstraints;
@@ -18,6 +19,8 @@ import org.webrtc.VideoCapturer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
 
 public class JanusPublisher extends JanusConnection{
@@ -25,10 +28,19 @@ public class JanusPublisher extends JanusConnection{
     public final Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
     //TODO: Add videoCapturer to VideoTrackInfo
     public final Map<String, VideoCapturer> videoCapturers = new HashMap<>();
+    public final BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer;
+    public final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 
-    public JanusPublisher(PeerConnectionFactory pcFactory, PmxKeyStore keyStore, TrackObserver observer, BiConsumer<Long,String> onTrickle) {
+    public JanusPublisher(
+            PeerConnectionFactory pcFactory,
+            PmxKeyStore keyStore,
+            TrackObserver observer,
+            BiConsumer<Long,String> onTrickle,
+            BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer
+    ) {
         super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle);
+        this.acceptRenegotiationOffer = acceptRenegotiationOffer;
     }
 
     public void addAudioTrack(org.webrtc.AudioTrack audioTrack) {
@@ -116,8 +128,8 @@ public class JanusPublisher extends JanusConnection{
         }
     }
 
-    public void setAnswer(String sdp){
-        peerConnection.setRemoteDescription(new SdpObserver(null),new SessionDescription(SessionDescription.Type.ANSWER,sdp));
+    public void setAnswer(String sdp, String type){
+        peerConnection.setRemoteDescription(new SdpObserver(null),new SessionDescription(SessionDescription.Type.fromCanonicalForm(type),sdp));
     }
 
     @Nullable
@@ -141,5 +153,15 @@ public class JanusPublisher extends JanusConnection{
         this.audioTracks.values().forEach(it ->{
             it.frameCryptor.setOptions(options);
         });
+    }
+
+
+    @Override
+    public void onRenegotiationNeeded() {
+        if(getSessionId() > -1) {
+            executorService.execute(()->{
+                acceptRenegotiationOffer.accept(getSessionId(),new SdpWithTypeModel(createOffer(), SessionDescription.Type.OFFER.canonicalForm()));
+            });
+        }
     }
 }

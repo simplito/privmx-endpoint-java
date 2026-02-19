@@ -15,15 +15,15 @@ public class JanusSubscriber extends JanusConnection{
         super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle);
     }
 
-    public String createAnswer(String offerSdp){
+    public String createAnswer(String offerSdp, String type) {
         CompletableFuture<SessionDescription> res = new CompletableFuture<>();
-        peerConnection.setRemoteDescription(new SdpObserver(null), new SessionDescription(SessionDescription.Type.OFFER,offerSdp));
+        peerConnection.setRemoteDescription(new SdpObserver(null), new SessionDescription(SessionDescription.Type.fromCanonicalForm(type), offerSdp));
         peerConnection.createAnswer(new SdpObserver(res), new MediaConstraints());
         try {
             SessionDescription answer = res.get();
-            peerConnection.setLocalDescription(new SdpObserver(null),answer);
+            peerConnection.setLocalDescription(new SdpObserver(null), answer);
             return answer.description;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Cannot create answer");
         }
     }
