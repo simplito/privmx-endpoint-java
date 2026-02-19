@@ -25,31 +25,31 @@ namespace privmx::wrapper::streams {
         this->jstreamSettings = env->NewGlobalRef(jstreamSettings);
 
 
-        this->OnFrame = [this](
-                int64_t a,
-                int64_t b,
-                const std::shared_ptr<privmx::endpoint::stream::Frame> &frame,
-                const std::string &c
-        ) {
-            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
-                    javaVM,
-                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
-            JniContextUtils ctx(env);
-        };
-
-        this->OnVideo = [this](const std::string &a) {
-            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
-                    javaVM,
-                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
-            JniContextUtils ctx(env);
-        };
-
-        this->OnVideoRemove = [this](const std::string &a) {
-            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
-                    javaVM,
-                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
-            JniContextUtils ctx(env);
-        };
+//        this->OnFrame = [this](
+//                int64_t a,
+//                int64_t b,
+//                const std::shared_ptr<privmx::endpoint::stream::Frame> &frame,
+//                const std::string &c
+//        ) {
+//            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
+//                    javaVM,
+//                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
+//            JniContextUtils ctx(env);
+//        };
+//
+//        this->OnVideo = [this](const std::string &a) {
+//            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
+//                    javaVM,
+//                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
+//            JniContextUtils ctx(env);
+//        };
+//
+//        this->OnVideoRemove = [this](const std::string &a) {
+//            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
+//                    javaVM,
+//                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
+//            JniContextUtils ctx(env);
+//        };
     }
 
 //    void StreamSettingsJNI::StreamSettingsJNI::onVideo2(

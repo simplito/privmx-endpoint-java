@@ -2,12 +2,11 @@
 // Created by Dawid Jenczewski on 13/02/2025.
 //
 
-#include "privmx/endpoint/wrapper/streams/modules/WebRTCInterfaceJNI.h"
+#include "privmx/endpoint/wrapper/modules/WebRTCInterfaceJNI.h"
 #include "privmx/endpoint/wrapper/utils/jniUtils.h"
 #include "privmx/endpoint/wrapper/utils/utils.hpp"
 #include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
 
-#include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
 #include <thread>
 
 JNIEnv *WebRTCInterfaceJNI::AttachCurrentThreadIfNeeded() {
@@ -224,7 +223,7 @@ void WebRTCInterfaceJNI::updateKeys(
         env->CallBooleanMethod(
                 jKeysArray,
                 addToArrayMID,
-                privmx::wrapper::streams::key2Java(ctx, key_c)
+                privmx::wrapper::key2Java(ctx, key_c)
         );
     }
     env->CallVoidMethod(
