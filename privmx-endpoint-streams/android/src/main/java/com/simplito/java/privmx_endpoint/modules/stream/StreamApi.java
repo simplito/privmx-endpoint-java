@@ -6,6 +6,7 @@ import static android.media.AudioManager.GET_DEVICES_OUTPUTS;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.AudioRecordingConfiguration;
+import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,16 +15,15 @@ import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.DeviceType;
 import com.simplito.java.privmx_endpoint.model.MediaDevice;
 import com.simplito.java.privmx_endpoint.model.PagingList;
-import com.simplito.java.privmx_endpoint.model.Settings;
-import com.simplito.java.privmx_endpoint.model.StreamHandle;
-import com.simplito.java.privmx_endpoint.model.StreamInfo;
-import com.simplito.java.privmx_endpoint.model.StreamPublishResult;
-import com.simplito.java.privmx_endpoint.model.StreamRoom;
-import com.simplito.java.privmx_endpoint.model.StreamSettings;
-import com.simplito.java.privmx_endpoint.model.StreamSubscription;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
-import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StreamEventSelectorType;
-import com.simplito.java.privmx_endpoint.model.events.eventTypes.StreamEventType;
+import com.simplito.java.privmx_endpoint.model.stream.Settings;
+import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
+import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
+import com.simplito.java.privmx_endpoint.model.stream.StreamPublishResult;
+import com.simplito.java.privmx_endpoint.model.stream.StreamRoom;
+import com.simplito.java.privmx_endpoint.model.stream.StreamSubscription;
+import com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes.StreamEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEventType;
 
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
@@ -51,6 +51,7 @@ import org.webrtc.audio.JavaAudioDeviceModule;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 //TODO: Good to remove context from StreamApi
@@ -273,6 +274,38 @@ public class StreamApi {
         return null;
     }
 
+
+    private VideoCapturer createCameraCapturer(CameraEnumerator enumerator, boolean isBackFacing) {
+        final String[] deviceNames = enumerator.getDeviceNames();
+        // First, try to find front facing camera
+        Logging.d(TAG, "Looking for front facing cameras.");
+        for (String deviceName : deviceNames) {
+            if (enumerator.isFrontFacing(deviceName)) {
+                Logging.d(TAG, "Creating front facing camera capturer.");
+                VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
+
+                if (videoCapturer != null && !isBackFacing) {
+                    return videoCapturer;
+                }
+            }
+        }
+
+        // Front facing camera not found, try something else
+        Logging.d(TAG, "Looking for other cameras.");
+        for (String deviceName : deviceNames) {
+            if (!enumerator.isFrontFacing(deviceName)) {
+                Logging.d(TAG, "Creating other camera capturer.");
+                VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
+
+                if (videoCapturer != null && isBackFacing) {
+                    return videoCapturer;
+                }
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @param context
      * @param localSink
@@ -326,6 +359,67 @@ public class StreamApi {
         }
     }
 
+    public void addTrackAudio(
+            AudioTrack audioTrack,
+            StreamHandle streamHandle,
+            MediaDevice track
+    ) {
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        JanusPublisher connection = session.getPublisher();
+        if (session == null)
+            throw new IllegalStateException("Stream not exists. Create stream first.");
+        if (connection == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+
+        if (track.type == DeviceType.Audio) {
+            audioTrack.setEnabled(true);
+            connection.addAudioTrack(audioTrack);
+        }
+    }
+
+    public void addTrackVideo(
+            Context context,
+            VideoSink localSink,
+            StreamHandle streamHandle,
+            MediaDevice track,
+            Boolean isScreenCast,
+            VideoCapturer capturer,
+            boolean isBackFacing
+    ) {
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        JanusPublisher connection = session.getPublisher();
+        SurfaceTextureHelper surfaceTextureHelper;
+
+        VideoCapturer currentCapturer;
+        if (isScreenCast) {
+            surfaceTextureHelper = SurfaceTextureHelper.create("ScreenCaptureThread", rootEglBase.getEglBaseContext());
+            currentCapturer = capturer;
+        } else {
+            surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
+            currentCapturer = createCameraCapturer(new Camera2Enumerator(context), isBackFacing);
+        }
+
+        VideoSource videoSource = connection.peerConnectionFactory.createVideoSource(isScreenCast);
+        currentCapturer.initialize(surfaceTextureHelper, appContext, videoSource.getCapturerObserver());
+
+        VideoTrack videoTrack = connection.peerConnectionFactory.createVideoTrack(track.name, videoSource);
+        videoTrack.setEnabled(true);
+        videoTrack.addSink(localSink);
+        connection.addVideoTrack(
+                videoTrack,
+                currentCapturer
+        );
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        Objects.requireNonNull(context.getDisplay()).getMetrics(metrics);
+
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+
+        currentCapturer.startCapture(width, height, 30);
+
+    }
+
     /**
      * @param streamHandle
      * @param track
@@ -345,6 +439,24 @@ public class StreamApi {
             publisher.removeAudioTrack(track.id());
         } else if (track instanceof VideoTrack) {
             publisher.removeVideoTrack(track.id());
+        }
+    }
+
+    public void removeTrack(
+            StreamHandle streamHandle,
+            MediaDevice track
+    ) throws IllegalStateException {
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("Stream with this StreamHandle doesn't exist.");
+        JanusPublisher publisher = session.getPublisher();
+
+        if (publisher == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+        if (track.type == DeviceType.Audio) {
+            publisher.removeAudioTrack(track.name);
+        } else if (track.type == DeviceType.Video) {
+            publisher.removeVideoTrack(track.name);
         }
     }
 
