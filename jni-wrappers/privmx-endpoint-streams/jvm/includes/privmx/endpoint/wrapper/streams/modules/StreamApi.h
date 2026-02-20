@@ -4,10 +4,10 @@
 //#include "../../../../../../../../privmx-endpoint/src/main/cpp/model_native_initializers.h"
 //#include "../../../../../../../../privmx-endpoint/src/main/cpp/modules/Connection.h"
 //#include "../../../../../../../../privmx-endpoint/src/main/cpp/modules/EventApi.h"
-#include "privmx/endpoint/modules/EventApi.h"
-#include "privmx/endpoint/modules/Connection.h"
-#include "privmx/endpoint/parsers/model_native_initializers.h"
-#include "privmx/endpoint/utils/utils.hpp"
+#include "privmx/endpoint/wrapper/modules/EventApi.h"
+#include "privmx/endpoint/wrapper/modules/Connection.h"
+#include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
+#include "privmx/endpoint/wrapper/utils/utils.hpp"
 
 using namespace privmx::endpoint;
 

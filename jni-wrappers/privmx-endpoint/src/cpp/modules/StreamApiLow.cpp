@@ -9,11 +9,8 @@
 #include "privmx/endpoint/wrapper/modules/Connection.h"
 #include "privmx/endpoint/wrapper/modules/EventApi.h"
 
-#include "privmx/endpoint/wrapper/streams/modules/WebRTCInterfaceJNI.h"
-#include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
-#include "privmx/endpoint/wrapper/streams/parsers/parser.h"
-
-//#include <privmx-endpoint/includes/privmx/endpoint/wrapper/parsers/parser.h>
+#include "privmx/endpoint/wrapper/modules/WebRTCInterfaceJNI.h"
+#include "privmx/endpoint/stream/StreamApiLow.hpp"
 
 using namespace privmx::endpoint::stream;
 using namespace privmx::endpoint;
@@ -312,7 +309,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                 for (auto &streamRoom_c: streamRooms_c.readItems) {
                     env->CallBooleanMethod(array,
                             addToArrayMID,
-                            privmx::wrapper::streams::streamRoom2Java(
+                            privmx::wrapper::streamRoom2Java(
                                     ctx,
                                     streamRoom_c
                                     )
@@ -346,7 +343,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getStreamRoo
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &thiz, &stream_room_id] {
 
-        return privmx::wrapper::streams::streamRoom2Java(
+        return privmx::wrapper::streamRoom2Java(
                 ctx,
                 getStreamApi(ctx, thiz)->getStreamRoom(
                         ctx.jString2string(stream_room_id)
@@ -392,7 +389,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_createStream
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &thiz, &stream_room_id] {
 
-        return privmx::wrapper::streams::streamHandle2Java(
+        return privmx::wrapper::streamHandle2Java(
                 ctx,
                 getStreamApi(ctx, thiz)->createStream(
                         ctx.jString2string(stream_room_id)
@@ -424,12 +421,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_publishStrea
         auto result = getStreamApi(ctx, thiz)->publishStream(
                 parseStreamHandle(ctx, stream_handle)
         );
-        return nullptr;
-        //TODO: Return result
-//        return privmx::wrapper::streams::streamPublishResult2Java(
-//                ctx,
-//                result
-//        );
+        return privmx::wrapper::streamPublishResult2Java(
+                ctx,
+                result
+        );
     });
     if (ctx->ExceptionCheck()) {
         return nullptr;
@@ -489,7 +484,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreams(
             env->CallBooleanMethod(
                     array,
                     addToArrayMID,
-                    privmx::wrapper::streams::streamInfo2Java(ctx, info_c)
+                    privmx::wrapper::streamInfo2Java(ctx, info_c)
             );
         }
         return array;
@@ -560,7 +555,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getTurnCrede
             env->CallBooleanMethod(
                     array,
                     addToArrayMID,
-                    privmx::wrapper::streams::turnCredentials2Java(ctx, turnCredentials_c)
+                    privmx::wrapper::turnCredentials2Java(ctx, turnCredentials_c)
             );
         }
 
@@ -647,6 +642,38 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeF
 
         getStreamApi(ctx, thiz)->unsubscribeFrom(subscription_ids_c);
     });
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_buildSubscriptionQuery(
+        JNIEnv *env,
+        jobject thiz,
+        jlong event_type,
+        jlong selector_type,
+        jstring selector_id
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(selector_id, "SelectorID")) {
+        return nullptr;
+    }
+
+    jstring result = nullptr;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [&ctx, &thiz, &event_type, &selector_type, &selector_id]() {
+                std::string query_result_c = getStreamApi(ctx, thiz)->buildSubscriptionQuery(
+                        static_cast<stream::EventType>(event_type),
+                        static_cast<stream::EventSelectorType>(selector_type),
+                        ctx.jString2string(selector_id)
+                );
+                return ctx->NewStringUTF(query_result_c.c_str());
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
 }
 
 extern "C"
@@ -835,6 +862,65 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeToR
                 ctx.jString2string(stream_room_id),
                 subscriptions_c,
                 parseSettings(ctx, options)
+        );
+    });
+}
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_updateStream(
+        JNIEnv *env,
+        jobject thiz,
+        jobject stream_handle
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_handle, "Stream Handle")) {
+        return nullptr;
+    }
+
+    jobject result;
+
+    ctx.callResultEndpointApi<jobject>(
+            &result, [
+                    &ctx,
+                    &env,
+                    &thiz,
+                    &stream_handle
+            ] {
+
+                auto stream_handle_c = parseStreamHandle(ctx, stream_handle);
+                auto stream_result = getStreamApi(ctx, thiz)->updateStream(
+                        stream_handle_c
+                );
+
+                return privmx::wrapper::streamPublishResult2Java(
+                        ctx,
+                        stream_result
+                );
+
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_acceptOfferOnReconfigure(
+        JNIEnv *env,
+        jobject thiz,
+        jlong session_id,
+        jobject sdp
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(sdp, " SDP")) {
+        return;
+    }
+
+    ctx.callVoidEndpointApi([&ctx, &thiz, &session_id, &sdp]() {
+
+        getStreamApi(ctx, thiz)->acceptOfferOnReconfigure(
+                session_id,
+                parseSdpWithTypeModel(ctx, sdp)
         );
     });
 }

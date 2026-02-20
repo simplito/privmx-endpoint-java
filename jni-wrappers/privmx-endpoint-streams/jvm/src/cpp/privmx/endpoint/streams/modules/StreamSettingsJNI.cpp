@@ -2,9 +2,6 @@
 #include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
 #include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
 #include "privmx/endpoint/wrapper/utils/jniUtils.h"
-//#include "../utils.hpp"
-//#include "StreamApi.h"
-//#include "../jniUtils.h"
 
 namespace privmx::wrapper::streams {
 
@@ -24,32 +21,32 @@ namespace privmx::wrapper::streams {
         env->GetJavaVM(&this->javaVM);
         this->jstreamSettings = env->NewGlobalRef(jstreamSettings);
 
-
-        this->OnFrame = [this](
-                int64_t a,
-                int64_t b,
-                const std::shared_ptr<privmx::endpoint::stream::Frame> &frame,
-                const std::string &c
-        ) {
-            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
-                    javaVM,
-                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
-            JniContextUtils ctx(env);
-        };
-
-        this->OnVideo = [this](const std::string &a) {
-            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
-                    javaVM,
-                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
-            JniContextUtils ctx(env);
-        };
-
-        this->OnVideoRemove = [this](const std::string &a) {
-            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
-                    javaVM,
-                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
-            JniContextUtils ctx(env);
-        };
+//
+//        this->OnFrame = [this](
+//                int64_t a,
+//                int64_t b,
+//                const std::shared_ptr<privmx::endpoint::stream::Frame> &frame,
+//                const std::string &c
+//        ) {
+//            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
+//                    javaVM,
+//                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
+//            JniContextUtils ctx(env);
+//        };
+//
+//        this->OnVideo = [this](const std::string &a) {
+//            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
+//                    javaVM,
+//                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
+//            JniContextUtils ctx(env);
+//        };
+//
+//        this->OnVideoRemove = [this](const std::string &a) {
+//            JNIEnv *env = privmx::wrapper::jni::AttachCurrentThreadIfNeeded(
+//                    javaVM,
+//                    privmx::wrapper::jni::getPrivmxCallbackThreadName());
+//            JniContextUtils ctx(env);
+//        };
     }
 
 //    void StreamSettingsJNI::StreamSettingsJNI::onVideo2(
