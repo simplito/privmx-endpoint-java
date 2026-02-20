@@ -3,10 +3,10 @@ package com.simplito.java.privmx_endpoint.model.stream;
 import jdk.internal.util.ByteArray;
 
 public class RecordingEncKey {
-    public ByteArray id;
-    public ByteArray key;
+    public byte[] id;
+    public byte[] key;
 
-    public RecordingEncKey(ByteArray id, ByteArray key) {
+    public RecordingEncKey(byte[] id, byte[] key) {
         this.id = id;
         this.key = key;
     }
