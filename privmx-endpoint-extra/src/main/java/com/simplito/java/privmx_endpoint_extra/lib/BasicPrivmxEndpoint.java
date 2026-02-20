@@ -20,8 +20,8 @@ import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 import com.simplito.java.privmx_endpoint.modules.inbox.InboxApi;
 import com.simplito.java.privmx_endpoint.modules.kvdb.KvdbApi;
 import com.simplito.java.privmx_endpoint.modules.store.StoreApi;
+import com.simplito.java.privmx_endpoint.modules.stream.StreamApiLow;
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi;
-import com.simplito.java.privmx_endpoint.streams.StreamApiLow;
 import com.simplito.java.privmx_endpoint_extra.model.Modules;
 
 import java.util.Set;

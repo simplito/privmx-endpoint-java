@@ -26,10 +26,9 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
 import com.simplito.java.privmx_endpoint.model.exceptions.NativeException;
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException;
+import com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes.StreamEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEventType;
 import com.simplito.java.privmx_endpoint.modules.crypto.CryptoApi;
-import com.simplito.java.privmx_endpoint.streams.StreamApiLow;
-import com.simplito.java.privmx_endpoint.streams.model.events.eventSelectorTypes.StreamEventSelectorType;
-import com.simplito.java.privmx_endpoint.streams.model.events.eventTypes.StreamEventType;
 import com.simplito.java.privmx_endpoint_extra.events.CallbackRegistration;
 import com.simplito.java.privmx_endpoint_extra.events.EventCallback;
 import com.simplito.java.privmx_endpoint_extra.events.EventDispatcher;
@@ -95,11 +94,6 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
      */
     public PrivmxEndpoint(Set<Modules> enableModule, String userPrivateKey, String solutionId, String bridgeUrl) throws IllegalStateException, PrivmxException, NativeException {
         this(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
-    }
-
-    public StreamApiLow initializeStreamApi() {
-        // todo - inform that eventApi is required?
-        return super.initializeStreamApi();
     }
 
     /**

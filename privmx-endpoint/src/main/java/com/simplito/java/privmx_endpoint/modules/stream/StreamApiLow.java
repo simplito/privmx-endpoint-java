@@ -14,6 +14,7 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
+import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.stream.Settings;
 import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
@@ -21,6 +22,8 @@ import com.simplito.java.privmx_endpoint.model.stream.StreamPublishResult;
 import com.simplito.java.privmx_endpoint.model.stream.StreamRoom;
 import com.simplito.java.privmx_endpoint.model.stream.StreamSubscription;
 import com.simplito.java.privmx_endpoint.model.stream.TurnCredentials;
+import com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes.StreamEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEventType;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 
@@ -196,31 +199,28 @@ public class StreamApiLow implements AutoCloseable {
 
     public native void trickle(long sessionId, String candidateAsJson);
 
-
-    // todo
-//    public native void acceptOfferOnReconfigure(
-//            long sessionId,
-//            SdpWithTypeModel sdp
-//    );
+    public native void acceptOfferOnReconfigure(
+            long sessionId,
+            SdpWithTypeModel sdp
+    );
 
     public native List<String> subscribeFor(List<String> subscriptionQueries);
 
     public native void unsubscribeFrom(List<String> subscriptionIds);
 
-//    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId);
-//
-//    public String buildSubscriptionQuery(
-//            StreamEventType eventType,
-//            StreamEventSelectorType selectorType,
-//            String selectorId
-//    ) {
-//        return buildSubscriptionQuery(
-//                eventType.ordinal(),
-//                selectorType.ordinal(),
-//                selectorId
-//        );
-//    }
+    private native String buildSubscriptionQuery(long eventType, long selectorType, String selectorId);
 
+    public String buildSubscriptionQuery(
+            StreamEventType eventType,
+            StreamEventSelectorType selectorType,
+            String selectorId
+    ) {
+        return buildSubscriptionQuery(
+                eventType.ordinal(),
+                selectorType.ordinal(),
+                selectorId
+        );
+    }
 
     public native void keyManagement(String streamRoomId, boolean disable);
 
