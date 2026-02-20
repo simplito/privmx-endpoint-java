@@ -127,6 +127,8 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
 
     public StreamApiLow initializeStreamApi() throws IllegalStateException, PrivmxException {
         if (streamApiLow == null) {
+            if (eventApi == null) throw new IllegalStateException("eventApi is not initialized.");
+
             streamApiLow = new StreamApiLow(connection, eventApi);
             return streamApiLow;
         }
