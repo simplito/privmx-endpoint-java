@@ -58,6 +58,7 @@ jobject parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core:
 privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery);
 
 
+
 // java -> c++
 template<typename T>
 std::vector<T> jArrayToVector(JniContextUtils &ctx, jobjectArray jArray,

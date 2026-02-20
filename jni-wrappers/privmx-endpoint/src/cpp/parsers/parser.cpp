@@ -793,8 +793,10 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
     return nullptr;
 }
 
-privmx::endpoint::core::PagingQuery
-parsePagingQuery(JniContextUtils &ctx, jobject pagingQuery) {
+privmx::endpoint::core::PagingQuery parsePagingQuery(
+        JniContextUtils &ctx,
+        jobject pagingQuery
+) {
     auto result = privmx::endpoint::core::PagingQuery();
     if (pagingQuery == nullptr) return result;
     jclass queryClass = ctx->GetObjectClass(pagingQuery);
