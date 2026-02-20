@@ -1,4 +1,4 @@
-package com.simplito.java.privmx_endpoint.streams.model.events.eventSelectorTypes;
+package com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes;
 
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.EventSelectorType;
 

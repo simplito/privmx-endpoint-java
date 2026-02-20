@@ -1,4 +1,4 @@
-package com.simplito.java.privmx_endpoint.streams.model.events;
+package com.simplito.java.privmx_endpoint.model.stream.events;
 
 public class StreamUnpublishedEventData {
     public String streamRoomId;
