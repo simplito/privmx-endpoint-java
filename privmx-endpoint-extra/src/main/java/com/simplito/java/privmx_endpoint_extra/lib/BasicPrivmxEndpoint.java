@@ -125,7 +125,7 @@ public class BasicPrivmxEndpoint implements AutoCloseable {
         this(enableModule, userPrivateKey, solutionId, bridgeUrl, null);
     }
 
-    public StreamApiLow initializeStreamApi() throws IllegalStateException, PrivmxException {
+    public StreamApiLow initializeStreamApiLow() throws IllegalStateException, PrivmxException {
         if (streamApiLow == null) {
             if (eventApi == null) throw new IllegalStateException("eventApi is not initialized.");
 

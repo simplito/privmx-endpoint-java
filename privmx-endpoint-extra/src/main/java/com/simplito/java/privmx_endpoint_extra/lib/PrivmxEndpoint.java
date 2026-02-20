@@ -223,7 +223,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                                 eventType.eventSelectorId
                         );
                     } else {
-                        throw new IllegalStateException("streamApi is not initialized. Try to initialize it first by calling the initializeStreamApi method.");
+                        throw new IllegalStateException("streamApiLow is not initialized. Try to initialize it first by calling the initializeStreamApiLow method.");
                     }
                 }
                 EventsToSubscribe eventsToSubscribe = eventsToSubscribeByModule.getOrDefault(
@@ -271,7 +271,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                 break;
             case STREAM:
                 if (streamApiLow == null)
-                    throw new IllegalStateException("streamApi is not initialized");
+                    throw new IllegalStateException("streamApiLow is not initialized");
                 streamApiLow.unsubscribeFrom(subscriptionIds);
                 break;
         }
@@ -335,7 +335,7 @@ public class PrivmxEndpoint extends BasicPrivmxEndpoint implements AutoCloseable
                         break;
                     case STREAM:
                         if (streamApiLow == null) {
-                            throw new IllegalStateException("streamApi is not initialized");
+                            throw new IllegalStateException("streamApiLow is not initialized");
                         }
                         subscribeFor(value.queriesMap, streamApiLow::subscribeFor);
                         break;
