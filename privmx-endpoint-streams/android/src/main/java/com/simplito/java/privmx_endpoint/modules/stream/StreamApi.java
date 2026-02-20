@@ -15,14 +15,14 @@ import com.simplito.java.privmx_endpoint.model.DeviceType;
 import com.simplito.java.privmx_endpoint.model.MediaDevice;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
-import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StreamEventSelectorType;
-import com.simplito.java.privmx_endpoint.model.events.eventTypes.StreamEventType;
 import com.simplito.java.privmx_endpoint.model.stream.Settings;
+import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
 import com.simplito.java.privmx_endpoint.model.stream.StreamPublishResult;
 import com.simplito.java.privmx_endpoint.model.stream.StreamRoom;
-import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.stream.StreamSubscription;
+import com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes.StreamEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEventType;
 
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
