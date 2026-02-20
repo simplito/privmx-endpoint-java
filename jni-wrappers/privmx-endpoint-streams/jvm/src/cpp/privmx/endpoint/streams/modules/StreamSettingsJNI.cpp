@@ -1,7 +1,8 @@
-#include "privmx/endpoint/wrapper/streams/modules/StreamSettingsJNI.h"
 #include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
-#include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
 #include "privmx/endpoint/wrapper/utils/jniUtils.h"
+//#include "../utils.hpp"
+//#include "StreamApi.h"
+//#include "../jniUtils.h"
 
 namespace privmx::wrapper::streams {
 
@@ -21,7 +22,7 @@ namespace privmx::wrapper::streams {
         env->GetJavaVM(&this->javaVM);
         this->jstreamSettings = env->NewGlobalRef(jstreamSettings);
 
-//
+
 //        this->OnFrame = [this](
 //                int64_t a,
 //                int64_t b,
