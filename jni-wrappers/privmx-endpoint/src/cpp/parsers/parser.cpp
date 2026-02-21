@@ -905,7 +905,7 @@ privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextU
     jfieldID streamIdFID = ctx->GetFieldID(
             ctx->GetObjectClass(streamSubscription),
             "streamId",
-            "J"
+            "Ljava/lang/Long;"
     );
 
     jfieldID trackIdFID = ctx->GetFieldID(

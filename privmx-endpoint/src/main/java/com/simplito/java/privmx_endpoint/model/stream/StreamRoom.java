@@ -30,7 +30,7 @@ public class StreamRoom {
     public ContainerPolicy policy;
     public Long statusCode;
     public Long schemaVersion;
-    public boolean closed;
+    public Boolean closed;
 
     public StreamRoom(
             String contextId,
