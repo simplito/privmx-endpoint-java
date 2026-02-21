@@ -903,21 +903,21 @@ privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextU
     privmx::endpoint::stream::StreamSubscription result;
     jclass cls = ctx->GetObjectClass(streamSubscription);
     jfieldID streamIdFID = ctx->GetFieldID(
-            ctx->GetObjectClass(streamSubscription),
+            cls,
             "streamId",
             "Ljava/lang/Long;"
     );
 
     jfieldID trackIdFID = ctx->GetFieldID(
-            ctx->GetObjectClass(streamSubscription),
+            cls,
             "streamTrackId",
             "Ljava/lang/String;"
     );
 
-    jlong streamId = ctx->GetLongField(streamSubscription, streamIdFID);
+    jobject streamId = ctx->GetObjectField(streamSubscription, streamIdFID);
     jobject streamTrackId = ctx->GetObjectField(streamSubscription, trackIdFID);
 
-    result.streamId = streamId;
+    result.streamId = jobject2long(ctx, streamId);
     if (streamTrackId != nullptr) result.streamTrackId = jobject2string(ctx, streamTrackId);
 
     return result;
