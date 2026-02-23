@@ -955,7 +955,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_createStreamRoomEx(
         ctx.nullCheck(users, "Users list") ||
         ctx.nullCheck(managers, "Managers list") ||
         ctx.nullCheck(public_meta, "Public meta") ||
-        ctx.nullCheck(public_meta, "Public meta") ||
+        ctx.nullCheck(private_meta, "Private meta") ||
         ctx.nullCheck(type, "Type")) {
         return nullptr;
     }
