@@ -91,12 +91,13 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_init(
 
     ctx.callResultEndpointApi<jobject>(
             &result,
-            [&ctx, &env, &connection, &eventApi, stream_encryption_mode] {
+            [&ctx, &env, &connection, &eventApi, &stream_encryption_mode] {
                 auto connection_c = getConnection(env, connection);
                 auto eventApi_c = getEventApi(env, eventApi);
                 auto streamApiLow = stream::StreamApiLow::create(
                         *connection_c,
-                        *eventApi_c
+                        *eventApi_c,
+                        parseStreamEncryptionMode(ctx, stream_encryption_mode)
                 );
                 auto streamApiLow_ptr = new stream::StreamApiLow();
                 *streamApiLow_ptr = streamApiLow;
