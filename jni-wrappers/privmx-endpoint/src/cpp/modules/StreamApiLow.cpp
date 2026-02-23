@@ -12,9 +12,8 @@
 #include "privmx/endpoint/wrapper/modules/WebRTCInterfaceJNI.h"
 #include "privmx/endpoint/stream/StreamApiLow.hpp"
 
-using namespace privmx::endpoint::stream;
 using namespace privmx::endpoint;
-//using namespace privmx::wrapper;
+using namespace privmx::wrapper;
 
 StreamApiLow *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
     jclass cls = ctx->GetObjectClass(streamApiInstance);
@@ -265,7 +264,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                 for (auto &streamRoom_c: streamRooms_c.readItems) {
                     env->CallBooleanMethod(array,
                             addToArrayMID,
-                            privmx::wrapper::streamRoom2Java(
+                            streamRoom2Java(
                                     ctx,
                                     streamRoom_c
                                     )
@@ -879,4 +878,236 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_acceptOfferO
                 parseSdpWithTypeModel(ctx, sdp)
         );
     });
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_createStreamRoomEx(
+        JNIEnv *env,
+        jobject thiz,
+        jstring context_id,
+        jobject users,
+        jobject managers,
+        jbyteArray public_meta,
+        jbyteArray private_meta,
+        jstring type,
+        jobject policies
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(context_id, "Context ID") ||
+            ctx.nullCheck(users, "Users list") ||
+            ctx.nullCheck(managers, "Managers list") ||
+            ctx.nullCheck(public_meta, "Public meta") ||
+            ctx.nullCheck(public_meta, "Public meta") ||
+            ctx.nullCheck(type, "Type")) {
+        return nullptr;
+    }
+
+    jstring result;
+    ctx.callResultEndpointApi<jstring>(
+            &result,
+            [
+                    &ctx,
+                    &thiz,
+                    context_id,
+                    &users,
+                    &managers,
+                    &public_meta,
+                    &private_meta,
+                    &type,
+                    &policies
+            ]() {
+                std::vector<core::UserWithPubKey> users_c = usersToVector(
+                        ctx,
+                        ctx.jObject2jArray(users));
+                std::vector<core::UserWithPubKey> managers_c = usersToVector(
+                        ctx,
+                        ctx.jObject2jArray(managers));
+                auto container_policies_c = std::optional<core::ContainerPolicy>(
+                        parseContainerPolicy(ctx, policies));
+                return ctx->NewStringUTF(
+                        getStreamApi(ctx, thiz)->createStreamRoomEx(
+                                ctx.jString2string(context_id),
+                                users_c,
+                                managers_c,
+                                core::Buffer::from(ctx.jByteArray2String(public_meta)),
+                                core::Buffer::from(ctx.jByteArray2String(private_meta)),
+                                ctx.jString2string(type),
+                                container_policies_c
+                        ).c_str());
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_getStreamRoomEx(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id,
+        jstring type
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
+            ctx.nullCheck(type, "Type")) {
+        return nullptr;
+    }
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &thiz, &stream_room_id, &type] {
+
+        return streamRoom2Java(
+                ctx,
+                getStreamApi(ctx, thiz)->getStreamRoomEx(
+                        ctx.jString2string(stream_room_id),
+                        ctx.jString2string(type)
+                )
+        );
+    });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreamRoomsEx(
+        JNIEnv *env,
+        jobject thiz,
+        jstring context_id,
+        jlong skip,
+        jlong limit,
+        jstring sort_order,
+        jstring type,
+        jstring last_id,
+        jstring sort_by,
+        jstring query_as_json
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(context_id, "Context ID") ||
+            ctx.nullCheck(sort_order, "Sort order") ||
+            ctx.nullCheck(type, "Type")) {
+        return nullptr;
+    }
+
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [
+                    &ctx,
+                    &env,
+                    &thiz,
+                    &context_id,
+                    &skip,
+                    &limit,
+                    &sort_order,
+                    &last_id,
+                    &sort_by,
+                    &query_as_json,
+                    &type
+            ]() {
+                jclass pagingListCls = env->FindClass(
+                        "com/simplito/java/privmx_endpoint/model/PagingList");
+                jmethodID pagingListInitMID = env->GetMethodID(
+                        pagingListCls, "<init>",
+                        "(Ljava/lang/Long;Ljava/util/List;)V");
+                jclass arrayCls = env->FindClass("java/util/ArrayList");
+                jmethodID initArrayMID = env->GetMethodID(arrayCls,
+                        "<init>",
+                        "()V");
+                jmethodID addToArrayMID = env->GetMethodID(arrayCls,
+                        "add",
+                        "(Ljava/lang/Object;)Z");
+                auto query = core::PagingQuery();
+                query.skip = skip;
+                query.limit = limit;
+                query.sortOrder = ctx.jString2string(sort_order);
+
+                if (last_id != nullptr) {
+                    query.lastId = ctx.jString2string(last_id);
+                }
+                if (sort_by != nullptr) {
+                    query.sortBy = ctx.jString2string(sort_by);
+                }
+                if (query_as_json != nullptr) {
+                    query.queryAsJson = ctx.jString2string(query_as_json);
+                }
+
+                auto streamRooms_c(
+                        getStreamApi(ctx, thiz)->listStreamRoomsEx(
+                                ctx.jString2string(context_id),
+                                query,
+                                ctx.jString2string(type)
+                        )
+                );
+                jobject array = env->NewObject(arrayCls, initArrayMID);
+                for (auto &streamRoom_c: streamRooms_c.readItems) {
+                    env->CallBooleanMethod(array,
+                            addToArrayMID,
+                            streamRoom2Java(
+                                    ctx,
+                                    streamRoom_c
+                            )
+                    );
+                }
+                return ctx->NewObject(
+                        pagingListCls,
+                        pagingListInitMID,
+                        ctx.long2jLong(streamRooms_c.totalAvailable),
+                        array
+                );
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_enableStreamRoomRecording(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room ID")) {
+        return;
+    }
+
+    ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id]() {
+        getStreamApi(ctx, thiz)->enableStreamRoomRecording(
+                ctx.jString2string(stream_room_id)
+        );
+    });
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_getStreamRoomRecordingKeys(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id
+) {
+    JniContextUtils ctx(env);
+    jobject result;
+
+    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &thiz, &stream_room_id] {
+        auto keys = getStreamApi(ctx, thiz)->getStreamRoomRecordingKeys(
+                ctx.jString2string(stream_room_id)
+        );
+
+        return vectorTojArray(
+                ctx,
+                keys,
+                recordingEncKey2Java
+        );
+    });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
 }
