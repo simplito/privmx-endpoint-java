@@ -3,18 +3,14 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.simplito.java.privmx_endpoint.model.ConnectionType;
-import com.simplito.java.privmx_endpoint.model.Key;
-import com.simplito.java.privmx_endpoint.model.KeyType;
+import com.simplito.java.privmx_endpoint.model.stream.Key;
+import com.simplito.java.privmx_endpoint.model.stream.KeyType;
 
-import org.webrtc.MediaStreamTrack;
-import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

@@ -11,7 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.stream;
 
-import com.simplito.java.privmx_endpoint.model.Key;
+import com.simplito.java.privmx_endpoint.model.stream.Key;
 
 import java.util.List;
 
