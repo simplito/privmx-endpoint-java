@@ -14,6 +14,7 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
+import com.simplito.java.privmx_endpoint.model.stream.RecordingEncKey;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.stream.Settings;
 import com.simplito.java.privmx_endpoint.model.stream.StreamEncryptionMode;
@@ -305,6 +306,8 @@ public class StreamApiLow implements AutoCloseable {
     ) {
         return this.createStreamRoomEx(contextId, users, managers, publicMeta, privateMeta, type, null);
     }
+
+    public native List<RecordingEncKey> getStreamRoomRecordingKeys(String streamRoomId);
 
     private native void deinit() throws IllegalStateException;
 
