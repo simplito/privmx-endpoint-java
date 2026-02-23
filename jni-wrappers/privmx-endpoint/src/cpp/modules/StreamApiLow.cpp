@@ -25,19 +25,67 @@ StreamApiLow *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
     return (stream::StreamApiLow *) ctx.getObject(apiLong).getLongValue();
 }
 
+
+/*
+ *
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_create(
+        JNIEnv *env,
+        jclass clazz,
+        jobject connection,
+        jobject eventApi,
+        jobject stream_encryption_mode
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(connection, "Connection")) {
+        return nullptr;
+    }
+
+//    jobject result;
+//    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &clazz, &connection, &eventApi] {
+    jmethodID initMID = ctx->GetMethodID(clazz, "<init>",
+            "(Ljava/lang/Long;)V");
+    auto connection_c = getConnection(env, connection);
+    auto eventApi_c = getEventApi(env, eventApi);
+    auto streamApiLow = StreamApiLow::create(
+            *connection_c,
+            *eventApi_c
+    );
+    auto *api = new StreamApiLow();
+    *api = streamApiLow;
+
+    jobject result = ctx->NewObject(
+            clazz,
+            initMID,
+            ctx.long2jLong((jlong) api)
+    );
+    return result;
+
+//    });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+ */
+
+
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_init(
         JNIEnv *env,
         jobject thiz,
         jobject connection,
-        jobject eventApi
+        jobject eventApi,
+        jobject stream_encryption_mode
 ) {
     JniContextUtils ctx(env);
     jobject result;
 
     if (ctx.nullCheck(connection, "Connection") ||
-            ctx.nullCheck(eventApi, "EventApi")) {
+            ctx.nullCheck(eventApi, "EventApi") ||
+            ctx.nullCheck(stream_encryption_mode, "Stream Encryption Mode")) {
         return nullptr;
     }
 
