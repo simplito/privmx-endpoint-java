@@ -116,8 +116,6 @@ public class PcObserver implements PeerConnection.Observer {
         RtpReceiver rtpReceiver = transceiver.getReceiver();
         MediaStreamTrack track = rtpReceiver.track();
         if (peerConnectionFactory != null && track != null && track.id() != null) {
-
-            PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(peerConnectionFactory, rtpReceiver, keyStore);
             frameCryptorMap.put(
                     track.id(),
                     PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
