@@ -451,7 +451,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_joinStreamRo
         jobject thiz,
         jstring stream_room_id,
         jobject web_rtc
-        // todo - made changes in arguments
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream room ID") ||
@@ -1151,6 +1150,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getStreamRoo
 ) {
     JniContextUtils ctx(env);
     jobject result;
+
+    if (ctx.nullCheck(stream_room_id, "Stream Room ID")) {
+        return nullptr;
+    }
 
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &thiz, &stream_room_id] {
         auto keys = getStreamApi(ctx, thiz)->getStreamRoomRecordingKeys(
