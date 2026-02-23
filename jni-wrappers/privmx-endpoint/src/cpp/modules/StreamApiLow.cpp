@@ -84,22 +84,30 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_init(
     jobject result;
 
     if (ctx.nullCheck(connection, "Connection") ||
-            ctx.nullCheck(eventApi, "EventApi") ||
-            ctx.nullCheck(stream_encryption_mode, "Stream Encryption Mode")) {
+        ctx.nullCheck(eventApi, "EventApi") ||
+        ctx.nullCheck(stream_encryption_mode, "Stream Encryption Mode")) {
         return nullptr;
     }
 
-    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &connection, &eventApi] {
-        auto connection_c = getConnection(env, connection);
-        auto eventApi_c = getEventApi(env, eventApi);
-        auto streamApiLow = stream::StreamApiLow::create(
-                *connection_c,
-                *eventApi_c
-        );
-        auto streamApiLow_ptr = new stream::StreamApiLow();
-        *streamApiLow_ptr = streamApiLow;
-        return ctx.long2jLong((jlong) streamApiLow_ptr);
-    });
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &env, &connection, &eventApi, stream_encryption_mode] {
+                auto connection_c = getConnection(env, connection);
+                auto eventApi_c = getEventApi(env, eventApi);
+                auto streamApiLow = stream::StreamApiLow::create(
+                        *connection_c,
+                        *eventApi_c
+                );
+                auto streamApiLow_ptr = new stream::StreamApiLow();
+                *streamApiLow_ptr = streamApiLow;
+
+                return ctx.long2jLong((jlong) streamApiLow_ptr);
+            }
+    );
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
 }
 
 extern "C"
@@ -138,10 +146,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_createStream
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
-            ctx.nullCheck(users, "Users list") ||
-            ctx.nullCheck(managers, "Managers list") ||
-            ctx.nullCheck(public_meta, "Public meta") ||
-            ctx.nullCheck(private_meta, "Private meta")) {
+        ctx.nullCheck(users, "Users list") ||
+        ctx.nullCheck(managers, "Managers list") ||
+        ctx.nullCheck(public_meta, "Public meta") ||
+        ctx.nullCheck(private_meta, "Private meta")) {
         return nullptr;
     }
 
@@ -199,10 +207,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_updateStream
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream room ID") ||
-            ctx.nullCheck(users, "Users list") ||
-            ctx.nullCheck(managers, "Managers list") ||
-            ctx.nullCheck(public_meta, "Public meta") ||
-            ctx.nullCheck(private_meta, "Private meta")) {
+        ctx.nullCheck(users, "Users list") ||
+        ctx.nullCheck(managers, "Managers list") ||
+        ctx.nullCheck(public_meta, "Public meta") ||
+        ctx.nullCheck(private_meta, "Private meta")) {
         return;
     }
     ctx.callVoidEndpointApi(
@@ -257,7 +265,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
-            ctx.nullCheck(sort_order, "Sort order")) {
+        ctx.nullCheck(sort_order, "Sort order")) {
         return nullptr;
     }
 
@@ -283,11 +291,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                         "(Ljava/lang/Long;Ljava/util/List;)V");
                 jclass arrayCls = env->FindClass("java/util/ArrayList");
                 jmethodID initArrayMID = env->GetMethodID(arrayCls,
-                        "<init>",
-                        "()V");
+                                                          "<init>",
+                                                          "()V");
                 jmethodID addToArrayMID = env->GetMethodID(arrayCls,
-                        "add",
-                        "(Ljava/lang/Object;)Z");
+                                                           "add",
+                                                           "(Ljava/lang/Object;)Z");
                 auto query = core::PagingQuery();
                 query.skip = skip;
                 query.limit = limit;
@@ -311,11 +319,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                 jobject array = env->NewObject(arrayCls, initArrayMID);
                 for (auto &streamRoom_c: streamRooms_c.readItems) {
                     env->CallBooleanMethod(array,
-                            addToArrayMID,
-                            streamRoom2Java(
-                                    ctx,
-                                    streamRoom_c
-                                    )
+                                           addToArrayMID,
+                                           streamRoom2Java(
+                                                   ctx,
+                                                   streamRoom_c
+                                           )
                     );
                 }
                 return ctx->NewObject(
@@ -446,7 +454,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_joinStreamRo
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream room ID") ||
-            ctx.nullCheck(web_rtc, "webRtc")) {
+        ctx.nullCheck(web_rtc, "webRtc")) {
         return;
     }
 
@@ -735,7 +743,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeF
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
-            ctx.nullCheck(subscriptions_to_remove, "Subscriptions to remove")) {
+        ctx.nullCheck(subscriptions_to_remove, "Subscriptions to remove")) {
         return;
     }
 
@@ -776,9 +784,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_modifyRemote
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
-            ctx.nullCheck(subscriptions_to_add, "Subscriptions to add") ||
-            ctx.nullCheck(subscriptions_to_add, "Subscriptions to remove") ||
-            ctx.nullCheck(options, "Options")) {
+        ctx.nullCheck(subscriptions_to_add, "Subscriptions to add") ||
+        ctx.nullCheck(subscriptions_to_add, "Subscriptions to remove") ||
+        ctx.nullCheck(options, "Options")) {
         return;
     }
 
@@ -807,7 +815,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_modifyRemote
                 }
                 for (int i = 0; i < subscriptions_to_remove_length; i++) {
                     jobject arrayElement = ctx->GetObjectArrayElement(subscriptions_to_remove_arr,
-                            i);
+                                                                      i);
                     if (ctx.nullCheck(arrayElement, "Subscriptions to remove array elements")) {
                         return;
                     }
@@ -839,8 +847,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeToR
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
-            ctx.nullCheck(subscriptions, "Subscriptions") ||
-            ctx.nullCheck(options, "Options")) {
+        ctx.nullCheck(subscriptions, "Subscriptions") ||
+        ctx.nullCheck(options, "Options")) {
         return;
     }
     ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id, &subscriptions, &options]() {
@@ -943,11 +951,11 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_createStreamRoomEx(
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
-            ctx.nullCheck(users, "Users list") ||
-            ctx.nullCheck(managers, "Managers list") ||
-            ctx.nullCheck(public_meta, "Public meta") ||
-            ctx.nullCheck(public_meta, "Public meta") ||
-            ctx.nullCheck(type, "Type")) {
+        ctx.nullCheck(users, "Users list") ||
+        ctx.nullCheck(managers, "Managers list") ||
+        ctx.nullCheck(public_meta, "Public meta") ||
+        ctx.nullCheck(public_meta, "Public meta") ||
+        ctx.nullCheck(type, "Type")) {
         return nullptr;
     }
 
@@ -999,7 +1007,7 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_getStreamRoomEx(
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
-            ctx.nullCheck(type, "Type")) {
+        ctx.nullCheck(type, "Type")) {
         return nullptr;
     }
     jobject result;
@@ -1035,8 +1043,8 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreamRoomsEx(
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(context_id, "Context ID") ||
-            ctx.nullCheck(sort_order, "Sort order") ||
-            ctx.nullCheck(type, "Type")) {
+        ctx.nullCheck(sort_order, "Sort order") ||
+        ctx.nullCheck(type, "Type")) {
         return nullptr;
     }
 
@@ -1063,11 +1071,11 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreamRoomsEx(
                         "(Ljava/lang/Long;Ljava/util/List;)V");
                 jclass arrayCls = env->FindClass("java/util/ArrayList");
                 jmethodID initArrayMID = env->GetMethodID(arrayCls,
-                        "<init>",
-                        "()V");
+                                                          "<init>",
+                                                          "()V");
                 jmethodID addToArrayMID = env->GetMethodID(arrayCls,
-                        "add",
-                        "(Ljava/lang/Object;)Z");
+                                                           "add",
+                                                           "(Ljava/lang/Object;)Z");
                 auto query = core::PagingQuery();
                 query.skip = skip;
                 query.limit = limit;
@@ -1093,11 +1101,11 @@ Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_listStreamRoomsEx(
                 jobject array = env->NewObject(arrayCls, initArrayMID);
                 for (auto &streamRoom_c: streamRooms_c.readItems) {
                     env->CallBooleanMethod(array,
-                            addToArrayMID,
-                            streamRoom2Java(
-                                    ctx,
-                                    streamRoom_c
-                            )
+                                           addToArrayMID,
+                                           streamRoom2Java(
+                                                   ctx,
+                                                   streamRoom_c
+                                           )
                     );
                 }
                 return ctx->NewObject(
