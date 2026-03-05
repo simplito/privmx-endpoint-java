@@ -248,9 +248,13 @@ public class EventDispatcher {
          */
         KVDB,
         /**
-         * CoreModules
+         * Core module case.
          */
-        CORE
+        CORE,
+        /**
+         * Stream module case.
+         */
+        STREAM
     }
 
     private static class Pair {
