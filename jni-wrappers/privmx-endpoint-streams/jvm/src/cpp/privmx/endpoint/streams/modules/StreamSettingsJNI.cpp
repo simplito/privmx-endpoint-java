@@ -1,6 +1,4 @@
-#include "privmx/endpoint/wrapper/streams/modules/StreamSettingsJNI.h"
 #include "privmx/endpoint/wrapper/parsers/model_native_initializers.h"
-#include "privmx/endpoint/wrapper/streams/parsers/model_native_initializers.h"
 #include "privmx/endpoint/wrapper/utils/jniUtils.h"
 //#include "../utils.hpp"
 //#include "StreamApi.h"
