@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 //TODO: Fix warnings
 public class PcObserver implements PeerConnection.Observer {
@@ -31,17 +32,8 @@ public class PcObserver implements PeerConnection.Observer {
     private BiConsumer<List<MediaStream>, RtpReceiver> onAddTrack;
     private Consumer<String> onVideoTrack;
 
-    private Consumer<PeerConnection.SignalingState> onSignalingState;
-    private Consumer<PeerConnection.PeerConnectionState> onPeerConnectionState;
-    private Consumer<PeerConnection.IceGatheringState> onIceGatheringState;
-    private Consumer<PeerConnection.IceConnectionState> onIceConnectionState;
     private Consumer<IceCandidate> onIceCandidate;
-    private Consumer<MediaStream> onAddStream;
-    private Consumer<MediaStream> onRemoveStream;
-    private Consumer<DataChannel> onDataChannel;
-    private Runnable onRenegotiationNeeded;
-    private Consumer<MediaStreamTrack> onTrack;
-    private Consumer<RtpReceiver> onRemoveTrack;
+    private final Map<String,String> streamIdsByTracks = new HashMap<>();
 
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
@@ -53,21 +45,6 @@ public class PcObserver implements PeerConnection.Observer {
         this.keyStore = store;
         this.trackObserver = observer;
         this.onIceCandidate = onIceCandidate;
-    }
-
-    public PcObserver(
-            PeerConnectionFactory peerConnectionFactory,
-            PmxKeyStore store,
-            TrackObserver observer
-    ) {
-        this(peerConnectionFactory, store, observer,null);
-    }
-
-    public PcObserver(
-            PeerConnectionFactory peerConnectionFactory,
-            PmxKeyStore store
-    ) {
-        this(peerConnectionFactory, store, null,null);
     }
 
     public void setOnAddTrack(BiConsumer<List<MediaStream>, RtpReceiver> onAddTrack) {
@@ -109,9 +86,7 @@ public class PcObserver implements PeerConnection.Observer {
     }
 
     @Override
-    public void onAddStream(MediaStream mediaStream) {
-
-    }
+    public void onAddStream(MediaStream mediaStream) {}
 
     @Override
     public void onRemoveStream(MediaStream mediaStream) {
@@ -130,22 +105,9 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onAddTrack(RtpReceiver receiver, MediaStream[] mediaStreams) {
-        if (peerConnectionFactory != null && receiver.track() != null && receiver.track().id().equals(null)) {
-            frameCryptorMap.put(
-                    receiver.track().id(),
-                    PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
-                            peerConnectionFactory,
-                            receiver,
-                            keyStore
-                    )
-            );
-        }
-        if (onAddTrack != null) {
-            onAddTrack.accept(Arrays.asList(mediaStreams), receiver);
-
-            if (Objects.equals(receiver.track().kind(), MediaStreamTrack.VIDEO_TRACK_KIND)) {
-                onVideoTrack.accept(receiver.track().id());
-            }
+        MediaStreamTrack track = receiver.track();
+        if(track != null && mediaStreams.length > 0) {
+            streamIdsByTracks.put(track.id(), mediaStreams[0].getId());
         }
     }
 
@@ -153,8 +115,29 @@ public class PcObserver implements PeerConnection.Observer {
     public void onTrack(RtpTransceiver transceiver) {
         RtpReceiver rtpReceiver = transceiver.getReceiver();
         MediaStreamTrack track = rtpReceiver.track();
-        if (trackObserver != null) trackObserver.onTrack(track);
-        PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(peerConnectionFactory, rtpReceiver, keyStore);
+        if (peerConnectionFactory != null && track != null && track.id() != null) {
+            frameCryptorMap.put(
+                    track.id(),
+                    PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
+                            peerConnectionFactory,
+                            rtpReceiver,
+                            keyStore
+                    )
+            );
+            if(trackObserver != null){
+                String streamId = streamIdsByTracks.get(track.id());
+                if(streamId != null) {
+                    trackObserver.OnRemoteTrack(streamId, track);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onRemoveTrack(RtpReceiver receiver) {
+        //TODO: cleanup track cryptors (?)
+//        onRemoveTrack.accept(receiver.track());
+        receiver.dispose();
     }
 
     public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {

@@ -3,10 +3,8 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.simplito.java.privmx_endpoint.model.ConnectionType;
-import com.simplito.java.privmx_endpoint.model.StreamHandle;
+import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 
-import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 
 import java.util.HashMap;
@@ -16,13 +14,13 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class PeerConnectionManager {
+class PeerConnectionManager {
     private final Map<String, RoomJanusSession> sessions = new HashMap<>();
     private final Map<Long, String> sessionHandles = new HashMap<>();
-    private final PeerConnectionFactory pcFactory;
+    protected final PeerConnectionFactory pcFactory;
     private final BiConsumer<Long,String> onTrickle;
 
-    public PeerConnectionManager(
+    PeerConnectionManager(
             PeerConnectionFactory pcFactory,
             BiConsumer<Long,String> onTrickle
     ) {
@@ -31,9 +29,9 @@ public class PeerConnectionManager {
     }
 
     @NonNull
-    public RoomJanusSession createSession(@NonNull String streamRoomId, TrackObserver defaultTrackObserver) {
+    public RoomJanusSession createSession(@NonNull String streamRoomId) {
         return Optional.ofNullable(
-                sessions.putIfAbsent(streamRoomId, new RoomJanusSession(streamRoomId, pcFactory, defaultTrackObserver, onTrickle))
+                sessions.putIfAbsent(streamRoomId, new RoomJanusSession(streamRoomId, pcFactory, onTrickle))
         ).orElse(Objects.requireNonNull(sessions.get(streamRoomId)));
     }
 

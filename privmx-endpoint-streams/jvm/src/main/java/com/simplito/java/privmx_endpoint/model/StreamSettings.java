@@ -1,5 +1,7 @@
 package com.simplito.java.privmx_endpoint.model;
 
+import com.simplito.java.privmx_endpoint.model.stream.Settings;
+
 import java.util.function.Consumer;
 
 public class StreamSettings {

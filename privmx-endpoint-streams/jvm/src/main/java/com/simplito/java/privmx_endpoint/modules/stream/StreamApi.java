@@ -4,15 +4,15 @@ import com.simplito.java.privmx_endpoint.LibLoader;
 import com.simplito.java.privmx_endpoint.model.MediaDevice;
 import com.simplito.java.privmx_endpoint.model.RemoteStreamId;
 import com.simplito.java.privmx_endpoint.model.Stream;
-import com.simplito.java.privmx_endpoint.model.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.StreamSettings;
-import com.simplito.java.privmx_endpoint.model.StreamSubscription;
 import com.simplito.java.privmx_endpoint.model.events.eventSelectorTypes.StreamEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StreamEventType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
-import com.simplito.java.privmx_endpoint.model.StreamRoom;
+import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
+import com.simplito.java.privmx_endpoint.model.stream.StreamRoom;
+import com.simplito.java.privmx_endpoint.model.stream.StreamSubscription;
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 
