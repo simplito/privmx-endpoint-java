@@ -1,5 +1,7 @@
 package com.simplito.java.privmx_endpoint.model;
 
+import com.simplito.java.privmx_endpoint.model.stream.Settings;
+
 public class StreamSettings {
     public Settings settings;
     public boolean dropCorruptedFrames = true;
