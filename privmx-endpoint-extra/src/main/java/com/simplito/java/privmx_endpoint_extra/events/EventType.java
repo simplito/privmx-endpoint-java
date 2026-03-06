@@ -47,16 +47,16 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.InboxEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
-import com.simplito.java.privmx_endpoint.streams.model.StreamRoom;
-import com.simplito.java.privmx_endpoint.streams.model.events.NewStreams;
-import com.simplito.java.privmx_endpoint.streams.model.events.StreamEventData;
-import com.simplito.java.privmx_endpoint.streams.model.events.StreamPublishedEventData;
-import com.simplito.java.privmx_endpoint.streams.model.events.StreamRoomDeletedEventData;
-import com.simplito.java.privmx_endpoint.streams.model.events.StreamUnpublishedEventData;
-import com.simplito.java.privmx_endpoint.streams.model.events.StreamUpdatedEventData;
-import com.simplito.java.privmx_endpoint.streams.model.events.StreamsUpdatedData;
-import com.simplito.java.privmx_endpoint.streams.model.events.eventSelectorTypes.StreamEventSelectorType;
-import com.simplito.java.privmx_endpoint.streams.model.events.eventTypes.StreamEventType;
+import com.simplito.java.privmx_endpoint.model.stream.StreamRoom;
+import com.simplito.java.privmx_endpoint.model.stream.events.NewStreams;
+import com.simplito.java.privmx_endpoint.model.stream.events.StreamEventData;
+import com.simplito.java.privmx_endpoint.model.stream.events.StreamPublishedEventData;
+import com.simplito.java.privmx_endpoint.model.stream.events.StreamRoomDeletedEventData;
+import com.simplito.java.privmx_endpoint.model.stream.events.StreamUnpublishedEventData;
+import com.simplito.java.privmx_endpoint.model.stream.events.StreamUpdatedEventData;
+import com.simplito.java.privmx_endpoint.model.stream.events.StreamsUpdatedData;
+import com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes.StreamEventSelectorType;
+import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEventType;
 
 import java.util.Objects;
 
