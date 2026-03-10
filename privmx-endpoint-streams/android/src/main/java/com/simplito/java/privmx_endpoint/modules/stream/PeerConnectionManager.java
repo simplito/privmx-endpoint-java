@@ -55,16 +55,7 @@ class PeerConnectionManager {
     }
 
     public void leaveStreamRoom(@NonNull String streamRoomId) {
-        RoomJanusSession session = sessions.remove(streamRoomId);
-        if (session == null) return;
-        JanusConnection subscriber = session.getSubscriber();
-        if (subscriber != null) {
-            subscriber.peerConnection.dispose();
-        }
-        JanusConnection publisher = session.getPublisher();
-        if (publisher != null) {
-            publisher.peerConnection.dispose();
-        }
+        sessions.remove(streamRoomId);
     }
 }
 
