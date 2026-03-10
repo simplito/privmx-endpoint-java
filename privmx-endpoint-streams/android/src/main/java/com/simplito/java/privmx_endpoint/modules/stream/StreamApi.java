@@ -93,6 +93,7 @@ public class StreamApi {
             @NonNull Context appContext,
             @NonNull EglBase rootEglBase,
             @NonNull StreamApiLow api,
+            //TODO: remove this parameter
             @Nullable PeerConnectionFactory pcFactory
     ) {
         this.appContext = appContext;
@@ -291,9 +292,7 @@ public class StreamApi {
             throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
         try {
             session.createSubscriber();
-        } catch (IllegalStateException e) {
-            throw new IllegalStateException("Subscriber is now active, try use modifyRemoteStreamsSubscriptions");
-        }
+        } catch (IllegalStateException ignored) {}
         api.subscribeToRemoteStreams(streamRoomId, subscriptions, options);
     }
 
