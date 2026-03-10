@@ -48,13 +48,7 @@ import com.simplito.java.privmx_endpoint.model.events.eventTypes.KvdbEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.StoreEventType;
 import com.simplito.java.privmx_endpoint.model.events.eventTypes.ThreadEventType;
 import com.simplito.java.privmx_endpoint.model.stream.StreamRoom;
-import com.simplito.java.privmx_endpoint.model.stream.events.NewStreams;
-import com.simplito.java.privmx_endpoint.model.stream.events.StreamEventData;
-import com.simplito.java.privmx_endpoint.model.stream.events.StreamPublishedEventData;
-import com.simplito.java.privmx_endpoint.model.stream.events.StreamRoomDeletedEventData;
-import com.simplito.java.privmx_endpoint.model.stream.events.StreamUnpublishedEventData;
-import com.simplito.java.privmx_endpoint.model.stream.events.StreamUpdatedEventData;
-import com.simplito.java.privmx_endpoint.model.stream.events.StreamsUpdatedData;
+import com.simplito.java.privmx_endpoint.model.stream.events.*;
 import com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes.StreamEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEventType;
 
@@ -795,13 +789,13 @@ public class EventType<T> {
         );
     }
 
-    public static EventType<StreamEventData> StreamLeftEvent(StreamEventSelectorType selectorType, String selectorId) {
+    public static EventType<StreamLeftEventData> StreamLeftEvent(StreamEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
                 "streamLeft",
                 StreamEventType.STREAM_LEAVE,
                 selectorType,
                 selectorId,
-                StreamEventData.class
+                StreamLeftEventData.class
         );
     }
 
