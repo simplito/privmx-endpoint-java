@@ -2126,6 +2126,32 @@ namespace privmx {
         }
 
         jobject
+        streamLeftEventData2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::StreamLeftEventData data
+        ) {
+            jclass cls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/stream/events/StreamLeftEventData");
+            jmethodID initItemMID = ctx->GetMethodID(
+                    cls,
+                    "<init>",
+                    "("
+                    "Ljava/lang/String;"
+                    "Ljava/lang/Long;"
+                    "Ljava/lang/String;"
+                    ")V"
+            );
+
+            return ctx->NewObject(
+                    cls,
+                    initItemMID,
+                    ctx->NewStringUTF(data.streamRoomId.c_str()),
+                    ctx.long2jLong(data.streamId),
+                    ctx->NewStringUTF(data.userId.c_str())
+            );
+        }
+
+        jobject
         streamUnpublishedEventData2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::stream::StreamUnpublishedEventData data
