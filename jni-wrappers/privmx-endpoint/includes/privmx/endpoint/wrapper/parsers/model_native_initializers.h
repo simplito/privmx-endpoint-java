@@ -194,17 +194,6 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::stream::Stream stream_c
         );
-
-        jobject deviceType2Java(
-                JniContextUtils &ctx,
-                privmx::endpoint::stream::DeviceType deviceType_c
-        );
-
-        jobject mediaDevice2Java(
-                JniContextUtils &ctx,
-                privmx::endpoint::stream::MediaDevice mediaDevice_c
-        );
-
         jobject streamHandle2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::stream::StreamHandle streamHandle_c
@@ -234,12 +223,6 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::stream::RemoteStreamId remoteStreamId_c
         );
-
-        jobject frame2Java(
-                JniContextUtils &ctx,
-                privmx::endpoint::stream::Frame &frame_c
-        );
-
         jobject keyType2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::stream::KeyType keyType_c

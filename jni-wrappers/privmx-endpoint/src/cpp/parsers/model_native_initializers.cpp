@@ -1651,50 +1651,6 @@ namespace privmx {
             );
         }
 
-        jobject deviceType2Java(
-                JniContextUtils &ctx,
-                privmx::endpoint::stream::DeviceType deviceType_c
-        ) {
-            jclass itemCls = ctx->FindClass(
-                    "com/simplito/java/privmx_endpoint/model/DeviceType");
-
-            jmethodID valuesMID = ctx->GetStaticMethodID(itemCls, "values",
-                    "()[Lcom/simplito/java/privmx_endpoint/model/DeviceType;");
-
-            jobjectArray enumValues = (jobjectArray) ctx->CallStaticObjectMethod(itemCls,
-                    valuesMID);
-
-            return (jobject) ctx->GetObjectArrayElement(enumValues, (int) deviceType_c);
-        }
-
-
-        jobject mediaDevice2Java(
-                JniContextUtils &ctx,
-                privmx::endpoint::stream::MediaDevice mediaDevice_c
-        ) {
-            jclass itemCls = ctx->FindClass(
-                    "com/simplito/java/privmx_endpoint/model/MediaDevice");
-
-            jmethodID initItemMID = ctx->GetMethodID(
-                    itemCls,
-                    "<init>",
-                    "("
-                    "Ljava/lang/String;"      // name
-                    "Ljava/lang/String;"      // id
-                    "Lcom/simplito/java/privmx_endpoint/model/DeviceType;"  // type
-                    ")V"
-            );
-
-            return ctx->NewObject(
-                    itemCls,
-                    initItemMID,
-                    ctx->NewStringUTF(mediaDevice_c.name.c_str()),
-                    ctx->NewStringUTF(mediaDevice_c.id.c_str()),
-                    deviceType2Java(ctx, mediaDevice_c.type)
-
-            );
-        }
-
         jobject streamHandle2Java(
                 JniContextUtils &ctx,
                 privmx::endpoint::stream::StreamHandle streamHandle_c
@@ -1929,21 +1885,6 @@ namespace privmx {
             );
         }
 
-        jobject frame2Java(JniContextUtils &ctx, privmx::endpoint::stream::Frame &frame_c) {
-            jclass itemCls = ctx->FindClass(
-                    "com/simplito/java/privmx_endpoint/model/Frame");
-
-            jmethodID initItemMID = ctx->GetMethodID(
-                    itemCls,
-                    "<init>",
-                    "()V"
-            );
-
-            return ctx->NewObject(
-                    itemCls,
-                    initItemMID
-            );
-        }
 
         jobject
         streamTrackModificationPair2Java(

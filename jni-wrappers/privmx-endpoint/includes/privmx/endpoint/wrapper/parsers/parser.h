@@ -19,7 +19,6 @@
 #include "privmx/endpoint/core/Events.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/stream/Events.hpp"
-#include "privmx/endpoint/stream/webrtc/Types.hpp"
 
 std::vector<privmx::endpoint::core::UserWithPubKey>
 usersToVector(JniContextUtils &ctx, jobjectArray users);
@@ -38,15 +37,9 @@ privmx::endpoint::core::ItemPolicy parseItemPolicy(JniContextUtils &ctx, jobject
 privmx::endpoint::inbox::FilesConfig parseFilesConfig(JniContextUtils &ctx, jobject filesConfig);
 
 // streams
-privmx::endpoint::stream::DeviceType parseDeviceType(JniContextUtils &ctx, jobject type);
-
-privmx::endpoint::stream::MediaDevice parseMediaDevice(JniContextUtils &ctx, jobject mediaDevice);
-
 privmx::endpoint::stream::StreamHandle parseStreamHandle(JniContextUtils &ctx, jobject streamHandle);
 
 privmx::endpoint::stream::Settings parseSettings(JniContextUtils &ctx, jobject settings);
-
-privmx::endpoint::stream::StreamSettings parseStreamSettings(JNIEnv *env, jobject streamSettings);
 
 privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextUtils &ctx, jobject streamSubscription);
 
