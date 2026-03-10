@@ -53,6 +53,10 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_init(
         *streamApiLow_ptr = streamApiLow;
         return ctx.long2jLong((jlong) streamApiLow_ptr);
     });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
 }
 
 extern "C"
@@ -775,8 +779,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_modifyRemote
                 getStreamApi(ctx, thiz)->modifyRemoteStreamsSubscriptions(
                         ctx.jString2string(stream_room_id),
                         subscriptions_to_add_c,
-                        subscriptions_to_remove_c,
-                        parseSettings(ctx, options)
+                        subscriptions_to_remove_c
                 );
             });
 }
@@ -816,8 +819,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeToR
 
         getStreamApi(ctx, thiz)->subscribeToRemoteStreams(
                 ctx.jString2string(stream_room_id),
-                subscriptions_c,
-                parseSettings(ctx, options)
+                subscriptions_c
         );
     });
 }
