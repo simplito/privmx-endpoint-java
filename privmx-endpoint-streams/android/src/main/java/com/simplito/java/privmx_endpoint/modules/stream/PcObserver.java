@@ -106,26 +106,17 @@ public class PcObserver implements PeerConnection.Observer {
     @Override
     public void onAddTrack(RtpReceiver receiver, MediaStream[] mediaStreams) {
         MediaStreamTrack track = receiver.track();
-        if(track != null && mediaStreams.length > 0) {
-            streamIdsByTracks.put(track.id(), mediaStreams[0].getId());
-        }
-    }
-
-    @Override
-    public void onTrack(RtpTransceiver transceiver) {
-        RtpReceiver rtpReceiver = transceiver.getReceiver();
-        MediaStreamTrack track = rtpReceiver.track();
         if (peerConnectionFactory != null && track != null && track.id() != null) {
             frameCryptorMap.put(
                     track.id(),
                     PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
                             peerConnectionFactory,
-                            rtpReceiver,
+                            receiver,
                             keyStore
                     )
             );
             if(trackObserver != null){
-                String streamId = streamIdsByTracks.get(track.id());
+                String streamId = mediaStreams.length > 0 ? mediaStreams[0].getId() : null;
                 if(streamId != null) {
                     trackObserver.OnRemoteTrack(streamId, track);
                 }
