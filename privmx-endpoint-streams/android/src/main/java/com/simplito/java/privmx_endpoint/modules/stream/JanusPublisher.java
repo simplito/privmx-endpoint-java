@@ -130,6 +130,8 @@ public class JanusPublisher extends JanusConnection{
         super.close();
         audioTracks.clear();
         videoTracks.clear();
+
+        videoCapturers.forEach((k, v) -> v.dispose());
         videoCapturers.clear();
     }
 
