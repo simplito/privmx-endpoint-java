@@ -118,6 +118,7 @@ public class JanusConnection {
     public void close(){
         if(peerConnection.connectionState() != PeerConnection.PeerConnectionState.CLOSED) {
             peerConnection.dispose();
+            pcObserver.frameCryptorMap.forEach((k,v) -> v.dispose());
         }
     }
 }
