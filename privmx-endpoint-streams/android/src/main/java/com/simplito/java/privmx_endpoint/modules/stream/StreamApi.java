@@ -364,4 +364,9 @@ public class StreamApi {
                 selectorId
         );
     }
+
+    public void close() throws Exception {
+        pcManager.close();
+        api.close();
+    }
 }
