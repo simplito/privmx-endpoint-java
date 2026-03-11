@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class RoomJanusSession {
@@ -37,6 +38,7 @@ public class RoomJanusSession {
     private final BiConsumer<Long,String> onTrickle;
     private final Map<String, TrackObserver> trackObserversByStreamId = new HashMap<>();
     private final TrackObserver trackObserver = new TrackObserverImpl();
+    private Consumer<PeerConnection.IceConnectionState> onConnectionChangeCallback = null;
 
     //TODO: Add error listener for catch errors from webrtcInterface
     public RoomJanusSession(@NonNull String roomId, @NonNull PeerConnectionFactory pcFactory, BiConsumer<Long,String> onTrickle) {
@@ -77,10 +79,22 @@ public class RoomJanusSession {
 
     public synchronized void createPublisher(TrackObserver observer) {
         if (publisher == null) {
-            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle);
+            publisher = new JanusPublisher(
+                    pcFactory,
+                    keyStore,
+                    observer,
+                    onTrickle,
+                    this::onConnectionChange
+            );
         }else if (publisher.isEnded()) {
             publisher.close();
-            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle);
+            publisher = new JanusPublisher(
+                    pcFactory,
+                    keyStore,
+                    observer,
+                    onTrickle,
+                    this::onConnectionChange
+            );
         }else{
             throw new IllegalStateException("Publisher is currently active.");
         }
@@ -101,12 +115,24 @@ public class RoomJanusSession {
         }
     }
 
+    public synchronized void setOnConnectionChange(
+            Consumer<PeerConnection.IceConnectionState> onConnectionChange
+    ){
+        this.onConnectionChangeCallback = onConnectionChange;
+    }
+
     public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {
         if(subscriber != null){
             subscriber.setFrameCryptorOptions(options);
         }
         if(publisher != null){
             publisher.setFrameCryptorOptions(options);
+        }
+    }
+
+    private void onConnectionChange(PeerConnection.IceConnectionState connectionState){
+        if(onConnectionChangeCallback != null){
+            onConnectionChangeCallback.accept(connectionState);
         }
     }
 

@@ -7,6 +7,7 @@ import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.VideoTrackInfo;
 
 import org.webrtc.MediaConstraints;
+import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxFrameCryptorFactory;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class JanusPublisher extends JanusConnection{
     public final Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
@@ -27,8 +29,14 @@ public class JanusPublisher extends JanusConnection{
     public final Map<String, VideoCapturer> videoCapturers = new HashMap<>();
 
 
-    public JanusPublisher(PeerConnectionFactory pcFactory, PmxKeyStore keyStore, TrackObserver observer, BiConsumer<Long,String> onTrickle) {
-        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle);
+    public JanusPublisher(
+            PeerConnectionFactory pcFactory,
+            PmxKeyStore keyStore,
+            TrackObserver observer,
+            BiConsumer<Long,String> onTrickle,
+            Consumer<PeerConnection.IceConnectionState> onConnectionChange
+    ) {
+        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle, onConnectionChange);
     }
 
     public void addAudioTrack(org.webrtc.AudioTrack audioTrack) {
