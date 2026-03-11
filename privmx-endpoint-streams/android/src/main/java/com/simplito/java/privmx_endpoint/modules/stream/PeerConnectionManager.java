@@ -61,5 +61,15 @@ class PeerConnectionManager {
             sessions.remove(streamRoomId);
         }
     }
+
+    public void close() {
+        try {
+            sessions.forEach((roomId, session) -> session.close());
+            sessions.clear();
+            sessionHandles.clear();
+        } catch (Exception ignored) {}
+
+        pcFactory.dispose();
+    }
 }
 
