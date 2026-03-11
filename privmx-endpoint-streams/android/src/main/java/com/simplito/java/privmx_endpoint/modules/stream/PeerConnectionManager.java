@@ -55,7 +55,11 @@ class PeerConnectionManager {
     }
 
     public void leaveStreamRoom(@NonNull String streamRoomId) {
-        sessions.remove(streamRoomId);
+        RoomJanusSession session = sessions.getOrDefault(streamRoomId, null);
+        if (session != null) {
+            session.close();
+            sessions.remove(streamRoomId);
+        }
     }
 }
 
