@@ -30,6 +30,7 @@ public class StreamRoom {
     public ContainerPolicy policy;
     public Long statusCode;
     public Long schemaVersion;
+    public Boolean closed;
 
     public StreamRoom(
             String contextId,
@@ -45,7 +46,8 @@ public class StreamRoom {
             byte[] privateMeta,
             ContainerPolicy policy,
             Long statusCode,
-            Long schemaVersion
+            Long schemaVersion,
+            boolean closed
     ) {
         this.contextId = contextId;
         this.streamRoomId = streamRoomId;
@@ -61,5 +63,6 @@ public class StreamRoom {
         this.policy = policy;
         this.statusCode = statusCode;
         this.schemaVersion = schemaVersion;
+        this.closed = closed;
     }
 }
