@@ -14,13 +14,13 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class PeerConnectionManager {
+class PeerConnectionManager {
     private final Map<String, RoomJanusSession> sessions = new HashMap<>();
     private final Map<Long, String> sessionHandles = new HashMap<>();
-    private final PeerConnectionFactory pcFactory;
+    protected final PeerConnectionFactory pcFactory;
     private final BiConsumer<Long,String> onTrickle;
 
-    public PeerConnectionManager(
+    PeerConnectionManager(
             PeerConnectionFactory pcFactory,
             BiConsumer<Long,String> onTrickle
     ) {
@@ -29,9 +29,9 @@ public class PeerConnectionManager {
     }
 
     @NonNull
-    public RoomJanusSession createSession(@NonNull String streamRoomId, TrackObserver defaultTrackObserver) {
+    public RoomJanusSession createSession(@NonNull String streamRoomId) {
         return Optional.ofNullable(
-                sessions.putIfAbsent(streamRoomId, new RoomJanusSession(streamRoomId, pcFactory, defaultTrackObserver, onTrickle))
+                sessions.putIfAbsent(streamRoomId, new RoomJanusSession(streamRoomId, pcFactory, onTrickle))
         ).orElse(Objects.requireNonNull(sessions.get(streamRoomId)));
     }
 
@@ -55,16 +55,7 @@ public class PeerConnectionManager {
     }
 
     public void leaveStreamRoom(@NonNull String streamRoomId) {
-        RoomJanusSession session = sessions.remove(streamRoomId);
-        if (session == null) return;
-        JanusConnection subscriber = session.getSubscriber();
-        if (subscriber != null) {
-            subscriber.peerConnection.dispose();
-        }
-        JanusConnection publisher = session.getPublisher();
-        if (publisher != null) {
-            publisher.peerConnection.dispose();
-        }
+        sessions.remove(streamRoomId);
     }
 }
 

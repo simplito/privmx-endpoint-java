@@ -12,8 +12,8 @@
 #include "privmx/endpoint/wrapper/modules/WebRTCInterfaceJNI.h"
 #include "privmx/endpoint/stream/StreamApiLow.hpp"
 
+using namespace privmx::endpoint::stream;
 using namespace privmx::endpoint;
-using namespace privmx::wrapper;
 
 StreamApiLow *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
     jclass cls = ctx->GetObjectClass(streamApiInstance);
@@ -24,52 +24,6 @@ StreamApiLow *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
     }
     return (stream::StreamApiLow *) ctx.getObject(apiLong).getLongValue();
 }
-
-
-/*
- *
-extern "C"
-JNIEXPORT jobject JNICALL
-Java_com_simplito_java_privmx_1endpoint_streams_StreamApiLow_create(
-        JNIEnv *env,
-        jclass clazz,
-        jobject connection,
-        jobject eventApi,
-        jobject stream_encryption_mode
-) {
-    JniContextUtils ctx(env);
-    if (ctx.nullCheck(connection, "Connection")) {
-        return nullptr;
-    }
-
-//    jobject result;
-//    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &clazz, &connection, &eventApi] {
-    jmethodID initMID = ctx->GetMethodID(clazz, "<init>",
-            "(Ljava/lang/Long;)V");
-    auto connection_c = getConnection(env, connection);
-    auto eventApi_c = getEventApi(env, eventApi);
-    auto streamApiLow = StreamApiLow::create(
-            *connection_c,
-            *eventApi_c
-    );
-    auto *api = new StreamApiLow();
-    *api = streamApiLow;
-
-    jobject result = ctx->NewObject(
-            clazz,
-            initMID,
-            ctx.long2jLong((jlong) api)
-    );
-    return result;
-
-//    });
-    if (ctx->ExceptionCheck()) {
-        return nullptr;
-    }
-    return result;
-}
- */
-
 
 extern "C"
 JNIEXPORT jobject JNICALL
@@ -84,27 +38,24 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_init(
     jobject result;
 
     if (ctx.nullCheck(connection, "Connection") ||
-        ctx.nullCheck(eventApi, "EventApi") ||
-        ctx.nullCheck(stream_encryption_mode, "Stream Encryption Mode")) {
+            ctx.nullCheck(eventApi, "EventApi") ||
+        ctx.nullCheck(stream_encryption_mode, "Stream Encryption Mode")
+            ) {
         return nullptr;
     }
 
-    ctx.callResultEndpointApi<jobject>(
-            &result,
-            [&ctx, &env, &connection, &eventApi, &stream_encryption_mode] {
-                auto connection_c = getConnection(env, connection);
-                auto eventApi_c = getEventApi(env, eventApi);
-                auto streamApiLow = stream::StreamApiLow::create(
-                        *connection_c,
-                        *eventApi_c,
-                        parseStreamEncryptionMode(ctx, stream_encryption_mode)
-                );
-                auto streamApiLow_ptr = new stream::StreamApiLow();
-                *streamApiLow_ptr = streamApiLow;
-
-                return ctx.long2jLong((jlong) streamApiLow_ptr);
-            }
-    );
+    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &connection, &eventApi, &stream_encryption_mode] {
+        auto connection_c = getConnection(env, connection);
+        auto eventApi_c = getEventApi(env, eventApi);
+        auto streamApiLow = stream::StreamApiLow::create(
+                *connection_c,
+                *eventApi_c,
+                parseStreamEncryptionMode(ctx, stream_encryption_mode)
+        );
+        auto streamApiLow_ptr = new stream::StreamApiLow();
+        *streamApiLow_ptr = streamApiLow;
+        return ctx.long2jLong((jlong) streamApiLow_ptr);
+    });
     if (ctx->ExceptionCheck()) {
         return nullptr;
     }
@@ -292,11 +243,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                         "(Ljava/lang/Long;Ljava/util/List;)V");
                 jclass arrayCls = env->FindClass("java/util/ArrayList");
                 jmethodID initArrayMID = env->GetMethodID(arrayCls,
-                                                          "<init>",
-                                                          "()V");
+                        "<init>",
+                        "()V");
                 jmethodID addToArrayMID = env->GetMethodID(arrayCls,
-                                                           "add",
-                                                           "(Ljava/lang/Object;)Z");
+                        "add",
+                        "(Ljava/lang/Object;)Z");
                 auto query = core::PagingQuery();
                 query.skip = skip;
                 query.limit = limit;
@@ -320,11 +271,11 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                 jobject array = env->NewObject(arrayCls, initArrayMID);
                 for (auto &streamRoom_c: streamRooms_c.readItems) {
                     env->CallBooleanMethod(array,
-                                           addToArrayMID,
-                                           streamRoom2Java(
-                                                   ctx,
-                                                   streamRoom_c
-                                           )
+                            addToArrayMID,
+                            privmx::wrapper::streamRoom2Java(
+                                    ctx,
+                                    streamRoom_c
+                                    )
                     );
                 }
                 return ctx->NewObject(
@@ -830,8 +781,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_modifyRemote
                 getStreamApi(ctx, thiz)->modifyRemoteStreamsSubscriptions(
                         ctx.jString2string(stream_room_id),
                         subscriptions_to_add_c,
-                        subscriptions_to_remove_c,
-                        parseSettings(ctx, options)
+                        subscriptions_to_remove_c
                 );
             });
 }
@@ -871,8 +821,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeToR
 
         getStreamApi(ctx, thiz)->subscribeToRemoteStreams(
                 ctx.jString2string(stream_room_id),
-                subscriptions_c,
-                parseSettings(ctx, options)
+                subscriptions_c
         );
     });
 }
@@ -997,6 +946,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_createStream
     }
     return result;
 }
+
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getStreamRoomEx(

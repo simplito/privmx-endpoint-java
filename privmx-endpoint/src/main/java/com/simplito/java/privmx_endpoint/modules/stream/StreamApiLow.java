@@ -13,6 +13,14 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
+import com.simplito.java.privmx_endpoint.model.SdpWithTypeModel;
+import com.simplito.java.privmx_endpoint.model.Settings;
+import com.simplito.java.privmx_endpoint.model.StreamHandle;
+import com.simplito.java.privmx_endpoint.model.StreamInfo;
+import com.simplito.java.privmx_endpoint.model.StreamPublishResult;
+import com.simplito.java.privmx_endpoint.model.StreamRoom;
+import com.simplito.java.privmx_endpoint.model.StreamSubscription;
+import com.simplito.java.privmx_endpoint.model.TurnCredentials;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.stream.RecordingEncKey;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
