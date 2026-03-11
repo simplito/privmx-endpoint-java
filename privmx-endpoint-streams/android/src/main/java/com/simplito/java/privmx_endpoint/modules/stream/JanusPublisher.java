@@ -4,7 +4,7 @@ import androidx.annotation.Nullable;
 
 import com.simplito.java.privmx_endpoint.model.AudioTrackInfo;
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
-import com.simplito.java.privmx_endpoint.model.SdpWithTypeModel;
+import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.VideoTrackInfo;
 
 import org.webrtc.MediaConstraints;
@@ -28,7 +28,7 @@ public class JanusPublisher extends JanusConnection{
     public final Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
     //TODO: Add videoCapturer to VideoTrackInfo
     public final Map<String, VideoCapturer> videoCapturers = new HashMap<>();
-    public final BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer;
+    public final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
     public final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 
@@ -40,7 +40,7 @@ public class JanusPublisher extends JanusConnection{
             BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer
     ) {
         super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle);
-        this.acceptRenegotiationOffer = acceptRenegotiationOffer;
+        this.setNewOfferOnReconfigure = acceptRenegotiationOffer;
     }
 
     public void addAudioTrack(org.webrtc.AudioTrack audioTrack) {
@@ -160,7 +160,7 @@ public class JanusPublisher extends JanusConnection{
     public void onRenegotiationNeeded() {
         if(getSessionId() > -1) {
             executorService.execute(()->{
-                acceptRenegotiationOffer.accept(getSessionId(),new SdpWithTypeModel(createOffer(), SessionDescription.Type.OFFER.canonicalForm()));
+                setNewOfferOnReconfigure.accept(getSessionId(),new SdpWithTypeModel(createOffer(), SessionDescription.Type.OFFER.canonicalForm()));
             });
         }
     }

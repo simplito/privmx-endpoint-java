@@ -112,7 +112,7 @@ public class StreamApi {
                     }
                 },
                 (s,s2)->{
-                    this.api.acceptOfferOnReconfigure(s,s2);
+                    this.api.setNewOfferOnReconfigure(s,s2);
                 }
 
         );
