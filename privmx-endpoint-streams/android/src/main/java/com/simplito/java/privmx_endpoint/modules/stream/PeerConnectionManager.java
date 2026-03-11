@@ -5,20 +5,22 @@ import androidx.annotation.Nullable;
 
 import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 
+import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 class PeerConnectionManager {
     private final Map<String, RoomJanusSession> sessions = new HashMap<>();
     private final Map<Long, String> sessionHandles = new HashMap<>();
     protected final PeerConnectionFactory pcFactory;
     private final BiConsumer<Long,String> onTrickle;
+    private List<PeerConnection.IceServer> configuration;
 
     PeerConnectionManager(
             PeerConnectionFactory pcFactory,
@@ -29,9 +31,9 @@ class PeerConnectionManager {
     }
 
     @NonNull
-    public RoomJanusSession createSession(@NonNull String streamRoomId) {
+    public RoomJanusSession createSession(@NonNull String streamRoomId, List<PeerConnection.IceServer> configuration) {
         return Optional.ofNullable(
-                sessions.putIfAbsent(streamRoomId, new RoomJanusSession(streamRoomId, pcFactory, onTrickle))
+                sessions.putIfAbsent(streamRoomId, new RoomJanusSession(streamRoomId, pcFactory, onTrickle, configuration))
         ).orElse(Objects.requireNonNull(sessions.get(streamRoomId)));
     }
 

@@ -10,12 +10,14 @@ import org.webrtc.PmxKeyStore;
 import org.webrtc.SessionDescription;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 public class JanusConnection {
     protected final PeerConnection peerConnection;
     protected final PeerConnectionFactory peerConnectionFactory;
+    private final List<PeerConnection.IceServer> configuration;
     protected PmxKeyStore keyStore;
     public final ConnectionType connectionType;
     private long sessionId = -1L;
@@ -27,6 +29,17 @@ public class JanusConnection {
             ConnectionType connectionType,
             TrackObserver trackObserver,
             BiConsumer<Long,String> onTrickle
+    ) {
+        this(pcFactory, keyStore, connectionType, trackObserver, onTrickle, Collections.emptyList());
+    }
+
+    public JanusConnection(
+            PeerConnectionFactory pcFactory,
+            PmxKeyStore keyStore,
+            ConnectionType connectionType,
+            TrackObserver trackObserver,
+            BiConsumer<Long, String> onTrickle,
+            List<PeerConnection.IceServer> configuration
     ) {
         this.peerConnectionFactory = pcFactory;
         this.connectionType = connectionType;
@@ -53,6 +66,7 @@ public class JanusConnection {
                     }
                 }
         );
+        this.configuration = configuration;
         this.peerConnection = createPeerConnection(pcObserver);
     }
 
@@ -87,7 +101,7 @@ public class JanusConnection {
     //TODO: We need method to pass framecryptorOptions and TrackObserver
     private PeerConnection createPeerConnection(PcObserver pcObserver) {
         return peerConnectionFactory.createPeerConnection(
-                new PeerConnection.RTCConfiguration(Collections.emptyList()),
+                new PeerConnection.RTCConfiguration(configuration),
                 pcObserver
         );
     }

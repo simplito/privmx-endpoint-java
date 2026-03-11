@@ -23,6 +23,7 @@ import org.webrtc.DefaultVideoDecoderFactory;
 import org.webrtc.DefaultVideoEncoderFactory;
 import org.webrtc.EglBase;
 import org.webrtc.MediaStreamTrack;
+import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.VideoDecoderFactory;
@@ -31,7 +32,6 @@ import org.webrtc.VideoTrack;
 import org.webrtc.audio.AudioDeviceModule;
 import org.webrtc.audio.JavaAudioDeviceModule;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -165,8 +165,14 @@ public class StreamApi {
     public void joinStreamRoom(
             String streamRoomId
     ) {
+        List<PeerConnection.IceServer> iceServers = api.getTurnCredentials().stream().map(item -> PeerConnection.IceServer.builder(item.url)
+                .setUsername(item.username)
+                .setPassword(item.password)
+                .createIceServer()
+        ).collect(Collectors.toList());
+
         //TODO: Rollback this change, it is do only for run test
-        RoomJanusSession session = pcManager.createSession(streamRoomId);
+        RoomJanusSession session = pcManager.createSession(streamRoomId, iceServers);
         api.joinStreamRoom(streamRoomId, session.webrtc);
     }
 

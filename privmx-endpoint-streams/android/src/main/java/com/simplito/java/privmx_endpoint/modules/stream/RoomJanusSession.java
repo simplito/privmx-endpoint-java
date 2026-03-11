@@ -3,7 +3,6 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-
 import com.simplito.java.privmx_endpoint.model.stream.Key;
 import com.simplito.java.privmx_endpoint.model.stream.KeyType;
 import org.webrtc.MediaStreamTrack;
@@ -37,13 +36,20 @@ public class RoomJanusSession {
     private final BiConsumer<Long,String> onTrickle;
     private final Map<String, TrackObserver> trackObserversByStreamId = new HashMap<>();
     private final TrackObserver trackObserver = new TrackObserverImpl();
+    private List<PeerConnection.IceServer> configuration = Collections.emptyList();
 
     //TODO: Add error listener for catch errors from webrtcInterface
-    public RoomJanusSession(@NonNull String roomId, @NonNull PeerConnectionFactory pcFactory, BiConsumer<Long,String> onTrickle) {
+    public RoomJanusSession(
+            @NonNull String roomId,
+            @NonNull PeerConnectionFactory pcFactory,
+            BiConsumer<Long,String> onTrickle,
+            List<PeerConnection.IceServer> configuration
+    ) {
         this.pcFactory = pcFactory;
         this.roomID = roomId;
         this.keyStore = PmxFrameCryptorFactory.createPmxKeyStore();
         this.onTrickle = onTrickle;
+        this.configuration = configuration;
     }
 
     @Nullable
@@ -62,11 +68,11 @@ public class RoomJanusSession {
 
     public synchronized void createSubscriber(TrackObserver observer) {
         if (subscriber == null) {
-            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
-        }else if (subscriber.isEnded()) {
+            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle, configuration);
+        } else if (subscriber.isEnded()) {
             subscriber.close();
-            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
-        }else{
+            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle, configuration);
+        } else {
             throw new IllegalStateException("Subscriber is currently active.");
         }
     }
@@ -77,10 +83,10 @@ public class RoomJanusSession {
 
     public synchronized void createPublisher(TrackObserver observer) {
         if (publisher == null) {
-            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle);
+            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle, configuration);
         }else if (publisher.isEnded()) {
             publisher.close();
-            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle);
+            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle, configuration);
         }else{
             throw new IllegalStateException("Publisher is currently active.");
         }
