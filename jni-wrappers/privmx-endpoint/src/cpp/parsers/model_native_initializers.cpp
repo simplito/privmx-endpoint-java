@@ -2236,36 +2236,5 @@ namespace privmx {
             );
         }
 
-        jobject recordingEncKey2Java(
-                JniContextUtils &ctx,
-                privmx::endpoint::stream::RecordingEncKey recordingEncKey_c
-        ){
-            jclass itemCls = ctx->FindClass(
-                    "com/simplito/java/privmx_endpoint/streams/model/RecordingEncKey");
-
-            jmethodID initItemMID = ctx->GetMethodID(
-                    itemCls,
-                    "<init>",
-                    "("
-                    "[B"        // id
-                    "[B"        // key
-                    ")V"
-            );
-
-            jbyteArray id = ctx->NewByteArray(recordingEncKey_c.id.size());
-            jbyteArray key = ctx->NewByteArray(recordingEncKey_c.key.size());
-
-            ctx->SetByteArrayRegion(id, 0, recordingEncKey_c.id.size(),
-                                    (jbyte *) recordingEncKey_c.id.data());
-            ctx->SetByteArrayRegion(key, 0, recordingEncKey_c.key.size(),
-                                    (jbyte *) recordingEncKey_c.key.data());
-
-            return ctx->NewObject(
-                    itemCls,
-                    initItemMID,
-                    id,
-                    key
-            );
-        }
     } // wrapper
 } // privmx

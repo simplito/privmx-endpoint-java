@@ -303,12 +303,6 @@ namespace privmx {
                 JniContextUtils &ctx,
                 privmx::endpoint::stream::StreamsUpdatedData data
         );
-
-        jobject recordingEncKey2Java(
-                JniContextUtils &ctx,
-                privmx::endpoint::stream::RecordingEncKey recordingEncKey_c
-        );
-
     } // wrapper
 } // privmx
 
