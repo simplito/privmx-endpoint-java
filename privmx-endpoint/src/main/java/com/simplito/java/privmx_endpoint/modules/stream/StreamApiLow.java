@@ -13,14 +13,6 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
-import com.simplito.java.privmx_endpoint.model.SdpWithTypeModel;
-import com.simplito.java.privmx_endpoint.model.Settings;
-import com.simplito.java.privmx_endpoint.model.StreamHandle;
-import com.simplito.java.privmx_endpoint.model.StreamInfo;
-import com.simplito.java.privmx_endpoint.model.StreamPublishResult;
-import com.simplito.java.privmx_endpoint.model.StreamRoom;
-import com.simplito.java.privmx_endpoint.model.StreamSubscription;
-import com.simplito.java.privmx_endpoint.model.TurnCredentials;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.stream.RecordingEncKey;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
@@ -247,73 +239,6 @@ public class StreamApiLow implements AutoCloseable {
     public native void keyManagement(String streamRoomId, boolean disable);
 
     public native void enableStreamRoomRecording(String streamRoomId);
-
-    public native PagingList<StreamRoom> listStreamRoomsEx(
-            String contextId,
-            long skip,
-            long limit,
-            String sortOrder,
-            String type,
-            String lastId,
-            String sortBy,
-            String queryAsJson
-    );
-
-    public PagingList<StreamRoom> listStreamRoomsEx(
-            String contextId,
-            long skip,
-            long limit,
-            String sortOrder,
-            String type,
-            String lastId,
-            String sortBy
-    ) {
-        return listStreamRoomsEx(contextId, skip, limit, sortOrder, type, lastId, sortBy, null);
-    }
-
-    public PagingList<StreamRoom> listStreamRoomsEx(
-            String contextId,
-            long skip,
-            long limit,
-            String sortOrder,
-            String type,
-            String lastId
-    ) {
-        return listStreamRoomsEx(contextId, skip, limit, sortOrder, type, lastId, null, null);
-    }
-
-    public PagingList<StreamRoom> listStreamRoomsEx(
-            String contextId,
-            long skip,
-            long limit,
-            String sortOrder,
-            String type
-    ) {
-        return listStreamRoomsEx(contextId, skip, limit, sortOrder, type, null, null, null);
-    }
-
-    public native StreamRoom getStreamRoomEx(String streamRoomId, String type);
-
-    public native String createStreamRoomEx(
-            String contextId,
-            List<UserWithPubKey> users,
-            List<UserWithPubKey> managers,
-            byte[] publicMeta,
-            byte[] privateMeta,
-            String type,
-            ContainerPolicy policies
-    );
-
-    public String createStreamRoomEx(
-            String contextId,
-            List<UserWithPubKey> users,
-            List<UserWithPubKey> managers,
-            byte[] publicMeta,
-            byte[] privateMeta,
-            String type
-    ) {
-        return this.createStreamRoomEx(contextId, users, managers, publicMeta, privateMeta, type, null);
-    }
 
     public native List<RecordingEncKey> getStreamRoomRecordingKeys(String streamRoomId);
 
