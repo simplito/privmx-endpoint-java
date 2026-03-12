@@ -868,7 +868,7 @@ privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextU
 
 privmx::endpoint::stream::SdpWithTypeModel parseSdpWithTypeModel(JniContextUtils &ctx, jobject sdpWithTypeModel) {
     jclass cls = ctx->FindClass(
-            "com/simplito/java/privmx_endpoint/model/SdpWithTypeModel");
+            "com/simplito/java/privmx_endpoint/model/stream/SdpWithTypeModel");
 
     jfieldID sdpFID = ctx->GetFieldID(cls, "sdp", "Ljava/lang/String;");
     jfieldID typeFID = ctx->GetFieldID(cls, "type", "Ljava/lang/String;");
