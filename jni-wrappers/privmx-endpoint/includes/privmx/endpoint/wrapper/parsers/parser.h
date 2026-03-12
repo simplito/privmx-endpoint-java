@@ -56,6 +56,10 @@ privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobje
 // java -> c++
 template<typename T>
 std::vector<T> jArrayToVector(JniContextUtils &ctx, jobjectArray jArray,
+                              std::function<T(JniContextUtils &, jobject)> fun, bool acceptNullValues);
+
+template<typename T>
+std::vector<T> jArrayToVector(JniContextUtils &ctx, jobjectArray jArray,
                               std::function<T(JniContextUtils &, jobject)> fun);
 
 int64_t jobject2long(JniContextUtils &ctx, jobject jLong);

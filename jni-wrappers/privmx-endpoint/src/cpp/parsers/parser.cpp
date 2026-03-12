@@ -909,15 +909,32 @@ template<typename T>
 std::vector<T> jArrayToVector(
         JniContextUtils &ctx,
         jobjectArray jArray,
-        std::function<T(JniContextUtils &, jobject)> fun
+        std::function<T(JniContextUtils &, jobject)> fun,
+        bool acceptNullValues
 ) {
     std::vector<T> result;
 
     for (int i = 0; i < ctx->GetArrayLength(jArray); i++) {
         jobject element = ctx->GetObjectArrayElement(jArray, i);
+
+        if (!acceptNullValues && element == nullptr) {
+            jclass exCls = ctx->FindClass("java/lang/NullPointerException");
+            ctx->ThrowNew(exCls, "Null element in array");
+            return {};
+        }
         result.push_back(fun(ctx, element));
     }
+
     return result;
+}
+
+template<typename T>
+std::vector<T> jArrayToVector(
+        JniContextUtils &ctx,
+        jobjectArray jArray,
+        std::function<T(JniContextUtils &, jobject)> fun
+) {
+    return jArrayToVector(&ctx, jArray, fun, true);
 }
 
 int64_t jobject2long(JniContextUtils &ctx, jobject jLong) {
