@@ -68,7 +68,12 @@ std::string jobject2string(JniContextUtils &ctx, jobject jString);
 
 // c++ -> java
 template<typename T, typename F>
-jobject vectorTojArray(JniContextUtils &ctx, const std::vector<T> &vector,F fun){
+jobject vectorTojArray(
+        JniContextUtils &ctx,
+        const std::vector<T> &vector,
+        F fun,
+        bool acceptNullValues
+) {
     jclass arrayListCls = ctx->FindClass("java/util/ArrayList");
     jmethodID initMID = ctx->GetMethodID(arrayListCls, "<init>", "()V");
     jmethodID addToListMID = ctx->GetMethodID(arrayListCls, "add", "(Ljava/lang/Object;)Z");
@@ -77,10 +82,20 @@ jobject vectorTojArray(JniContextUtils &ctx, const std::vector<T> &vector,F fun)
 
     for (const auto &item: vector) {
         jobject jItem = fun(ctx, item);
+
+        if (!acceptNullValues && jItem == nullptr) {
+            jclass exCls = ctx->FindClass("java/lang/NullPointerException");
+            ctx->ThrowNew(exCls, "Null element");
+            return nullptr;
+        }
         ctx->CallBooleanMethod(listObj, addToListMID, jItem);
     }
-
     return listObj;
+}
+
+template<typename T, typename F>
+jobject vectorTojArray(JniContextUtils &ctx, const std::vector<T> &vector, F fun) {
+    return vectorTojArray(ctx, vector, fun, true);
 }
 
 template<typename T, typename F>
