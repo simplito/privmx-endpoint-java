@@ -917,11 +917,12 @@ std::vector<T> jArrayToVector(
     for (int i = 0; i < ctx->GetArrayLength(jArray); i++) {
         jobject element = ctx->GetObjectArrayElement(jArray, i);
 
-        if (!acceptNullValues && element == nullptr) {
-            jclass exCls = ctx->FindClass("java/lang/NullPointerException");
-            ctx->ThrowNew(exCls, "Null element in array");
-            return {};
+        if (!acceptNullValues) {
+            if (ctx.nullCheck(element, "Array element")) {
+                return{};
+            }
         }
+
         result.push_back(fun(ctx, element));
     }
 
@@ -934,7 +935,7 @@ std::vector<T> jArrayToVector(
         jobjectArray jArray,
         std::function<T(JniContextUtils &, jobject)> fun
 ) {
-    return jArrayToVector(&ctx, jArray, fun, true);
+    return jArrayToVector(ctx, jArray, fun, true);
 }
 
 int64_t jobject2long(JniContextUtils &ctx, jobject jLong) {

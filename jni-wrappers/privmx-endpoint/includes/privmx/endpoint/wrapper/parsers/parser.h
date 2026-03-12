@@ -82,12 +82,10 @@ jobject vectorTojArray(
 
     for (const auto &item: vector) {
         jobject jItem = fun(ctx, item);
-
-        if (!acceptNullValues && jItem == nullptr) {
-            jclass exCls = ctx->FindClass("java/lang/NullPointerException");
-            ctx->ThrowNew(exCls, "Null element");
-            return nullptr;
+        if (!acceptNullValues) {
+            if (ctx.nullCheck(jItem, "Array element")) {return nullptr;}
         }
+
         ctx->CallBooleanMethod(listObj, addToListMID, jItem);
     }
     return listObj;
@@ -99,9 +97,9 @@ jobject vectorTojArray(JniContextUtils &ctx, const std::vector<T> &vector, F fun
 }
 
 template<typename T, typename F>
-jobject pagingList2Java(JniContextUtils &ctx, privmx::endpoint::core::PagingList<T> pagingList,F fun);
+jobject pagingList2Java(JniContextUtils &ctx, privmx::endpoint::core::PagingList<T> pagingList, F fun);
 
-jobject string2jobject(JniContextUtils &ctx,const std::string &cstring);
-jobject long2jobject(JniContextUtils &ctx,const int64_t &clong);
+jobject string2jobject(JniContextUtils &ctx, const std::string &cstring);
+jobject long2jobject(JniContextUtils &ctx, const int64_t &clong);
 
 #endif //PRIVMX_POCKET_LIB_PARSER_H
