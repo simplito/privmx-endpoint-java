@@ -3,17 +3,16 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-
 import com.simplito.java.privmx_endpoint.model.stream.Key;
 import com.simplito.java.privmx_endpoint.model.stream.KeyType;
+import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
+
 import org.webrtc.MediaStreamTrack;
-import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,13 +36,20 @@ public class RoomJanusSession {
     private final BiConsumer<Long,String> onTrickle;
     private final Map<String, TrackObserver> trackObserversByStreamId = new HashMap<>();
     private final TrackObserver trackObserver = new TrackObserverImpl();
+    private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
 
     //TODO: Add error listener for catch errors from webrtcInterface
-    public RoomJanusSession(@NonNull String roomId, @NonNull PeerConnectionFactory pcFactory, BiConsumer<Long,String> onTrickle) {
+    public RoomJanusSession(
+            @NonNull String roomId,
+            @NonNull PeerConnectionFactory pcFactory,
+            BiConsumer<Long,String> onTrickle,
+            BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer
+    ) {
         this.pcFactory = pcFactory;
         this.roomID = roomId;
         this.keyStore = PmxFrameCryptorFactory.createPmxKeyStore();
         this.onTrickle = onTrickle;
+        this.setNewOfferOnReconfigure = acceptRenegotiationOffer;
     }
 
     @Nullable
@@ -77,10 +83,10 @@ public class RoomJanusSession {
 
     public synchronized void createPublisher(TrackObserver observer) {
         if (publisher == null) {
-            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle);
+            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle, setNewOfferOnReconfigure);
         }else if (publisher.isEnded()) {
             publisher.close();
-            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle);
+            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle, setNewOfferOnReconfigure);
         }else{
             throw new IllegalStateException("Publisher is currently active.");
         }
@@ -134,7 +140,7 @@ public class RoomJanusSession {
         public String createAnswerAndSetDescriptions(String streamRoomId, String sdp, String type) {
             try {
                 if (subscriber != null) {
-                    return subscriber.createAnswer(sdp);
+                    return subscriber.createAnswer(sdp,type);
                 } else {
                     throw new RuntimeException("Create subscriber first");
                 }
@@ -147,7 +153,7 @@ public class RoomJanusSession {
         public void setAnswerAndSetRemoteDescription(String streamRoomId, String sdp, String type) {
             try {
                 if (publisher != null) {
-                    publisher.setAnswer(sdp);
+                    publisher.setAnswer(sdp,type);
                 } else {
                     throw new RuntimeException("Create publisher first");
                 }
