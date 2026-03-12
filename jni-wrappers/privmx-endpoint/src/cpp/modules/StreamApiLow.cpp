@@ -506,7 +506,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeFor
         std::vector<std::string> subscription_queries_c = jArrayToVector<std::string>(
                 ctx,
                 subscription_queries_arr,
-                jobject2string
+                jobject2string,
+                false
         );
 
         auto subscription_ids_c = getStreamApi(ctx, thiz)->subscribeFor(
@@ -545,7 +546,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeF
         auto subscription_ids_c = jArrayToVector<std::string>(
                 ctx,
                 subscription_ids_arr,
-                jobject2string
+                jobject2string,
+                false
         );
         getStreamApi(ctx, thiz)->unsubscribeFrom(subscription_ids_c);
     });
