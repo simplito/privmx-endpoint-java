@@ -14,7 +14,6 @@
 
 using namespace privmx::endpoint::stream;
 using namespace privmx::endpoint;
-//using namespace privmx::wrapper;
 
 StreamApiLow *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
     jclass cls = ctx->GetObjectClass(streamApiInstance);
@@ -32,22 +31,26 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_init(
         JNIEnv *env,
         jobject thiz,
         jobject connection,
-        jobject eventApi
+        jobject eventApi,
+        jobject stream_encryption_mode
 ) {
     JniContextUtils ctx(env);
     jobject result;
 
     if (ctx.nullCheck(connection, "Connection") ||
-        ctx.nullCheck(eventApi, "EventApi")) {
+        ctx.nullCheck(eventApi, "EventApi") ||
+        ctx.nullCheck(stream_encryption_mode, "Stream Encryption Mode")
+    ) {
         return nullptr;
     }
 
-    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &connection, &eventApi] {
+    ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &connection, &eventApi, &stream_encryption_mode] {
         auto connection_c = getConnection(env, connection);
         auto eventApi_c = getEventApi(env, eventApi);
         auto streamApiLow = stream::StreamApiLow::create(
                 *connection_c,
-                *eventApi_c
+                *eventApi_c,
+                parseStreamEncryptionMode(ctx, stream_encryption_mode)
         );
         auto streamApiLow_ptr = new stream::StreamApiLow();
         *streamApiLow_ptr = streamApiLow;
@@ -399,7 +402,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_joinStreamRo
         jobject thiz,
         jstring stream_room_id,
         jobject web_rtc
-        // todo - made changes in arguments
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream room ID") ||
