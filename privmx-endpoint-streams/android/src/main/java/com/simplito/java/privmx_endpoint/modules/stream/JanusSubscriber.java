@@ -12,7 +12,7 @@ import java.util.function.BiConsumer;
 
 public class JanusSubscriber extends JanusConnection{
     public JanusSubscriber(PeerConnectionFactory pcFactory, PmxKeyStore keyStore, TrackObserver observer, BiConsumer<Long,String> onTrickle) {
-        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle,null);
+        super(pcFactory, keyStore, ConnectionType.Subscriber, observer, onTrickle,null);
     }
 
     public String createAnswer(String offerSdp, String type) {
