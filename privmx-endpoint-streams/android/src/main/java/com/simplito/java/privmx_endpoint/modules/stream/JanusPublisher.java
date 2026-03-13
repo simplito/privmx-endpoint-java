@@ -26,12 +26,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class JanusPublisher extends JanusConnection{
-    public final Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
-    public final Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
-    //TODO: Add videoCapturer to VideoTrackInfo
-    public final Map<String, VideoCapturer> videoCapturers = new HashMap<>();
-    public final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
-    public final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
+    private final Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
+    private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 
     public JanusPublisher(
@@ -67,10 +65,7 @@ public class JanusPublisher extends JanusConnection{
         }
     }
 
-    public void addVideoTrack(
-            org.webrtc.VideoTrack videoTrack,
-            VideoCapturer videoCapturer
-    ) {
+    public void addVideoTrack(org.webrtc.VideoTrack videoTrack) {
         if (peerConnectionFactory != null) {
             synchronized (videoTracks) {
                 RtpSender rtpSender = peerConnection.addTrack(videoTrack);
@@ -89,15 +84,8 @@ public class JanusPublisher extends JanusConnection{
                                 frameCryptor
                         )
                 );
-                if (videoCapturer != null) {
-                    videoCapturers.put(videoTrack.id(), videoCapturer);
-                }
             }
         }
-    }
-
-    public void addVideoTrack(org.webrtc.VideoTrack videoTrack) {
-        addVideoTrack(videoTrack,null);
     }
 
     public void removeAudioTrack(String id) {
@@ -115,7 +103,6 @@ public class JanusPublisher extends JanusConnection{
             if (videoTrackInfo == null) return;
             peerConnection.removeTrack(videoTrackInfo.sender);
             videoTracks.remove(id);
-            videoCapturers.remove(id);
         }
     }
 
@@ -135,17 +122,12 @@ public class JanusPublisher extends JanusConnection{
         peerConnection.setRemoteDescription(new SdpObserver(null),new SessionDescription(SessionDescription.Type.fromCanonicalForm(type),sdp));
     }
 
-    @Nullable
-    public VideoCapturer getVideoCapturer(String trackId){
-        return videoCapturers.get(trackId);
-    }
 
     @Override
     public void close() {
         super.close();
         audioTracks.clear();
         videoTracks.clear();
-        videoCapturers.clear();
     }
 
     @Override
