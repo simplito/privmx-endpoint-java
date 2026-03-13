@@ -54,6 +54,7 @@ public class JanusConnection {
 //                        System.out.println("Trickle executed");
                     }
                 },
+                this::onRenegotiationNeeded,
                 onConnectionChange
         );
         this.peerConnection = createPeerConnection(pcObserver);
@@ -123,4 +124,6 @@ public class JanusConnection {
             peerConnection.dispose();
         }
     }
+
+    public void onRenegotiationNeeded(){}
 }

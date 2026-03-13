@@ -747,7 +747,7 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.connectionId,
                     event_cast.subscriptions,
                     event_cast.timestamp,
-                    privmx::wrapper::streamEventData2Java(ctx, event_cast.data)
+                    privmx::wrapper::streamLeftEventData2Java(ctx, event_cast.data)
             );
         } else if (stream::Events::isStreamNewStreamsEvent(event)) {
             privmx::endpoint::stream::StreamNewStreamsEvent event_cast =
@@ -846,21 +846,21 @@ privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextU
     privmx::endpoint::stream::StreamSubscription result;
     jclass cls = ctx->GetObjectClass(streamSubscription);
     jfieldID streamIdFID = ctx->GetFieldID(
-            ctx->GetObjectClass(streamSubscription),
+            cls,
             "streamId",
-            "J"
+            "Ljava/lang/Long;"
     );
 
     jfieldID trackIdFID = ctx->GetFieldID(
-            ctx->GetObjectClass(streamSubscription),
+            cls,
             "streamTrackId",
             "Ljava/lang/String;"
     );
 
-    jlong streamId = ctx->GetLongField(streamSubscription, streamIdFID);
+    jobject streamId = ctx->GetObjectField(streamSubscription, streamIdFID);
     jobject streamTrackId = ctx->GetObjectField(streamSubscription, trackIdFID);
 
-    result.streamId = streamId;
+    result.streamId = jobject2long(ctx, streamId);
     if (streamTrackId != nullptr) result.streamTrackId = jobject2string(ctx, streamTrackId);
 
     return result;
@@ -868,7 +868,7 @@ privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextU
 
 privmx::endpoint::stream::SdpWithTypeModel parseSdpWithTypeModel(JniContextUtils &ctx, jobject sdpWithTypeModel) {
     jclass cls = ctx->FindClass(
-            "com/simplito/java/privmx_endpoint/model/SdpWithTypeModel");
+            "com/simplito/java/privmx_endpoint/model/stream/SdpWithTypeModel");
 
     jfieldID sdpFID = ctx->GetFieldID(cls, "sdp", "Ljava/lang/String;");
     jfieldID typeFID = ctx->GetFieldID(cls, "type", "Ljava/lang/String;");
@@ -883,6 +883,26 @@ privmx::endpoint::stream::SdpWithTypeModel parseSdpWithTypeModel(JniContextUtils
     return result;
 }
 
+
+privmx::endpoint::stream::StreamEncryptionMode parseStreamEncryptionMode(
+        JniContextUtils &ctx,
+        jobject streamEncryptionMode
+) {
+    jclass cls = ctx->GetObjectClass(streamEncryptionMode);
+    jmethodID nameFID = ctx->GetMethodID(
+            cls,
+            "name",
+            "()Ljava/lang/String;"
+    );
+
+    auto name_j = (jstring) ctx->CallObjectMethod(streamEncryptionMode, nameFID);
+    std::string name_c = ctx.jString2string(name_j);
+
+    if (name_c == "SINGLE_KEY") return privmx::endpoint::stream::StreamEncryptionMode::SINGLE_KEY;
+    if (name_c == "MULTIPLE_KEY") return privmx::endpoint::stream::StreamEncryptionMode::MULTIPLE_KEY;
+
+    return {};
+}
 
 // java -> c++
 template<typename T>

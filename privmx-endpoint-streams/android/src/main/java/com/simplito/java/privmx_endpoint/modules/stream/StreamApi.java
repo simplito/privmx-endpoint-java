@@ -112,7 +112,12 @@ public class StreamApi {
                     if (sessionId != null) {
                         this.api.trickle(sessionId, rtcConfiguration);
                     }
-                });
+                },
+                (s,s2)->{
+                    this.api.setNewOfferOnReconfigure(s,s2);
+                }
+
+        );
         trackFactory = new TrackFactory(pcManager);
     }
 

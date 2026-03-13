@@ -16,6 +16,7 @@ import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.stream.Settings;
+import com.simplito.java.privmx_endpoint.model.stream.StreamEncryptionMode;
 import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
 import com.simplito.java.privmx_endpoint.model.stream.StreamPublishResult;
@@ -46,23 +47,36 @@ public class StreamApiLow implements AutoCloseable {
         this.api = api;
     }
 
-    private native Long init(Connection connection, EventApi eventApi) throws IllegalStateException;
+    private native Long init(
+            Connection connection,
+            EventApi eventApi,
+            StreamEncryptionMode streamEncryptionMode
+    ) throws IllegalStateException;
 
     public StreamApiLow(
             Connection connection
     ) throws IllegalStateException {
-        this.api = init(connection, null);
+        this.api = init(connection, null, StreamEncryptionMode.SINGLE_KEY);
     }
 
     public StreamApiLow(
             Connection connection,
             EventApi eventApi
     ) throws IllegalStateException {
+        this.api = init(connection, eventApi, StreamEncryptionMode.SINGLE_KEY);
+    }
+
+    public StreamApiLow(
+            Connection connection,
+            EventApi eventApi,
+            StreamEncryptionMode streamEncryptionMode
+    ) throws IllegalStateException {
         Objects.requireNonNull(connection);
         EventApi tmpEventApi = eventApi == null ? new EventApi(connection) : null;
         this.api = init(
                 connection,
-                Optional.ofNullable(eventApi).orElse(tmpEventApi)
+                Optional.ofNullable(eventApi).orElse(tmpEventApi),
+                Optional.ofNullable(streamEncryptionMode).orElse(StreamEncryptionMode.SINGLE_KEY)
         );
 
         try {
@@ -203,6 +217,11 @@ public class StreamApiLow implements AutoCloseable {
             SdpWithTypeModel sdp
     );
 
+    public native void setNewOfferOnReconfigure(
+            long sessionId,
+            SdpWithTypeModel sdp
+    );
+
     public native List<String> subscribeFor(List<String> subscriptionQueries);
 
     public native void unsubscribeFrom(List<String> subscriptionIds);
@@ -222,7 +241,6 @@ public class StreamApiLow implements AutoCloseable {
     }
 
     public native void keyManagement(String streamRoomId, boolean disable);
-
     private native void deinit() throws IllegalStateException;
 
     @Override

@@ -34,6 +34,7 @@ public class PcObserver implements PeerConnection.Observer {
 
     private Consumer<IceCandidate> onIceCandidate;
     private final Map<String,String> streamIdsByTracks = new HashMap<>();
+    private final Runnable onRenegotiationNeeded;
     Consumer<PeerConnection.IceConnectionState> onIceConnectionChange;
 
     public PcObserver(
@@ -41,12 +42,14 @@ public class PcObserver implements PeerConnection.Observer {
             PmxKeyStore store,
             TrackObserver observer,
             Consumer<IceCandidate> onIceCandidate,
+            Runnable onRenegotiationNeeded,
             Consumer<PeerConnection.IceConnectionState> onIceConnectionChange
     ) {
         this.peerConnectionFactory = peerConnectionFactory;
         this.keyStore = store;
         this.trackObserver = observer;
         this.onIceCandidate = onIceCandidate;
+        this.onRenegotiationNeeded = onRenegotiationNeeded;
         this.onIceConnectionChange = onIceConnectionChange;
     }
 
@@ -54,9 +57,10 @@ public class PcObserver implements PeerConnection.Observer {
             PeerConnectionFactory peerConnectionFactory,
             PmxKeyStore store,
             TrackObserver observer,
-            Consumer<IceCandidate> onIceCandidate
-    ) {
-        this(peerConnectionFactory,store,observer,onIceCandidate,null);
+            Consumer<IceCandidate> onIceCandidate,
+            Runnable onRenegotiationNeeded
+    ){
+        this(peerConnectionFactory,store,observer,onIceCandidate,onRenegotiationNeeded,null);
     }
 
     public void setOnAddTrack(BiConsumer<List<MediaStream>, RtpReceiver> onAddTrack) {
@@ -114,7 +118,9 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onRenegotiationNeeded() {
-
+        if(onRenegotiationNeeded != null){
+            onRenegotiationNeeded.run();
+        }
     }
 
     @Override
