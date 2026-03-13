@@ -6,6 +6,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
@@ -262,13 +263,13 @@ public class StreamApi {
 
     public StreamPublishResult publishStream(StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
-        setRTCConfiguration(streamHandle, Mode.PUBLISHER);
+        setRTCConfiguration(streamHandle, ConnectionType.Publisher);
         return api.publishStream(streamHandle);
     }
 
     public StreamPublishResult updateStream(StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
-        setRTCConfiguration(streamHandle, Mode.PUBLISHER);
+        setRTCConfiguration(streamHandle, ConnectionType.Publisher);
         return api.updateStream(streamHandle);
     }
 
@@ -294,7 +295,7 @@ public class StreamApi {
             throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
         try {
             session.createSubscriber();
-            setRTCConfiguration(streamRoomId, Mode.SUBSCRIBER);
+            setRTCConfiguration(streamRoomId, ConnectionType.Subscriber);
         } catch (IllegalStateException ignored) {}
         api.subscribeToRemoteStreams(streamRoomId, subscriptions, options);
     }
@@ -318,7 +319,7 @@ public class StreamApi {
             List<StreamSubscription> subscriptionsToRemove,
             Settings options
     ) {
-        setRTCConfiguration(streamRoomId, Mode.SUBSCRIBER);
+        setRTCConfiguration(streamRoomId, ConnectionType.Subscriber);
         api.modifyRemoteStreamsSubscriptions(
                 streamRoomId,
                 subscriptionsToAdd,
@@ -331,7 +332,7 @@ public class StreamApi {
             String streamRoomId,
             List<StreamSubscription> subscriptionsToRemove
     ) {
-        setRTCConfiguration(streamRoomId, Mode.SUBSCRIBER);
+        setRTCConfiguration(streamRoomId,ConnectionType.Subscriber);
         api.unsubscribeFromRemoteStreams(
                 streamRoomId,
                 subscriptionsToRemove
@@ -380,9 +381,7 @@ public class StreamApi {
         ).collect(Collectors.toList());
     }
 
-    private enum Mode {PUBLISHER, SUBSCRIBER}
-
-    private void setRTCConfiguration(Object key, Mode mode) {
+    private void setRTCConfiguration(Object key, ConnectionType mode) {
         RoomJanusSession session = key instanceof StreamHandle
                 ? pcManager.getSession((StreamHandle) key)
                 : pcManager.getSession((String) key);
@@ -396,15 +395,15 @@ public class StreamApi {
         applyRTCConfiguration(session, mode);
     }
 
-    private void applyRTCConfiguration(RoomJanusSession session, Mode mode) {
+    private void applyRTCConfiguration(RoomJanusSession session, ConnectionType mode) {
         switch (mode) {
-            case PUBLISHER:
+            case Publisher:
                 if (session.getPublisher() != null) {
                     session.getPublisher().setRTCConfiguration(getRTCConfiguration());
                 }
                 break;
 
-            case SUBSCRIBER:
+            case Subscriber:
                 if (session.getSubscriber() != null) {
                     session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
                 }
