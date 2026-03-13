@@ -111,9 +111,6 @@ public class RoomJanusSession {
     }
 
     public void close(){
-        if (publisher != null) publisher.close();
-        if (subscriber != null) subscriber.close();
-
         // todo - to use this update aar is required
         // keyStore.release();
     }
