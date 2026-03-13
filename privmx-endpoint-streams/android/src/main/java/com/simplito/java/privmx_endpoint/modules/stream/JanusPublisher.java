@@ -90,7 +90,11 @@ public class JanusPublisher extends JanusConnection{
             AudioTrackInfo audioTrackInfo = audioTracks.get(id);
             if (audioTrackInfo == null) return;
             peerConnection.removeTrack(audioTrackInfo.sender);
-            audioTracks.remove(id);
+
+            AudioTrackInfo removedAudioTrackInfo = audioTracks.remove(id);
+            if (removedAudioTrackInfo != null) {
+                removedAudioTrackInfo.frameCryptor.dispose();
+            }
         }
     }
 
@@ -99,8 +103,12 @@ public class JanusPublisher extends JanusConnection{
             VideoTrackInfo videoTrackInfo = videoTracks.get(id);
             if (videoTrackInfo == null) return;
             peerConnection.removeTrack(videoTrackInfo.sender);
-            videoTracks.remove(id);
             videoCapturers.remove(id);
+
+            VideoTrackInfo removedVideoTrackInfo = videoTracks.remove(id);
+            if (removedVideoTrackInfo != null) {
+                removedVideoTrackInfo.frameCryptor.dispose();
+            }
         }
     }
 
