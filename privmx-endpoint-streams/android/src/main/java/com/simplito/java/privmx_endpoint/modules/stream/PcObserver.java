@@ -35,6 +35,23 @@ public class PcObserver implements PeerConnection.Observer {
     private Consumer<IceCandidate> onIceCandidate;
     private final Map<String,String> streamIdsByTracks = new HashMap<>();
     private final Runnable onRenegotiationNeeded;
+    Consumer<PeerConnection.IceConnectionState> onIceConnectionChange;
+
+    public PcObserver(
+            PeerConnectionFactory peerConnectionFactory,
+            PmxKeyStore store,
+            TrackObserver observer,
+            Consumer<IceCandidate> onIceCandidate,
+            Runnable onRenegotiationNeeded,
+            Consumer<PeerConnection.IceConnectionState> onIceConnectionChange
+    ) {
+        this.peerConnectionFactory = peerConnectionFactory;
+        this.keyStore = store;
+        this.trackObserver = observer;
+        this.onIceCandidate = onIceCandidate;
+        this.onRenegotiationNeeded = onRenegotiationNeeded;
+        this.onIceConnectionChange = onIceConnectionChange;
+    }
 
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
@@ -42,12 +59,8 @@ public class PcObserver implements PeerConnection.Observer {
             TrackObserver observer,
             Consumer<IceCandidate> onIceCandidate,
             Runnable onRenegotiationNeeded
-    ) {
-        this.peerConnectionFactory = peerConnectionFactory;
-        this.keyStore = store;
-        this.trackObserver = observer;
-        this.onIceCandidate = onIceCandidate;
-        this.onRenegotiationNeeded = onRenegotiationNeeded;
+    ){
+        this(peerConnectionFactory,store,observer,onIceCandidate,onRenegotiationNeeded,null);
     }
 
     public void setOnAddTrack(BiConsumer<List<MediaStream>, RtpReceiver> onAddTrack) {
@@ -65,7 +78,9 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onIceConnectionChange(PeerConnection.IceConnectionState iceConnectionState) {
-
+        if(onIceConnectionChange != null) {
+            onIceConnectionChange.accept(iceConnectionState);
+        }
     }
 
     @Override

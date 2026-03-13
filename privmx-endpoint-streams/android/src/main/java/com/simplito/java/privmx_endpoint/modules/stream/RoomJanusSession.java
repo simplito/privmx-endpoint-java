@@ -8,6 +8,7 @@ import com.simplito.java.privmx_endpoint.model.stream.KeyType;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 
 import org.webrtc.MediaStreamTrack;
+import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxFrameCryptorFactory;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class RoomJanusSession {
@@ -36,6 +38,7 @@ public class RoomJanusSession {
     private final BiConsumer<Long,String> onTrickle;
     private final Map<String, TrackObserver> trackObserversByStreamId = new HashMap<>();
     private final TrackObserver trackObserver = new TrackObserverImpl();
+    private Consumer<PeerConnection.IceConnectionState> onConnectionChangeCallback = null;
     private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
 
     //TODO: Add error listener for catch errors from webrtcInterface
@@ -83,10 +86,24 @@ public class RoomJanusSession {
 
     public synchronized void createPublisher(TrackObserver observer) {
         if (publisher == null) {
-            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle, setNewOfferOnReconfigure);
+            publisher = new JanusPublisher(
+                    pcFactory,
+                    keyStore,
+                    observer,
+                    onTrickle,
+                    setNewOfferOnReconfigure,
+                    this::onConnectionChange
+            );
         }else if (publisher.isEnded()) {
             publisher.close();
-            publisher = new JanusPublisher(pcFactory, keyStore, observer, onTrickle, setNewOfferOnReconfigure);
+            publisher = new JanusPublisher(
+                    pcFactory,
+                    keyStore,
+                    observer,
+                    onTrickle,
+                    setNewOfferOnReconfigure,
+                    this::onConnectionChange
+            );
         }else{
             throw new IllegalStateException("Publisher is currently active.");
         }
@@ -107,12 +124,24 @@ public class RoomJanusSession {
         }
     }
 
+    public synchronized void setOnConnectionChange(
+            Consumer<PeerConnection.IceConnectionState> onConnectionChange
+    ){
+        this.onConnectionChangeCallback = onConnectionChange;
+    }
+
     public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {
         if(subscriber != null){
             subscriber.setFrameCryptorOptions(options);
         }
         if(publisher != null){
             publisher.setFrameCryptorOptions(options);
+        }
+    }
+
+    private void onConnectionChange(PeerConnection.IceConnectionState connectionState){
+        if(onConnectionChangeCallback != null){
+            onConnectionChangeCallback.accept(connectionState);
         }
     }
 

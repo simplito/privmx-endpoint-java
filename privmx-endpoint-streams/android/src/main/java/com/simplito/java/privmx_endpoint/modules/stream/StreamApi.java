@@ -23,6 +23,7 @@ import org.webrtc.DefaultVideoDecoderFactory;
 import org.webrtc.DefaultVideoEncoderFactory;
 import org.webrtc.EglBase;
 import org.webrtc.MediaStreamTrack;
+import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.VideoDecoderFactory;
@@ -34,6 +35,7 @@ import org.webrtc.audio.JavaAudioDeviceModule;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 //TODO: Good to remove context from StreamApi
@@ -233,6 +235,17 @@ public class StreamApi {
         if (session == null)
             throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first.");
         session.setTrackObserver(streamId, observer);
+    }
+
+    public void setConnectionStateObserver(
+            String roomId,
+            Consumer<PeerConnection.IceConnectionState> observer
+    ) {
+        Objects.requireNonNull(roomId);
+        RoomJanusSession session = pcManager.getSession(roomId);
+        if (session == null)
+            throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first.");
+        session.setOnConnectionChange(observer);
     }
 
     public void setTrackObserver(

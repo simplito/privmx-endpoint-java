@@ -12,6 +12,7 @@ import org.webrtc.SessionDescription;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class JanusConnection {
     protected final PeerConnection peerConnection;
@@ -26,7 +27,8 @@ public class JanusConnection {
             PmxKeyStore keyStore,
             ConnectionType connectionType,
             TrackObserver trackObserver,
-            BiConsumer<Long,String> onTrickle
+            BiConsumer<Long,String> onTrickle,
+            Consumer<PeerConnection.IceConnectionState> onConnectionChange
     ) {
         this.peerConnectionFactory = pcFactory;
         this.connectionType = connectionType;
@@ -52,7 +54,8 @@ public class JanusConnection {
 //                        System.out.println("Trickle executed");
                     }
                 },
-                this::onRenegotiationNeeded
+                this::onRenegotiationNeeded,
+                onConnectionChange
         );
         this.peerConnection = createPeerConnection(pcObserver);
     }

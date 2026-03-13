@@ -8,6 +8,7 @@ import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.VideoTrackInfo;
 
 import org.webrtc.MediaConstraints;
+import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxFrameCryptorFactory;
@@ -22,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class JanusPublisher extends JanusConnection{
     public final Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
@@ -37,9 +39,10 @@ public class JanusPublisher extends JanusConnection{
             PmxKeyStore keyStore,
             TrackObserver observer,
             BiConsumer<Long,String> onTrickle,
-            BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer
+            BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer,
+            Consumer<PeerConnection.IceConnectionState> onConnectionChange
     ) {
-        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle);
+        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle, onConnectionChange);
         this.setNewOfferOnReconfigure = acceptRenegotiationOffer;
     }
 
