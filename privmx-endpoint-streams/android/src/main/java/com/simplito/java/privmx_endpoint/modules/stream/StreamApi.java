@@ -370,4 +370,46 @@ public class StreamApi {
                 selectorId
         );
     }
+
+    // ----- PRIV
+    private List<PeerConnection.IceServer> getRTCConfiguration() {
+        return api.getTurnCredentials().stream().map(item ->
+                PeerConnection.IceServer.builder(item.url)
+                        .setUsername(item.username)
+                        .setPassword(item.password)
+                        .createIceServer()
+        ).collect(Collectors.toList());
+    }
+
+    private enum Mode {PUBLISHER, SUBSCRIBER}
+
+    private void setRTCConfiguration(Object key, Mode mode) {
+        RoomJanusSession session = key instanceof StreamHandle
+                ? pcManager.getSession((StreamHandle) key)
+                : pcManager.getSession((String) key);
+
+        if (session == null) {
+            throw new IllegalStateException(
+                    "No active session to this Stream Room. Join stream room first"
+            );
+        }
+
+        applyRTCConfiguration(session, mode);
+    }
+
+    private void applyRTCConfiguration(RoomJanusSession session, Mode mode) {
+        switch (mode) {
+            case PUBLISHER:
+                if (session.getPublisher() != null) {
+                    session.getPublisher().setRTCConfiguration(getRTCConfiguration());
+                }
+                break;
+
+            case SUBSCRIBER:
+                if (session.getSubscriber() != null) {
+                    session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
+                }
+                break;
+        }
+    }
 }
