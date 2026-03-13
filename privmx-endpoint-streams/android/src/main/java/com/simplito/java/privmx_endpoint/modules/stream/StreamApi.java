@@ -165,14 +165,8 @@ public class StreamApi {
     public void joinStreamRoom(
             String streamRoomId
     ) {
-        List<PeerConnection.IceServer> iceServers = api.getTurnCredentials().stream().map(item -> PeerConnection.IceServer.builder(item.url)
-                .setUsername(item.username)
-                .setPassword(item.password)
-                .createIceServer()
-        ).collect(Collectors.toList());
-
         //TODO: Rollback this change, it is do only for run test
-        RoomJanusSession session = pcManager.createSession(streamRoomId, iceServers);
+        RoomJanusSession session = pcManager.createSession(streamRoomId, getRTCConfiguration());
         api.joinStreamRoom(streamRoomId, session.webrtc);
     }
 
@@ -268,11 +262,13 @@ public class StreamApi {
 
     public StreamPublishResult publishStream(StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
+        setRTCConfiguration(streamHandle, Mode.PUBLISHER);
         return api.publishStream(streamHandle);
     }
 
     public StreamPublishResult updateStream(StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
+        setRTCConfiguration(streamHandle, Mode.PUBLISHER);
         return api.updateStream(streamHandle);
     }
 
@@ -298,6 +294,7 @@ public class StreamApi {
             throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
         try {
             session.createSubscriber();
+            setRTCConfiguration(streamRoomId, Mode.SUBSCRIBER);
         } catch (IllegalStateException ignored) {}
         api.subscribeToRemoteStreams(streamRoomId, subscriptions, options);
     }
@@ -321,6 +318,7 @@ public class StreamApi {
             List<StreamSubscription> subscriptionsToRemove,
             Settings options
     ) {
+        setRTCConfiguration(streamRoomId, Mode.SUBSCRIBER);
         api.modifyRemoteStreamsSubscriptions(
                 streamRoomId,
                 subscriptionsToAdd,
@@ -333,6 +331,7 @@ public class StreamApi {
             String streamRoomId,
             List<StreamSubscription> subscriptionsToRemove
     ) {
+        setRTCConfiguration(streamRoomId, Mode.SUBSCRIBER);
         api.unsubscribeFromRemoteStreams(
                 streamRoomId,
                 subscriptionsToRemove
