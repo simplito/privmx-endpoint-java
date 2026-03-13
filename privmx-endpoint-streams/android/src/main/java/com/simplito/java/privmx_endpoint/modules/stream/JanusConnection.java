@@ -17,7 +17,7 @@ import java.util.function.BiConsumer;
 public class JanusConnection {
     protected final PeerConnection peerConnection;
     protected final PeerConnectionFactory peerConnectionFactory;
-    private final List<PeerConnection.IceServer> configuration;
+    private List<PeerConnection.IceServer> configuration;
     protected PmxKeyStore keyStore;
     public final ConnectionType connectionType;
     private long sessionId = -1L;
@@ -133,5 +133,10 @@ public class JanusConnection {
         if(peerConnection.connectionState() != PeerConnection.PeerConnectionState.CLOSED) {
             peerConnection.dispose();
         }
+    }
+
+    public void setRTCConfiguration(List<PeerConnection.IceServer> configuration) {
+        this.configuration = configuration;
+        this.peerConnection.setConfiguration(new PeerConnection.RTCConfiguration(configuration));
     }
 }
