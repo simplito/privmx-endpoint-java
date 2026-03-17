@@ -12,9 +12,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
-class PeerConnectionManager {
+class PeerConnectionManager implements AutoCloseable {
     private final Map<String, RoomJanusSession> sessions = new HashMap<>();
     private final Map<Long, String> sessionHandles = new HashMap<>();
     protected final PeerConnectionFactory pcFactory;
@@ -55,20 +54,17 @@ class PeerConnectionManager {
     }
 
     public void leaveStreamRoom(@NonNull String streamRoomId) {
-        RoomJanusSession session = sessions.getOrDefault(streamRoomId, null);
+        RoomJanusSession session = sessions.remove(streamRoomId);
         if (session != null) {
             session.close();
-            sessions.remove(streamRoomId);
         }
     }
 
-    public void close() {
-        try {
-            sessions.forEach((roomId, session) -> session.close());
-            sessions.clear();
-            sessionHandles.clear();
-        } catch (Exception ignored) {}
-
+    @Override
+    public void close() throws Exception {
+        sessions.values().forEach(RoomJanusSession::close);
+        sessions.clear();
+        sessionHandles.clear();
         pcFactory.dispose();
     }
 }
