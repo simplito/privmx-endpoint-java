@@ -5,6 +5,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
@@ -252,11 +253,25 @@ public class StreamApi {
 
     public StreamPublishResult publishStream(@NonNull StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("Stream with this StreamHandle doesn't exist.");
+        JanusPublisher publisher = session.getPublisher();
+        if (publisher == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+        publisher.setRTCConfiguration(getRTCConfiguration());
         return api.publishStream(streamHandle);
     }
 
     public StreamPublishResult updateStream(@NonNull StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("Stream with this StreamHandle doesn't exist.");
+        JanusPublisher publisher = session.getPublisher();
+        if (publisher == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+        publisher.setRTCConfiguration(getRTCConfiguration());
         return api.updateStream(streamHandle);
     }
 
@@ -282,7 +297,11 @@ public class StreamApi {
             throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
         try {
             session.createSubscriber();
-        } catch (IllegalStateException ignored) {}
+        } catch (IllegalStateException ignored) {
+        }
+        if (session.getSubscriber() == null)
+            throw new IllegalStateException("This streamRoom has not created companion subscriber.");
+        session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
         api.subscribeToRemoteStreams(streamRoomId, subscriptions, options);
     }
 
@@ -305,6 +324,12 @@ public class StreamApi {
             List<StreamSubscription> subscriptionsToRemove,
             Settings options
     ) {
+        RoomJanusSession session = pcManager.getSession(streamRoomId);
+        if (session == null)
+            throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
+        if (session.getSubscriber() == null)
+            throw new IllegalStateException("This streamRoom has not created companion subscriber.");
+        session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
         api.modifyRemoteStreamsSubscriptions(
                 streamRoomId,
                 subscriptionsToAdd,
@@ -317,6 +342,12 @@ public class StreamApi {
             String streamRoomId,
             List<StreamSubscription> subscriptionsToRemove
     ) {
+        RoomJanusSession session = pcManager.getSession(streamRoomId);
+        if (session == null)
+            throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
+        if (session.getSubscriber() == null)
+            throw new IllegalStateException("This streamRoom has not created companion subscriber.");
+        session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
         api.unsubscribeFromRemoteStreams(
                 streamRoomId,
                 subscriptionsToRemove
@@ -353,5 +384,14 @@ public class StreamApi {
                 selectorType,
                 selectorId
         );
+    }
+
+    private List<PeerConnection.IceServer> getRTCConfiguration() {
+        return api.getTurnCredentials().stream().map(item ->
+                PeerConnection.IceServer.builder(item.url)
+                        .setUsername(item.username)
+                        .setPassword(item.password)
+                        .createIceServer()
+        ).collect(Collectors.toList());
     }
 }

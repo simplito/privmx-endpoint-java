@@ -72,10 +72,10 @@ public class RoomJanusSession {
     public synchronized void createSubscriber(TrackObserver observer) {
         if (subscriber == null) {
             subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
-        }else if (subscriber.isEnded()) {
+        } else if (subscriber.isEnded()) {
             subscriber.close();
             subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
-        }else{
+        } else {
             throw new IllegalStateException("Subscriber is currently active.");
         }
     }

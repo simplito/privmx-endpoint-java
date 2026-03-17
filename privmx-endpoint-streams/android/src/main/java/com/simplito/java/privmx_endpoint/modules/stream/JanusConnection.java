@@ -10,6 +10,7 @@ import org.webrtc.PmxKeyStore;
 import org.webrtc.SessionDescription;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -126,4 +127,8 @@ public class JanusConnection {
     }
 
     public void onRenegotiationNeeded(){}
+
+    public void setRTCConfiguration(List<PeerConnection.IceServer> configuration) {
+        this.peerConnection.setConfiguration(new PeerConnection.RTCConfiguration(configuration));
+    }
 }

@@ -6,9 +6,11 @@ import androidx.annotation.Nullable;
 import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 
+import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;

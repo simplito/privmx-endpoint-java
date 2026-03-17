@@ -31,12 +31,11 @@ public class JanusPublisher extends JanusConnection{
     private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-
     public JanusPublisher(
             PeerConnectionFactory pcFactory,
             PmxKeyStore keyStore,
             TrackObserver observer,
-            BiConsumer<Long,String> onTrickle,
+            BiConsumer<Long, String> onTrickle,
             BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer,
             Consumer<PeerConnection.IceConnectionState> onConnectionChange
     ) {
