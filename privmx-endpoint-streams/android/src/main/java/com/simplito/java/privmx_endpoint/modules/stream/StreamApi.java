@@ -167,7 +167,7 @@ public class StreamApi {
             String streamRoomId
     ) {
         //TODO: Rollback this change, it is do only for run test
-        RoomJanusSession session = pcManager.createSession(streamRoomId, getRTCConfiguration());
+        RoomJanusSession session = pcManager.createSession(streamRoomId);
         api.joinStreamRoom(streamRoomId, session.webrtc);
     }
 
@@ -263,13 +263,25 @@ public class StreamApi {
 
     public StreamPublishResult publishStream(StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
-        setRTCConfiguration(streamHandle, ConnectionType.Publisher);
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("Stream with this StreamHandle doesn't exist.");
+        JanusPublisher publisher = session.getPublisher();
+        if (publisher == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+        publisher.setRTCConfiguration(getRTCConfiguration());
         return api.publishStream(streamHandle);
     }
 
     public StreamPublishResult updateStream(StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
-        setRTCConfiguration(streamHandle, ConnectionType.Publisher);
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("Stream with this StreamHandle doesn't exist.");
+        JanusPublisher publisher = session.getPublisher();
+        if (publisher == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+        publisher.setRTCConfiguration(getRTCConfiguration());
         return api.updateStream(streamHandle);
     }
 
@@ -295,8 +307,11 @@ public class StreamApi {
             throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
         try {
             session.createSubscriber();
-            setRTCConfiguration(streamRoomId, ConnectionType.Subscriber);
-        } catch (IllegalStateException ignored) {}
+        } catch (IllegalStateException ignored) {
+        }
+        if (session.getSubscriber() == null)
+            throw new IllegalStateException("This streamRoom has not created companion subscriber.");
+        session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
         api.subscribeToRemoteStreams(streamRoomId, subscriptions, options);
     }
 
@@ -319,7 +334,12 @@ public class StreamApi {
             List<StreamSubscription> subscriptionsToRemove,
             Settings options
     ) {
-        setRTCConfiguration(streamRoomId, ConnectionType.Subscriber);
+        RoomJanusSession session = pcManager.getSession(streamRoomId);
+        if (session == null)
+            throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
+        if (session.getSubscriber() == null)
+            throw new IllegalStateException("This streamRoom has not created companion subscriber.");
+        session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
         api.modifyRemoteStreamsSubscriptions(
                 streamRoomId,
                 subscriptionsToAdd,
@@ -332,7 +352,12 @@ public class StreamApi {
             String streamRoomId,
             List<StreamSubscription> subscriptionsToRemove
     ) {
-        setRTCConfiguration(streamRoomId,ConnectionType.Subscriber);
+        RoomJanusSession session = pcManager.getSession(streamRoomId);
+        if (session == null)
+            throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
+        if (session.getSubscriber() == null)
+            throw new IllegalStateException("This streamRoom has not created companion subscriber.");
+        session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
         api.unsubscribeFromRemoteStreams(
                 streamRoomId,
                 subscriptionsToRemove
@@ -371,7 +396,6 @@ public class StreamApi {
         );
     }
 
-    // ----- PRIV
     private List<PeerConnection.IceServer> getRTCConfiguration() {
         return api.getTurnCredentials().stream().map(item ->
                 PeerConnection.IceServer.builder(item.url)
@@ -379,35 +403,5 @@ public class StreamApi {
                         .setPassword(item.password)
                         .createIceServer()
         ).collect(Collectors.toList());
-    }
-
-    private void setRTCConfiguration(Object key, ConnectionType mode) {
-        RoomJanusSession session = key instanceof StreamHandle
-                ? pcManager.getSession((StreamHandle) key)
-                : pcManager.getSession((String) key);
-
-        if (session == null) {
-            throw new IllegalStateException(
-                    "No active session to this Stream Room. Join stream room first"
-            );
-        }
-
-        applyRTCConfiguration(session, mode);
-    }
-
-    private void applyRTCConfiguration(RoomJanusSession session, ConnectionType mode) {
-        switch (mode) {
-            case Publisher:
-                if (session.getPublisher() != null) {
-                    session.getPublisher().setRTCConfiguration(getRTCConfiguration());
-                }
-                break;
-
-            case Subscriber:
-                if (session.getSubscriber() != null) {
-                    session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
-                }
-                break;
-        }
     }
 }

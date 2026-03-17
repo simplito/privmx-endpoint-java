@@ -20,7 +20,6 @@ class PeerConnectionManager {
     private final Map<Long, String> sessionHandles = new HashMap<>();
     protected final PeerConnectionFactory pcFactory;
     private final BiConsumer<Long,String> onTrickle;
-    private List<PeerConnection.IceServer> configuration;
 
     PeerConnectionManager(
             PeerConnectionFactory pcFactory,
@@ -31,9 +30,9 @@ class PeerConnectionManager {
     }
 
     @NonNull
-    public RoomJanusSession createSession(@NonNull String streamRoomId, List<PeerConnection.IceServer> configuration) {
+    public RoomJanusSession createSession(@NonNull String streamRoomId) {
         return Optional.ofNullable(
-                sessions.putIfAbsent(streamRoomId, new RoomJanusSession(streamRoomId, pcFactory, onTrickle, configuration))
+                sessions.putIfAbsent(streamRoomId, new RoomJanusSession(streamRoomId, pcFactory, onTrickle))
         ).orElse(Objects.requireNonNull(sessions.get(streamRoomId)));
     }
 
