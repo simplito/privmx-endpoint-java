@@ -124,10 +124,31 @@ public class PcObserver implements PeerConnection.Observer {
         }
     }
 
+    public void dispose() {
+        frameCryptorMap.forEach((id, cryptor) -> {
+            if (cryptor != null) cryptor.dispose();
+        });
+        frameCryptorMap.clear();
+
+        onAddTrack = null;
+        onVideoTrack = null;
+        onIceCandidate = null;
+    }
+
     @Override
     public void onRemoveTrack(RtpReceiver receiver) {
         //TODO: cleanup track cryptors (?)
 //        onRemoveTrack.accept(receiver.track());
+        MediaStreamTrack track = receiver.track();
+        if (track != null) {
+            String trackId = track.id();
+            if (trackId != null) {
+                PmxFrameCryptor cryptor = frameCryptorMap.remove(trackId);
+                if (cryptor != null) cryptor.dispose();
+
+                streamIdsByTracks.remove(trackId);
+            }
+        }
         receiver.dispose();
     }
 
