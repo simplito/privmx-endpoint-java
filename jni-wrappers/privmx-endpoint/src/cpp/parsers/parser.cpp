@@ -910,14 +910,14 @@ std::vector<T> jArrayToVector(
         JniContextUtils &ctx,
         jobjectArray jArray,
         std::function<T(JniContextUtils &, jobject)> fun,
-        bool acceptNullValues
+        bool requireNonNulls
 ) {
     std::vector<T> result;
 
     for (int i = 0; i < ctx->GetArrayLength(jArray); i++) {
         jobject element = ctx->GetObjectArrayElement(jArray, i);
 
-        if (!acceptNullValues) {
+        if (requireNonNulls) {
             if (ctx.nullCheck(element, "Array element")) {
                 return{};
             }
@@ -935,7 +935,7 @@ std::vector<T> jArrayToVector(
         jobjectArray jArray,
         std::function<T(JniContextUtils &, jobject)> fun
 ) {
-    return jArrayToVector(ctx, jArray, fun, true);
+    return jArrayToVector(ctx, jArray, fun, false);
 }
 
 int64_t jobject2long(JniContextUtils &ctx, jobject jLong) {

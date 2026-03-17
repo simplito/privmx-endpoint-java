@@ -56,7 +56,7 @@ privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobje
 // java -> c++
 template<typename T>
 std::vector<T> jArrayToVector(JniContextUtils &ctx, jobjectArray jArray,
-                              std::function<T(JniContextUtils &, jobject)> fun, bool acceptNullValues);
+                              std::function<T(JniContextUtils &, jobject)> fun, bool requireNonNulls);
 
 template<typename T>
 std::vector<T> jArrayToVector(JniContextUtils &ctx, jobjectArray jArray,
@@ -72,7 +72,7 @@ jobject vectorTojArray(
         JniContextUtils &ctx,
         const std::vector<T> &vector,
         F fun,
-        bool acceptNullValues
+        bool requireNonNulls
 ) {
     jclass arrayListCls = ctx->FindClass("java/util/ArrayList");
     jmethodID initMID = ctx->GetMethodID(arrayListCls, "<init>", "()V");
@@ -82,7 +82,7 @@ jobject vectorTojArray(
 
     for (const auto &item: vector) {
         jobject jItem = fun(ctx, item);
-        if (!acceptNullValues) {
+        if (requireNonNulls) {
             if (ctx.nullCheck(jItem, "Array element")) {return nullptr;}
         }
 
@@ -93,7 +93,7 @@ jobject vectorTojArray(
 
 template<typename T, typename F>
 jobject vectorTojArray(JniContextUtils &ctx, const std::vector<T> &vector, F fun) {
-    return vectorTojArray(ctx, vector, fun, true);
+    return vectorTojArray(ctx, vector, fun, false);
 }
 
 template<typename T, typename F>
