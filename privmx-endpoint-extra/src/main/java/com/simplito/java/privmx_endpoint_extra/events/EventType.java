@@ -799,9 +799,9 @@ public class EventType<T> {
         );
     }
 
-    public static EventType<NewStreams> StreamNewStreamsEvent(StreamEventSelectorType selectorType, String selectorId) {
+    public static EventType<NewStreams> RemoteStreamsChangedEvent(StreamEventSelectorType selectorType, String selectorId) {
         return new EventType<>(
-                "StreamNewStreams",
+                "remoteStreamsChanged",
                 StreamEventType.STREAMROOM_UPDATE,
                 selectorType,
                 selectorId,
