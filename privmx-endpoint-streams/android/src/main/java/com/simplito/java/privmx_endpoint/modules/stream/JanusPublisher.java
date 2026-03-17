@@ -135,12 +135,16 @@ public class JanusPublisher extends JanusConnection{
 
     @Override
     public void close() {
-        super.close();
+        try {
+            audioTracks.values().forEach(track -> track.frameCryptor.dispose());
+            videoTracks.values().forEach(track -> track.frameCryptor.dispose());
+        } catch (IllegalStateException ignored) {}
         audioTracks.clear();
         videoTracks.clear();
 
         videoCapturers.forEach((k, v) -> v.dispose());
         videoCapturers.clear();
+        super.close();
     }
 
     @Override
