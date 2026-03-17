@@ -4,7 +4,6 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
@@ -35,17 +34,9 @@ import org.webrtc.audio.JavaAudioDeviceModule;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
-//TODO: Good to remove context from StreamApi
 public class StreamApi {
-    public static final String VIDEO_TRACK_ID = "ARDAMSv0";
-    public static final String AUDIO_TRACK_ID = "ARDAMSa0";
-    public static final String VIDEO_TRACK_TYPE = "video";
-    private static final String TAG = "StreamApi";
-
-    private final Context appContext;
-    private final EglBase rootEglBase;
     private final StreamApiLow api;
     private final PeerConnectionManager pcManager;
     public final TrackFactory trackFactory;
@@ -83,35 +74,24 @@ public class StreamApi {
     }
 
     public StreamApi(
-            Context appContext,
-            EglBase rootEglBase,
-            StreamApiLow api
-    ) {
-        this(appContext, rootEglBase, api, null);
-    }
-
-    public StreamApi(
             @NonNull Context appContext,
             @NonNull EglBase rootEglBase,
-            @NonNull StreamApiLow api,
-            //TODO: remove this parameter
-            @Nullable PeerConnectionFactory pcFactory
+            @NonNull StreamApiLow api
     ) {
-        this.appContext = appContext;
-        this.rootEglBase = rootEglBase;
         this.api = api;
-        PeerConnectionFactory factory = pcFactory;
-        if (factory == null) {
-            //TODO: What should be passed to the options parameter
-            factory = DefaultPeerConnectionFactory(appContext, rootEglBase, new PeerConnectionFactory.Options());
-        }
+        PeerConnectionFactory factory = DefaultPeerConnectionFactory(appContext, rootEglBase, new PeerConnectionFactory.Options());
         pcManager = new PeerConnectionManager(
                 factory,
                 (sessionId, rtcConfiguration) -> {
                     if (sessionId != null) {
                         this.api.trickle(sessionId, rtcConfiguration);
                     }
-                });
+                },
+                (s,s2)->{
+                    this.api.setNewOfferOnReconfigure(s,s2);
+                }
+
+        );
         trackFactory = new TrackFactory(pcManager);
     }
 
@@ -166,7 +146,6 @@ public class StreamApi {
     public void joinStreamRoom(
             String streamRoomId
     ) {
-        //TODO: Rollback this change, it is do only for run test
         RoomJanusSession session = pcManager.createSession(streamRoomId);
         api.joinStreamRoom(streamRoomId, session.webrtc);
     }
@@ -197,7 +176,7 @@ public class StreamApi {
      * @throws IllegalStateException if call addTrack before call createStream
      */
     public void addTrack(
-            StreamHandle streamHandle,
+            @NonNull StreamHandle streamHandle,
             MediaStreamTrack track
     ) throws IllegalStateException {
         Objects.requireNonNull(streamHandle);
@@ -220,7 +199,7 @@ public class StreamApi {
     }
 
     public void setTrackObserver(
-            String roomId,
+            @NonNull String roomId,
             TrackObserver observer,
             String streamId
     ) {
@@ -229,6 +208,17 @@ public class StreamApi {
         if (session == null)
             throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first.");
         session.setTrackObserver(streamId, observer);
+    }
+
+    public void setConnectionStateObserver(
+            @NonNull String roomId,
+            Consumer<PeerConnection.IceConnectionState> observer
+    ) {
+        Objects.requireNonNull(roomId);
+        RoomJanusSession session = pcManager.getSession(roomId);
+        if (session == null)
+            throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first.");
+        session.setOnConnectionChange(observer);
     }
 
     public void setTrackObserver(
@@ -244,8 +234,8 @@ public class StreamApi {
      * @throws IllegalStateException when Stream with this StreamHandle doesn't exist.
      */
     public void removeTrack(
-            StreamHandle streamHandle,
-            MediaStreamTrack track
+            @NonNull StreamHandle streamHandle,
+            @NonNull MediaStreamTrack track
     ) throws IllegalStateException {
         Objects.requireNonNull(streamHandle);
         RoomJanusSession session = pcManager.getSession(streamHandle);
@@ -261,7 +251,7 @@ public class StreamApi {
         }
     }
 
-    public StreamPublishResult publishStream(StreamHandle streamHandle) {
+    public StreamPublishResult publishStream(@NonNull StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
         RoomJanusSession session = pcManager.getSession(streamHandle);
         if (session == null)
@@ -273,7 +263,7 @@ public class StreamApi {
         return api.publishStream(streamHandle);
     }
 
-    public StreamPublishResult updateStream(StreamHandle streamHandle) {
+    public StreamPublishResult updateStream(@NonNull StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
         RoomJanusSession session = pcManager.getSession(streamHandle);
         if (session == null)
@@ -285,7 +275,7 @@ public class StreamApi {
         return api.updateStream(streamHandle);
     }
 
-    public void unpublishStream(StreamHandle streamHandle) {
+    public void unpublishStream(@NonNull StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
         api.unpublishStream(streamHandle);
     }

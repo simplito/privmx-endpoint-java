@@ -22,37 +22,39 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-//TODO: Fix warnings
 public class PcObserver implements PeerConnection.Observer {
-    Map<String, PmxFrameCryptor> frameCryptorMap = new HashMap<>();
-    PmxKeyStore keyStore;
-    private PeerConnectionFactory peerConnectionFactory;
-    public TrackObserver trackObserver;
-
-    private BiConsumer<List<MediaStream>, RtpReceiver> onAddTrack;
-    private Consumer<String> onVideoTrack;
-
-    private Consumer<IceCandidate> onIceCandidate;
-    private final Map<String,String> streamIdsByTracks = new HashMap<>();
+    private final Map<String, PmxFrameCryptor> frameCryptorMap = new HashMap<>();
+    private final PmxKeyStore keyStore;
+    private final PeerConnectionFactory peerConnectionFactory;
+    private final TrackObserver trackObserver;
+    private final Consumer<IceCandidate> onIceCandidate;
+    private final Runnable onRenegotiationNeeded;
+    private final Consumer<PeerConnection.IceConnectionState> onIceConnectionChange;
 
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
             PmxKeyStore store,
             TrackObserver observer,
-            Consumer<IceCandidate> onIceCandidate
+            Consumer<IceCandidate> onIceCandidate,
+            Runnable onRenegotiationNeeded,
+            Consumer<PeerConnection.IceConnectionState> onIceConnectionChange
     ) {
         this.peerConnectionFactory = peerConnectionFactory;
         this.keyStore = store;
         this.trackObserver = observer;
         this.onIceCandidate = onIceCandidate;
+        this.onRenegotiationNeeded = onRenegotiationNeeded;
+        this.onIceConnectionChange = onIceConnectionChange;
     }
 
-    public void setOnAddTrack(BiConsumer<List<MediaStream>, RtpReceiver> onAddTrack) {
-        this.onAddTrack = onAddTrack;
-    }
-
-    public void setOnVideoTrack(Consumer<String> onVideoTrack) {
-        this.onVideoTrack = onVideoTrack;
+    public PcObserver(
+            PeerConnectionFactory peerConnectionFactory,
+            PmxKeyStore store,
+            TrackObserver observer,
+            Consumer<IceCandidate> onIceCandidate,
+            Runnable onRenegotiationNeeded
+    ){
+        this(peerConnectionFactory,store,observer,onIceCandidate,onRenegotiationNeeded,null);
     }
 
     @Override
@@ -62,7 +64,9 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onIceConnectionChange(PeerConnection.IceConnectionState iceConnectionState) {
-
+        if(onIceConnectionChange != null) {
+            onIceConnectionChange.accept(iceConnectionState);
+        }
     }
 
     @Override
@@ -100,7 +104,9 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onRenegotiationNeeded() {
-
+        if(onRenegotiationNeeded != null){
+            onRenegotiationNeeded.run();
+        }
     }
 
     @Override
@@ -126,9 +132,13 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onRemoveTrack(RtpReceiver receiver) {
-        //TODO: cleanup track cryptors (?)
-//        onRemoveTrack.accept(receiver.track());
-        receiver.dispose();
+        MediaStreamTrack track = receiver.track();
+        if(track != null) {
+            PmxFrameCryptor removedCryptor = frameCryptorMap.remove(track.id());
+            if(removedCryptor != null) {
+                removedCryptor.dispose();
+            }
+        }
     }
 
     public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {

@@ -1,11 +1,6 @@
 package com.simplito.java.privmx_endpoint.modules.stream;
 
-import org.webrtc.AudioSource;
-import org.webrtc.AudioTrack;
-import org.webrtc.MediaConstraints;
-import org.webrtc.PeerConnectionFactory;
-import org.webrtc.VideoSource;
-import org.webrtc.VideoTrack;
+import org.webrtc.*;
 
 public class TrackFactory {
     private final PeerConnectionFactory factory;
@@ -13,17 +8,14 @@ public class TrackFactory {
         factory = pcManager.pcFactory;
     }
 
-    //TODO: Maybe creating sources should be hidden
     public VideoSource createVideoSource(boolean isScreenCast){
         return factory.createVideoSource(isScreenCast);
     }
 
-    //TODO: Maybe creating sources should be hidden
     public VideoSource createVideoSource(boolean isScreenCast, boolean alignTimestamps){
         return factory.createVideoSource(isScreenCast,alignTimestamps);
     }
 
-    //TODO: Maybe creating sources should be hidden
     public AudioSource createAudioSource(){
         return factory.createAudioSource(new MediaConstraints());
     }

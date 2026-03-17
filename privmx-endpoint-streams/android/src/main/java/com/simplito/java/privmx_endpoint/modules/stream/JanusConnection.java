@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class JanusConnection {
     protected final PeerConnection peerConnection;
@@ -27,7 +28,8 @@ public class JanusConnection {
             PmxKeyStore keyStore,
             ConnectionType connectionType,
             TrackObserver trackObserver,
-            BiConsumer<Long,String> onTrickle
+            BiConsumer<Long,String> onTrickle,
+            Consumer<PeerConnection.IceConnectionState> onConnectionChange
     ) {
         this.peerConnectionFactory = pcFactory;
         this.connectionType = connectionType;
@@ -52,7 +54,9 @@ public class JanusConnection {
 //                        onTrickle.accept(sessionId,obj.toString());
 //                        System.out.println("Trickle executed");
                     }
-                }
+                },
+                this::onRenegotiationNeeded,
+                onConnectionChange
         );
         this.peerConnection = createPeerConnection(pcObserver);
     }
@@ -121,6 +125,8 @@ public class JanusConnection {
             peerConnection.dispose();
         }
     }
+
+    public void onRenegotiationNeeded(){}
 
     public void setRTCConfiguration(List<PeerConnection.IceServer> configuration) {
         this.peerConnection.setConfiguration(new PeerConnection.RTCConfiguration(configuration));

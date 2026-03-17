@@ -1,7 +1,7 @@
 package com.simplito.java.privmx_endpoint.model.stream;
 
 public class StreamSubscription {
-    public long streamId;
+    public Long streamId;
     public String streamTrackId;
 
     public StreamSubscription(long streamId, String streamTrackId) {
