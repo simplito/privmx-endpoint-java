@@ -54,15 +54,11 @@ class PeerConnectionManager implements AutoCloseable {
     }
 
     public void leaveStreamRoom(@NonNull String streamRoomId) {
-        RoomJanusSession session = sessions.remove(streamRoomId);
-        if (session != null) {
-            session.close();
-        }
+        sessions.remove(streamRoomId);
     }
 
     @Override
     public void close() throws Exception {
-        sessions.values().forEach(RoomJanusSession::close);
         sessions.clear();
         sessionHandles.clear();
         pcFactory.dispose();
