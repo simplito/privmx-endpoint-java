@@ -35,6 +35,7 @@ import org.webrtc.audio.JavaAudioDeviceModule;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class StreamApi implements AutoCloseable{
     private final StreamApiLow api;
