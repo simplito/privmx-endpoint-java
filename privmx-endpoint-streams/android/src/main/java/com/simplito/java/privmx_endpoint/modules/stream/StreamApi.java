@@ -31,13 +31,11 @@ import org.webrtc.VideoTrack;
 import org.webrtc.audio.AudioDeviceModule;
 import org.webrtc.audio.JavaAudioDeviceModule;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 //TODO: Good to remove context from StreamApi
-public class StreamApi {
+public class StreamApi implements AutoCloseable{
     public static final String VIDEO_TRACK_ID = "ARDAMSv0";
     public static final String AUDIO_TRACK_ID = "ARDAMSa0";
     public static final String VIDEO_TRACK_TYPE = "video";
@@ -365,6 +363,7 @@ public class StreamApi {
         );
     }
 
+    @Override
     public void close() throws Exception {
         pcManager.close();
         api.close();
