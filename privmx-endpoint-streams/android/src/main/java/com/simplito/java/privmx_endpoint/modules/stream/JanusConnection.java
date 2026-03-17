@@ -115,10 +115,10 @@ public class JanusConnection {
                 peerConnection.connectionState() == PeerConnection.PeerConnectionState.FAILED;
     }
 
-    public void close(){
-        if(peerConnection.connectionState() != PeerConnection.PeerConnectionState.CLOSED) {
+    public void close() {
+        if (peerConnection.connectionState() != PeerConnection.PeerConnectionState.CLOSED) {
             peerConnection.dispose();
-            pcObserver.frameCryptorMap.forEach((k,v) -> v.dispose());
+            pcObserver.dispose();
         }
     }
 }
