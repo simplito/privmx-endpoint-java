@@ -110,11 +110,6 @@ public class RoomJanusSession {
         }
     }
 
-    public void close(){
-        // todo - to use this update aar is required
-        // keyStore.release();
-    }
-
     public class WebRTCImpl implements WebRTCInterface {
         private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
