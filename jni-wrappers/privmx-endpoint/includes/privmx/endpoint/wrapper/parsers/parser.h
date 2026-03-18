@@ -11,6 +11,7 @@
 
 #ifndef PRIVMX_POCKET_LIB_PARSER_H
 #define PRIVMX_POCKET_LIB_PARSER_H
+#define RETURN_IF_EXCEPTION(ctx, val) if ((ctx)->ExceptionCheck()) return val;
 
 #include "../utils/utils.hpp"
 #include <jni.h>
