@@ -4,9 +4,11 @@ import androidx.annotation.Nullable;
 
 import com.simplito.java.privmx_endpoint.model.AudioTrackInfo;
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
+import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.VideoTrackInfo;
 
 import org.webrtc.MediaConstraints;
+import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxFrameCryptorFactory;
@@ -18,17 +20,27 @@ import org.webrtc.VideoCapturer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class JanusPublisher extends JanusConnection{
-    public final Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
-    public final Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
-    //TODO: Add videoCapturer to VideoTrackInfo
-    public final Map<String, VideoCapturer> videoCapturers = new HashMap<>();
+    private final Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
+    private final Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
+    private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-
-    public JanusPublisher(PeerConnectionFactory pcFactory, PmxKeyStore keyStore, TrackObserver observer, BiConsumer<Long,String> onTrickle) {
-        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle);
+    public JanusPublisher(
+            PeerConnectionFactory pcFactory,
+            PmxKeyStore keyStore,
+            TrackObserver observer,
+            BiConsumer<Long, String> onTrickle,
+            BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer,
+            Consumer<PeerConnection.IceConnectionState> onConnectionChange
+    ) {
+        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle, onConnectionChange);
+        this.setNewOfferOnReconfigure = acceptRenegotiationOffer;
     }
 
     public void addAudioTrack(org.webrtc.AudioTrack audioTrack) {
@@ -52,10 +64,7 @@ public class JanusPublisher extends JanusConnection{
         }
     }
 
-    public void addVideoTrack(
-            org.webrtc.VideoTrack videoTrack,
-            VideoCapturer videoCapturer
-    ) {
+    public void addVideoTrack(org.webrtc.VideoTrack videoTrack) {
         if (peerConnectionFactory != null) {
             synchronized (videoTracks) {
                 RtpSender rtpSender = peerConnection.addTrack(videoTrack);
@@ -74,15 +83,8 @@ public class JanusPublisher extends JanusConnection{
                                 frameCryptor
                         )
                 );
-                if (videoCapturer != null) {
-                    videoCapturers.put(videoTrack.id(), videoCapturer);
-                }
             }
         }
-    }
-
-    public void addVideoTrack(org.webrtc.VideoTrack videoTrack) {
-        addVideoTrack(videoTrack,null);
     }
 
     public void removeAudioTrack(String id) {
@@ -100,7 +102,6 @@ public class JanusPublisher extends JanusConnection{
             if (videoTrackInfo == null) return;
             peerConnection.removeTrack(videoTrackInfo.sender);
             videoTracks.remove(id);
-            videoCapturers.remove(id);
         }
     }
 
@@ -116,21 +117,16 @@ public class JanusPublisher extends JanusConnection{
         }
     }
 
-    public void setAnswer(String sdp){
-        peerConnection.setRemoteDescription(new SdpObserver(null),new SessionDescription(SessionDescription.Type.ANSWER,sdp));
+    public void setAnswer(String sdp, String type){
+        peerConnection.setRemoteDescription(new SdpObserver(null),new SessionDescription(SessionDescription.Type.fromCanonicalForm(type),sdp));
     }
 
-    @Nullable
-    public VideoCapturer getVideoCapturer(String trackId){
-        return videoCapturers.get(trackId);
-    }
 
     @Override
     public void close() {
         super.close();
         audioTracks.clear();
         videoTracks.clear();
-        videoCapturers.clear();
     }
 
     @Override
@@ -141,5 +137,15 @@ public class JanusPublisher extends JanusConnection{
         this.audioTracks.values().forEach(it ->{
             it.frameCryptor.setOptions(options);
         });
+    }
+
+
+    @Override
+    public void onRenegotiationNeeded() {
+        if(getSessionId() > -1) {
+            executorService.execute(()->{
+                setNewOfferOnReconfigure.accept(getSessionId(),new SdpWithTypeModel(createOffer(), SessionDescription.Type.OFFER.canonicalForm()));
+            });
+        }
     }
 }

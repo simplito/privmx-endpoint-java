@@ -747,11 +747,12 @@ parseEvent(JniContextUtils &ctx, std::shared_ptr<privmx::endpoint::core::Event> 
                     event_cast.connectionId,
                     event_cast.subscriptions,
                     event_cast.timestamp,
-                    privmx::wrapper::streamEventData2Java(ctx, event_cast.data)
+                    privmx::wrapper::streamLeftEventData2Java(ctx, event_cast.data)
             );
-        } else if (stream::Events::isStreamNewStreamsEvent(event)) {
-            privmx::endpoint::stream::StreamNewStreamsEvent event_cast =
-                    stream::Events::extractStreamNewStreamsEvent(event);
+        }
+        else if (stream::Events::isRemoteStreamsChangedEvent(event)) {
+            privmx::endpoint::stream::RemoteStreamsChangedEvent event_cast =
+                    stream::Events::extractRemoteStreamsChangedEvent(event);
 
             return initEvent(
                     ctx,
@@ -868,7 +869,7 @@ privmx::endpoint::stream::StreamSubscription parseStreamSubscription(JniContextU
 
 privmx::endpoint::stream::SdpWithTypeModel parseSdpWithTypeModel(JniContextUtils &ctx, jobject sdpWithTypeModel) {
     jclass cls = ctx->FindClass(
-            "com/simplito/java/privmx_endpoint/model/SdpWithTypeModel");
+            "com/simplito/java/privmx_endpoint/model/stream/SdpWithTypeModel");
 
     jfieldID sdpFID = ctx->GetFieldID(cls, "sdp", "Ljava/lang/String;");
     jfieldID typeFID = ctx->GetFieldID(cls, "type", "Ljava/lang/String;");

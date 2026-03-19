@@ -47,7 +47,7 @@ public class StreamRoom {
             ContainerPolicy policy,
             Long statusCode,
             Long schemaVersion,
-            boolean closed
+            Boolean closed
     ) {
         this.contextId = contextId;
         this.streamRoomId = streamRoomId;

@@ -383,7 +383,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_joinStreamRo
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream room ID") ||
-            ctx.nullCheck(web_rtc, "webRtc")) {
+        ctx.nullCheck(web_rtc, "webRtc")) {
         return;
     }
 
@@ -638,7 +638,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeF
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
-            ctx.nullCheck(subscriptions_to_remove, "Subscriptions to remove")) {
+        ctx.nullCheck(subscriptions_to_remove, "Subscriptions to remove")) {
         return;
     }
 
@@ -670,9 +670,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_modifyRemote
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
-            ctx.nullCheck(subscriptions_to_add, "Subscriptions to add") ||
-            ctx.nullCheck(subscriptions_to_add, "Subscriptions to remove") ||
-            ctx.nullCheck(options, "Options")) {
+        ctx.nullCheck(subscriptions_to_add, "Subscriptions to add") ||
+        ctx.nullCheck(subscriptions_to_add, "Subscriptions to remove") ||
+        ctx.nullCheck(options, "Options")) {
         return;
     }
 
@@ -713,8 +713,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeToR
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
-            ctx.nullCheck(subscriptions, "Subscriptions") ||
-            ctx.nullCheck(options, "Options")) {
+        ctx.nullCheck(subscriptions, "Subscriptions") ||
+        ctx.nullCheck(options, "Options")) {
         return;
     }
     ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id, &subscriptions, &options]() {
@@ -780,12 +780,33 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_acceptOfferO
         jobject sdp
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(sdp, " SDP")) {
+    if (ctx.nullCheck(sdp, "SDP")) {
         return;
     }
 
     ctx.callVoidEndpointApi([&ctx, &thiz, &session_id, &sdp]() {
         getStreamApi(ctx, thiz)->acceptOfferOnReconfigure(
+                session_id,
+                parseSdpWithTypeModel(ctx, sdp)
+        );
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_setNewOfferOnReconfigure(
+        JNIEnv *env,
+        jobject thiz,
+        jlong session_id,
+        jobject sdp
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(sdp, "SDP")) {
+        return;
+    }
+
+    ctx.callVoidEndpointApi([&ctx, &thiz, &session_id, &sdp]() {
+        getStreamApi(ctx, thiz)->setNewOfferOnReconfigure(
                 session_id,
                 parseSdpWithTypeModel(ctx, sdp)
         );
