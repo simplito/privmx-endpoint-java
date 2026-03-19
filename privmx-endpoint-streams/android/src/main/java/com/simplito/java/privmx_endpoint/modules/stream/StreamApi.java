@@ -389,7 +389,7 @@ public class StreamApi implements AutoCloseable{
 
     @Override
     public void close() throws Exception {
-        pcManager.getRoomIds().forEach(api::leaveStreamRoom);
+        pcManager.getRoomIds().forEach(this::leaveStreamRoom);
         pcManager.close();
         api.close();
     }
