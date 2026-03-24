@@ -37,7 +37,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class StreamApi {
+public class StreamApi implements AutoCloseable{
     private final StreamApiLow api;
     private final PeerConnectionManager pcManager;
     public final TrackFactory trackFactory;
@@ -385,6 +385,13 @@ public class StreamApi {
                 selectorType,
                 selectorId
         );
+    }
+
+    @Override
+    public void close() throws Exception {
+        pcManager.getRoomIds().forEach(this::leaveStreamRoom);
+        pcManager.close();
+        api.close();
     }
 
     private List<PeerConnection.IceServer> getRTCConfiguration() {

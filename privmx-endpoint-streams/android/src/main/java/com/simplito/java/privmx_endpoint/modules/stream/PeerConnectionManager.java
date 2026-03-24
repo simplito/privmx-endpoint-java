@@ -6,17 +6,16 @@ import androidx.annotation.Nullable;
 import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 
-import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
-class PeerConnectionManager {
+class PeerConnectionManager implements AutoCloseable {
     private final Map<String, RoomJanusSession> sessions = new HashMap<>();
     private final Map<Long, String> sessionHandles = new HashMap<>();
     protected final PeerConnectionFactory pcFactory;
@@ -45,7 +44,6 @@ class PeerConnectionManager {
         return sessions.get(streamRoomId);
     }
 
-
     @Nullable
     public RoomJanusSession getSession(@NonNull StreamHandle handle) {
         String streamRoomId = sessionHandles.get(handle.getValue());
@@ -61,6 +59,16 @@ class PeerConnectionManager {
 
     public void leaveStreamRoom(@NonNull String streamRoomId) {
         sessions.remove(streamRoomId);
+    }
+
+    public Set<String> getRoomIds(){
+        return sessions.keySet();
+    }
+
+    @Override
+    public void close() throws Exception {
+        sessionHandles.clear();
+        pcFactory.dispose();
     }
 }
 

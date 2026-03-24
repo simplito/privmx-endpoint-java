@@ -92,7 +92,11 @@ public class JanusPublisher extends JanusConnection{
             AudioTrackInfo audioTrackInfo = audioTracks.get(id);
             if (audioTrackInfo == null) return;
             peerConnection.removeTrack(audioTrackInfo.sender);
-            audioTracks.remove(id);
+
+            AudioTrackInfo removedAudioTrackInfo = audioTracks.remove(id);
+            if (removedAudioTrackInfo != null) {
+                removedAudioTrackInfo.frameCryptor.dispose();
+            }
         }
     }
 
@@ -102,6 +106,11 @@ public class JanusPublisher extends JanusConnection{
             if (videoTrackInfo == null) return;
             peerConnection.removeTrack(videoTrackInfo.sender);
             videoTracks.remove(id);
+
+            VideoTrackInfo removedVideoTrackInfo = videoTracks.remove(id);
+            if (removedVideoTrackInfo != null) {
+                removedVideoTrackInfo.frameCryptor.dispose();
+            }
         }
     }
 
@@ -124,9 +133,14 @@ public class JanusPublisher extends JanusConnection{
 
     @Override
     public void close() {
-        super.close();
+        try {
+            audioTracks.values().forEach(track -> track.frameCryptor.dispose());
+            videoTracks.values().forEach(track -> track.frameCryptor.dispose());
+        } catch (IllegalStateException ignored) {}
         audioTracks.clear();
         videoTracks.clear();
+
+        super.close();
     }
 
     @Override
