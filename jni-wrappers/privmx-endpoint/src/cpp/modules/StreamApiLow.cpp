@@ -38,9 +38,9 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_init(
     jobject result;
 
     if (ctx.nullCheck(connection, "Connection") ||
-        ctx.nullCheck(eventApi, "EventApi") ||
+            ctx.nullCheck(eventApi, "EventApi") ||
         ctx.nullCheck(stream_encryption_mode, "Stream Encryption Mode")
-    ) {
+            ) {
         return nullptr;
     }
 
@@ -212,7 +212,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
         jlong limit,
         jstring sort_order,
         jstring last_id,
-        jstring sort_by, // todo - use in this impl.
+        jstring sort_by,
         jstring query_as_json
 ) {
     JniContextUtils ctx(env);
@@ -236,18 +236,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                     &sort_by,
                     &query_as_json
             ]() {
-                jclass pagingListCls = env->FindClass(
-                        "com/simplito/java/privmx_endpoint/model/PagingList");
-                jmethodID pagingListInitMID = env->GetMethodID(
-                        pagingListCls, "<init>",
-                        "(Ljava/lang/Long;Ljava/util/List;)V");
-                jclass arrayCls = env->FindClass("java/util/ArrayList");
-                jmethodID initArrayMID = env->GetMethodID(arrayCls,
-                                                          "<init>",
-                                                          "()V");
-                jmethodID addToArrayMID = env->GetMethodID(arrayCls,
-                                                           "add",
-                                                           "(Ljava/lang/Object;)Z");
                 auto query = core::PagingQuery();
                 query.skip = skip;
                 query.limit = limit;
@@ -268,22 +256,14 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreamRo
                                 query
                         )
                 );
-                jobject array = env->NewObject(arrayCls, initArrayMID);
-                for (auto &streamRoom_c: streamRooms_c.readItems) {
-                    env->CallBooleanMethod(array,
-                                           addToArrayMID,
-                                           privmx::wrapper::streamRoom2Java(
-                                                   ctx,
-                                                   streamRoom_c
-                                           )
-                    );
-                }
-                return ctx->NewObject(
-                        pagingListCls,
-                        pagingListInitMID,
-                        ctx.long2jLong(streamRooms_c.totalAvailable),
-                        array
+
+                jobject array = pagingList2Java(
+                        ctx,
+                        streamRooms_c,
+                        privmx::wrapper::streamRoom2Java
                 );
+
+                return array;
             }
     );
     if (ctx->ExceptionCheck()) {
@@ -343,7 +323,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_createStream
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id
-        // todo - made changes in arguments
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream room ID"))
@@ -372,7 +351,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_publishStrea
         JNIEnv *env,
         jobject thiz,
         jobject stream_handle
-        // todo - made changes in arguments
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_handle, "Stream Handle"))
@@ -434,21 +412,16 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_listStreams(
 
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &thiz, &env, &stream_room_id] {
-        jclass arrayCls = env->FindClass("java/util/ArrayList");
-        jmethodID initArrayMID = env->GetMethodID(arrayCls, "<init>", "()V");
-        jmethodID addToArrayMID = env->GetMethodID(arrayCls, "add", "(Ljava/lang/Object;)Z");
-
         auto stream_infos_c = getStreamApi(ctx, thiz)->listStreams(
                 ctx.jString2string(stream_room_id)
         );
-        jobject array = env->NewObject(arrayCls, initArrayMID);
-        for (auto &info_c: stream_infos_c) {
-            env->CallBooleanMethod(
-                    array,
-                    addToArrayMID,
-                    privmx::wrapper::streamInfo2Java(ctx, info_c)
-            );
-        }
+
+        jobject array = vectorTojArray(
+                ctx,
+                stream_infos_c,
+                privmx::wrapper::streamInfo2Java
+        );
+
         return array;
     });
     if (ctx->ExceptionCheck()) {
@@ -463,7 +436,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unpublishStr
         JNIEnv *env,
         jobject thiz,
         jobject stream_handle
-        // todo - made changes in arguments
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_handle, "Stream Handle")) {
@@ -483,7 +455,6 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_leaveStreamR
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id
-        // todo - made changes in arguments
 ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID")) {
@@ -506,20 +477,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_getTurnCrede
     JniContextUtils ctx(env);
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &thiz] {
-        jclass arrayCls = env->FindClass("java/util/ArrayList");
-        jmethodID initArrayMID = env->GetMethodID(arrayCls, "<init>", "()V");
-        jmethodID addToArrayMID = env->GetMethodID(arrayCls, "add", "(Ljava/lang/Object;)Z");
-
         auto turnCredentialsVector = getStreamApi(ctx, thiz)->getTurnCredentials();
-        jobject array = env->NewObject(arrayCls, initArrayMID);
-        for (
-            auto &turnCredentials_c: turnCredentialsVector) {
-            env->CallBooleanMethod(
-                    array,
-                    addToArrayMID,
-                    privmx::wrapper::turnCredentials2Java(ctx, turnCredentials_c)
-            );
-        }
+        auto array = vectorTojArray(
+                ctx,
+                turnCredentialsVector,
+                privmx::wrapper::turnCredentials2Java
+        );
 
         return array;
     });
@@ -535,37 +498,28 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeFor
         JNIEnv *env,
         jobject thiz,
         jobject subscription_queries
-        // todo - made changes in arguments
 ) {
     JniContextUtils ctx(env);
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &thiz, &subscription_queries] {
-        jclass arrayListCls = env->FindClass("java/util/ArrayList");
-        jmethodID initMID = env->GetMethodID(arrayListCls, "<init>", "()V");
-        jmethodID addToListMID = env->GetMethodID(arrayListCls, "add", "(Ljava/lang/Object;)Z");
-
         auto subscription_queries_arr = ctx.jObject2jArray(subscription_queries);
-        auto subscription_queries_c = std::vector<std::string>();
+        std::vector<std::string> subscription_queries_c = jArrayToVector<std::string>(
+                ctx,
+                subscription_queries_arr,
+                jobject2string,
+                false
+        );
 
-        int length = ctx->GetArrayLength(subscription_queries_arr);
-        for (int i = 0; i < length; i++) {
-            jobject arrayElement = ctx->GetObjectArrayElement(subscription_queries_arr, i);
-            subscription_queries_c.push_back(ctx.jString2string((jstring) arrayElement));
-        }
-
-        jobject arrayList = env->NewObject(arrayListCls, initMID);
         auto subscription_ids_c = getStreamApi(ctx, thiz)->subscribeFor(
                 subscription_queries_c
         );
 
-        for (auto &id_str: subscription_ids_c) {
-            jstring java_id_str = ctx->NewStringUTF(id_str.c_str());
-            env->CallBooleanMethod(
-                    arrayList,
-                    addToListMID,
-                    java_id_str
-            );
-        }
+        auto arrayList = vectorTojArray(
+                ctx,
+                subscription_ids_c,
+                string2jobject
+        );
+
         return arrayList;
 
     });
@@ -581,9 +535,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeF
         JNIEnv *env,
         jobject thiz,
         jobject subscription_ids
-        // todo - made changes in arguments
 ) {
-//TODO: Add nullchecks
     JniContextUtils ctx(env);
     if (ctx.nullCheck(subscription_ids, "Subscription ids")) {
         return;
@@ -591,17 +543,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeF
 
     ctx.callVoidEndpointApi([&ctx, &thiz, &subscription_ids]() {
         auto subscription_ids_arr = ctx.jObject2jArray(subscription_ids);
-        auto subscription_ids_c = std::vector<std::string>();
-
-        int length = ctx->GetArrayLength(subscription_ids_arr);
-        for (int i = 0; i < length; i++) {
-            jobject arrayElement = ctx->GetObjectArrayElement(subscription_ids_arr, i);
-            if (ctx.nullCheck(arrayElement, "Subscription ids array elements")) {
-                return;
-            }
-            subscription_ids_c.push_back(ctx.jString2string((jstring) arrayElement));
-        }
-
+        auto subscription_ids_c = jArrayToVector<std::string>(
+                ctx,
+                subscription_ids_arr,
+                jobject2string,
+                false
+        );
         getStreamApi(ctx, thiz)->unsubscribeFrom(subscription_ids_c);
     });
 }
@@ -645,10 +592,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_keyManagemen
         jobject thiz,
         jstring stream_room_id,
         jboolean disable
-        // todo - made changes in arguments
-
 ) {
-//TODO: Add nullchecks
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID")) {
         return;
@@ -700,21 +644,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeF
 
     ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id, &subscriptions_to_remove]() {
         auto subscriptions_to_remove_arr = ctx.jObject2jArray(subscriptions_to_remove);
-        auto subscriptions_to_remove_c = std::vector<StreamSubscription>();
-
-        int length = ctx->GetArrayLength(subscriptions_to_remove_arr);
-        for (int i = 0; i < length; i++) {
-            jobject arrayElement = ctx->GetObjectArrayElement(subscriptions_to_remove_arr, i);
-            if (ctx.nullCheck(arrayElement, "Subscriptions to remove array elements")) {
-                return;
-            }
-            subscriptions_to_remove_c.push_back(
-                    parseStreamSubscription(
-                            ctx,
-                            arrayElement
-                    )
-            );
-        }
+        auto subscriptions_to_remove_c = jArrayToVector<StreamSubscription>(
+                ctx,
+                subscriptions_to_remove_arr,
+                parseStreamSubscription,
+                false
+        );
 
         getStreamApi(ctx, thiz)->unsubscribeFromRemoteStreams(
                 ctx.jString2string(stream_room_id),
@@ -745,38 +680,19 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_modifyRemote
             [&ctx, &thiz, &stream_room_id, &subscriptions_to_add, &subscriptions_to_remove, &options]() {
                 auto subscriptions_to_add_arr = ctx.jObject2jArray(subscriptions_to_remove);
                 auto subscriptions_to_remove_arr = ctx.jObject2jArray(subscriptions_to_remove);
-                auto subscriptions_to_add_c = std::vector<StreamSubscription>();
-                auto subscriptions_to_remove_c = std::vector<StreamSubscription>();
 
-                int subscriptions_to_add_length = ctx->GetArrayLength(subscriptions_to_add_arr);
-                int subscriptions_to_remove_length = ctx->GetArrayLength(
-                        subscriptions_to_remove_arr);
-
-                for (int i = 0; i < subscriptions_to_add_length; i++) {
-                    jobject arrayElement = ctx->GetObjectArrayElement(subscriptions_to_add_arr, i);
-                    if (ctx.nullCheck(arrayElement, "Subscriptions to add array elements")) {
-                        return;
-                    }
-                    subscriptions_to_add_c.push_back(
-                            parseStreamSubscription(
-                                    ctx,
-                                    arrayElement
-                            )
-                    );
-                }
-                for (int i = 0; i < subscriptions_to_remove_length; i++) {
-                    jobject arrayElement = ctx->GetObjectArrayElement(subscriptions_to_remove_arr,
-                                                                      i);
-                    if (ctx.nullCheck(arrayElement, "Subscriptions to remove array elements")) {
-                        return;
-                    }
-                    subscriptions_to_remove_c.push_back(
-                            parseStreamSubscription(
-                                    ctx,
-                                    arrayElement
-                            )
-                    );
-                }
+                auto subscriptions_to_add_c = jArrayToVector<StreamSubscription>(
+                        ctx,
+                        subscriptions_to_add_arr,
+                        parseStreamSubscription,
+                        false
+                );
+                auto subscriptions_to_remove_c = jArrayToVector<StreamSubscription>(
+                        ctx,
+                        subscriptions_to_remove_arr,
+                        parseStreamSubscription,
+                        false
+                );
 
                 getStreamApi(ctx, thiz)->modifyRemoteStreamsSubscriptions(
                         ctx.jString2string(stream_room_id),
@@ -803,21 +719,12 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeToR
     }
     ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id, &subscriptions, &options]() {
         auto subscriptions_arr = ctx.jObject2jArray(subscriptions);
-        auto subscriptions_c = std::vector<StreamSubscription>();
-
-        int length = ctx->GetArrayLength(subscriptions_arr);
-        for (int i = 0; i < length; i++) {
-            jobject arrayElement = ctx->GetObjectArrayElement(subscriptions_arr, i);
-            if (ctx.nullCheck(arrayElement, "Subscriptions array elements")) {
-                return;
-            }
-            subscriptions_c.push_back(
-                    parseStreamSubscription(
-                            ctx,
-                            arrayElement
-                    )
-            );
-        }
+        auto subscriptions_c = jArrayToVector<StreamSubscription>(
+                ctx,
+                subscriptions_arr,
+                parseStreamSubscription,
+                false
+        );
 
         getStreamApi(ctx, thiz)->subscribeToRemoteStreams(
                 ctx.jString2string(stream_room_id),
@@ -863,6 +770,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_updateStream
     }
     return result;
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_acceptOfferOnReconfigure(
@@ -877,13 +785,13 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_acceptOfferO
     }
 
     ctx.callVoidEndpointApi([&ctx, &thiz, &session_id, &sdp]() {
-
         getStreamApi(ctx, thiz)->acceptOfferOnReconfigure(
                 session_id,
                 parseSdpWithTypeModel(ctx, sdp)
         );
     });
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_setNewOfferOnReconfigure(

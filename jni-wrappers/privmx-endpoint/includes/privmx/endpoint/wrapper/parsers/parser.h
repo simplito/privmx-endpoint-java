@@ -11,6 +11,7 @@
 
 #ifndef PRIVMX_POCKET_LIB_PARSER_H
 #define PRIVMX_POCKET_LIB_PARSER_H
+#define RETURN_IF_EXCEPTION(ctx, val) if ((ctx)->ExceptionCheck()) return val;
 
 #include "../utils/utils.hpp"
 #include <jni.h>
@@ -56,6 +57,10 @@ privmx::endpoint::core::PagingQuery parsePagingQuery(JniContextUtils &ctx, jobje
 // java -> c++
 template<typename T>
 std::vector<T> jArrayToVector(JniContextUtils &ctx, jobjectArray jArray,
+                              std::function<T(JniContextUtils &, jobject)> fun, bool requireNonNulls);
+
+template<typename T>
+std::vector<T> jArrayToVector(JniContextUtils &ctx, jobjectArray jArray,
                               std::function<T(JniContextUtils &, jobject)> fun);
 
 int64_t jobject2long(JniContextUtils &ctx, jobject jLong);
@@ -64,7 +69,12 @@ std::string jobject2string(JniContextUtils &ctx, jobject jString);
 
 // c++ -> java
 template<typename T, typename F>
-jobject vectorTojArray(JniContextUtils &ctx, const std::vector<T> &vector,F fun){
+jobject vectorTojArray(
+        JniContextUtils &ctx,
+        const std::vector<T> &vector,
+        F fun,
+        bool requireNonNulls
+) {
     jclass arrayListCls = ctx->FindClass("java/util/ArrayList");
     jmethodID initMID = ctx->GetMethodID(arrayListCls, "<init>", "()V");
     jmethodID addToListMID = ctx->GetMethodID(arrayListCls, "add", "(Ljava/lang/Object;)Z");
@@ -73,16 +83,24 @@ jobject vectorTojArray(JniContextUtils &ctx, const std::vector<T> &vector,F fun)
 
     for (const auto &item: vector) {
         jobject jItem = fun(ctx, item);
+        if (requireNonNulls) {
+            if (ctx.nullCheck(jItem, "Array element")) {return nullptr;}
+        }
+
         ctx->CallBooleanMethod(listObj, addToListMID, jItem);
     }
-
     return listObj;
 }
 
 template<typename T, typename F>
-jobject pagingList2Java(JniContextUtils &ctx, privmx::endpoint::core::PagingList<T> pagingList,F fun);
+jobject vectorTojArray(JniContextUtils &ctx, const std::vector<T> &vector, F fun) {
+    return vectorTojArray(ctx, vector, fun, false);
+}
 
-jobject string2jobject(JniContextUtils &ctx,const std::string &cstring);
-jobject long2jobject(JniContextUtils &ctx,const int64_t &clong);
+template<typename T, typename F>
+jobject pagingList2Java(JniContextUtils &ctx, privmx::endpoint::core::PagingList<T> pagingList, F fun);
+
+jobject string2jobject(JniContextUtils &ctx, const std::string &cstring);
+jobject long2jobject(JniContextUtils &ctx, const int64_t &clong);
 
 #endif //PRIVMX_POCKET_LIB_PARSER_H
