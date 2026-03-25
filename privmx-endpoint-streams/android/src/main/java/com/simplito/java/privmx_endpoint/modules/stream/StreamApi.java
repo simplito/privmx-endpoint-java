@@ -32,6 +32,7 @@ import org.webrtc.VideoTrack;
 import org.webrtc.audio.AudioDeviceModule;
 import org.webrtc.audio.JavaAudioDeviceModule;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -88,8 +89,8 @@ public class StreamApi {
                         this.api.trickle(sessionId, rtcConfiguration);
                     }
                 },
-                (s,s2)->{
-                    this.api.setNewOfferOnReconfigure(s,s2);
+                (s, s2) -> {
+                    this.api.setNewOfferOnReconfigure(s, s2);
                 }
 
         );
@@ -171,20 +172,22 @@ public class StreamApi {
         return handle;
     }
 
-    public DataChannel createDataChannel(
-            StreamHandle streamHandle
-    ){
+    public void sendMessage(
+            StreamHandle streamHandle,
+            ByteBuffer message,
+            boolean binary
+    ) throws RuntimeException {
         Objects.requireNonNull(streamHandle);
+        Objects.requireNonNull(message);
         RoomJanusSession session = pcManager.getSession(streamHandle);
         if (session == null)
             throw new IllegalStateException("Stream not exists. Create stream first.");
         JanusPublisher publisher = session.getPublisher();
         if (publisher == null)
             throw new IllegalStateException("This StreamHandle has not created companion publisher.");
-        DataChannel.Init init  = new DataChannel.Init();
-        init.ordered = true;
-        init.negotiated = false;
-        return publisher.peerConnection.createDataChannel("JanusDataChannel",init);
+        DataChannel dataChannel = publisher.getOrCreateDataChannel();
+        System.out.println("Send in datachannel state: " + dataChannel);
+        dataChannel.send(new DataChannel.Buffer(message, binary));
     }
 
     /**
