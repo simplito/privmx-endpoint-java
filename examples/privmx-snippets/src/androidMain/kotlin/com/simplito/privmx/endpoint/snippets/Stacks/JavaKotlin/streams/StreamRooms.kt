@@ -1,4 +1,4 @@
-package Stacks.JavaKotlin.streams
+package com.simplito.privmx.endpoint.snippets.Stacks.JavaKotlin.streams
 
 import Stacks.JavaKotlin.contextId
 import Stacks.JavaKotlin.user1Id

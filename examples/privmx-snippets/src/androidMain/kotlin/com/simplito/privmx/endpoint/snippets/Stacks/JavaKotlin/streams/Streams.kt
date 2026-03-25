@@ -1,4 +1,4 @@
-package Stacks.JavaKotlin.streams
+package com.simplito.privmx.endpoint.snippets.Stacks.JavaKotlin.streams
 
 import com.simplito.java.privmx_endpoint.model.stream.StreamHandle
 import com.simplito.java.privmx_endpoint.model.stream.StreamInfo
