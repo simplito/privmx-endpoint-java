@@ -127,10 +127,42 @@ public class StreamApi implements AutoCloseable{
             long limit,
             String sortOrder,
             String lastId,
+            String sortBy,
+            String queryAsJson
+    ) {
+        return api.listStreamRooms(contextId, skip, limit, sortOrder, lastId, sortBy, queryAsJson);
+    }
+
+    public PagingList<StreamRoom> listStreamRooms(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId,
             String sortBy
     ) {
-        return api.listStreamRooms(contextId, skip, limit, sortOrder, lastId, sortBy);
+        return listStreamRooms(contextId, skip, limit, sortOrder, lastId, sortBy, null);
     }
+
+    public PagingList<StreamRoom> listStreamRooms(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder,
+            String lastId
+    ) {
+        return listStreamRooms(contextId, skip, limit, sortOrder, lastId, null, null);
+    }
+
+    public PagingList<StreamRoom> listStreamRooms(
+            String contextId,
+            long skip,
+            long limit,
+            String sortOrder
+    ) {
+        return listStreamRooms(contextId, skip, limit, sortOrder, null, null, null);
+    }
+
 
     public StreamRoom getStreamRoom(String streamRoomId) {
         return api.getStreamRoom(streamRoomId);
