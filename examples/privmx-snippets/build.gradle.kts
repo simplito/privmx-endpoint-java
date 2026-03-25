@@ -2,13 +2,14 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinPluginSerialization)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.privmx.install.native)
 }
 
 group = "com.simplito.privmx-endpoint-snippets"
 version = "2.2.0"
 
 android {
-    namespace = "com.simplito.privmx-endpoint-snippets"
+    namespace = "com.simplito.privmx.endpoint.snippets"
     compileSdk = 36
 
     defaultConfig {
