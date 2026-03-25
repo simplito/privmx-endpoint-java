@@ -27,7 +27,7 @@ public class JanusConnection {
             PeerConnectionFactory pcFactory,
             PmxKeyStore keyStore,
             ConnectionType connectionType,
-            TrackObserver trackObserver,
+            RemoteStreamObserver trackObserver,
             BiConsumer<Long,String> onTrickle,
             Consumer<PeerConnection.IceConnectionState> onConnectionChange
     ) {

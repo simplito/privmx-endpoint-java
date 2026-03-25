@@ -36,8 +36,8 @@ public class RoomJanusSession {
     private final PmxKeyStore keyStore;
     public final WebRTCImpl webrtc = new WebRTCImpl();
     private final BiConsumer<Long,String> onTrickle;
-    private final Map<String, TrackObserver> trackObserversByStreamId = new HashMap<>();
-    private final TrackObserver trackObserver = new TrackObserverImpl();
+    private final Map<String, RemoteStreamObserver> trackObserversByStreamId = new HashMap<>();
+    private final RemoteStreamObserver trackObserver = new TrackObserverImpl();
     private Consumer<PeerConnection.IceConnectionState> onConnectionChangeCallback = null;
     private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
 
@@ -69,7 +69,7 @@ public class RoomJanusSession {
         createSubscriber(trackObserver);
     }
 
-    public synchronized void createSubscriber(TrackObserver observer) {
+    public synchronized void createSubscriber(RemoteStreamObserver observer) {
         if (subscriber == null) {
             subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
         } else if (subscriber.isEnded()) {
@@ -84,7 +84,7 @@ public class RoomJanusSession {
         createPublisher(null);
     }
 
-    public synchronized void createPublisher(TrackObserver observer) {
+    public synchronized void createPublisher(RemoteStreamObserver observer) {
         if (publisher == null) {
             publisher = new JanusPublisher(
                     pcFactory,
@@ -110,14 +110,14 @@ public class RoomJanusSession {
     }
 
     public void setTrackObserver(
-            TrackObserver trackObserver
+            RemoteStreamObserver trackObserver
     ){
         setTrackObserver(null,trackObserver);
     }
 
     public void setTrackObserver(
             String streamId,
-            TrackObserver trackObserver
+            RemoteStreamObserver trackObserver
     ){
         synchronized (trackObserversByStreamId) {
             trackObserversByStreamId.put(streamId, trackObserver);
@@ -232,7 +232,7 @@ public class RoomJanusSession {
             }
         }
     }
-    private class TrackObserverImpl implements TrackObserver{
+    private class TrackObserverImpl implements RemoteStreamObserver {
         @Override
         public void OnRemoteTrack(String streamId, MediaStreamTrack track) {
             synchronized (trackObserversByStreamId){
@@ -244,6 +244,17 @@ public class RoomJanusSession {
                     observer.OnRemoteTrack(streamId,track);
                 });
             }
+        }
+
+        @Override
+        public void OnRemoteData(String streamId, byte[] msg) {
+            Optional.ofNullable(trackObserversByStreamId.get(streamId)).ifPresent(observer->{
+                observer.OnRemoteData(streamId,msg);
+            });
+
+            Optional.ofNullable(trackObserversByStreamId.get(null)).ifPresent(observer->{
+                observer.OnRemoteData(streamId,msg);
+            });
         }
     }
 }

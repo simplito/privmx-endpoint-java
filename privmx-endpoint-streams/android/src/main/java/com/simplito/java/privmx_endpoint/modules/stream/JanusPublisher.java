@@ -7,15 +7,7 @@ import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.VideoTrackInfo;
 
-import org.webrtc.MediaConstraints;
-import org.webrtc.PeerConnection;
-import org.webrtc.PeerConnectionFactory;
-import org.webrtc.PmxFrameCryptor;
-import org.webrtc.PmxFrameCryptorFactory;
-import org.webrtc.PmxKeyStore;
-import org.webrtc.RtpSender;
-import org.webrtc.SessionDescription;
-import org.webrtc.VideoCapturer;
+import org.webrtc.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +26,7 @@ public class JanusPublisher extends JanusConnection{
     public JanusPublisher(
             PeerConnectionFactory pcFactory,
             PmxKeyStore keyStore,
-            TrackObserver observer,
+            RemoteStreamObserver observer,
             BiConsumer<Long, String> onTrickle,
             BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer,
             Consumer<PeerConnection.IceConnectionState> onConnectionChange
@@ -105,7 +97,7 @@ public class JanusPublisher extends JanusConnection{
         }
     }
 
-    public String createOffer(){
+    public synchronized String createOffer(){
         CompletableFuture<SessionDescription> res = new CompletableFuture<>();
         peerConnection.createOffer(new SdpObserver(res), new MediaConstraints());
         try {
@@ -117,7 +109,7 @@ public class JanusPublisher extends JanusConnection{
         }
     }
 
-    public void setAnswer(String sdp, String type){
+    public synchronized void setAnswer(String sdp, String type){
         peerConnection.setRemoteDescription(new SdpObserver(null),new SessionDescription(SessionDescription.Type.fromCanonicalForm(type),sdp));
     }
 

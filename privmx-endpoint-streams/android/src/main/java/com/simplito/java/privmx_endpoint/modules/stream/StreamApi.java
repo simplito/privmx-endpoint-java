@@ -5,7 +5,6 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
@@ -19,6 +18,7 @@ import com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes.
 import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEventType;
 
 import org.webrtc.AudioTrack;
+import org.webrtc.DataChannel;
 import org.webrtc.DefaultVideoDecoderFactory;
 import org.webrtc.DefaultVideoEncoderFactory;
 import org.webrtc.EglBase;
@@ -171,6 +171,22 @@ public class StreamApi {
         return handle;
     }
 
+    public DataChannel createDataChannel(
+            StreamHandle streamHandle
+    ){
+        Objects.requireNonNull(streamHandle);
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("Stream not exists. Create stream first.");
+        JanusPublisher publisher = session.getPublisher();
+        if (publisher == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+        DataChannel.Init init  = new DataChannel.Init();
+        init.ordered = true;
+        init.negotiated = false;
+        return publisher.peerConnection.createDataChannel("JanusDataChannel",init);
+    }
+
     /**
      * @param streamHandle
      * @param track
@@ -201,7 +217,7 @@ public class StreamApi {
 
     public void setTrackObserver(
             @NonNull String roomId,
-            TrackObserver observer,
+            RemoteStreamObserver observer,
             String streamId
     ) {
         Objects.requireNonNull(roomId);
@@ -224,7 +240,7 @@ public class StreamApi {
 
     public void setTrackObserver(
             String roomId,
-            TrackObserver observer
+            RemoteStreamObserver observer
     ) {
         setTrackObserver(roomId, observer, null);
     }

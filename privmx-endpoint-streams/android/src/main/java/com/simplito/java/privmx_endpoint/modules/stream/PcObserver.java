@@ -11,22 +11,16 @@ import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.RtpReceiver;
-import org.webrtc.RtpTransceiver;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class PcObserver implements PeerConnection.Observer {
     private final Map<String, PmxFrameCryptor> frameCryptorMap = new HashMap<>();
     private final PmxKeyStore keyStore;
     private final PeerConnectionFactory peerConnectionFactory;
-    private final TrackObserver trackObserver;
+    private final RemoteStreamObserver trackObserver;
     private final Consumer<IceCandidate> onIceCandidate;
     private final Runnable onRenegotiationNeeded;
     private final Consumer<PeerConnection.IceConnectionState> onIceConnectionChange;
@@ -34,7 +28,7 @@ public class PcObserver implements PeerConnection.Observer {
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
             PmxKeyStore store,
-            TrackObserver observer,
+            RemoteStreamObserver observer,
             Consumer<IceCandidate> onIceCandidate,
             Runnable onRenegotiationNeeded,
             Consumer<PeerConnection.IceConnectionState> onIceConnectionChange
@@ -50,7 +44,7 @@ public class PcObserver implements PeerConnection.Observer {
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
             PmxKeyStore store,
-            TrackObserver observer,
+            RemoteStreamObserver observer,
             Consumer<IceCandidate> onIceCandidate,
             Runnable onRenegotiationNeeded
     ){
@@ -99,7 +93,25 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onDataChannel(DataChannel dataChannel) {
+        //TODO: Register decryptor to this channel
+        dataChannel.registerObserver(new DataChannel.Observer() {
+            @Override
+            public void onBufferedAmountChange(long l) {
 
+            }
+
+            @Override
+            public void onStateChange() {
+
+            }
+
+            @Override
+            public void onMessage(DataChannel.Buffer buffer) {
+                byte[] data = new byte[buffer.data.capacity()];
+                buffer.data.get(data);
+                trackObserver.OnRemoteData(dataChannel.label(),data);
+            }
+        });
     }
 
     @Override
