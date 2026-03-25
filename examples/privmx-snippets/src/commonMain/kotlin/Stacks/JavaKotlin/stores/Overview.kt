@@ -20,6 +20,7 @@ fun setStoreApi() {
     val storeApi = endpointSession.storeApi
 }
 
+@Suppress("UnsafeOptInUsageError")
 @Serializable
 data class StorePublicMeta(val tags: List<String>)
 
