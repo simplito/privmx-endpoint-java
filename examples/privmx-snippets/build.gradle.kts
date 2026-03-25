@@ -1,35 +1,41 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.kotlinPluginSerialization)
-    alias(libs.plugins.android.lint)
+    alias(libs.plugins.androidLibrary)
 }
+
 group = "com.simplito.privmx-endpoint-snippets"
 version = "2.2.0"
 
-kotlin {
-    androidLibrary {
-        namespace = "com.simplito.privmx-endpoint-snippets"
-        compileSdk = 36
+android {
+    namespace = "com.simplito.privmx-endpoint-snippets"
+    compileSdk = 36
+
+    defaultConfig {
         minSdk = 24
+    }
+}
+
+kotlin {
+    jvm()
+    androidTarget {
+        publishLibraryVariants("release", "debug")
     }
 
     sourceSets {
         commonMain {
             dependencies {
-                implementation(libs.kotlin.stdlib)
                 implementation(project(":privmx-endpoint-extra"))
+                implementation(libs.kotlinx.serialization.json)
             }
         }
 
         androidMain {
             dependencies {
                 implementation(project(":privmx-endpoint-streams:android"))
-                implementation("com.simplito.webrtc:webrtc-android:1.0.0")
                 implementation(project(":privmx-endpoint-android"))
+                implementation(libs.privmx.endpoint.webrtc)
             }
         }
-
     }
-
 }
