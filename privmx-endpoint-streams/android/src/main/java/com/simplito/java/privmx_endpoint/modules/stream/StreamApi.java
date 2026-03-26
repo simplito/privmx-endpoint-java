@@ -274,6 +274,12 @@ public class StreamApi implements AutoCloseable {
         api.deleteStreamRoom(streamRoomId);
     }
 
+    /**
+     * Gets a list of currently published streams in given Stream Room.
+     *
+     * @param streamRoomId ID of the Stream Room to list streams from
+     * @return list of {@link StreamInfo} structs describing currently published streams
+     */
     public List<StreamInfo> listStreams(String streamRoomId) {
         return api.listStreams(streamRoomId);
     }
