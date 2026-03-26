@@ -657,6 +657,14 @@ public class StreamApi implements AutoCloseable {
         );
     }
 
+    /**
+     * Releases all resources associated with this instance.
+     * <p>
+     * Leaves all active Stream Rooms, shuts down the peer connection manager,
+     * and closes the underlying {@link StreamApiLow} instance.
+     *
+     * @throws Exception thrown if an error occurs during cleanup
+     */
     @Override
     public void close() throws Exception {
         pcManager.getRoomIds().forEach(this::leaveStreamRoom);
