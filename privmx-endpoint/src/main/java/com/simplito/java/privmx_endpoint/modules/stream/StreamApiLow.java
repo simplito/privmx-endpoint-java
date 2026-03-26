@@ -203,7 +203,7 @@ public class StreamApiLow implements AutoCloseable {
 
     public native void unpublishStream(StreamHandle streamHandle);
 
-    public native void subscribeToRemoteStreams(String streamRoomId, List<StreamSubscription> subscriptions, Settings options);
+    public native void subscribeToRemoteStreams(String streamRoomId, List<StreamSubscription> subscriptions);
 
     public native void modifyRemoteStreamsSubscriptions(String streamRoomId, List<StreamSubscription> subscriptionsToAdd, List<StreamSubscription> subscriptionsToRemove);
 
