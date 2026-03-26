@@ -136,6 +136,23 @@ public class StreamApi implements AutoCloseable {
         return api.createStreamRoom(contextId, users, managers, publicMeta, privateMeta, policies);
     }
 
+    /**
+     * Updates an existing Stream Room.
+     *
+     * @param streamRoomId        ID of the Stream Room to update
+     * @param users               list of {@link UserWithPubKey} indicating which users will have
+     *                            access to the created Stream Room
+     * @param managers            list of {@link UserWithPubKey} indicating which users will have
+     *                            access and management rights to the created Stream Room
+     * @param publicMeta          public (unencrypted) metadata
+     * @param privateMeta         private (encrypted) metadata
+     * @param version             current version of the updated Stream Room
+     * @param force               force update (without checking version)
+     * @param forceGenerateNewKey force to regenerate the encryption key for the Stream Room.
+     *                            Should be {@code true} whenever a user is removed
+     * @param policies            additional container access policies, or {@code null} to keep
+     *                            current/defaults
+     */
     public void updateStreamRoom(
             String streamRoomId,
             List<UserWithPubKey> users,
