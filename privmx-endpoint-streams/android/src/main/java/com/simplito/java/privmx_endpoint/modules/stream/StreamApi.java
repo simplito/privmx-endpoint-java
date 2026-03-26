@@ -167,6 +167,19 @@ public class StreamApi implements AutoCloseable {
         api.updateStreamRoom(streamRoomId, users, managers, publicMeta, privateMeta, version, force, forceGenerateNewKey, policies);
     }
 
+    /**
+     * Gets a list of Stream Rooms in given Context.
+     *
+     * @param contextId   ID of the Context to get Stream Rooms from
+     * @param skip        number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ({@code "asc"} for ascending,
+     *                    {@code "desc"} for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param sortBy      field name to sort elements by
+     * @param queryAsJson stringified JSON object with a custom field to filter result
+     * @return list of Stream Rooms
+     */
     public PagingList<StreamRoom> listStreamRooms(
             String contextId,
             long skip,
@@ -179,6 +192,18 @@ public class StreamApi implements AutoCloseable {
         return api.listStreamRooms(contextId, skip, limit, sortOrder, lastId, sortBy, queryAsJson);
     }
 
+    /**
+     * Gets a list of Stream Rooms in given Context.
+     *
+     * @param contextId   ID of the Context to get Stream Rooms from
+     * @param skip        number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ({@code "asc"} for ascending,
+     *                    {@code "desc"} for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @param sortBy      field name to sort elements by
+     * @return list of Stream Rooms
+     */
     public PagingList<StreamRoom> listStreamRooms(
             String contextId,
             long skip,
@@ -190,6 +215,17 @@ public class StreamApi implements AutoCloseable {
         return listStreamRooms(contextId, skip, limit, sortOrder, lastId, sortBy, null);
     }
 
+    /**
+     * Gets a list of Stream Rooms in given Context.
+     *
+     * @param contextId   ID of the Context to get Stream Rooms from
+     * @param skip        number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ({@code "asc"} for ascending,
+     *                    {@code "desc"} for descending)
+     * @param lastId      ID of the element from which query results should start
+     * @return list of Stream Rooms
+     */
     public PagingList<StreamRoom> listStreamRooms(
             String contextId,
             long skip,
@@ -200,6 +236,16 @@ public class StreamApi implements AutoCloseable {
         return listStreamRooms(contextId, skip, limit, sortOrder, lastId, null, null);
     }
 
+    /**
+     * Gets a list of Stream Rooms in given Context.
+     *
+     * @param contextId   ID of the Context to get Stream Rooms from
+     * @param skip        number of elements to skip from result
+     * @param limit       limit of elements to return for query
+     * @param sortOrder   order of elements in result ({@code "asc"} for ascending,
+     *                    {@code "desc"} for descending)
+     * @return list of Stream Rooms
+     */
     public PagingList<StreamRoom> listStreamRooms(
             String contextId,
             long skip,
