@@ -424,9 +424,14 @@ public class StreamApi implements AutoCloseable {
 
 
     /**
-     * @param streamHandle
-     * @param track
-     * @throws IllegalStateException when Stream with this StreamHandle doesn't exist.
+     * Removes a media track from a stream.
+     * <p>
+     * After removing tracks, call {@link #updateStream(StreamHandle)} to propagate
+     * the change to other participants.
+     *
+     * @param streamHandle handle returned by {@link #createStream(String)}
+     * @param track        {@link VideoTrack} or {@link AudioTrack} to remove
+     * @throws IllegalStateException thrown when Stream with this StreamHandle doesn't exist.
      */
     public void removeTrack(
             @NonNull StreamHandle streamHandle,
