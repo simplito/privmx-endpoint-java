@@ -300,6 +300,11 @@ public class StreamApi implements AutoCloseable {
         api.joinStreamRoom(streamRoomId, session.webrtc);
     }
 
+    /**
+     * Leaves a Stream Room and releases the associated WebRTC session.
+     *
+     * @param streamRoomId ID of the Stream Room to leave
+     */
     public void leaveStreamRoom(String streamRoomId) {
         pcManager.leaveStreamRoom(streamRoomId);
         api.leaveStreamRoom(streamRoomId);
