@@ -336,8 +336,11 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * @param streamHandle
-     * @param track
+     * Adds a local media track to a Stream handle.
+     * The track is staged locally and becomes visible to others after publishStream/updateStream.
+     *
+     * @param streamHandle handle returned by {@link #createStream(String)}
+     * @param track        {@link VideoTrack} or {@link AudioTrack} to add
      * @throws IllegalStateException if call addTrack before call createStream
      */
     public void addTrack(
