@@ -563,6 +563,14 @@ public class StreamApi implements AutoCloseable {
         );
     }
 
+    /**
+     * Unsubscribes from selected remote streams in a Stream Room.
+     *
+     * @param streamRoomId          ID of the Stream Room
+     * @param subscriptionsToRemove list of {@link StreamSubscription} structs to remove
+     * @throws IllegalStateException thrown when no active session or subscriber exists
+     *                               for the given room.
+     */
     public void unsubscribeFromRemoteStreams(
             String streamRoomId,
             List<StreamSubscription> subscriptionsToRemove
