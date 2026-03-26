@@ -622,6 +622,12 @@ public class StreamApi implements AutoCloseable {
         return api.subscribeFor(subscriptionQueries);
     }
 
+    /**
+     * Unsubscribes from events with the given subscription IDs.
+     *
+     * @param subscriptionIds list of subscription IDs returned by {@link #subscribeFor(List)}
+     * @throws IllegalStateException thrown when instance is closed.
+     */
     public void unsubscribeFrom(List<String> subscriptionIds) {
         api.unsubscribeFrom(subscriptionIds);
     }
