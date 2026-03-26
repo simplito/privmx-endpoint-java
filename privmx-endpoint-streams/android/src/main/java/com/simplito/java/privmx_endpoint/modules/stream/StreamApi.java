@@ -83,6 +83,13 @@ public class StreamApi implements AutoCloseable {
         return factory;
     }
 
+    /**
+     * Creates a {@code StreamApi} instance.
+     *
+     * @param appContext  Android application context
+     * @param rootEglBase {@link EglBase} context used for hardware-accelerated video encoding and decoding
+     * @param api         initialised {@link StreamApiLow} instance
+     */
     public StreamApi(
             @NonNull Context appContext,
             @NonNull EglBase rootEglBase,
