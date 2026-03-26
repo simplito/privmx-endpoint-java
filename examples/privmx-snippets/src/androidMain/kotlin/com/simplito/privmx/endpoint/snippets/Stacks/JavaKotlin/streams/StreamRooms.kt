@@ -58,8 +58,9 @@ fun createStreamRoomWithName() {
 @Suppress("UnsafeOptInUsageError")
 @Serializable
 data class StreamRoomPublicMeta(
-    val name: String,
-    val date: String
+    val title: String,
+    val type: String,
+    val scheduledAt: String
 )
 
 fun createStreamRoomWithPublicMeta() {
@@ -71,8 +72,9 @@ fun createStreamRoomWithPublicMeta() {
         UserWithPubKey(user1Id, user1PublicKey)
     )
     val publicMeta = StreamRoomPublicMeta(
-        "Daily meeting #34",
-        "23 February 2026"
+        title = "Daily meeting #34",
+        type = "meeting",
+        scheduledAt = "2026-02-23T10:00:00Z",
     )
     val privateMeta = ByteArray(0)
 
