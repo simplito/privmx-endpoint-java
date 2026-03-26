@@ -36,7 +36,13 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class StreamApi implements AutoCloseable{
+/**
+ * High-level API for managing PrivMX Stream Rooms and WebRTC media sessions on Android.
+ * <p>
+ * {@code StreamApi} is a high-level wrapper over {@link StreamApiLow}, providing
+ * a simplified interface for working with Stream Rooms.
+ */
+public class StreamApi implements AutoCloseable {
     private final StreamApiLow api;
     private final PeerConnectionManager pcManager;
     public final TrackFactory trackFactory;
