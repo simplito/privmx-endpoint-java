@@ -284,6 +284,15 @@ public class StreamApi implements AutoCloseable {
         return api.listStreams(streamRoomId);
     }
 
+    /**
+     * Joins a Stream Room and establishes a WebRTC session.
+     * <p>
+     * Must be called before {@link #createStream(String)},
+     * {@link #publishStream(StreamHandle)}, and any remote stream subscription calls
+     * for the given room.
+     *
+     * @param streamRoomId ID of the Stream Room to join
+     */
     public void joinStreamRoom(
             String streamRoomId
     ) {
