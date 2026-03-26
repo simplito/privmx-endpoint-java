@@ -610,7 +610,8 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Subscribes to Stream Room and Stream-level events based on the provided subscription queries.
+     * Subscribes to events for the Stream Room as well as its individual streams,
+     * based on the provided subscription queries.
      *
      * @param subscriptionQueries list of queries built with
      *                            {@link #buildSubscriptionQuery(StreamEventType, StreamEventSelectorType, String)}
