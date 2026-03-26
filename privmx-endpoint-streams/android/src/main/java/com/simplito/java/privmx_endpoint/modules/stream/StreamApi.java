@@ -494,6 +494,12 @@ public class StreamApi implements AutoCloseable {
         return api.updateStream(streamHandle);
     }
 
+    /**
+     * Stops publishing the stream.
+     *
+     * @param streamHandle handle returned by {@link #createStream(String)}
+     * @throws IllegalStateException thrown when instance is closed.
+     */
     public void unpublishStream(@NonNull StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
         api.unpublishStream(streamHandle);
