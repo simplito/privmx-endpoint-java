@@ -505,6 +505,16 @@ public class StreamApi implements AutoCloseable {
         api.unpublishStream(streamHandle);
     }
 
+    /**
+     * Subscribes to selected remote streams in a Stream Room.
+     * <p>
+     * {@link #joinStreamRoom(String)} must be called before this method.
+     *
+     * @param streamRoomId  ID of the Stream Room
+     * @param subscriptions list of {@link StreamSubscription} structs describing the remote
+     *                      streams to subscribe to
+     * @throws IllegalStateException thrown when no active session exists for the given room.
+     */
     public void subscribeToRemoteStreams(
             String streamRoomId,
             List<StreamSubscription> subscriptions
