@@ -336,18 +336,6 @@ public class StreamApi implements AutoCloseable{
         api.subscribeToRemoteStreams(streamRoomId, subscriptions);
     }
 
-    public void modifyRemoteStreamsSubscriptions(
-            String streamRoomId,
-            List<StreamSubscription> subscriptionsToAdd,
-            List<StreamSubscription> subscriptionsToRemove
-    ) {
-        modifyRemoteStreamsSubscriptions(
-                streamRoomId,
-                subscriptionsToAdd,
-                subscriptionsToRemove,
-                new Settings()
-        );
-    }
 
     public void modifyRemoteStreamsSubscriptions(
             String streamRoomId,
