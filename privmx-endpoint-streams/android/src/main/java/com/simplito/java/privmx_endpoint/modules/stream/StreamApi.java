@@ -265,6 +265,11 @@ public class StreamApi implements AutoCloseable {
         return api.getStreamRoom(streamRoomId);
     }
 
+    /**
+     * Deletes a Stream Room by given Stream Room ID.
+     *
+     * @param streamRoomId ID of the Stream Room to delete
+     */
     public void deleteStreamRoom(String streamRoomId) {
         api.deleteStreamRoom(streamRoomId);
     }
