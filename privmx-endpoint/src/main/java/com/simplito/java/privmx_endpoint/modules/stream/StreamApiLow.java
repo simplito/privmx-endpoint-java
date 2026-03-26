@@ -15,7 +15,6 @@ import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
-import com.simplito.java.privmx_endpoint.model.stream.Settings;
 import com.simplito.java.privmx_endpoint.model.stream.StreamEncryptionMode;
 import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
@@ -206,7 +205,7 @@ public class StreamApiLow implements AutoCloseable {
 
     public native void subscribeToRemoteStreams(String streamRoomId, List<StreamSubscription> subscriptions, Settings options);
 
-    public native void modifyRemoteStreamsSubscriptions(String streamRoomId, List<StreamSubscription> subscriptionsToAdd, List<StreamSubscription> subscriptionsToRemove, Settings options);
+    public native void modifyRemoteStreamsSubscriptions(String streamRoomId, List<StreamSubscription> subscriptionsToAdd, List<StreamSubscription> subscriptionsToRemove);
 
     public native void unsubscribeFromRemoteStreams(String streamRoomId, List<StreamSubscription> subscriptionsToRemove);
 
