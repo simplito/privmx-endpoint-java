@@ -471,6 +471,17 @@ public class StreamApi implements AutoCloseable {
         return api.publishStream(streamHandle);
     }
 
+    /**
+     * Updates a published stream after track changes.
+     * <p>
+     * Call this after {@link #addTrack(StreamHandle, MediaStreamTrack)} or
+     * {@link #removeTrack(StreamHandle, MediaStreamTrack)} on an already-published stream
+     * to propagate the changes to other participants.
+     *
+     * @param streamHandle handle returned by {@link #createStream(String)}
+     * @return result of the update operation containing updated session information
+     * @throws IllegalStateException thrown when no stream exists for the given handle.
+     */
     public StreamPublishResult updateStream(@NonNull StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
         RoomJanusSession session = pcManager.getSession(streamHandle);
