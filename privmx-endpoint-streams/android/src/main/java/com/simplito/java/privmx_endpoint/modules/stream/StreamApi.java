@@ -112,6 +112,19 @@ public class StreamApi implements AutoCloseable {
         trackFactory = new TrackFactory(pcManager);
     }
 
+    /**
+     * Creates a new Stream Room within the specified Context.
+     *
+     * @param contextId   ID of the Context to create the Stream Room in
+     * @param users       list of {@link UserWithPubKey} indicating which users will have
+     *                    access to the created Stream Room
+     * @param managers    list of {@link UserWithPubKey} indicating which users will have
+     *                    access and management rights to the created Stream Room
+     * @param publicMeta  public (unencrypted) metadata
+     * @param privateMeta private (encrypted) metadata
+     * @param policies    additional container access policies, or {@code null} to use default settings
+     * @return ID of the created Stream Room
+     */
     public String createStreamRoom(
             String contextId,
             List<UserWithPubKey> users,
