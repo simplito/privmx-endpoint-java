@@ -706,16 +706,14 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeToR
         JNIEnv *env,
         jobject thiz,
         jstring stream_room_id,
-        jobject subscriptions,
-        jobject options
-) {
+        jobject subscriptions
+        ) {
     JniContextUtils ctx(env);
     if (ctx.nullCheck(stream_room_id, "Stream Room ID") ||
-        ctx.nullCheck(subscriptions, "Subscriptions") ||
-        ctx.nullCheck(options, "Options")) {
+        ctx.nullCheck(subscriptions, "Subscriptions")) {
         return;
     }
-    ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id, &subscriptions, &options]() {
+    ctx.callVoidEndpointApi([&ctx, &thiz, &stream_room_id, &subscriptions]() {
         auto subscriptions_arr = ctx.jObject2jArray(subscriptions);
         auto subscriptions_c = jArrayToVector<StreamSubscription>(
                 ctx,
