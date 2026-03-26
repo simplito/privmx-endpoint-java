@@ -609,6 +609,14 @@ public class StreamApi implements AutoCloseable {
         }
     }
 
+    /**
+     * Subscribes to Stream Room and Stream-level events based on the provided subscription queries.
+     *
+     * @param subscriptionQueries list of queries built with
+     *                            {@link #buildSubscriptionQuery(StreamEventType, StreamEventSelectorType, String)}
+     * @return list of subscription IDs in matching order to {@code subscriptionQueries}
+     * @throws IllegalStateException thrown when instance is closed.
+     */
     public List<String> subscribeFor(List<String> subscriptionQueries) {
         return api.subscribeFor(subscriptionQueries);
     }
