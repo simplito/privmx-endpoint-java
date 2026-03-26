@@ -316,13 +316,6 @@ public class StreamApi implements AutoCloseable{
             String streamRoomId,
             List<StreamSubscription> subscriptions
     ) {
-        subscribeToRemoteStreams(streamRoomId, subscriptions, new Settings());
-    }
-
-    public void subscribeToRemoteStreams(
-            String streamRoomId,
-            List<StreamSubscription> subscriptions
-    ) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
         if (session == null)
             throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
