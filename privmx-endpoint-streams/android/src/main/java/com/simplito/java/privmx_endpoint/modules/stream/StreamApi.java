@@ -321,8 +321,7 @@ public class StreamApi implements AutoCloseable{
 
     public void subscribeToRemoteStreams(
             String streamRoomId,
-            List<StreamSubscription> subscriptions,
-            Settings options
+            List<StreamSubscription> subscriptions
     ) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
         if (session == null)
@@ -334,7 +333,7 @@ public class StreamApi implements AutoCloseable{
         if (session.getSubscriber() == null)
             throw new IllegalStateException("This streamRoom has not created companion subscriber.");
         session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
-        api.subscribeToRemoteStreams(streamRoomId, subscriptions, options);
+        api.subscribeToRemoteStreams(streamRoomId, subscriptions);
     }
 
     public void modifyRemoteStreamsSubscriptions(
