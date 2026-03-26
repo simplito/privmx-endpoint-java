@@ -255,7 +255,12 @@ public class StreamApi implements AutoCloseable {
         return listStreamRooms(contextId, skip, limit, sortOrder, null, null, null);
     }
 
-
+    /**
+     * Gets a single Stream Room by given Stream Room ID.
+     *
+     * @param streamRoomId ID of the Stream Room to get
+     * @return struct containing information about the Stream Room
+     */
     public StreamRoom getStreamRoom(String streamRoomId) {
         return api.getStreamRoom(streamRoomId);
     }
