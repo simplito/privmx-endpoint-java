@@ -45,6 +45,10 @@ import java.util.stream.Collectors;
 public class StreamApi implements AutoCloseable {
     private final StreamApiLow api;
     private final PeerConnectionManager pcManager;
+
+    /**
+     * Factory which provides helpers for creating WebRTC media sources and tracks.
+     */
     public final TrackFactory trackFactory;
 
     private static PeerConnectionFactory DefaultPeerConnectionFactory(
