@@ -632,6 +632,19 @@ public class StreamApi implements AutoCloseable {
         api.unsubscribeFrom(subscriptionIds);
     }
 
+    /**
+     * Generates a subscription query string for events for the Stream Room
+     * as well as its individual streams.
+     * <p>
+     * The returned query should be passed to {@link #subscribeFor(List)} to start
+     * receiving the requested events.
+     *
+     * @param eventType    type of event to listen for
+     * @param selectorType scope at which events are observed
+     * @param selectorId   ID of the selected entity
+     * @return query string used for event subscription
+     * @throws IllegalStateException thrown when instance is closed
+     */
     public String buildSubscriptionQuery(
             StreamEventType eventType,
             StreamEventSelectorType selectorType,
