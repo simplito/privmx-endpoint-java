@@ -403,6 +403,14 @@ public class StreamApi implements AutoCloseable {
     ) {
         setTrackObserver(roomId, observer, null);
     }
+
+    /**
+     * Registers an observer to receive ICE connection state changes for the given Stream Room.
+     *
+     * @param roomId   ID of the Stream Room
+     * @param observer callback receiving {@link PeerConnection.IceConnectionState} values
+     * @throws IllegalStateException thrown when no active session exists for the given room.
+     */
     public void setConnectionStateObserver(
             @NonNull String roomId,
             Consumer<PeerConnection.IceConnectionState> observer
