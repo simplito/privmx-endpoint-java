@@ -9,7 +9,6 @@ import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
-import com.simplito.java.privmx_endpoint.model.stream.Settings;
 import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
 import com.simplito.java.privmx_endpoint.model.stream.StreamPublishResult;
@@ -354,8 +353,7 @@ public class StreamApi implements AutoCloseable{
     public void modifyRemoteStreamsSubscriptions(
             String streamRoomId,
             List<StreamSubscription> subscriptionsToAdd,
-            List<StreamSubscription> subscriptionsToRemove,
-            Settings options
+            List<StreamSubscription> subscriptionsToRemove
     ) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
         if (session == null)
@@ -366,8 +364,7 @@ public class StreamApi implements AutoCloseable{
         api.modifyRemoteStreamsSubscriptions(
                 streamRoomId,
                 subscriptionsToAdd,
-                subscriptionsToRemove,
-                options
+                subscriptionsToRemove
         );
     }
 
