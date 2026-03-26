@@ -446,6 +446,14 @@ public class StreamApi implements AutoCloseable {
         }
     }
 
+    /**
+     * Publishes the stream (with currently added tracks) to the server,
+     * making it visible to other participants in the room.
+     *
+     * @param streamHandle handle returned by {@link #createStream(String)}
+     * @return result of the publish operation containing session information
+     * @throws IllegalStateException thrown when no stream exists for the given handle.
+     */
     public StreamPublishResult publishStream(@NonNull StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
         RoomJanusSession session = pcManager.getSession(streamHandle);
