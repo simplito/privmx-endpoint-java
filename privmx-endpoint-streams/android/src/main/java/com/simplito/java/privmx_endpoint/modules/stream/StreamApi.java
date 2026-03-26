@@ -366,6 +366,17 @@ public class StreamApi implements AutoCloseable {
         }
     }
 
+    /**
+     * Registers a {@link TrackObserver} to receive callbacks when remote media tracks
+     * become available for a specific stream in the given Stream Room.
+     * <p>
+     * Use this method to observe tracks only from a selected remote stream.
+     *
+     * @param roomId   ID of the Stream Room
+     * @param observer observer implementation receiving track callbacks
+     * @param streamId ID of a specific remote stream to observe, or {@code null} for all streams
+     * @throws IllegalStateException thrown when no active session exists for the given room.
+     */
     public void setTrackObserver(
             @NonNull String roomId,
             TrackObserver observer,
@@ -378,6 +389,20 @@ public class StreamApi implements AutoCloseable {
         session.setTrackObserver(streamId, observer);
     }
 
+    /**
+     * Registers a {@link TrackObserver} to receive callbacks when remote media tracks
+     * become available for all streams in the given Stream Room.
+     *
+     * @param roomId   ID of the Stream Room
+     * @param observer observer implementation receiving track callbacks
+     * @throws IllegalStateException thrown when no active session exists for the given room.
+     */
+    public void setTrackObserver(
+            @NonNull String roomId,
+            TrackObserver observer
+    ) {
+        setTrackObserver(roomId, observer, null);
+    }
     public void setConnectionStateObserver(
             @NonNull String roomId,
             Consumer<PeerConnection.IceConnectionState> observer
@@ -389,12 +414,6 @@ public class StreamApi implements AutoCloseable {
         session.setOnConnectionChange(observer);
     }
 
-    public void setTrackObserver(
-            String roomId,
-            TrackObserver observer
-    ) {
-        setTrackObserver(roomId, observer, null);
-    }
 
     /**
      * @param streamHandle
