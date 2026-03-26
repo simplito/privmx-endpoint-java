@@ -533,6 +533,18 @@ public class StreamApi implements AutoCloseable {
     }
 
 
+    /**
+     * Modifies the current list of remote stream subscriptions in a Stream Room.
+     * <p>
+     * Allows atomically adding and removing remote stream subscriptions in a single call,
+     * avoiding the need to fully unsubscribe and resubscribe.
+     *
+     * @param streamRoomId          ID of the Stream Room
+     * @param subscriptionsToAdd    list of {@link StreamSubscription} structs to add
+     * @param subscriptionsToRemove list of {@link StreamSubscription} structs to remove
+     * @throws IllegalStateException thrown when no active session or subscriber exists
+     *                               for the given room.
+     */
     public void modifyRemoteStreamsSubscriptions(
             String streamRoomId,
             List<StreamSubscription> subscriptionsToAdd,
