@@ -17,17 +17,7 @@ import com.simplito.java.privmx_endpoint.model.stream.StreamSubscription;
 import com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes.StreamEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEventType;
 
-import org.webrtc.AudioTrack;
-import org.webrtc.DefaultVideoDecoderFactory;
-import org.webrtc.DefaultVideoEncoderFactory;
-import org.webrtc.EglBase;
-import org.webrtc.MediaStreamTrack;
-import org.webrtc.PeerConnection;
-import org.webrtc.PeerConnectionFactory;
-import org.webrtc.PmxFrameCryptor;
-import org.webrtc.VideoDecoderFactory;
-import org.webrtc.VideoEncoderFactory;
-import org.webrtc.VideoTrack;
+import org.webrtc.*;
 import org.webrtc.audio.AudioDeviceModule;
 import org.webrtc.audio.JavaAudioDeviceModule;
 
@@ -40,14 +30,17 @@ public class StreamApi implements AutoCloseable{
     private final StreamApiLow api;
     private final PeerConnectionManager pcManager;
     public final TrackFactory trackFactory;
+    public final PmxAudioLevelAnalyzer audioLevelAnalyzer = PmxAudioLevelAnalyzer.create();
 
     private static PeerConnectionFactory DefaultPeerConnectionFactory(
             Context appContext,
             EglBase eglBase,
-            PeerConnectionFactory.Options options
+            PeerConnectionFactory.Options options,
+            JavaAudioDeviceModule.AudioBufferCallback audioBufferCallback
     ) {
         AudioDeviceModule adm = JavaAudioDeviceModule
                 .builder(appContext)
+                .setAudioBufferCallback(audioBufferCallback)
                 .createAudioDeviceModule();
 
         boolean enableH264HighProfile = false;
@@ -68,7 +61,6 @@ public class StreamApi implements AutoCloseable{
                 .setOptions(options)
                 .setAudioDeviceModule(adm)
                 .createPeerConnectionFactory();
-
         adm.release();
         return factory;
     }
@@ -79,7 +71,13 @@ public class StreamApi implements AutoCloseable{
             @NonNull StreamApiLow api
     ) {
         this.api = api;
-        PeerConnectionFactory factory = DefaultPeerConnectionFactory(appContext, rootEglBase, new PeerConnectionFactory.Options());
+        PeerConnectionFactory factory = DefaultPeerConnectionFactory(
+                appContext,
+                rootEglBase,
+                new PeerConnectionFactory.Options(),
+                audioLevelAnalyzer
+        );
+
         pcManager = new PeerConnectionManager(
                 factory,
                 (sessionId, rtcConfiguration) -> {
@@ -93,6 +91,7 @@ public class StreamApi implements AutoCloseable{
 
         );
         trackFactory = new TrackFactory(pcManager);
+        audioLevelAnalyzer.release();
     }
 
     public String createStreamRoom(
@@ -224,7 +223,7 @@ public class StreamApi implements AutoCloseable{
                 break;
             }
             case MediaStreamTrack.AUDIO_TRACK_KIND: {
-                publisher.addAudioTrack((AudioTrack) track);
+                publisher.addAudioTrack((AudioTrack) track, audioLevelAnalyzer);
                 break;
             }
         }

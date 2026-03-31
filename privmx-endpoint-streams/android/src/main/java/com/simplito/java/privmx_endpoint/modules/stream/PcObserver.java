@@ -1,26 +1,11 @@
 package com.simplito.java.privmx_endpoint.modules.stream;
 
 
-import org.webrtc.DataChannel;
-import org.webrtc.IceCandidate;
-import org.webrtc.MediaStream;
-import org.webrtc.MediaStreamTrack;
-import org.webrtc.PeerConnection;
-import org.webrtc.PeerConnectionFactory;
-import org.webrtc.PmxFrameCryptor;
-import org.webrtc.PmxFrameCryptorFactory;
-import org.webrtc.PmxKeyStore;
-import org.webrtc.RtpReceiver;
-import org.webrtc.RtpTransceiver;
+import org.webrtc.*;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class PcObserver implements PeerConnection.Observer {
     private final Map<String, PmxFrameCryptor> frameCryptorMap = new HashMap<>();
@@ -30,7 +15,17 @@ public class PcObserver implements PeerConnection.Observer {
     private final Consumer<IceCandidate> onIceCandidate;
     private final Runnable onRenegotiationNeeded;
     private final Consumer<PeerConnection.IceConnectionState> onIceConnectionChange;
+    private final PmxFrameCryptor.Observer observer = new PmxFrameCryptor.Observer() {
+        @Override
+        public void onFrameCryptionStateChanged(PmxFrameCryptor.PmxFrameCryptionState newState) {
+            System.out.println("PC FrameCryptorObserver stateChanged to: " + newState.name());
+        }
 
+        @Override
+        public void onFrameRms(byte rms) {
+            System.out.println("PC FrameCryptorObserver rms changed to: " + rms);
+        }
+    };
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
             PmxKeyStore store,
@@ -113,14 +108,19 @@ public class PcObserver implements PeerConnection.Observer {
     public void onAddTrack(RtpReceiver receiver, MediaStream[] mediaStreams) {
         MediaStreamTrack track = receiver.track();
         if (peerConnectionFactory != null && track != null && track.id() != null) {
+            PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
+                    peerConnectionFactory,
+                    receiver,
+                    keyStore,
+                    null
+            );
             frameCryptorMap.put(
                     track.id(),
-                    PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
-                            peerConnectionFactory,
-                            receiver,
-                            keyStore
-                    )
+                    frameCryptor
             );
+            if(receiver.track() instanceof AudioTrack) {
+                frameCryptor.setObserver(observer);
+            }
             if(trackObserver != null){
                 String streamId = mediaStreams.length > 0 ? mediaStreams[0].getId() : null;
                 if(streamId != null) {

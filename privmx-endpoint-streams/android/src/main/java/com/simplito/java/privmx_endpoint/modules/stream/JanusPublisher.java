@@ -1,21 +1,19 @@
 package com.simplito.java.privmx_endpoint.modules.stream;
 
-import androidx.annotation.Nullable;
-
 import com.simplito.java.privmx_endpoint.model.AudioTrackInfo;
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
-import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.VideoTrackInfo;
+import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 
 import org.webrtc.MediaConstraints;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
+import org.webrtc.PmxAudioLevelAnalyzer;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.RtpSender;
 import org.webrtc.SessionDescription;
-import org.webrtc.VideoCapturer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,14 +41,17 @@ public class JanusPublisher extends JanusConnection{
         this.setNewOfferOnReconfigure = acceptRenegotiationOffer;
     }
 
-    public void addAudioTrack(org.webrtc.AudioTrack audioTrack) {
+    public void addAudioTrack(
+            org.webrtc.AudioTrack audioTrack,
+            PmxAudioLevelAnalyzer analyzer
+    ) {
         synchronized (audioTracks) {
             RtpSender rtpSender2 = peerConnection.addTrack(audioTrack);
             PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorFromRtpSender(
                     peerConnectionFactory,
                     rtpSender2,
-                    keyStore
-                    // options ?
+                    keyStore,
+                    analyzer
             );
 
             audioTracks.put(
@@ -71,8 +72,8 @@ public class JanusPublisher extends JanusConnection{
                 PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorFromRtpSender(
                         peerConnectionFactory,
                         rtpSender,
-                        keyStore
-                        // options ?
+                        keyStore,
+                        null
                 );
 
                 videoTracks.put(
