@@ -70,6 +70,21 @@ This library implements models, exception catching, and the following modules:
 - `StoreApi` - Methods for managing Stores and sending/reading files.
 - `InboxApi` - Methods for managing Inboxes and entries.
 
+
+### 4. PrivMX Endpoint Streams
+
+The PrivMX Endpoint Streams module enables developers to integrate secure,
+real-time communication into their applications.
+It handles the lifecycle of end-to-end encrypted meeting rooms and data transmission.
+
+#### Key Capabilities
+1. Creating and managing meeting rooms
+2. Sending/Receiving video and audio over WebRTC streams.
+
+#### Supported platforms
+- Android (arm64-v8a, x86_64, x86)
+- JVM (not supported yet) 
+
 ## Usage
 
 1. Add `mavenCentral()` repository to your `settings.gradle`:
