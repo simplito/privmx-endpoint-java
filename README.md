@@ -74,7 +74,7 @@ This library implements models, exception catching, and the following modules:
 ### 4. PrivMX Endpoint Streams
 
 The PrivMX Endpoint Streams module enables developers to integrate secure,
-real-time communication into their applications.
+real-time audio/video communication into their applications.
 It handles the lifecycle of end-to-end encrypted meeting rooms and data transmission.
 
 #### Key Capabilities
