@@ -5,6 +5,7 @@ import Stacks.JavaKotlin.user1Id
 import Stacks.JavaKotlin.user1PublicKey
 import Stacks.JavaKotlin.user2Id
 import Stacks.JavaKotlin.user2PublicKey
+import com.simplito.java.privmx_endpoint.model.PagingList
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
 import com.simplito.java.privmx_endpoint.model.stream.StreamRoom
 import com.simplito.java.privmx_endpoint_extra.model.SortOrder
@@ -88,12 +89,16 @@ fun createStreamRoomWithPublicMeta() {
     )
 }
 
-// Listing Stream Rooms
+// END: Creating Stream Rooms
+
+
+// START: Getting Stream Rooms
+
 fun getMostRecentStreamRooms() {
     val startIndex = 0L
     val pageSize = 100L
 
-    val streamRoomsPagingList = streamApi.listStreamRooms(
+    val streamRoomsPagingList: PagingList<StreamRoom> = streamApi.listStreamRooms(
         contextId,
         startIndex,
         pageSize,
@@ -116,7 +121,7 @@ fun getMostOldestStreamRooms() {
     val startIndex = 0L
     val pageSize = 100L
 
-    val streamRoomsPagingList = streamApi.listStreamRooms(
+    val streamRoomsPagingList: PagingList<StreamRoom> = streamApi.listStreamRooms(
         contextId,
         startIndex,
         pageSize,
@@ -135,8 +140,6 @@ fun getMostOldestStreamRooms() {
     }
 }
 
-// START: Getting Stream Rooms snippets
-
 fun getStreamRoomById() {
     val streamRoomId = "STREAM_ROOM_ID"
 
@@ -149,31 +152,25 @@ fun getStreamRoomById() {
     }
 }
 
-// START: Managing Stream Rooms snippets
+// END: Getting Stream Rooms
+
+
+// START: Managing Stream Rooms
 
 fun renamingStreamRoom() {
     val streamRoomId = "STREAM_ROOM_ID"
     val streamRoom: StreamRoom = streamApi.getStreamRoom(streamRoomId)
-    val users = streamRoom
-        .users
-        .map { userId ->
-            // Your application must provide a way,
-            // to get user's public key from their userId.
-            UserWithPubKey(
-                userId,
-                "USER_PUBLIC_KEY"
-            )
-        }
-    val managers = streamRoom
-        .managers
-        .map { userId ->
-            // Your application must provide a way,
-            // to get user's public key from their userId.
-            UserWithPubKey(
-                userId,
-                "USER_PUBLIC_KEY"
-            )
-        }
+
+    val users = streamRoom.users.map { userId ->
+        // Your application must provide a way
+        // to get user's public key from their userId
+        UserWithPubKey(userId, "USER_PUBLIC_KEY")
+    }
+
+    val managers = streamRoom.managers.map { userId ->
+        UserWithPubKey(userId, "USER_PUBLIC_KEY")
+    }
+
     val newStreamRoomNameAsPrivateMeta = "New stream room name"
 
     streamApi.updateStreamRoom(
@@ -183,9 +180,9 @@ fun renamingStreamRoom() {
         streamRoom.publicMeta,
         newStreamRoomNameAsPrivateMeta.encodeToByteArray(),
         streamRoom.version,
-        false,                  // force
-        false,                  //forceGenerateNewKey
-        null                    // policies
+        false,  // force
+        false,  // forceGenerateNewKey
+        null    // policies
     )
 }
 
@@ -231,17 +228,8 @@ fun removingUserFromStreamRoom() {
 
 fun deletingStreamRoom() {
     val streamRoomId = "STREAM_ROOM_ID"
+
     streamApi.deleteStreamRoom(streamRoomId)
 }
 
-// START: Joining and Leaving Stream Rooms
-
-fun joiningStreamRoom() {
-    val streamRoomId = "STREAM_ROOM_ID"
-    streamApi.joinStreamRoom(streamRoomId)
-}
-
-fun leavingStreamRoom() {
-    val streamRoomId = "STREAM_ROOM_ID"
-    streamApi.leaveStreamRoom(streamRoomId)
-}
+// END: Managing Stream Rooms

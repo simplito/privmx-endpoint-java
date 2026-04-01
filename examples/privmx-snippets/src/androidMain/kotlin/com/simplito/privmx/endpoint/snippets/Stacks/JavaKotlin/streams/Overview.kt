@@ -6,6 +6,9 @@ import android.content.Context
 import com.simplito.java.privmx_endpoint.model.stream.StreamRoom
 import com.simplito.java.privmx_endpoint.modules.stream.StreamApi
 import com.simplito.java.privmx_endpoint.modules.stream.StreamApiLow
+import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
+import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
+import com.simplito.java.privmx_endpoint_extra.model.Modules
 import org.webrtc.EglBase
 import org.webrtc.PeerConnection
 
@@ -15,11 +18,10 @@ lateinit var streamApi: StreamApi
 data class StreamRoomItem(
     val streamRoom: StreamRoom,
     val decodedPrivateMeta: String,
-    val decodedPublicMeta: StorePublicMeta
+    val decodedPublicMeta: StreamRoomPublicMeta
 )
 
 fun initializeStreamApi(context: Context) {
-
     // Create EGL context (required for video rendering)
     val eglBase: EglBase = EglBase.create()
     val appContext = context.applicationContext
@@ -35,7 +37,6 @@ fun initializeStreamApi(context: Context) {
 fun observingConnectionState() {
     val streamRoomId = "STREAM_ROOM_ID"
 
-    streamApi.joinStreamRoom(streamRoomId)
     streamApi.setConnectionStateObserver(streamRoomId) { state ->
         when (state) {
             PeerConnection.IceConnectionState.CONNECTED -> {
@@ -50,7 +51,9 @@ fun observingConnectionState() {
                 // handle failed
             }
 
-            else -> {}
+            else -> {
+                // handle other WebRTC states
+            }
         }
     }
 }
