@@ -11,9 +11,9 @@ kotlin {
     jvmToolchain(21)
 }
 
-privmxEndpointInstallJni {
-    version = project.version
-}
+//privmxEndpointInstallJni {
+//    version = project.version
+//}
 
 dependencies {
     implementation(project(":privmx-endpoint-extra"))

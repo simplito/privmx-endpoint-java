@@ -4,11 +4,16 @@ agp = "8.11.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-appcompat = "1.6.1"
-privmxInstallNative = "1.1"
+appcompat = "1.7.1"
+privmxInstallNative = "2.0.0"
+proguardGradle = "7.7.0"
 serialization-json = "1.6.2"
 kotlin-serialization = "1.9.21"
 gson = "2.11.0"
+material = "1.10.0"
+webrtc = "1.0.0"
+googleWebrtc = "1.0.24064"
+annotationJvm = "1.9.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -17,6 +22,13 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-jvm", version.ref = "serialization-json" }
+proguard-gradle = { module = "com.guardsquare:proguard-gradle", version.ref = "proguardGradle" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# ------------
+privmx-endpoint-webrtc = {group="com.simplito.webrtc", name="webrtc-android", version.ref= "webrtc"}
+annotation-jvm = { group = "androidx.annotation", name = "annotation-jvm", version.ref = "annotationJvm" }
+#google-webrtc = { module = "org.webrtc:google-webrtc", version.ref = "googleWebrtc" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinJVM" }
