@@ -9,7 +9,6 @@ import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
-import com.simplito.java.privmx_endpoint.model.stream.Settings;
 import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
 import com.simplito.java.privmx_endpoint.model.stream.StreamPublishResult;
@@ -317,14 +316,6 @@ public class StreamApi implements AutoCloseable{
             String streamRoomId,
             List<StreamSubscription> subscriptions
     ) {
-        subscribeToRemoteStreams(streamRoomId, subscriptions, new Settings());
-    }
-
-    public void subscribeToRemoteStreams(
-            String streamRoomId,
-            List<StreamSubscription> subscriptions,
-            Settings options
-    ) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
         if (session == null)
             throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
@@ -335,27 +326,14 @@ public class StreamApi implements AutoCloseable{
         if (session.getSubscriber() == null)
             throw new IllegalStateException("This streamRoom has not created companion subscriber.");
         session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
-        api.subscribeToRemoteStreams(streamRoomId, subscriptions, options);
+        api.subscribeToRemoteStreams(streamRoomId, subscriptions);
     }
+
 
     public void modifyRemoteStreamsSubscriptions(
             String streamRoomId,
             List<StreamSubscription> subscriptionsToAdd,
             List<StreamSubscription> subscriptionsToRemove
-    ) {
-        modifyRemoteStreamsSubscriptions(
-                streamRoomId,
-                subscriptionsToAdd,
-                subscriptionsToRemove,
-                new Settings()
-        );
-    }
-
-    public void modifyRemoteStreamsSubscriptions(
-            String streamRoomId,
-            List<StreamSubscription> subscriptionsToAdd,
-            List<StreamSubscription> subscriptionsToRemove,
-            Settings options
     ) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
         if (session == null)
@@ -366,8 +344,7 @@ public class StreamApi implements AutoCloseable{
         api.modifyRemoteStreamsSubscriptions(
                 streamRoomId,
                 subscriptionsToAdd,
-                subscriptionsToRemove,
-                options
+                subscriptionsToRemove
         );
     }
 
