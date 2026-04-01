@@ -17,7 +17,7 @@ if (file("build-publish-maven.gradle").exists()) {
 version = '2.6.0-streams-android'
 
 android {
-    namespace 'com.simplito.android.privmx_endpoint_streams'
+    namespace 'com.simplito.java.privmx_endpoint_streams_android'
     compileSdk 34
     ndkVersion "29.0.13599879"
 
@@ -53,7 +53,7 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     implementation(project(":privmx-endpoint"))
-    implementation("com.simplito.webrtc:webrtc-android:1.0.0")
+    implementation(libs.privmx.endpoint.webrtc)
 }
 
 sourceSets {
