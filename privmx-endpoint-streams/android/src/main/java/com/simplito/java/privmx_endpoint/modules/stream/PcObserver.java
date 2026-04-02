@@ -118,7 +118,8 @@ public class PcObserver implements PeerConnection.Observer {
                     PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
                             peerConnectionFactory,
                             receiver,
-                            keyStore
+                            keyStore,
+                            null
                     )
             );
             if(trackObserver != null){
