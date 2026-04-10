@@ -36,11 +36,12 @@ public class StreamApi implements AutoCloseable{
             Context appContext,
             EglBase eglBase,
             PeerConnectionFactory.Options options,
-            JavaAudioDeviceModule.AudioBufferCallback audioBufferCallback
+            ExternalAudioProcessingFactory.AudioProcessing audioPostCaptureProcessing
     ) {
         AudioDeviceModule adm = JavaAudioDeviceModule
                 .builder(appContext)
-                .setAudioBufferCallback(audioBufferCallback)
+                .setUseHardwareAcousticEchoCanceler(true)
+                .setUseHardwareNoiseSuppressor(true)
                 .createAudioDeviceModule();
 
         boolean enableH264HighProfile = false;
@@ -55,10 +56,13 @@ public class StreamApi implements AutoCloseable{
                 eglBase.getEglBaseContext()
         );
 
+        ExternalAudioProcessingFactory audioProcessingFactory = new ExternalAudioProcessingFactory();
+        audioProcessingFactory.setCapturePostProcessing(audioPostCaptureProcessing);
         PeerConnectionFactory factory = PeerConnectionFactory.builder()
                 .setVideoDecoderFactory(decoderFactory)
                 .setVideoEncoderFactory(encoderFactory)
                 .setOptions(options)
+                .setAudioProcessingFactory(audioProcessingFactory)
                 .setAudioDeviceModule(adm)
                 .createPeerConnectionFactory();
         adm.release();
@@ -91,7 +95,6 @@ public class StreamApi implements AutoCloseable{
 
         );
         trackFactory = new TrackFactory(pcManager);
-        audioLevelAnalyzer.release();
     }
 
     public String createStreamRoom(
