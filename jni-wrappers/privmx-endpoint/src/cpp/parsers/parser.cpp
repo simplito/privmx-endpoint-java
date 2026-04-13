@@ -905,31 +905,6 @@ privmx::endpoint::stream::StreamEncryptionMode parseStreamEncryptionMode(
     return {};
 }
 
-// java -> c++
-template<typename T>
-std::vector<T> jArrayToVector(
-        JniContextUtils &ctx,
-        jobjectArray jArray,
-        std::function<T(JniContextUtils &, jobject)> fun,
-        bool requireNonNulls
-) {
-    std::vector<T> result;
-
-    for (int i = 0; i < ctx->GetArrayLength(jArray); i++) {
-        jobject element = ctx->GetObjectArrayElement(jArray, i);
-
-        if (requireNonNulls) {
-            if (ctx.nullCheck(element, "Array element")) {
-                return{};
-            }
-        }
-
-        result.push_back(fun(ctx, element));
-    }
-
-    return result;
-}
-
 template<typename T>
 std::vector<T> jArrayToVector(
         JniContextUtils &ctx,
@@ -972,28 +947,6 @@ std::string jobject2string(JniContextUtils &ctx, jobject jString) {
 //
 //    return listObj;
 //}
-
-template<typename T, typename F>
-jobject pagingList2Java(
-        JniContextUtils &ctx,
-        privmx::endpoint::core::PagingList<T> pagingList,
-        F fun
-) {
-    jclass pagingListCls = ctx->FindClass(
-            "com/simplito/java/privmx_endpoint/model/PagingList");
-    jmethodID pagingListInitMID = ctx->GetMethodID(pagingListCls, "<init>",
-            "(Ljava/lang/Long;Ljava/util/List;)V"
-    );
-
-    jobject array = vectorTojArray(ctx, pagingList.readItems, fun);
-
-    return ctx->NewObject(
-            pagingListCls,
-            pagingListInitMID,
-            ctx.long2jLong(pagingList.totalAvailable),
-            array
-    );
-}
 
 jobject string2jobject(JniContextUtils &ctx, const std::string &str) {
     return ctx->NewStringUTF(str.c_str());
