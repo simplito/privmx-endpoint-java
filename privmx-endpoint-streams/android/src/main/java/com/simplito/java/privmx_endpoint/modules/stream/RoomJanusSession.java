@@ -46,7 +46,7 @@ public class RoomJanusSession {
     private JanusPublisher publisher = null;
     private final PmxKeyStore keyStore;
     public final WebRTCImpl webrtc = new WebRTCImpl();
-    private final BiConsumer<Long,String> onTrickle;
+    private final BiConsumer<Long, String> onTrickle;
     private final Map<String, TrackObserver> trackObserversByStreamId = new HashMap<>();
     private final TrackObserver trackObserver = new TrackObserverImpl();
     private Consumer<PeerConnection.IceConnectionState> onConnectionChangeCallback = null;
@@ -56,7 +56,7 @@ public class RoomJanusSession {
     public RoomJanusSession(
             @NonNull String roomId,
             @NonNull PeerConnectionFactory pcFactory,
-            BiConsumer<Long,String> onTrickle,
+            BiConsumer<Long, String> onTrickle,
             BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer
     ) {
         this.pcFactory = pcFactory;
@@ -105,7 +105,7 @@ public class RoomJanusSession {
                     setNewOfferOnReconfigure,
                     this::onConnectionChange
             );
-        }else if (publisher.isEnded()) {
+        } else if (publisher.isEnded()) {
             publisher.close();
             publisher = new JanusPublisher(
                     pcFactory,
@@ -115,21 +115,21 @@ public class RoomJanusSession {
                     setNewOfferOnReconfigure,
                     this::onConnectionChange
             );
-        }else{
+        } else {
             throw new IllegalStateException("Publisher is currently active.");
         }
     }
 
     public void setTrackObserver(
             TrackObserver trackObserver
-    ){
-        setTrackObserver(null,trackObserver);
+    ) {
+        setTrackObserver(null, trackObserver);
     }
 
     public void setTrackObserver(
             String streamId,
             TrackObserver trackObserver
-    ){
+    ) {
         synchronized (trackObserversByStreamId) {
             trackObserversByStreamId.put(streamId, trackObserver);
         }
@@ -137,22 +137,32 @@ public class RoomJanusSession {
 
     public synchronized void setOnConnectionChange(
             Consumer<PeerConnection.IceConnectionState> onConnectionChange
-    ){
+    ) {
         this.onConnectionChangeCallback = onConnectionChange;
     }
 
     public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {
-        if(subscriber != null){
+        if (subscriber != null) {
             subscriber.setFrameCryptorOptions(options);
         }
-        if(publisher != null){
+        if (publisher != null) {
             publisher.setFrameCryptorOptions(options);
         }
     }
 
-    private void onConnectionChange(PeerConnection.IceConnectionState connectionState){
-        if(onConnectionChangeCallback != null){
+    private void onConnectionChange(PeerConnection.IceConnectionState connectionState) {
+        if (onConnectionChangeCallback != null) {
             onConnectionChangeCallback.accept(connectionState);
+        }
+    }
+
+    void unpublish() {
+        if (publisher != null && !publisher.isEnded()) {
+            final JanusPublisher publisher = this.publisher;
+            synchronized (publisher) {
+                publisher.close();
+                this.publisher = null;
+            }
         }
     }
 
@@ -180,7 +190,7 @@ public class RoomJanusSession {
         public String createAnswerAndSetDescriptions(String streamRoomId, String sdp, String type) {
             try {
                 if (subscriber != null) {
-                    return subscriber.createAnswer(sdp,type);
+                    return subscriber.createAnswer(sdp, type);
                 } else {
                     throw new RuntimeException("Create subscriber first");
                 }
@@ -193,7 +203,7 @@ public class RoomJanusSession {
         public void setAnswerAndSetRemoteDescription(String streamRoomId, String sdp, String type) {
             try {
                 if (publisher != null) {
-                    publisher.setAnswer(sdp,type);
+                    publisher.setAnswer(sdp, type);
                 } else {
                     throw new RuntimeException("Create publisher first");
                 }
@@ -243,16 +253,17 @@ public class RoomJanusSession {
             }
         }
     }
-    private class TrackObserverImpl implements TrackObserver{
+
+    private class TrackObserverImpl implements TrackObserver {
         @Override
         public void OnRemoteTrack(String streamId, MediaStreamTrack track) {
-            synchronized (trackObserversByStreamId){
-                Optional.ofNullable(trackObserversByStreamId.get(streamId)).ifPresent(observer->{
-                    observer.OnRemoteTrack(streamId,track);
+            synchronized (trackObserversByStreamId) {
+                Optional.ofNullable(trackObserversByStreamId.get(streamId)).ifPresent(observer -> {
+                    observer.OnRemoteTrack(streamId, track);
                 });
 
-                Optional.ofNullable(trackObserversByStreamId.get(null)).ifPresent(observer->{
-                    observer.OnRemoteTrack(streamId,track);
+                Optional.ofNullable(trackObserversByStreamId.get(null)).ifPresent(observer -> {
+                    observer.OnRemoteTrack(streamId, track);
                 });
             }
         }

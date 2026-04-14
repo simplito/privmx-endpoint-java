@@ -68,6 +68,11 @@ class PeerConnectionManager implements AutoCloseable {
         sessionHandles.put(handle.getValue(), roomID);
     }
 
+    public void closeHandleToRoom(StreamHandle handle) {
+        Objects.requireNonNull(handle);
+        sessionHandles.remove(handle.getValue());
+    }
+
     public void leaveStreamRoom(@NonNull String streamRoomId) {
         sessions.remove(streamRoomId);
     }

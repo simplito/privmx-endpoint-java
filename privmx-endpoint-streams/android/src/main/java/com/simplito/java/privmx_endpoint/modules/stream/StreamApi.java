@@ -320,7 +320,14 @@ public class StreamApi implements AutoCloseable{
 
     public void unpublishStream(@NonNull StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
+        if (session.getPublisher() == null)
+            throw new IllegalStateException("No stream to unpublish. Call createStream and publishStream first.");
         api.unpublishStream(streamHandle);
+        session.unpublish();
+        pcManager.closeHandleToRoom(streamHandle);
     }
 
     public void subscribeToRemoteStreams(
