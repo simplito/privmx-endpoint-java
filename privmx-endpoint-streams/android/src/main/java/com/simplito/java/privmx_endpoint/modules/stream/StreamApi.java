@@ -400,7 +400,6 @@ public class StreamApi implements AutoCloseable{
     public void close() throws Exception {
         pcManager.getRoomIds().forEach(this::leaveStreamRoom);
         pcManager.close();
-        api.close();
     }
 
     private List<PeerConnection.IceServer> getRTCConfiguration() {
