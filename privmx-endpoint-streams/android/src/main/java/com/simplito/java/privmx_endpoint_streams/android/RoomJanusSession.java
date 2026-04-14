@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.modules.stream;
+package com.simplito.java.privmx_endpoint_streams.android;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import com.simplito.java.privmx_endpoint.model.stream.Key;
 import com.simplito.java.privmx_endpoint.model.stream.KeyType;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
+import com.simplito.java.privmx_endpoint.modules.stream.WebRTCInterface;
 
 import org.webrtc.MediaStreamTrack;
 import org.webrtc.PeerConnection;

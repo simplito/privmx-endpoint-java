@@ -9,14 +9,13 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.modules.stream;
+package com.simplito.java.privmx_endpoint_streams.android;
 
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
@@ -27,6 +26,7 @@ import com.simplito.java.privmx_endpoint.model.stream.StreamRoom;
 import com.simplito.java.privmx_endpoint.model.stream.StreamSubscription;
 import com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes.StreamEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEventType;
+import com.simplito.java.privmx_endpoint.modules.stream.StreamApiLow;
 
 import org.webrtc.AudioTrack;
 import org.webrtc.DefaultVideoDecoderFactory;

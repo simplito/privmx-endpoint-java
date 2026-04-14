@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.modules.stream;
+package com.simplito.java.privmx_endpoint_streams.android;
 
 
 import org.webrtc.DataChannel;
@@ -22,16 +22,10 @@ import org.webrtc.PmxFrameCryptor;
 import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.RtpReceiver;
-import org.webrtc.RtpTransceiver;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class PcObserver implements PeerConnection.Observer {
     private final Map<String, PmxFrameCryptor> frameCryptorMap = new HashMap<>();
