@@ -1,11 +1,9 @@
 package com.simplito.java.privmx_endpoint.modules.stream;
 
-import androidx.annotation.Nullable;
-
 import com.simplito.java.privmx_endpoint.model.AudioTrackInfo;
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
-import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.VideoTrackInfo;
+import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 
 import org.webrtc.MediaConstraints;
 import org.webrtc.PeerConnection;
@@ -15,7 +13,6 @@ import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.RtpSender;
 import org.webrtc.SessionDescription;
-import org.webrtc.VideoCapturer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,13 +22,13 @@ import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class JanusPublisher extends JanusConnection{
+class JanusPublisher extends JanusConnection {
     private final Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
     private final Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
     private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public JanusPublisher(
+    JanusPublisher(
             PeerConnectionFactory pcFactory,
             PmxKeyStore keyStore,
             TrackObserver observer,
