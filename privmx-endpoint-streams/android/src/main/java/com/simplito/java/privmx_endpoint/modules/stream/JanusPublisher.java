@@ -1,11 +1,6 @@
 package com.simplito.java.privmx_endpoint.modules.stream;
 
-import androidx.annotation.Nullable;
-
-import com.simplito.java.privmx_endpoint.model.AudioTrackInfo;
-import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
-import com.simplito.java.privmx_endpoint.model.VideoTrackInfo;
 
 import org.webrtc.MediaConstraints;
 import org.webrtc.PeerConnection;
@@ -162,4 +157,37 @@ public class JanusPublisher extends JanusConnection{
             });
         }
     }
+
+    static class AudioTrackInfo {
+        public AudioTrack track;
+        public RtpSender sender;
+        public PmxFrameCryptor frameCryptor;
+
+        public AudioTrackInfo(
+                AudioTrack track,
+                RtpSender sender,
+                PmxFrameCryptor frameCryptor
+        ) {
+            this.track = track;
+            this.sender = sender;
+            this.frameCryptor = frameCryptor;
+        }
+    }
+
+    static class VideoTrackInfo {
+        public VideoTrack track;
+        public RtpSender sender;
+        public PmxFrameCryptor frameCryptor;
+
+        public VideoTrackInfo(
+                VideoTrack track,
+                RtpSender sender,
+                PmxFrameCryptor frameCryptor
+        ) {
+            this.track = track;
+            this.sender = sender;
+            this.frameCryptor = frameCryptor;
+        }
+    }
+
 }
