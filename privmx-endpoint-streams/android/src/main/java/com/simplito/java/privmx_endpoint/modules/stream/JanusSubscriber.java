@@ -1,6 +1,5 @@
 package com.simplito.java.privmx_endpoint.modules.stream;
 
-import com.simplito.java.privmx_endpoint.model.ConnectionType;
 
 import org.webrtc.MediaConstraints;
 import org.webrtc.PeerConnection;
@@ -19,7 +18,7 @@ public class JanusSubscriber extends JanusConnection {
             TrackObserver observer,
             BiConsumer<Long, String> onTrickle
     ) {
-        super(pcFactory, keyStore, ConnectionType.Subscriber, observer, onTrickle,null);
+        super(pcFactory, keyStore, observer, onTrickle,null);
     }
 
     public String createAnswer(String offerSdp, String type) {

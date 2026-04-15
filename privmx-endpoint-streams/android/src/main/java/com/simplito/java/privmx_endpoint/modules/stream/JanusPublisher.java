@@ -34,7 +34,7 @@ public class JanusPublisher extends JanusConnection{
             BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer,
             Consumer<PeerConnection.IceConnectionState> onConnectionChange
     ) {
-        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle, onConnectionChange);
+        super(pcFactory, keyStore, observer, onTrickle, onConnectionChange);
         this.setNewOfferOnReconfigure = acceptRenegotiationOffer;
     }
 

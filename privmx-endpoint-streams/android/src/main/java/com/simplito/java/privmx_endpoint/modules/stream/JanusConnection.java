@@ -1,7 +1,5 @@
 package com.simplito.java.privmx_endpoint.modules.stream;
 
-import com.simplito.java.privmx_endpoint.model.ConnectionType;
-
 import org.json.JSONObject;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
@@ -19,20 +17,17 @@ public class JanusConnection {
     protected final PeerConnection peerConnection;
     protected final PeerConnectionFactory peerConnectionFactory;
     protected PmxKeyStore keyStore;
-    public final ConnectionType connectionType;
     private long sessionId = -1L;
     private final PcObserver pcObserver;
 
     public JanusConnection(
             PeerConnectionFactory pcFactory,
             PmxKeyStore keyStore,
-            ConnectionType connectionType,
             TrackObserver trackObserver,
             BiConsumer<Long,String> onTrickle,
             Consumer<PeerConnection.IceConnectionState> onConnectionChange
     ) {
         this.peerConnectionFactory = pcFactory;
-        this.connectionType = connectionType;
         this.keyStore = keyStore;
         this.pcObserver = new PcObserver(
                 peerConnectionFactory,
