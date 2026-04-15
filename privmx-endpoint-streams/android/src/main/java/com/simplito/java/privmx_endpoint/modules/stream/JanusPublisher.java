@@ -2,6 +2,7 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 
+import org.webrtc.AudioTrack;
 import org.webrtc.MediaConstraints;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
@@ -10,7 +11,7 @@ import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.RtpSender;
 import org.webrtc.SessionDescription;
-import org.webrtc.VideoCapturer;
+import org.webrtc.VideoTrack;
 
 import java.util.HashMap;
 import java.util.Map;
