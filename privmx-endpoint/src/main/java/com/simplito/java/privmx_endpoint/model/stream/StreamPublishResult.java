@@ -1,5 +1,7 @@
 package com.simplito.java.privmx_endpoint.model.stream;
 
+import com.simplito.java.privmx_endpoint.model.stream.events.PublishedStreamData;
+
 /**
  * Represents the result of a stream publish/update operation.
  */

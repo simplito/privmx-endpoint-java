@@ -1,4 +1,6 @@
-package com.simplito.java.privmx_endpoint.model.stream;
+package com.simplito.java.privmx_endpoint.model.stream.events;
+
+import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
 
 /**
  * Represents data of a published stream.
