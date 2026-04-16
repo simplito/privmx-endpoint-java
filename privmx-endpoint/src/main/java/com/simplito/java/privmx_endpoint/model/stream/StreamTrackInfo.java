@@ -1,17 +1,53 @@
 package com.simplito.java.privmx_endpoint.model.stream;
 
+/**
+ * Represents metadata about a single media track within a stream.
+ */
 public class StreamTrackInfo {
+    /**
+     * Type of the track (e.g. "audio", "video", "data")
+     */
     public String type;
+
     public Long mindex;
+
     public String mid;
 
+    /**
+     * Indicates if the track is disabled.
+     * Tracks are never truly removed from the stream - they are marked as disabled instead.
+     */
     public Boolean disabled;        // optional
+
+    /**
+     * Codec used by the track (e.g. "opus", "VP8")
+     */
     public String codec;            // optional
+
+    /**
+     * Description of the track
+     */
     public String description;      // optional
+
     public Boolean moderated;       // optional
+
+    /**
+     * Indicates if simulcast is enabled for the track
+     */
     public Boolean simulcast;       // optional
+
+    /**
+     * Indicates active speech detection on the track
+     */
     public Boolean talking;         // optional
 
+    /**
+     * Constructs a new {@link StreamTrackInfo} instance.
+     *
+     * @param type   Type of the track (e.g. "audio", "video", "data")
+     * @param mindex
+     * @param mid
+     */
     public StreamTrackInfo(
             String type,
             Long mindex,
@@ -20,6 +56,14 @@ public class StreamTrackInfo {
         this(type, mindex, mid, null, null, null, null, null, null);
     }
 
+    /**
+     * Constructs a new {@link StreamTrackInfo} instance.
+     *
+     * @param type     Type of the track (e.g. "audio", "video", "data")
+     * @param mindex
+     * @param mid
+     * @param disabled Indicates if the track is disabled
+     */
     public StreamTrackInfo(
             String type,
             Long mindex,
@@ -29,6 +73,15 @@ public class StreamTrackInfo {
         this(type, mindex, mid, disabled, null, null, null, null, null);
     }
 
+    /**
+     * Constructs a new {@link StreamTrackInfo} instance.
+     *
+     * @param type     Type of the track (e.g. "audio", "video", "data")
+     * @param mindex
+     * @param mid
+     * @param disabled Indicates if the track is disabled
+     * @param codec    Codec used by the track (e.g. "opus", "VP8")
+     */
     public StreamTrackInfo(
             String type,
             Long mindex,
@@ -39,6 +92,16 @@ public class StreamTrackInfo {
         this(type, mindex, mid, disabled, codec, null, null, null, null);
     }
 
+    /**
+     * Constructs a new {@link StreamTrackInfo} instance.
+     *
+     * @param type        Type of the track (e.g. "audio", "video", "data")
+     * @param mindex
+     * @param mid
+     * @param disabled    Indicates if the track is disabled
+     * @param codec       Codec used by the track (e.g. "opus", "VP8")
+     * @param description Description of the track
+     */
     public StreamTrackInfo(
             String type,
             Long mindex,
@@ -50,6 +113,17 @@ public class StreamTrackInfo {
         this(type, mindex, mid, disabled, codec, description, null, null, null);
     }
 
+    /**
+     * Constructs a new {@link StreamTrackInfo} instance.
+     *
+     * @param type        Type of the track (e.g. "audio", "video", "data")
+     * @param mindex
+     * @param mid
+     * @param disabled    Indicates if the track is disabled
+     * @param codec       Codec used by the track (e.g. "opus", "VP8")
+     * @param description Description of the track
+     * @param moderated
+     */
     public StreamTrackInfo(
             String type,
             Long mindex,
@@ -62,6 +136,18 @@ public class StreamTrackInfo {
         this(type, mindex, mid, disabled, codec, description, moderated, null, null);
     }
 
+    /**
+     * Constructs a new {@link StreamTrackInfo} instance.
+     *
+     * @param type        Type of the track (e.g. "audio", "video", "data")
+     * @param mindex
+     * @param mid
+     * @param disabled    Indicates if the track is disabled
+     * @param codec       Codec used by the track (e.g. "opus", "VP8")
+     * @param description Description of the track
+     * @param moderated
+     * @param simulcast   Indicates if simulcast is enabled for the track
+     */
     public StreamTrackInfo(
             String type,
             Long mindex,
@@ -75,6 +161,19 @@ public class StreamTrackInfo {
         this(type, mindex, mid, disabled, codec, description, moderated, simulcast, null);
     }
 
+    /**
+     * Constructs a new {@link StreamTrackInfo} instance.
+     *
+     * @param type        Type of the track (e.g. "audio", "video", "data")
+     * @param mindex
+     * @param mid
+     * @param disabled    Indicates if the track is disabled
+     * @param codec       Codec used by the track (e.g. "opus", "VP8")
+     * @param description Description of the track
+     * @param moderated
+     * @param simulcast   Indicates if simulcast is enabled for the track
+     * @param talking     Indicates active speech detection on the track
+     */
     public StreamTrackInfo(
             String type,
             Long mindex,
