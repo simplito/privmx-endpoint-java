@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
+import com.simplito.java.privmx_endpoint.model.stream.Settings;
 import com.simplito.java.privmx_endpoint.model.stream.StreamHandle;
 import com.simplito.java.privmx_endpoint.model.stream.StreamInfo;
 import com.simplito.java.privmx_endpoint.model.stream.StreamPublishResult;
@@ -413,7 +414,6 @@ public class StreamApi implements AutoCloseable {
         session.setOnConnectionChange(observer);
     }
 
-
     /**
      * Removes a media track from a stream.
      * After removing tracks, call {@link #updateStream(StreamHandle)} to propagate
@@ -650,7 +650,6 @@ public class StreamApi implements AutoCloseable {
     public void close() throws Exception {
         pcManager.getRoomIds().forEach(this::leaveStreamRoom);
         pcManager.close();
-        api.close();
     }
 
     private List<PeerConnection.IceServer> getRTCConfiguration() {
