@@ -28,6 +28,21 @@ public class JanusPublisher extends JanusConnection{
     private final Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
     private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final RmsObserver onRMSChange;
+
+    public JanusPublisher(
+            PeerConnectionFactory pcFactory,
+            PmxKeyStore keyStore,
+            TrackObserver observer,
+            BiConsumer<Long, String> onTrickle,
+            BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer,
+            Consumer<PeerConnection.IceConnectionState> onConnectionChange,
+            RmsObserver onRMSChange
+    ) {
+        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle, onConnectionChange,null);
+        this.setNewOfferOnReconfigure = acceptRenegotiationOffer;
+        this.onRMSChange = onRMSChange;
+    }
 
     public JanusPublisher(
             PeerConnectionFactory pcFactory,
@@ -37,8 +52,7 @@ public class JanusPublisher extends JanusConnection{
             BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer,
             Consumer<PeerConnection.IceConnectionState> onConnectionChange
     ) {
-        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle, onConnectionChange);
-        this.setNewOfferOnReconfigure = acceptRenegotiationOffer;
+        this(pcFactory, keyStore, observer, onTrickle, acceptRenegotiationOffer,onConnectionChange,null);
     }
 
     public void addAudioTrack(
@@ -53,6 +67,7 @@ public class JanusPublisher extends JanusConnection{
                     keyStore,
                     analyzer
             );
+            frameCryptor.setObserver(new InternalFrameCryptorObserver(audioTrack,null, onRMSChange));
 
             audioTracks.put(
                     audioTrack.id(),
@@ -75,6 +90,7 @@ public class JanusPublisher extends JanusConnection{
                         keyStore,
                         null
                 );
+                frameCryptor.setObserver(new InternalFrameCryptorObserver(videoTrack,null, null));
 
                 videoTracks.put(
                         videoTrack.id(),

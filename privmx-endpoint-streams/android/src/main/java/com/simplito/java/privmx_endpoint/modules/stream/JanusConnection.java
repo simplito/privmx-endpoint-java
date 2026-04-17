@@ -29,7 +29,8 @@ public class JanusConnection {
             ConnectionType connectionType,
             TrackObserver trackObserver,
             BiConsumer<Long,String> onTrickle,
-            Consumer<PeerConnection.IceConnectionState> onConnectionChange
+            Consumer<PeerConnection.IceConnectionState> onConnectionChange,
+            RmsObserver rmsChangesObserver
     ) {
         this.peerConnectionFactory = pcFactory;
         this.connectionType = connectionType;
@@ -56,7 +57,8 @@ public class JanusConnection {
                     }
                 },
                 this::onRenegotiationNeeded,
-                onConnectionChange
+                onConnectionChange,
+                rmsChangesObserver
         );
         this.peerConnection = createPeerConnection(pcObserver);
     }

@@ -11,21 +11,31 @@ public class PcObserver implements PeerConnection.Observer {
     private final Map<String, PmxFrameCryptor> frameCryptorMap = new HashMap<>();
     private final PmxKeyStore keyStore;
     private final PeerConnectionFactory peerConnectionFactory;
+
     private final TrackObserver trackObserver;
     private final Consumer<IceCandidate> onIceCandidate;
     private final Runnable onRenegotiationNeeded;
     private final Consumer<PeerConnection.IceConnectionState> onIceConnectionChange;
-    private final PmxFrameCryptor.Observer observer = new PmxFrameCryptor.Observer() {
-        @Override
-        public void onFrameCryptionStateChanged(PmxFrameCryptor.PmxFrameCryptionState newState) {
-            System.out.println("PC FrameCryptorObserver stateChanged to: " + newState.name());
-        }
+    private final RmsObserver onRMS;
 
-        @Override
-        public void onFrameRms(byte rms) {
-            System.out.println("PC FrameCryptorObserver rms changed to: " + rms);
-        }
-    };
+    public PcObserver(
+            PeerConnectionFactory peerConnectionFactory,
+            PmxKeyStore store,
+            TrackObserver observer,
+            Consumer<IceCandidate> onIceCandidate,
+            Runnable onRenegotiationNeeded,
+            Consumer<PeerConnection.IceConnectionState> onIceConnectionChange,
+            RmsObserver onRMS
+    ) {
+        this.peerConnectionFactory = peerConnectionFactory;
+        this.keyStore = store;
+        this.trackObserver = observer;
+        this.onIceCandidate = onIceCandidate;
+        this.onRenegotiationNeeded = onRenegotiationNeeded;
+        this.onIceConnectionChange = onIceConnectionChange;
+        this.onRMS = onRMS;
+    }
+
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
             PmxKeyStore store,
@@ -34,12 +44,7 @@ public class PcObserver implements PeerConnection.Observer {
             Runnable onRenegotiationNeeded,
             Consumer<PeerConnection.IceConnectionState> onIceConnectionChange
     ) {
-        this.peerConnectionFactory = peerConnectionFactory;
-        this.keyStore = store;
-        this.trackObserver = observer;
-        this.onIceCandidate = onIceCandidate;
-        this.onRenegotiationNeeded = onRenegotiationNeeded;
-        this.onIceConnectionChange = onIceConnectionChange;
+        this(peerConnectionFactory,store,observer,onIceCandidate,onRenegotiationNeeded,null,null);
     }
 
     public PcObserver(
@@ -49,7 +54,7 @@ public class PcObserver implements PeerConnection.Observer {
             Consumer<IceCandidate> onIceCandidate,
             Runnable onRenegotiationNeeded
     ){
-        this(peerConnectionFactory,store,observer,onIceCandidate,onRenegotiationNeeded,null);
+        this(peerConnectionFactory,store,observer,onIceCandidate,onRenegotiationNeeded,null,null);
     }
 
     @Override
@@ -107,6 +112,7 @@ public class PcObserver implements PeerConnection.Observer {
     @Override
     public void onAddTrack(RtpReceiver receiver, MediaStream[] mediaStreams) {
         MediaStreamTrack track = receiver.track();
+        String streamId = mediaStreams.length > 0 ? mediaStreams[0].getId() : null;
         if (peerConnectionFactory != null && track != null && track.id() != null) {
             PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
                     peerConnectionFactory,
@@ -118,11 +124,8 @@ public class PcObserver implements PeerConnection.Observer {
                     track.id(),
                     frameCryptor
             );
-            if(receiver.track() instanceof AudioTrack) {
-                frameCryptor.setObserver(observer);
-            }
+            frameCryptor.setObserver(new InternalFrameCryptorObserver(track,streamId, onRMS));
             if(trackObserver != null){
-                String streamId = mediaStreams.length > 0 ? mediaStreams[0].getId() : null;
                 if(streamId != null) {
                     trackObserver.OnRemoteTrack(streamId, track);
                 }

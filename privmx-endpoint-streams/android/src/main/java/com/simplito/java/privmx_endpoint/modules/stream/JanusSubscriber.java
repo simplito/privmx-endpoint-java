@@ -3,12 +3,10 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
 
 import org.webrtc.MediaConstraints;
-import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.SessionDescription;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
@@ -17,9 +15,10 @@ public class JanusSubscriber extends JanusConnection {
             PeerConnectionFactory pcFactory,
             PmxKeyStore keyStore,
             TrackObserver observer,
-            BiConsumer<Long, String> onTrickle
+            BiConsumer<Long, String> onTrickle,
+            RmsObserver rmsChangesObserver
     ) {
-        super(pcFactory, keyStore, ConnectionType.Subscriber, observer, onTrickle,null);
+        super(pcFactory, keyStore, ConnectionType.Subscriber, observer, onTrickle,null,rmsChangesObserver);
     }
 
     public String createAnswer(String offerSdp, String type) {

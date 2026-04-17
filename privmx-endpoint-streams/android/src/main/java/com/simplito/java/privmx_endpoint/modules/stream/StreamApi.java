@@ -22,6 +22,7 @@ import org.webrtc.audio.AudioDeviceModule;
 import org.webrtc.audio.JavaAudioDeviceModule;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -260,6 +261,16 @@ public class StreamApi implements AutoCloseable{
             TrackObserver observer
     ) {
         setTrackObserver(roomId, observer, null);
+    }
+
+    public void setAudioLevelAnalyzer(
+            @NonNull String roomId,
+            Consumer<Map<String,Long>> onSpeakingStats
+    ){
+        RoomJanusSession session = pcManager.getSession(roomId);
+        if (session == null)
+            throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first.");
+        session.setOnSpeakingStatsChanged(onSpeakingStats);
     }
 
     /**
