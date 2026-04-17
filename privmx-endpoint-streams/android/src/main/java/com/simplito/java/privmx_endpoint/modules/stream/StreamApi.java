@@ -147,8 +147,7 @@ public class StreamApi implements AutoCloseable {
      * @param privateMeta         private (encrypted) metadata
      * @param version             current version of the updated Stream Room
      * @param force               force update (without checking version)
-     * @param forceGenerateNewKey force to regenerate the encryption key for the Stream Room.
-     *                            Should be {@code true} whenever a user is removed
+     * @param forceGenerateNewKey force to regenerate the encryption key for the StreamRoom
      * @param policies            additional container access policies, or {@code null} to keep
      *                            current/defaults
      */
