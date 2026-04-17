@@ -263,7 +263,7 @@ public class StreamApi implements AutoCloseable{
         setTrackObserver(roomId, observer, null);
     }
 
-    public void setAudioLevelAnalyzer(
+    public void setSpeakingStatsListener(
             @NonNull String roomId,
             Consumer<Map<String,Long>> onSpeakingStats
     ){
