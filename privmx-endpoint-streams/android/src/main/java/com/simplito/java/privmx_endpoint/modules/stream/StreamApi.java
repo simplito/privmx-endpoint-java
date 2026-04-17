@@ -448,7 +448,7 @@ public class StreamApi implements AutoCloseable {
      * making it visible to other participants in the room.
      *
      * @param streamHandle handle returned by {@link #createStream(String)}
-     * @return result of the publish operation containing session information
+     * @return result of the publish operation containing stream information
      * @throws IllegalStateException thrown when no stream exists for the given handle.
      */
     public StreamPublishResult publishStream(@NonNull StreamHandle streamHandle) {
@@ -470,7 +470,7 @@ public class StreamApi implements AutoCloseable {
      * to propagate the changes to other participants.
      *
      * @param streamHandle handle returned by {@link #createStream(String)}
-     * @return result of the update operation containing updated session information
+     * @return result of the update operation containing updated stream information
      * @throws IllegalStateException thrown when no stream exists for the given handle.
      */
     public StreamPublishResult updateStream(@NonNull StreamHandle streamHandle) {
