@@ -255,7 +255,7 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Gets a single Stream Room by given Stream Room ID.
+     * Gets a single StreamRoom identified by given StreamRoom ID.
      *
      * @param streamRoomId ID of the Stream Room to get
      * @return struct containing information about the Stream Room
