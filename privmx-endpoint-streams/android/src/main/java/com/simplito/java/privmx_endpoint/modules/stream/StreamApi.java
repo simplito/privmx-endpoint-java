@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 /**
  * High-level API for managing PrivMX Stream Rooms and WebRTC media sessions on Android.
- * {@code StreamApi} is a high-level wrapper over {@link StreamApiLow}, providing
+ * {@code StreamApi} is a high-level wrapper over {@link StreamApiLow} and WebRTC, providing
  * a simplified interface for working with Stream Rooms.
  */
 public class StreamApi implements AutoCloseable {
