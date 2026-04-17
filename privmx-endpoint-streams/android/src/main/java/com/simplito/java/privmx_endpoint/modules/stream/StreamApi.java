@@ -361,7 +361,7 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Registers a {@link TrackObserver} to receive callbacks when remote media tracks
+     * Registers a {@link TrackObserver} to receive callbacks when a remote media track
      * become available for a specified stream in the given StreamRoom.
      * Use this method to observe tracks only from a selected remote stream.
      *
@@ -383,7 +383,7 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Registers a {@link TrackObserver} to receive callbacks when remote media tracks
+     * Registers a {@link TrackObserver} to receive callbacks when a remote media track
      * become available for all streams in the given StreamRoom.
      *
      * @param roomId   ID of the StreamRoom
