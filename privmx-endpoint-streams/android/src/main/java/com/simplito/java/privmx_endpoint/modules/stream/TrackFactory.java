@@ -30,10 +30,14 @@ public class TrackFactory {
     /**
      * Creates a {@link VideoSource} with explicit timestamp alignment control.
      *
-     * @param isScreenCast       {@code true} if the source is capturing a screen share;
-     *                           {@code false} for a regular camera feed
-     * @param alignTimestamps    {@code true} to align video frame timestamps with the
-     *                           audio clock, which can improve A/V sync in some scenarios
+     * @param isScreenCast    {@code true} if the source is capturing a screen share;
+     *                        {@code false} for a regular camera
+     * @param alignTimestamps if {@code} false - the caller is responsible for aligning
+     *                        frame timestamps to {@code rtc::TimeNanos()} — useful for
+     *                        higher accuracy when there is a significant delay between
+     *                        frame creation and delivery; if {@code true}, timestamps
+     *                        are automatically aligned to {@code rtc::TimeNanos()}
+     *                        upon arrival at the returned video source
      * @return a new {@link VideoSource} instance
      */
     public VideoSource createVideoSource(boolean isScreenCast, boolean alignTimestamps){
