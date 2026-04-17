@@ -579,12 +579,9 @@ public class StreamApi implements AutoCloseable {
 
     /**
      * Controls whether encrypted media frames that cannot be decrypted should be dropped.
-     * When enabled, this prevents corrupted audio or video from being rendered in situations
-     * such as key rotation, where a participant may temporarily use an outdated key.
      *
-     * @param streamRoomId ID of the Stream Room
-     * @param enable       {@code true} to silently drop undecryptable frames;
-     *                     {@code false} to pass them through unchanged
+     * @param streamRoomId ID of the StreamRoom
+     * @param enable       if {@code true}, broken frames will be dropped
      */
     public void dropBrokenFrames(
             String streamRoomId,
