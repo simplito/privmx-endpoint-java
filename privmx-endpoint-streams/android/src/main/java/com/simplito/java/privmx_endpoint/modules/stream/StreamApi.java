@@ -258,7 +258,7 @@ public class StreamApi implements AutoCloseable {
      * Gets a single StreamRoom identified by given StreamRoom ID.
      *
      * @param streamRoomId ID of the Stream Room to get
-     * @return struct containing information about the Stream Room
+     * @return {@link StreamRoom} containing information about the room
      */
     public StreamRoom getStreamRoom(String streamRoomId) {
         return api.getStreamRoom(streamRoomId);
@@ -277,7 +277,7 @@ public class StreamApi implements AutoCloseable {
      * Gets a list of currently published streams in given Stream Room.
      *
      * @param streamRoomId ID of the Stream Room to list streams from
-     * @return list of {@link StreamInfo} structs describing currently published streams
+     * @return list of {@link StreamInfo} describing currently published streams
      */
     public List<StreamInfo> listStreams(String streamRoomId) {
         return api.listStreams(streamRoomId);
@@ -504,7 +504,7 @@ public class StreamApi implements AutoCloseable {
      * {@link #joinStreamRoom(String)} must be called before this method.
      *
      * @param streamRoomId  ID of the Stream Room
-     * @param subscriptions list of {@link StreamSubscription} structs describing the remote
+     * @param subscriptions list of {@link StreamSubscription} describing the remote
      *                      streams to subscribe to
      * @throws IllegalStateException thrown when no active session exists for the given room.
      */
@@ -532,8 +532,8 @@ public class StreamApi implements AutoCloseable {
      * avoiding the need to fully unsubscribe and resubscribe.
      *
      * @param streamRoomId          ID of the Stream Room
-     * @param subscriptionsToAdd    list of {@link StreamSubscription} structs to add
-     * @param subscriptionsToRemove list of {@link StreamSubscription} structs to remove
+     * @param subscriptionsToAdd    list of {@link StreamSubscription} to add
+     * @param subscriptionsToRemove list of {@link StreamSubscription} to remove
      * @throws IllegalStateException thrown when no active session or subscriber exists
      *                               for the given room.
      */
@@ -559,7 +559,7 @@ public class StreamApi implements AutoCloseable {
      * Unsubscribes from selected remote streams in a Stream Room.
      *
      * @param streamRoomId          ID of the Stream Room
-     * @param subscriptionsToRemove list of {@link StreamSubscription} structs to remove
+     * @param subscriptionsToRemove list of {@link StreamSubscription} to remove
      * @throws IllegalStateException thrown when no active session or subscriber exists
      *                               for the given room.
      */
