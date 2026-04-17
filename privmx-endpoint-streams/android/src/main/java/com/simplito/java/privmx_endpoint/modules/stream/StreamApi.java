@@ -659,9 +659,7 @@ public class StreamApi implements AutoCloseable {
 
     /**
      * Releases all resources associated with this instance.
-     * <p>
-     * Leaves all active Stream Rooms, shuts down the peer connection manager,
-     * and closes the underlying {@link StreamApiLow} instance.
+     * Leaves all active StreamRooms and releases allocated resources.
      *
      * @throws Exception thrown if an error occurs during cleanup
      */
