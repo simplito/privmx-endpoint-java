@@ -308,12 +308,10 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Creates a local stream handle for publishing media in given Stream Room.
+     * Creates a local stream handle for publishing media in given StreamRoom.
      * {@link #joinStreamRoom(String)} must be called before this method.
-     * Use {@link #addTrack(StreamHandle, MediaStreamTrack)} to add media tracks
-     * before calling {@link #publishStream(StreamHandle)}.
      *
-     * @param streamRoomId ID of the Stream Room to create the stream in
+     * @param streamRoomId ID of the StreamRoom to create the stream in
      * @return handle to the local stream instance
      */
     public StreamHandle createStream(String streamRoomId) {
