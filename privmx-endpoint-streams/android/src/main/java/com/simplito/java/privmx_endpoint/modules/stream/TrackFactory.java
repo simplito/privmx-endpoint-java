@@ -11,7 +11,8 @@ import org.webrtc.*;
  */
 public class TrackFactory {
     private final PeerConnectionFactory factory;
-    TrackFactory(PeerConnectionManager pcManager){
+
+    TrackFactory(PeerConnectionManager pcManager) {
         factory = pcManager.pcFactory;
     }
 
@@ -22,7 +23,7 @@ public class TrackFactory {
      *                     {@code false} for a regular camera
      * @return a new {@link VideoSource} instance
      */
-    public VideoSource createVideoSource(boolean isScreenCast){
+    public VideoSource createVideoSource(boolean isScreenCast) {
         return factory.createVideoSource(isScreenCast);
     }
 
@@ -39,8 +40,8 @@ public class TrackFactory {
      *                        upon arrival at the returned video source
      * @return a new {@link VideoSource} instance
      */
-    public VideoSource createVideoSource(boolean isScreenCast, boolean alignTimestamps){
-        return factory.createVideoSource(isScreenCast,alignTimestamps);
+    public VideoSource createVideoSource(boolean isScreenCast, boolean alignTimestamps) {
+        return factory.createVideoSource(isScreenCast, alignTimestamps);
     }
 
     /**
@@ -51,22 +52,22 @@ public class TrackFactory {
      *
      * @return a new {@link AudioSource} instance
      */
-    public AudioSource createAudioSource(){
+    public AudioSource createAudioSource() {
         return factory.createAudioSource(new MediaConstraints());
     }
 
     /**
      * Creates a {@link VideoTrack} using the provided {@link VideoSource}.
+     *
      * @param id          unique identifier for this track within the peer connection
      * @param videoSource source of video frames
-     *
      * @return a new {@link VideoTrack} instance
      */
     public VideoTrack createVideoTrack(
             String id,
             VideoSource videoSource
-    ){
-        return factory.createVideoTrack(id,videoSource);
+    ) {
+        return factory.createVideoTrack(id, videoSource);
     }
 
     /**
@@ -74,14 +75,13 @@ public class TrackFactory {
      *
      * @param id          unique identifier for this track within the peer connection
      * @param audioSource source providing audio samples
-     *
      * @return a new {@link AudioTrack} instance
      */
     public AudioTrack createAudioTrack(
             String id,
             AudioSource audioSource
-    ){
-        return factory.createAudioTrack(id,audioSource);
+    ) {
+        return factory.createAudioTrack(id, audioSource);
     }
 
 }

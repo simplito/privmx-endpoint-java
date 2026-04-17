@@ -102,8 +102,8 @@ public class StreamApi implements AutoCloseable {
                         this.api.trickle(sessionId, rtcConfiguration);
                     }
                 },
-                (s,s2)->{
-                    this.api.setNewOfferOnReconfigure(s,s2);
+                (s, s2) -> {
+                    this.api.setNewOfferOnReconfigure(s, s2);
                 }
 
         );
