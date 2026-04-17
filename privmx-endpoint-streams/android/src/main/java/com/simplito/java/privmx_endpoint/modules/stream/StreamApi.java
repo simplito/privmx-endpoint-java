@@ -147,8 +147,7 @@ public class StreamApi implements AutoCloseable {
      * @param version             current version of the updated StreamRoom
      * @param force               force update (without checking version)
      * @param forceGenerateNewKey force to regenerate the encryption key for the StreamRoom
-     * @param policies            additional container access policies, or {@code null} to keep
-     *                            current/defaults
+     * @param policies            additional container access policies, or {@code null} to restore defaults
      */
     public void updateStreamRoom(
             String streamRoomId,
