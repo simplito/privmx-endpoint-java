@@ -283,7 +283,7 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Joins a Stream Room and establishes a WebRTC session.
+     * Joins a StreamRoom and prepares the session for WebRTC communication.
      * Must be called before {@link #createStream(String)},
      * {@link #publishStream(StreamHandle)}, and any remote stream subscription calls
      * for the given room.
