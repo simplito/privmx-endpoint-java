@@ -16,10 +16,10 @@ public class TrackFactory {
     }
 
     /**
-     * Creates a {@link VideoSource} that can capture a camera or screen feed.
+     * Creates a {@link VideoSource} that can capture a camera or screen with alignTimestamps to {@code true}.
      *
      * @param isScreenCast {@code true} if the source is capturing a screen share;
-     *                     {@code false} for a regular camera feed.
+     *                     {@code false} for a regular camera
      * @return a new {@link VideoSource} instance
      */
     public VideoSource createVideoSource(boolean isScreenCast){
