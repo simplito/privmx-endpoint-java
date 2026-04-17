@@ -264,7 +264,7 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Deletes a Stream Room by given Stream Room ID.
+     * Deletes a StreamRoom identified by given StreamRoom ID.
      *
      * @param streamRoomId ID of the Stream Room to delete
      */
