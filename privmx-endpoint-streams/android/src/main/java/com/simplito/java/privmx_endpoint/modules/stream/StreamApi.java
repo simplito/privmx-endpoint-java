@@ -362,12 +362,12 @@ public class StreamApi implements AutoCloseable {
 
     /**
      * Registers a {@link TrackObserver} to receive callbacks when remote media tracks
-     * become available for a specific stream in the given Stream Room.
+     * become available for a specified stream in the given StreamRoom.
      * Use this method to observe tracks only from a selected remote stream.
      *
-     * @param roomId   ID of the Stream Room
+     * @param roomId   ID of the StreamRoom
      * @param observer observer implementation receiving track callbacks
-     * @param streamId ID of a specific remote stream to observe, or {@code null} for all streams
+     * @param streamId ID of a specific remote stream to observe, or {@code null} for all streams in the given StreamRoom.
      * @throws IllegalStateException thrown when no active session exists for the given room.
      */
     public void setTrackObserver(
@@ -384,9 +384,9 @@ public class StreamApi implements AutoCloseable {
 
     /**
      * Registers a {@link TrackObserver} to receive callbacks when remote media tracks
-     * become available for all streams in the given Stream Room.
+     * become available for all streams in the given StreamRoom.
      *
-     * @param roomId   ID of the Stream Room
+     * @param roomId   ID of the StreamRoom
      * @param observer observer implementation receiving track callbacks
      * @throws IllegalStateException thrown when no active session exists for the given room.
      */
