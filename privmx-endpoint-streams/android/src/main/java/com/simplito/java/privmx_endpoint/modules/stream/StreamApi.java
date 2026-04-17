@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 
 /**
  * High-level API for managing PrivMX Stream Rooms and WebRTC media sessions on Android.
- * <p>
  * {@code StreamApi} is a high-level wrapper over {@link StreamApiLow}, providing
  * a simplified interface for working with Stream Rooms.
  */
@@ -286,7 +285,6 @@ public class StreamApi implements AutoCloseable {
 
     /**
      * Joins a Stream Room and establishes a WebRTC session.
-     * <p>
      * Must be called before {@link #createStream(String)},
      * {@link #publishStream(StreamHandle)}, and any remote stream subscription calls
      * for the given room.
@@ -312,7 +310,6 @@ public class StreamApi implements AutoCloseable {
 
     /**
      * Creates a local stream handle for publishing media in given Stream Room.
-     * <p>
      * {@link #joinStreamRoom(String)} must be called before this method.
      * Use {@link #addTrack(StreamHandle, MediaStreamTrack)} to add media tracks
      * before calling {@link #publishStream(StreamHandle)}.
@@ -369,7 +366,6 @@ public class StreamApi implements AutoCloseable {
     /**
      * Registers a {@link TrackObserver} to receive callbacks when remote media tracks
      * become available for a specific stream in the given Stream Room.
-     * <p>
      * Use this method to observe tracks only from a selected remote stream.
      *
      * @param roomId   ID of the Stream Room
@@ -425,7 +421,6 @@ public class StreamApi implements AutoCloseable {
 
     /**
      * Removes a media track from a stream.
-     * <p>
      * After removing tracks, call {@link #updateStream(StreamHandle)} to propagate
      * the change to other participants.
      *
@@ -473,7 +468,6 @@ public class StreamApi implements AutoCloseable {
 
     /**
      * Updates a published stream after track changes.
-     * <p>
      * Call this after {@link #addTrack(StreamHandle, MediaStreamTrack)} or
      * {@link #removeTrack(StreamHandle, MediaStreamTrack)} on an already-published stream
      * to propagate the changes to other participants.
@@ -507,7 +501,6 @@ public class StreamApi implements AutoCloseable {
 
     /**
      * Subscribes to selected remote streams in a Stream Room.
-     * <p>
      * {@link #joinStreamRoom(String)} must be called before this method.
      *
      * @param streamRoomId  ID of the Stream Room
@@ -535,7 +528,6 @@ public class StreamApi implements AutoCloseable {
 
     /**
      * Modifies the current list of remote stream subscriptions in a Stream Room.
-     * <p>
      * Allows atomically adding and removing remote stream subscriptions in a single call,
      * avoiding the need to fully unsubscribe and resubscribe.
      *
@@ -589,7 +581,6 @@ public class StreamApi implements AutoCloseable {
 
     /**
      * Controls whether encrypted media frames that cannot be decrypted should be dropped.
-     * <p>
      * When enabled, this prevents corrupted audio or video from being rendered in situations
      * such as key rotation, where a participant may temporarily use an outdated key.
      *
@@ -635,7 +626,6 @@ public class StreamApi implements AutoCloseable {
     /**
      * Generates a subscription query string for events for the Stream Room
      * as well as its individual streams.
-     * <p>
      * The returned query should be passed to {@link #subscribeFor(List)} to start
      * receiving the requested events.
      *

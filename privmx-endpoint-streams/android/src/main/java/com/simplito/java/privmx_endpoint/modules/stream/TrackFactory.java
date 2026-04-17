@@ -6,7 +6,6 @@ import org.webrtc.*;
  * Factory for creating WebRTC media sources and tracks.
  * Provides methods for creating the audio and video objects needed
  * to publish a stream via {@link StreamApi}.
- * <p>
  * You do not create instances of this class directly — obtain the shared instance
  * from {@link StreamApi#trackFactory} after constructing a {@link StreamApi}.
  */
@@ -46,7 +45,6 @@ public class TrackFactory {
 
     /**
      * Creates an {@link AudioSource} with default media constraints.
-     * <p>
      * The source captures audio from the device microphone. Default constraints
      * enable standard WebRTC audio processing (echo cancellation, noise suppression,
      * auto gain control).
