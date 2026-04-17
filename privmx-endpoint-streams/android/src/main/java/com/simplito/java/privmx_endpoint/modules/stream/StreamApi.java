@@ -5,7 +5,6 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
@@ -37,9 +36,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * High-level API for managing PrivMX Stream Rooms and WebRTC media sessions on Android.
+ * High-level API for managing PrivMX StreamRooms and WebRTC media sessions on Android.
  * {@code StreamApi} is a high-level wrapper over {@link StreamApiLow} and WebRTC, providing
- * a simplified interface for working with Stream Rooms.
+ * a simplified interface for working with StreamRooms.
  */
 public class StreamApi implements AutoCloseable {
     private final StreamApiLow api;
@@ -112,17 +111,17 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Creates a new Stream Room within the specified Context.
+     * Creates a new StreamRoom within the speci fvfied Context.
      *
-     * @param contextId   ID of the Context to create the Stream Room in
+     * @param contextId   ID of the Context to create the StreamRoom in
      * @param users       list of {@link UserWithPubKey} indicating which users will have
-     *                    access to the created Stream Room
+     *                    access to the created StreamRoom
      * @param managers    list of {@link UserWithPubKey} indicating which users will have
-     *                    access and management rights to the created Stream Room
+     *                    access and management rights to the created StreamRoom
      * @param publicMeta  public (unencrypted) metadata
      * @param privateMeta private (encrypted) metadata
      * @param policies    additional container access policies, or {@code null} to use default settings
-     * @return ID of the created Stream Room
+     * @return ID of the created StreamRoom
      */
     public String createStreamRoom(
             String contextId,
@@ -136,16 +135,16 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Updates an existing Stream Room.
+     * Updates an existing StreamRoom.
      *
-     * @param streamRoomId        ID of the Stream Room to update
+     * @param streamRoomId        ID of the StreamRoom to update
      * @param users               list of {@link UserWithPubKey} indicating which users will have
-     *                            access to the created Stream Room
+     *                            access to the StreamRoom
      * @param managers            list of {@link UserWithPubKey} indicating which users will have
-     *                            access and management rights to the created Stream Room
+     *                            access and management rights to the created StreamRoom
      * @param publicMeta          public (unencrypted) metadata
      * @param privateMeta         private (encrypted) metadata
-     * @param version             current version of the updated Stream Room
+     * @param version             current version of the updated StreamRoom
      * @param force               force update (without checking version)
      * @param forceGenerateNewKey force to regenerate the encryption key for the StreamRoom
      * @param policies            additional container access policies, or {@code null} to keep
@@ -166,9 +165,9 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Gets a list of Stream Rooms in given Context.
+     * Gets a list of StreamRooms in given Context.
      *
-     * @param contextId   ID of the Context to get Stream Rooms from
+     * @param contextId   ID of the Context to get StreamRooms from
      * @param skip        number of elements to skip from result
      * @param limit       limit of elements to return for query
      * @param sortOrder   order of elements in result ({@code "asc"} for ascending,
@@ -176,7 +175,7 @@ public class StreamApi implements AutoCloseable {
      * @param lastId      ID of the element from which query results should start
      * @param sortBy      field name to sort elements by
      * @param queryAsJson stringified JSON object with a custom field to filter result
-     * @return list of Stream Rooms
+     * @return list of StreamRooms
      */
     public PagingList<StreamRoom> listStreamRooms(
             String contextId,
@@ -191,16 +190,16 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Gets a list of Stream Rooms in given Context.
+     * Gets a list of StreamRooms in given Context.
      *
-     * @param contextId   ID of the Context to get Stream Rooms from
-     * @param skip        number of elements to skip from result
-     * @param limit       limit of elements to return for query
-     * @param sortOrder   order of elements in result ({@code "asc"} for ascending,
-     *                    {@code "desc"} for descending)
-     * @param lastId      ID of the element from which query results should start
-     * @param sortBy      field name to sort elements by
-     * @return list of Stream Rooms
+     * @param contextId ID of the Context to get StreamRooms from
+     * @param skip      number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ({@code "asc"} for ascending,
+     *                  {@code "desc"} for descending)
+     * @param lastId    ID of the element from which query results should start
+     * @param sortBy    field name to sort elements by
+     * @return list of StreamRooms
      */
     public PagingList<StreamRoom> listStreamRooms(
             String contextId,
@@ -214,15 +213,15 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Gets a list of Stream Rooms in given Context.
+     * Gets a list of StreamRooms in given Context.
      *
-     * @param contextId   ID of the Context to get Stream Rooms from
-     * @param skip        number of elements to skip from result
-     * @param limit       limit of elements to return for query
-     * @param sortOrder   order of elements in result ({@code "asc"} for ascending,
-     *                    {@code "desc"} for descending)
-     * @param lastId      ID of the element from which query results should start
-     * @return list of Stream Rooms
+     * @param contextId ID of the Context to get StreamRooms from
+     * @param skip      number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ({@code "asc"} for ascending,
+     *                  {@code "desc"} for descending)
+     * @param lastId    ID of the element from which query results should start
+     * @return list of StreamRooms
      */
     public PagingList<StreamRoom> listStreamRooms(
             String contextId,
@@ -235,14 +234,14 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Gets a list of Stream Rooms in given Context.
+     * Gets a list of StreamRooms in given Context.
      *
-     * @param contextId   ID of the Context to get Stream Rooms from
-     * @param skip        number of elements to skip from result
-     * @param limit       limit of elements to return for query
-     * @param sortOrder   order of elements in result ({@code "asc"} for ascending,
-     *                    {@code "desc"} for descending)
-     * @return list of Stream Rooms
+     * @param contextId ID of the Context to get StreamRooms from
+     * @param skip      number of elements to skip from result
+     * @param limit     limit of elements to return for query
+     * @param sortOrder order of elements in result ({@code "asc"} for ascending,
+     *                  {@code "desc"} for descending)
+     * @return list of StreamRooms
      */
     public PagingList<StreamRoom> listStreamRooms(
             String contextId,
@@ -256,7 +255,7 @@ public class StreamApi implements AutoCloseable {
     /**
      * Gets a single StreamRoom identified by given StreamRoom ID.
      *
-     * @param streamRoomId ID of the Stream Room to get
+     * @param streamRoomId ID of the StreamRoom to get
      * @return {@link StreamRoom} containing information about the room
      */
     public StreamRoom getStreamRoom(String streamRoomId) {
@@ -266,16 +265,16 @@ public class StreamApi implements AutoCloseable {
     /**
      * Deletes a StreamRoom identified by given StreamRoom ID.
      *
-     * @param streamRoomId ID of the Stream Room to delete
+     * @param streamRoomId ID of the StreamRoom to delete
      */
     public void deleteStreamRoom(String streamRoomId) {
         api.deleteStreamRoom(streamRoomId);
     }
 
     /**
-     * Gets a list of currently published streams in given Stream Room.
+     * Gets a list of currently published streams in given StreamRoom.
      *
-     * @param streamRoomId ID of the Stream Room to list streams from
+     * @param streamRoomId ID of the StreamRoom to list streams from
      * @return list of {@link StreamInfo} describing currently published streams
      */
     public List<StreamInfo> listStreams(String streamRoomId) {
@@ -288,7 +287,7 @@ public class StreamApi implements AutoCloseable {
      * {@link #publishStream(StreamHandle)}, and any remote stream subscription calls
      * for the given room.
      *
-     * @param streamRoomId ID of the Stream Room to join
+     * @param streamRoomId ID of the StreamRoom to join
      */
     public void joinStreamRoom(
             String streamRoomId
@@ -298,9 +297,9 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Leaves a Stream Room and releases the associated WebRTC session.
+     * Leaves a StreamRoom and releases the associated WebRTC session.
      *
-     * @param streamRoomId ID of the Stream Room to leave
+     * @param streamRoomId ID of the StreamRoom to leave
      */
     public void leaveStreamRoom(String streamRoomId) {
         pcManager.leaveStreamRoom(streamRoomId);
@@ -398,9 +397,9 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Registers an observer to receive ICE connection state changes for the given Stream Room.
+     * Registers an observer to receive ICE connection state changes for the given StreamRoom.
      *
-     * @param roomId   ID of the Stream Room
+     * @param roomId   ID of the StreamRoom
      * @param observer callback receiving {@link PeerConnection.IceConnectionState} values
      * @throws IllegalStateException thrown when no active session exists for the given room.
      */
@@ -525,11 +524,11 @@ public class StreamApi implements AutoCloseable {
 
 
     /**
-     * Modifies the current list of remote stream subscriptions in a Stream Room.
+     * Modifies the current list of remote stream subscriptions in a StreamRoom.
      * Allows atomically adding and removing remote stream subscriptions in a single call,
      * avoiding the need to fully unsubscribe and resubscribe.
      *
-     * @param streamRoomId          ID of the Stream Room
+     * @param streamRoomId          ID of the StreamRoom
      * @param subscriptionsToAdd    list of {@link StreamSubscription} to add
      * @param subscriptionsToRemove list of {@link StreamSubscription} to remove
      * @throws IllegalStateException thrown when no active session or subscriber exists
@@ -554,9 +553,9 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Unsubscribes from selected remote streams in a Stream Room.
+     * Unsubscribes from selected remote streams in a StreamRoom.
      *
-     * @param streamRoomId          ID of the Stream Room
+     * @param streamRoomId          ID of the StreamRoom
      * @param subscriptionsToRemove list of {@link StreamSubscription} to remove
      * @throws IllegalStateException thrown when no active session or subscriber exists
      *                               for the given room.
@@ -596,7 +595,7 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Subscribes to events for the Stream Room as well as its individual streams,
+     * Subscribes to events for the StreamRoom as well as its individual streams,
      * based on the provided subscription queries.
      *
      * @param subscriptionQueries list of queries built with
@@ -619,7 +618,7 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Generates a subscription query string for events for the Stream Room
+     * Generates a subscription query string for events for the StreamRoom
      * as well as its individual streams.
      * The returned query should be passed to {@link #subscribeFor(List)} to start
      * receiving the requested events.
