@@ -1769,13 +1769,11 @@ namespace privmx {
                     "Ljava/util/List;"          // tracks
                     "Ljava/lang/String;"        // metadata
                     "Ljava/lang/Boolean;"       // dummy
-                    "Ljava/lang/Boolean;"       // talking
                     ")V"
             );
 
             jobject metadata = nullptr;
             jobject dummy = nullptr;
-            jobject talking = nullptr;
 
             if (streamInfo_c.metadata.has_value()) {
                 metadata = ctx->NewStringUTF(streamInfo_c.metadata.value().c_str());
@@ -1785,20 +1783,7 @@ namespace privmx {
                 dummy = ctx.bool2jBoolean(streamInfo_c.dummy.value());
             }
 
-            if (streamInfo_c.talking.has_value()) {
-                talking = ctx.bool2jBoolean(streamInfo_c.talking.value());
-            }
-
-            jobject tracks = ctx->NewObject(arrayCls, initArrayMID);
-            for (auto &track: streamInfo_c.tracks) {
-                ctx->CallBooleanMethod(
-                        tracks,
-                        addToArrayMID,
-                        streamTrackInfo2Java(ctx, track)
-                );
-            }
-
-            // todo - check null?
+            jobject tracks = vectorTojArray(ctx, streamInfo_c.tracks, streamTrackInfo2Java);
 
             return ctx->NewObject(
                     itemCls,
@@ -1807,10 +1792,8 @@ namespace privmx {
                     ctx->NewStringUTF(streamInfo_c.userId.c_str()),
                     tracks,
                     metadata,
-                    dummy,
-                    talking
+                    dummy
             );
-
         }
 
         jobject publishedStreamData2Java(JniContextUtils &ctx, privmx::endpoint::stream::PublishedStreamData publishedStreamData_c) {
