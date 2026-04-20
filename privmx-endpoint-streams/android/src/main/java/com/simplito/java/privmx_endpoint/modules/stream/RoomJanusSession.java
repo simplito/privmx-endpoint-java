@@ -24,7 +24,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class RoomJanusSession {
+class RoomJanusSession {
     @NonNull
     public final String roomID;
     @NonNull
@@ -42,7 +42,7 @@ public class RoomJanusSession {
     private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
 
     //TODO: Add error listener for catch errors from webrtcInterface
-    public RoomJanusSession(
+    RoomJanusSession(
             @NonNull String roomId,
             @NonNull PeerConnectionFactory pcFactory,
             BiConsumer<Long,String> onTrickle,

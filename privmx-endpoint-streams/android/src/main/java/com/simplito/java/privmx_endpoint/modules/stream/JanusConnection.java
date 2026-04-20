@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class JanusConnection {
+class JanusConnection {
     protected final PeerConnection peerConnection;
     protected final PeerConnectionFactory peerConnectionFactory;
     protected PmxKeyStore keyStore;
@@ -23,7 +23,7 @@ public class JanusConnection {
     private long sessionId = -1L;
     private final PcObserver pcObserver;
 
-    public JanusConnection(
+    JanusConnection(
             PeerConnectionFactory pcFactory,
             PmxKeyStore keyStore,
             ConnectionType connectionType,
