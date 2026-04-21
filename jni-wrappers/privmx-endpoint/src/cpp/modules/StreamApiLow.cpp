@@ -20,7 +20,7 @@ StreamApiLow *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
     jfieldID apiFID = ctx->GetFieldID(cls, "api", "Ljava/lang/Long;");
     jobject apiLong = ctx->GetObjectField(streamApiInstance, apiFID);
     if (apiLong == nullptr) {
-        throw IllegalStateException("ThreadApi cannot be used");
+        throw IllegalStateException("StreamApiLow cannot be used");
     }
     return (stream::StreamApiLow *) ctx.getObject(apiLong).getLongValue();
 }
