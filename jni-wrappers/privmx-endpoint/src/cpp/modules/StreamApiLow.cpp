@@ -500,6 +500,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeFor
         jobject subscription_queries
 ) {
     JniContextUtils ctx(env);
+    if (ctx.nullCheck(subscription_queries, "Subscription queries")) return nullptr;
+
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &thiz, &subscription_queries] {
         auto subscription_queries_arr = ctx.jObject2jArray(subscription_queries);
