@@ -16,7 +16,6 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
@@ -51,12 +50,14 @@ public class StreamApi implements AutoCloseable{
     private final StreamApiLow api;
     private final PeerConnectionManager pcManager;
     public final TrackFactory trackFactory;
+    private static boolean initialized = false;
 
     private static PeerConnectionFactory DefaultPeerConnectionFactory(
             Context appContext,
             EglBase eglBase,
             PeerConnectionFactory.Options options
     ) {
+        initPeerConnectionFactory(appContext);
         AudioDeviceModule adm = JavaAudioDeviceModule
                 .builder(appContext)
                 .createAudioDeviceModule();
@@ -82,6 +83,15 @@ public class StreamApi implements AutoCloseable{
 
         adm.release();
         return factory;
+    }
+
+    private static void initPeerConnectionFactory(@NonNull Context appContext){
+        if(initialized) return;
+        PeerConnectionFactory.initialize(
+                PeerConnectionFactory.InitializationOptions.builder(appContext)
+                        .createInitializationOptions()
+        );
+        initialized = true;
     }
 
     public StreamApi(
