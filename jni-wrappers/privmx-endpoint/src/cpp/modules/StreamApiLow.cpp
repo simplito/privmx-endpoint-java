@@ -539,7 +539,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeF
         jobject subscription_ids
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(subscription_ids, "Subscription ids")) {
+    if (ctx.nullCheck(subscription_ids, "Subscription IDs")) {
         return;
     }
 
