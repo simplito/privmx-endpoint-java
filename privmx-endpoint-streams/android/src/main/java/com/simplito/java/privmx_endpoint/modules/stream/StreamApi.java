@@ -4,6 +4,7 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
@@ -149,6 +150,7 @@ public class StreamApi {
             String streamRoomId
     ) {
         RoomJanusSession session = pcManager.createSession(streamRoomId);
+        session.setDataChannelEncryption(new InternalDataChannelEncryption(streamRoomId,api));
         api.joinStreamRoom(streamRoomId, session.webrtc);
     }
 
@@ -172,22 +174,44 @@ public class StreamApi {
         return handle;
     }
 
-    public void sendMessage(
-            StreamHandle streamHandle,
-            ByteBuffer message,
-            boolean binary
-    ) throws RuntimeException {
-        Objects.requireNonNull(streamHandle);
-        Objects.requireNonNull(message);
+    public void createDataChannel(@NonNull StreamHandle streamHandle){
+        createDataChannel(streamHandle,null);
+    }
+
+    public void createDataChannel(
+            @NonNull StreamHandle streamHandle,
+            @Nullable Runnable onCloseDataChannel
+    ){
         RoomJanusSession session = pcManager.getSession(streamHandle);
         if (session == null)
             throw new IllegalStateException("Stream not exists. Create stream first.");
         JanusPublisher publisher = session.getPublisher();
         if (publisher == null)
             throw new IllegalStateException("This StreamHandle has not created companion publisher.");
-        DataChannel dataChannel = publisher.getOrCreateDataChannel();
-        System.out.println("Send in datachannel state: " + dataChannel);
-        dataChannel.send(new DataChannel.Buffer(message, binary));
+        publisher.createDataChannel(onCloseDataChannel);
+    }
+
+    public void closeDataChannel(@NonNull StreamHandle streamHandle){
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("Stream not exists. Create stream first.");
+        JanusPublisher publisher = session.getPublisher();
+        if (publisher == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+        publisher.closeDataChannel();
+    }
+
+    public void sendMessage(
+            @NonNull StreamHandle streamHandle,
+            @NonNull byte[] message
+    ) throws RuntimeException {
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("Stream not exists. Create stream first.");
+        JanusPublisher publisher = session.getPublisher();
+        if (publisher == null)
+            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+        publisher.sendMessage(message);
     }
 
     /**

@@ -22,6 +22,7 @@ public class JanusConnection {
     public final ConnectionType connectionType;
     private long sessionId = -1L;
     private final PcObserver pcObserver;
+    protected InternalDataChannelEncryption dataChannelEncryption;
 
     public JanusConnection(
             PeerConnectionFactory pcFactory,
@@ -29,7 +30,8 @@ public class JanusConnection {
             ConnectionType connectionType,
             RemoteStreamObserver trackObserver,
             BiConsumer<Long,String> onTrickle,
-            Consumer<PeerConnection.IceConnectionState> onConnectionChange
+            Consumer<PeerConnection.IceConnectionState> onConnectionChange,
+            InternalDataChannelEncryption dataChannelEncryption
     ) {
         this.peerConnectionFactory = pcFactory;
         this.connectionType = connectionType;
@@ -56,9 +58,11 @@ public class JanusConnection {
                     }
                 },
                 this::onRenegotiationNeeded,
-                onConnectionChange
+                onConnectionChange,
+                dataChannelEncryption
         );
         this.peerConnection = createPeerConnection(pcObserver);
+        this.dataChannelEncryption = dataChannelEncryption;
     }
 
     static class SdpObserver implements org.webrtc.SdpObserver {
@@ -124,6 +128,11 @@ public class JanusConnection {
         if(peerConnection.connectionState() != PeerConnection.PeerConnectionState.CLOSED) {
             peerConnection.dispose();
         }
+    }
+
+    public void setDataChannelEncryption(InternalDataChannelEncryption dataChannelEncryption){
+        pcObserver.setDataChannelEncryption(dataChannelEncryption);
+        this.dataChannelEncryption = dataChannelEncryption;
     }
 
     public void onRenegotiationNeeded(){}

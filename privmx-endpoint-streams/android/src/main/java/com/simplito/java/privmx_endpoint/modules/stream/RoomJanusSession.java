@@ -40,8 +40,8 @@ public class RoomJanusSession {
     private final RemoteStreamObserver trackObserver = new TrackObserverImpl();
     private Consumer<PeerConnection.IceConnectionState> onConnectionChangeCallback = null;
     private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
+    private InternalDataChannelEncryption dataChannelEncryption = null;
 
-    //TODO: Add error listener for catch errors from webrtcInterface
     public RoomJanusSession(
             @NonNull String roomId,
             @NonNull PeerConnectionFactory pcFactory,
@@ -53,6 +53,22 @@ public class RoomJanusSession {
         this.keyStore = PmxFrameCryptorFactory.createPmxKeyStore();
         this.onTrickle = onTrickle;
         this.setNewOfferOnReconfigure = acceptRenegotiationOffer;
+    }
+
+    //TODO: Add error listener for catch errors from webrtcInterface
+    public RoomJanusSession(
+            @NonNull String roomId,
+            @NonNull PeerConnectionFactory pcFactory,
+            BiConsumer<Long,String> onTrickle,
+            BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer,
+            InternalDataChannelEncryption dataChannelEncryption
+    ) {
+        this.pcFactory = pcFactory;
+        this.roomID = roomId;
+        this.keyStore = PmxFrameCryptorFactory.createPmxKeyStore();
+        this.onTrickle = onTrickle;
+        this.setNewOfferOnReconfigure = acceptRenegotiationOffer;
+        this.dataChannelEncryption = dataChannelEncryption;
     }
 
     @Nullable
@@ -71,10 +87,10 @@ public class RoomJanusSession {
 
     public synchronized void createSubscriber(RemoteStreamObserver observer) {
         if (subscriber == null) {
-            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
+            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle,dataChannelEncryption);
         } else if (subscriber.isEnded()) {
             subscriber.close();
-            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
+            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle,dataChannelEncryption);
         } else {
             throw new IllegalStateException("Subscriber is currently active.");
         }
@@ -92,7 +108,8 @@ public class RoomJanusSession {
                     observer,
                     onTrickle,
                     setNewOfferOnReconfigure,
-                    this::onConnectionChange
+                    this::onConnectionChange,
+                    dataChannelEncryption
             );
         }else if (publisher.isEnded()) {
             publisher.close();
@@ -102,7 +119,8 @@ public class RoomJanusSession {
                     observer,
                     onTrickle,
                     setNewOfferOnReconfigure,
-                    this::onConnectionChange
+                    this::onConnectionChange,
+                    dataChannelEncryption
             );
         }else{
             throw new IllegalStateException("Publisher is currently active.");
@@ -143,6 +161,12 @@ public class RoomJanusSession {
         if(onConnectionChangeCallback != null){
             onConnectionChangeCallback.accept(connectionState);
         }
+    }
+
+    public void setDataChannelEncryption(InternalDataChannelEncryption dataChannelEncryption){
+        this.dataChannelEncryption = dataChannelEncryption;
+        if(publisher != null) publisher.setDataChannelEncryption(dataChannelEncryption);
+        if(subscriber != null) subscriber.setDataChannelEncryption(dataChannelEncryption);
     }
 
     public class WebRTCImpl implements WebRTCInterface {

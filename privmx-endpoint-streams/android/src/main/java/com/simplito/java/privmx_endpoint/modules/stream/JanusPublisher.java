@@ -1,13 +1,19 @@
 package com.simplito.java.privmx_endpoint.modules.stream;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.simplito.java.privmx_endpoint.model.AudioTrackInfo;
 import com.simplito.java.privmx_endpoint.model.ConnectionType;
+import com.simplito.java.privmx_endpoint.model.stream.DataChannelMessage;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.VideoTrackInfo;
 
 import org.webrtc.*;
 
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -17,9 +23,9 @@ import java.util.function.Consumer;
 public class JanusPublisher extends JanusConnection {
     private final Map<String, AudioTrackInfo> audioTracks = new HashMap<>();
     private final Map<String, VideoTrackInfo> videoTracks = new HashMap<>();
-    private DataChannel dataChannel = null;
     private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private DataChannelWrapper wrappedDataChannel = null;
 
     public JanusPublisher(
             PeerConnectionFactory pcFactory,
@@ -27,9 +33,10 @@ public class JanusPublisher extends JanusConnection {
             RemoteStreamObserver observer,
             BiConsumer<Long, String> onTrickle,
             BiConsumer<Long, SdpWithTypeModel> acceptRenegotiationOffer,
-            Consumer<PeerConnection.IceConnectionState> onConnectionChange
+            Consumer<PeerConnection.IceConnectionState> onConnectionChange,
+            InternalDataChannelEncryption dataChannelEncryption
     ) {
-        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle, onConnectionChange);
+        super(pcFactory, keyStore, ConnectionType.Publisher, observer, onTrickle, onConnectionChange, dataChannelEncryption);
         this.setNewOfferOnReconfigure = acceptRenegotiationOffer;
     }
 
@@ -39,7 +46,8 @@ public class JanusPublisher extends JanusConnection {
             PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorFromRtpSender(
                     peerConnectionFactory,
                     rtpSender2,
-                    keyStore
+                    keyStore,
+                    null
                     // options ?
             );
 
@@ -61,7 +69,8 @@ public class JanusPublisher extends JanusConnection {
                 PmxFrameCryptor frameCryptor = PmxFrameCryptorFactory.createPmxFrameCryptorFromRtpSender(
                         peerConnectionFactory,
                         rtpSender,
-                        keyStore
+                        keyStore,
+                        null
                         // options ?
                 );
 
@@ -77,72 +86,43 @@ public class JanusPublisher extends JanusConnection {
         }
     }
 
-    @NonNull
-    public synchronized DataChannel getOrCreateDataChannel() throws RuntimeException{
-        if (dataChannel != null) {
-            if (dataChannel.state() == DataChannel.State.OPEN) return dataChannel;
-            //TODO: try reconnecting
-            if (dataChannel.state() == DataChannel.State.CLOSING)
-                throw new IllegalStateException("Data channel is now closing");
-            //If state is closed then create new data channel and wait for open
-            //If datachannel state is connecting then method execution waits on synchronized block.
-        }
-        if (dataChannel == null || dataChannel.state() == DataChannel.State.CLOSED) {
-            dataChannel = createNewDataChannel();
-        }
-        waitForOpen(dataChannel,false);
-        if(dataChannel.state() != DataChannel.State.OPEN) throw new RuntimeException("Cannot open data channel");
-        return dataChannel;
-    }
-
-    private DataChannel createNewDataChannel() {
+    public synchronized void createDataChannel(@Nullable Runnable onCloseDataChannel) {
         synchronized (peerConnection) {
-            return peerConnection.createDataChannel("JanusDataChannel", getDataChannelInit());
+            if (wrappedDataChannel != null) {
+                if (wrappedDataChannel.dataChannel.state() != DataChannel.State.CLOSED)
+                    throw new IllegalStateException("You already have an active data channel");
+            }
+            if (wrappedDataChannel == null || wrappedDataChannel.dataChannel.state() == DataChannel.State.CLOSED) {
+                wrappedDataChannel = new DataChannelWrapper(peerConnection, onCloseDataChannel);
+            }
         }
     }
 
-    private void waitForOpen(DataChannel channel, boolean withTimeout) {
-        if (channel.state() == DataChannel.State.OPEN) return;
-        if (channel.state() != DataChannel.State.CONNECTING) throw new RuntimeException("Channel is closing or closed");
-        CompletableFuture<DataChannel> dataChannelCompletableFuture = new CompletableFuture<>();
-        channel.registerObserver(new DataChannel.Observer() {
-            @Override
-            public void onBufferedAmountChange(long l) {
-            }
-
-            @Override
-            public void onStateChange() {
-                System.out.println("datachannel state updated: " + channel.state().name());
-                if (channel.state() == DataChannel.State.OPEN) {
-                    dataChannelCompletableFuture.complete(channel);
-                } else {
-                    dataChannelCompletableFuture.completeExceptionally(new RuntimeException("Cannot open data channel"));
-                }
-            }
-
-            @Override
-            public void onMessage(DataChannel.Buffer buffer) {
-            }
-        });
-        try {
-            if (withTimeout) {
-                dataChannelCompletableFuture.get(20, TimeUnit.SECONDS);
-                return;
-            }
-            dataChannelCompletableFuture.get();
-        }catch (Throwable ignored){}
+    public synchronized void closeDataChannel() {
+        if (wrappedDataChannel == null) return;
+        if (wrappedDataChannel.dataChannel.state() == DataChannel.State.OPEN ||
+                wrappedDataChannel.dataChannel.state() == DataChannel.State.CONNECTING) {
+            wrappedDataChannel.dataChannel.close();
+            wrappedDataChannel.dataChannel.dispose();
+            wrappedDataChannel = null;
+        }
     }
 
-    private void closeDataChannel(){
-        if(dataChannel != null && dataChannel.state() != DataChannel.State.CLOSING && dataChannel.state() != DataChannel.State.CLOSING) dataChannel.dispose();
-        dataChannel = null;
-    }
+    public synchronized void sendMessage(byte[] message) {
+        if (wrappedDataChannel == null)
+            throw new IllegalStateException("DataChannel is not created");
+        //TODO: Throw exception when cannot send message because channel is closed or closing
+        //TODO: Throw exception when timeout reach. And throw that too long wait for open
+        wrappedDataChannel.waitForDataChannelOpen(false);
+        if (wrappedDataChannel.dataChannel.bufferedAmount() + message.length > DataChannelWrapper.MAX_BUFFERED_AMOUNT)
+            throw new RuntimeException("Buffered messages size exceeded");
+        if (dataChannelEncryption != null) {
+            byte[] bytesToSend = dataChannelEncryption.encryptDataChannelMessage(new DataChannelMessage(message, 0));
 
-    private DataChannel.Init getDataChannelInit() {
-        DataChannel.Init init = new DataChannel.Init();
-        init.ordered = true;
-        init.negotiated = false;
-        return init;
+        }else{
+            wrappedDataChannel.dataChannel.send(new DataChannel.Buffer(ByteBuffer.wrap(message), true));
+        }
+
     }
 
     public void removeAudioTrack(String id) {
@@ -209,6 +189,69 @@ public class JanusPublisher extends JanusConnection {
             executorService.execute(() -> {
                 setNewOfferOnReconfigure.accept(getSessionId(), new SdpWithTypeModel(createOffer(), SessionDescription.Type.OFFER.canonicalForm()));
             });
+        }
+    }
+
+    private static class DataChannelWrapper {
+        final DataChannel dataChannel;
+        final Runnable onCloseDataChannel;
+        final CompletableFuture<Void> dataChannelOpenCompletable = new CompletableFuture<>();
+        private static final int MAX_BUFFERED_AMOUNT = 128 * 1024 * 1024;
+        private static final int MAX_CHUNK_SIZE = 256 * 1024;
+
+        private DataChannelWrapper(
+                PeerConnection peerConnection,
+                Runnable onCloseDataChannel
+        ) {
+            this.dataChannel = peerConnection.createDataChannel("JanusDataChannel", getDataChannelInit());
+            dataChannel.registerObserver(new DataChannel.Observer() {
+                @Override
+                public void onBufferedAmountChange(long l) {
+                }
+
+                @Override
+                public void onStateChange() {
+                    if (dataChannel.state() == DataChannel.State.OPEN) {
+                        if (!dataChannelOpenCompletable.isDone()) {
+                            dataChannelOpenCompletable.complete(null);
+                        }
+                    } else {
+                        if (!dataChannelOpenCompletable.isDone()) {
+                            dataChannelOpenCompletable.completeExceptionally(new RuntimeException("Cannot open data channel"));
+                        }
+                        if (dataChannel.state() == DataChannel.State.CLOSED && onCloseDataChannel != null) {
+                            onCloseDataChannel.run();
+                        }
+                    }
+                }
+
+                @Override
+                public void onMessage(DataChannel.Buffer buffer) {
+                }
+            });
+            this.onCloseDataChannel = onCloseDataChannel;
+        }
+
+        private DataChannel.Init getDataChannelInit() {
+            DataChannel.Init init = new DataChannel.Init();
+            init.ordered = true;
+            init.negotiated = false;
+            return init;
+        }
+
+        private void waitForDataChannelOpen(boolean withTimeout) {
+            if (dataChannel.state() == DataChannel.State.OPEN) return;
+            if (dataChannel.state() != DataChannel.State.CONNECTING)
+                throw new RuntimeException("Channel is closing or closed");
+
+            try {
+                if (withTimeout) {
+                    dataChannelOpenCompletable.get(20, TimeUnit.SECONDS);
+                    return;
+                }
+                dataChannelOpenCompletable.get();
+            } catch (Throwable ignored) {
+            }
         }
     }
 }

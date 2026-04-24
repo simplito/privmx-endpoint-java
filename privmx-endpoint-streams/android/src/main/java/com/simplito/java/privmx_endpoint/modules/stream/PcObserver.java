@@ -12,6 +12,8 @@ import org.webrtc.PmxFrameCryptorFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.RtpReceiver;
 
+import com.simplito.java.privmx_endpoint.model.stream.DecryptedDataChannelMessage;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -24,6 +26,7 @@ public class PcObserver implements PeerConnection.Observer {
     private final Consumer<IceCandidate> onIceCandidate;
     private final Runnable onRenegotiationNeeded;
     private final Consumer<PeerConnection.IceConnectionState> onIceConnectionChange;
+    private InternalDataChannelEncryption dataChannelEncryption = null;
 
     public PcObserver(
             PeerConnectionFactory peerConnectionFactory,
@@ -31,7 +34,8 @@ public class PcObserver implements PeerConnection.Observer {
             RemoteStreamObserver observer,
             Consumer<IceCandidate> onIceCandidate,
             Runnable onRenegotiationNeeded,
-            Consumer<PeerConnection.IceConnectionState> onIceConnectionChange
+            Consumer<PeerConnection.IceConnectionState> onIceConnectionChange,
+            InternalDataChannelEncryption dataChannelEncryption
     ) {
         this.peerConnectionFactory = peerConnectionFactory;
         this.keyStore = store;
@@ -39,6 +43,7 @@ public class PcObserver implements PeerConnection.Observer {
         this.onIceCandidate = onIceCandidate;
         this.onRenegotiationNeeded = onRenegotiationNeeded;
         this.onIceConnectionChange = onIceConnectionChange;
+        this.dataChannelEncryption = dataChannelEncryption;
     }
 
     public PcObserver(
@@ -47,8 +52,8 @@ public class PcObserver implements PeerConnection.Observer {
             RemoteStreamObserver observer,
             Consumer<IceCandidate> onIceCandidate,
             Runnable onRenegotiationNeeded
-    ){
-        this(peerConnectionFactory,store,observer,onIceCandidate,onRenegotiationNeeded,null);
+    ) {
+        this(peerConnectionFactory, store, observer, onIceCandidate, onRenegotiationNeeded, null, null);
     }
 
     @Override
@@ -58,7 +63,7 @@ public class PcObserver implements PeerConnection.Observer {
 
     @Override
     public void onIceConnectionChange(PeerConnection.IceConnectionState iceConnectionState) {
-        if(onIceConnectionChange != null) {
+        if (onIceConnectionChange != null) {
             onIceConnectionChange.accept(iceConnectionState);
         }
     }
@@ -84,7 +89,8 @@ public class PcObserver implements PeerConnection.Observer {
     }
 
     @Override
-    public void onAddStream(MediaStream mediaStream) {}
+    public void onAddStream(MediaStream mediaStream) {
+    }
 
     @Override
     public void onRemoveStream(MediaStream mediaStream) {
@@ -107,16 +113,23 @@ public class PcObserver implements PeerConnection.Observer {
 
             @Override
             public void onMessage(DataChannel.Buffer buffer) {
-                byte[] data = new byte[buffer.data.capacity()];
-                buffer.data.get(data);
-                trackObserver.OnRemoteData(dataChannel.label(),data);
+                dataChannel.bufferedAmount();
+                byte[] data;
+                if (dataChannelEncryption != null) {
+                    DecryptedDataChannelMessage message = dataChannelEncryption.decryptDataChannelMessage(buffer.data);
+                    data = message.data;
+                } else {
+                    data = new byte[buffer.data.capacity()];
+                    buffer.data.get(data);
+                }
+                trackObserver.OnRemoteData(dataChannel.label(), data);
             }
         });
     }
 
     @Override
     public void onRenegotiationNeeded() {
-        if(onRenegotiationNeeded != null){
+        if (onRenegotiationNeeded != null) {
             onRenegotiationNeeded.run();
         }
     }
@@ -130,12 +143,13 @@ public class PcObserver implements PeerConnection.Observer {
                     PmxFrameCryptorFactory.createPmxFrameCryptorForRtpReceiver(
                             peerConnectionFactory,
                             receiver,
-                            keyStore
+                            keyStore,
+                            null
                     )
             );
-            if(trackObserver != null){
+            if (trackObserver != null) {
                 String streamId = mediaStreams.length > 0 ? mediaStreams[0].getId() : null;
-                if(streamId != null) {
+                if (streamId != null) {
                     trackObserver.OnRemoteTrack(streamId, track);
                 }
             }
@@ -145,12 +159,16 @@ public class PcObserver implements PeerConnection.Observer {
     @Override
     public void onRemoveTrack(RtpReceiver receiver) {
         MediaStreamTrack track = receiver.track();
-        if(track != null) {
+        if (track != null) {
             PmxFrameCryptor removedCryptor = frameCryptorMap.remove(track.id());
-            if(removedCryptor != null) {
+            if (removedCryptor != null) {
                 removedCryptor.dispose();
             }
         }
+    }
+
+    public void setDataChannelEncryption(InternalDataChannelEncryption dataChannelEncryption) {
+        this.dataChannelEncryption = dataChannelEncryption;
     }
 
     public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {

@@ -13,9 +13,10 @@ public class JanusSubscriber extends JanusConnection {
             PeerConnectionFactory pcFactory,
             PmxKeyStore keyStore,
             RemoteStreamObserver observer,
-            BiConsumer<Long, String> onTrickle
+            BiConsumer<Long, String> onTrickle,
+            InternalDataChannelEncryption dataChannelEncryption
     ) {
-        super(pcFactory, keyStore, ConnectionType.Subscriber, observer, onTrickle,null);
+        super(pcFactory, keyStore, ConnectionType.Subscriber, observer, onTrickle,null,dataChannelEncryption);
     }
 
     public synchronized String createAnswer(String offerSdp, String type) {
