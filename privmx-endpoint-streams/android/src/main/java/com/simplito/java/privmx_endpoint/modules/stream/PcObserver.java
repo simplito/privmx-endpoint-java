@@ -22,7 +22,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class PcObserver implements PeerConnection.Observer {
+class PcObserver implements PeerConnection.Observer {
     private final Map<String, PmxFrameCryptor> frameCryptorMap = new HashMap<>();
     private final PmxKeyStore keyStore;
     private final PeerConnectionFactory peerConnectionFactory;
@@ -31,7 +31,7 @@ public class PcObserver implements PeerConnection.Observer {
     private final Runnable onRenegotiationNeeded;
     private final Consumer<PeerConnection.IceConnectionState> onIceConnectionChange;
 
-    public PcObserver(
+    PcObserver(
             PeerConnectionFactory peerConnectionFactory,
             PmxKeyStore store,
             TrackObserver observer,
