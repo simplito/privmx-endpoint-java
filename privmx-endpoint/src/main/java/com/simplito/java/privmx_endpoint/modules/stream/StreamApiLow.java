@@ -14,6 +14,7 @@ package com.simplito.java.privmx_endpoint.modules.stream;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
+import com.simplito.java.privmx_endpoint.model.stream.DecryptedDataChannelMessage;
 import com.simplito.java.privmx_endpoint.model.stream.SdpWithTypeModel;
 import com.simplito.java.privmx_endpoint.model.stream.Settings;
 import com.simplito.java.privmx_endpoint.model.stream.StreamEncryptionMode;
@@ -28,6 +29,7 @@ import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEv
 import com.simplito.java.privmx_endpoint.modules.core.Connection;
 import com.simplito.java.privmx_endpoint.modules.event.EventApi;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -205,6 +207,10 @@ public class StreamApiLow implements AutoCloseable {
     public native void unpublishStream(StreamHandle streamHandle);
 
     public native void subscribeToRemoteStreams(String streamRoomId, List<StreamSubscription> subscriptions, Settings options);
+
+    public native byte[] encryptDataChannelMessage(String streamRoomId, byte[] plainMessage, long seq);
+
+    public native DecryptedDataChannelMessage decryptDataChannelMessage(String streamRoomId, ByteBuffer encryptedData);
 
     public native void modifyRemoteStreamsSubscriptions(String streamRoomId, List<StreamSubscription> subscriptionsToAdd, List<StreamSubscription> subscriptionsToRemove, Settings options);
 
