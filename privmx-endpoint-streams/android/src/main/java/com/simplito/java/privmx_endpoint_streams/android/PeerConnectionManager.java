@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.modules.stream;
+package com.simplito.java.privmx_endpoint_streams.android;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -66,6 +66,11 @@ class PeerConnectionManager implements AutoCloseable {
             @NonNull String roomID
     ) {
         sessionHandles.put(handle.getValue(), roomID);
+    }
+
+    public void closeHandleToRoom(StreamHandle handle) {
+        Objects.requireNonNull(handle);
+        sessionHandles.remove(handle.getValue());
     }
 
     public void leaveStreamRoom(@NonNull String streamRoomId) {

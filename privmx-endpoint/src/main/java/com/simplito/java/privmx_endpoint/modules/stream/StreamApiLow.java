@@ -11,6 +11,7 @@
 
 package com.simplito.java.privmx_endpoint.modules.stream;
 
+import com.simplito.java.privmx_endpoint.LibLoader;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
@@ -33,10 +34,7 @@ import java.util.Optional;
 
 public class StreamApiLow implements AutoCloseable {
     static {
-//        System.loadLibrary("crypto");
-//        System.loadLibrary("ssl");
-//        System.loadLibrary("privmx-endpoint-java");
-//        System.loadLibrary("privmx-endpoint-streams-android");
+        LibLoader.loadPrivmxLibraries();
     }
 
     @SuppressWarnings("FieldCanBeLocal")
@@ -53,12 +51,6 @@ public class StreamApiLow implements AutoCloseable {
     ) throws IllegalStateException;
 
     public StreamApiLow(
-            Connection connection
-    ) throws IllegalStateException {
-        this.api = init(connection, null, StreamEncryptionMode.SINGLE_KEY);
-    }
-
-    public StreamApiLow(
             Connection connection,
             EventApi eventApi
     ) throws IllegalStateException {
@@ -71,17 +63,12 @@ public class StreamApiLow implements AutoCloseable {
             StreamEncryptionMode streamEncryptionMode
     ) throws IllegalStateException {
         Objects.requireNonNull(connection);
-        EventApi tmpEventApi = eventApi == null ? new EventApi(connection) : null;
+        Objects.requireNonNull(eventApi);
         this.api = init(
                 connection,
-                Optional.ofNullable(eventApi).orElse(tmpEventApi),
+                eventApi,
                 Optional.ofNullable(streamEncryptionMode).orElse(StreamEncryptionMode.SINGLE_KEY)
         );
-
-        try {
-            if (eventApi != null) tmpEventApi.close();
-        } catch (Exception ignore) {
-        }
     }
 
     public native List<TurnCredentials> getTurnCredentials();

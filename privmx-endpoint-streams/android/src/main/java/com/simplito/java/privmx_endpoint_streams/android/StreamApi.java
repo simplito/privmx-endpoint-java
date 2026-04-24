@@ -9,14 +9,13 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.modules.stream;
+package com.simplito.java.privmx_endpoint_streams.android;
 
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.simplito.java.privmx_endpoint.model.ConnectionType;
 import com.simplito.java.privmx_endpoint.model.ContainerPolicy;
 import com.simplito.java.privmx_endpoint.model.PagingList;
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey;
@@ -27,6 +26,7 @@ import com.simplito.java.privmx_endpoint.model.stream.StreamRoom;
 import com.simplito.java.privmx_endpoint.model.stream.StreamSubscription;
 import com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes.StreamEventSelectorType;
 import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEventType;
+import com.simplito.java.privmx_endpoint.modules.stream.StreamApiLow;
 
 import org.webrtc.*;
 import org.webrtc.audio.AudioDeviceModule;
@@ -204,11 +204,11 @@ public class StreamApi implements AutoCloseable{
     public StreamHandle createStream(String streamRoomId) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
         if (session == null)
-            throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first");
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
         try {
             session.createPublisher();
         } catch (IllegalStateException e) {
-            throw new IllegalStateException("Publisher is now active, try use modifyRemoteStreamsSubscriptions");
+            throw new IllegalStateException("Cannot create a new stream. This room already has an active stream.");
         }
 
         StreamHandle handle = api.createStream(streamRoomId);
@@ -228,10 +228,10 @@ public class StreamApi implements AutoCloseable{
         Objects.requireNonNull(streamHandle);
         RoomJanusSession session = pcManager.getSession(streamHandle);
         if (session == null)
-            throw new IllegalStateException("Stream not exists. Create stream first.");
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
         JanusPublisher publisher = session.getPublisher();
         if (publisher == null)
-            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+            throw new IllegalStateException("No active stream for this streamHandle. Call createStream to create a stream first.");
         switch (track.kind()) {
             case MediaStreamTrack.VIDEO_TRACK_KIND: {
                 publisher.addVideoTrack((VideoTrack) track);
@@ -252,7 +252,7 @@ public class StreamApi implements AutoCloseable{
         Objects.requireNonNull(roomId);
         RoomJanusSession session = pcManager.getSession(roomId);
         if (session == null)
-            throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first.");
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
         session.setTrackObserver(streamId, observer);
     }
 
@@ -263,7 +263,7 @@ public class StreamApi implements AutoCloseable{
         Objects.requireNonNull(roomId);
         RoomJanusSession session = pcManager.getSession(roomId);
         if (session == null)
-            throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first.");
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
         session.setOnConnectionChange(observer);
     }
 
@@ -296,10 +296,10 @@ public class StreamApi implements AutoCloseable{
         Objects.requireNonNull(streamHandle);
         RoomJanusSession session = pcManager.getSession(streamHandle);
         if (session == null)
-            throw new IllegalStateException("Stream with this StreamHandle doesn't exist.");
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
         JanusPublisher publisher = session.getPublisher();
         if (publisher == null)
-            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+            throw new IllegalStateException("No active stream for this streamHandle. Call createStream to create a stream first.");
         if (track instanceof AudioTrack) {
             publisher.removeAudioTrack(track.id());
         } else if (track instanceof VideoTrack) {
@@ -311,10 +311,10 @@ public class StreamApi implements AutoCloseable{
         Objects.requireNonNull(streamHandle);
         RoomJanusSession session = pcManager.getSession(streamHandle);
         if (session == null)
-            throw new IllegalStateException("Stream with this StreamHandle doesn't exist.");
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
         JanusPublisher publisher = session.getPublisher();
         if (publisher == null)
-            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+            throw new IllegalStateException("No stream to publish. Call createStream to create a stream first.");
         publisher.setRTCConfiguration(getRTCConfiguration());
         return api.publishStream(streamHandle);
     }
@@ -323,17 +323,24 @@ public class StreamApi implements AutoCloseable{
         Objects.requireNonNull(streamHandle);
         RoomJanusSession session = pcManager.getSession(streamHandle);
         if (session == null)
-            throw new IllegalStateException("Stream with this StreamHandle doesn't exist.");
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
         JanusPublisher publisher = session.getPublisher();
         if (publisher == null)
-            throw new IllegalStateException("This StreamHandle has not created companion publisher.");
+            throw new IllegalStateException("No stream to update. Call createStream and publishStream first.");
         publisher.setRTCConfiguration(getRTCConfiguration());
         return api.updateStream(streamHandle);
     }
 
     public void unpublishStream(@NonNull StreamHandle streamHandle) {
         Objects.requireNonNull(streamHandle);
+        RoomJanusSession session = pcManager.getSession(streamHandle);
+        if (session == null)
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
+        if (session.getPublisher() == null)
+            throw new IllegalStateException("No stream to unpublish. Call createStream and publishStream first.");
         api.unpublishStream(streamHandle);
+        session.unpublish();
+        pcManager.closeHandleToRoom(streamHandle);
     }
 
     public void subscribeToRemoteStreams(
@@ -342,13 +349,13 @@ public class StreamApi implements AutoCloseable{
     ) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
         if (session == null)
-            throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
         try {
             session.createSubscriber();
         } catch (IllegalStateException ignored) {
         }
         if (session.getSubscriber() == null)
-            throw new IllegalStateException("This streamRoom has not created companion subscriber.");
+            throw new IllegalStateException("Failed to create a subscriber for this stream room.");
         session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
         api.subscribeToRemoteStreams(streamRoomId, subscriptions);
     }
@@ -361,9 +368,9 @@ public class StreamApi implements AutoCloseable{
     ) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
         if (session == null)
-            throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
         if (session.getSubscriber() == null)
-            throw new IllegalStateException("This streamRoom has not created companion subscriber.");
+            throw new IllegalStateException("No active subscription to modify. Call subscribeToRemoteStreams first.");
         session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
         api.modifyRemoteStreamsSubscriptions(
                 streamRoomId,
@@ -378,9 +385,9 @@ public class StreamApi implements AutoCloseable{
     ) {
         RoomJanusSession session = pcManager.getSession(streamRoomId);
         if (session == null)
-            throw new IllegalStateException("No active session to this Stream Room. Join stream room first");
+            throw new IllegalStateException("No active session for this stream room. Call joinStreamRoom to create a session first.");
         if (session.getSubscriber() == null)
-            throw new IllegalStateException("This streamRoom has not created companion subscriber.");
+            throw new IllegalStateException("No active subscription to unsubscribe from. Call subscribeToRemoteStreams first.");
         session.getSubscriber().setRTCConfiguration(getRTCConfiguration());
         api.unsubscribeFromRemoteStreams(
                 streamRoomId,

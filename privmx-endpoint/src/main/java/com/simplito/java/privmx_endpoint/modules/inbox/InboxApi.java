@@ -50,19 +50,6 @@ public class InboxApi implements AutoCloseable {
     private final Long api;
 
     /**
-     * Creates Inbox from existing {@link Connection}.
-     *
-     * @param connection current connection
-     * @throws IllegalStateException when one of the passed parameters is closed.
-     */
-    public InboxApi(
-            Connection connection
-    ) throws IllegalStateException {
-        this(connection, null, null);
-    }
-
-
-    /**
      * Creates Inbox from existing {@link Connection}, {@link ThreadApi}, {@link StoreApi}.
      *
      * @param connection active connection to PrivMX Bridge
@@ -76,18 +63,13 @@ public class InboxApi implements AutoCloseable {
             StoreApi storeApi
     ) throws IllegalStateException {
         Objects.requireNonNull(connection);
-        StoreApi tmpStoreApi = storeApi == null ? new StoreApi(connection) : null;
-        ThreadApi tmpThreadApi = threadApi == null ? new ThreadApi(connection) : null;
+        Objects.requireNonNull(threadApi);
+        Objects.requireNonNull(storeApi);
         this.api = init(
                 connection,
-                Optional.ofNullable(threadApi).orElse(tmpThreadApi),
-                Optional.ofNullable(storeApi).orElse(tmpStoreApi)
+                threadApi,
+                storeApi
         );
-        try {
-            if (tmpThreadApi != null) tmpThreadApi.close();
-            if (tmpStoreApi != null) tmpStoreApi.close();
-        } catch (Exception ignore) {
-        }
     }
 
     private native Long init(

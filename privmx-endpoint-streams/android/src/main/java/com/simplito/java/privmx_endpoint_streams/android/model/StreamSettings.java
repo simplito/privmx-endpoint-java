@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.model;
+package com.simplito.java.privmx_endpoint_streams.android.model;
 
 import com.simplito.java.privmx_endpoint.model.stream.Settings;
 

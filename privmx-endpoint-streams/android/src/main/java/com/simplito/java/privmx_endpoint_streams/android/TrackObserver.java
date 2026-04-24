@@ -9,9 +9,10 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.model;
+package com.simplito.java.privmx_endpoint_streams.android;
 
-public enum StreamStatus {
-    Offline,
-    Online
+import org.webrtc.MediaStreamTrack;
+
+public interface TrackObserver {
+    void OnRemoteTrack(String streamId, MediaStreamTrack track);
 }

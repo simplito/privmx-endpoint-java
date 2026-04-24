@@ -9,10 +9,19 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.modules.stream;
+package com.simplito.java.privmx_endpoint_streams.android;
 
 
-import org.webrtc.*;
+import org.webrtc.DataChannel;
+import org.webrtc.IceCandidate;
+import org.webrtc.MediaStream;
+import org.webrtc.MediaStreamTrack;
+import org.webrtc.PeerConnection;
+import org.webrtc.PeerConnectionFactory;
+import org.webrtc.PmxFrameCryptor;
+import org.webrtc.PmxFrameCryptorFactory;
+import org.webrtc.PmxKeyStore;
+import org.webrtc.RtpReceiver;
 
 import java.util.HashMap;
 import java.util.Map;
