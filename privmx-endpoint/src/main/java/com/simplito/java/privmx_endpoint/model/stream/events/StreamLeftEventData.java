@@ -10,7 +10,7 @@ public class StreamLeftEventData {
     public String streamRoomId;
 
     /**
-     * Identifier of the stream that was left
+     * Published stream identifier of the user who left
      */
     public Long streamId;
 
