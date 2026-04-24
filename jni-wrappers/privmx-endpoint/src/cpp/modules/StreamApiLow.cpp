@@ -904,3 +904,77 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_setNewOfferO
         );
     });
 }
+extern "C"
+JNIEXPORT jbyteArray JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_encryptDataChannelMessage(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id,
+        jbyteArray plain_message,
+        jlong seq
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room Id")) {
+        return nullptr;
+    }
+    jbyteArray result;
+    ctx.callResultEndpointApi<jbyteArray>(
+            &result,
+            [&ctx, &thiz, &stream_room_id, &plain_message, &seq]() {
+                auto plain_message_buffer = privmx::endpoint::core::Buffer::from(ctx.jByteArray2String(plain_message));
+
+                DataChannelMessage message = DataChannelMessage();
+                message.data = plain_message_buffer;
+                message.seq = seq;
+
+                auto buffer = getStreamApi(ctx, thiz)->encryptDataChannelMessage(
+                        ctx.jString2string(stream_room_id),
+                        message
+                );
+
+                //TODO: Can be optimized to return direct byte buffer, but we need native method implementation for correct free space of it.
+                jbyteArray encryptedBuffer = ctx->NewByteArray((jsize) buffer.size());
+                ctx->SetByteArrayRegion(encryptedBuffer, 0, (jsize) buffer.size(),
+                                        (jbyte *) buffer.data());
+                return encryptedBuffer;
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_decryptDataChannelMessage(
+        JNIEnv *env,
+        jobject thiz,
+        jstring stream_room_id,
+        jobject encrypted_data
+) {
+    JniContextUtils ctx(env);
+    if (ctx.nullCheck(stream_room_id, "Stream Room Id") &&
+        ctx.nullCheck(encrypted_data, "Encrypted data")) {
+        return nullptr;
+    }
+    jobject result;
+    ctx.callResultEndpointApi<jobject>(
+            &result,
+            [&ctx, &thiz, &stream_room_id, &encrypted_data]() {
+                auto encrypted_buffer = privmx::endpoint::core::Buffer::from(
+                        (char *) ctx->GetDirectBufferAddress(encrypted_data),
+                        ctx->GetDirectBufferCapacity(encrypted_data)
+                );
+
+                auto decryptedDataChannelMessage = getStreamApi(ctx,
+                                                                thiz)->decryptDataChannelMessage(
+                        ctx.jString2string(stream_room_id),
+                        encrypted_buffer
+                );
+                return privmx::wrapper::decryptedDataChannelMessage2Java(ctx,
+                                                                         decryptedDataChannelMessage);
+            });
+    if (ctx->ExceptionCheck()) {
+        return nullptr;
+    }
+    return result;
+}

@@ -2236,5 +2236,32 @@ namespace privmx {
             );
         }
 
+        jobject decryptedDataChannelMessage2Java(
+                JniContextUtils &ctx,
+                privmx::endpoint::stream::DecryptedDataChannelMessage dataChannelMessage_c
+        ) {
+            jclass cls = ctx->FindClass(
+                    "com/simplito/java/privmx_endpoint/model/stream/DecryptedDataChannelMessage");
+            jmethodID initItemMID = ctx->GetMethodID(
+                    cls,
+                    "<init>",
+                    "("
+                    "[B"
+                    "J"
+                    "Ljava/lang/Long;"
+                    ")V"
+            );
+            jbyteArray decryptedData = ctx->NewByteArray((jsize) dataChannelMessage_c.data.size());
+            ctx->SetByteArrayRegion(decryptedData, 0, (jsize) dataChannelMessage_c.data.size(),
+                                    (jbyte *) dataChannelMessage_c.data.data());
+            return ctx->NewObject(
+                    cls,
+                    initItemMID,
+                    decryptedData,
+                    dataChannelMessage_c.seq,
+                    ctx.long2jLong(dataChannelMessage_c.statusCode)
+            );
+        }
+
     } // wrapper
 } // privmx
