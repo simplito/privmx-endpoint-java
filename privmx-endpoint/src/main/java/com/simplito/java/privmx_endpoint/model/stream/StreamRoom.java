@@ -49,7 +49,7 @@ public class StreamRoom {
      */
     public String lastModifier;
     /**
-     * List of usernames with access to the stream room
+     * List of user's IDs with access to the stream room
      */
     public List<String> users;
     /**
@@ -102,7 +102,7 @@ public class StreamRoom {
      * @param creator              Identifier of the user who created the stream room
      * @param lastModificationDate Timestamp of when the stream room was last modified
      * @param lastModifier         Identifier of the user who last modified the stream room
-     * @param users                List of usernames with access to the stream room
+     * @param users                List of user's IDs with access to the stream room
      * @param managers             List of usernames with management privileges over the stream room
      * @param version              Version number (changes on updates)
      * @param publicMeta           StreamRoom's public metadata
