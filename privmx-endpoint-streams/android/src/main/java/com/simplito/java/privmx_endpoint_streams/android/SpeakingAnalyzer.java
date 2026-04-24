@@ -1,4 +1,4 @@
-package com.simplito.java.privmx_endpoint.modules.stream;
+package com.simplito.java.privmx_endpoint_streams.android;
 
 import java.util.HashMap;
 import java.util.Map;
