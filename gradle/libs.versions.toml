@@ -1,5 +1,5 @@
 [versions]
-kotlinJVM = "2.1.10"
+kotlin = "2.1.10"
 agp = "8.11.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -8,7 +8,6 @@ appcompat = "1.7.1"
 privmxInstallNative = "2.0.0"
 proguardGradle = "7.7.0"
 serialization-json = "1.6.2"
-kotlin-serialization = "1.9.21"
 gson = "2.11.0"
 material = "1.10.0"
 webrtc = "1.0.0"
@@ -31,7 +30,9 @@ annotation-jvm = { group = "androidx.annotation", name = "annotation-jvm", versi
 #google-webrtc = { module = "org.webrtc:google-webrtc", version.ref = "googleWebrtc" }
 
 [plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinJVM" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 privmx-install-native = { id = "com.simplito.privmx-endpoint-install-native", version.ref = "privmxInstallNative" }
-kotlinPluginSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-serialization" }
+kotlinPluginSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+android-lint = { id = "com.android.lint", version.ref = "agp" }
