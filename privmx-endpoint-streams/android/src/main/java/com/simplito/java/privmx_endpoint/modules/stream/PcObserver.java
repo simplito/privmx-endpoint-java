@@ -14,6 +14,7 @@ import org.webrtc.RtpReceiver;
 
 import com.simplito.java.privmx_endpoint.model.stream.DecryptedDataChannelMessage;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -115,14 +116,18 @@ public class PcObserver implements PeerConnection.Observer {
             public void onMessage(DataChannel.Buffer buffer) {
                 dataChannel.bufferedAmount();
                 byte[] data;
-                if (dataChannelEncryption != null) {
+                byte[] collectedData;
+                if(dataChannelEncryption != null){
                     DecryptedDataChannelMessage message = dataChannelEncryption.decryptDataChannelMessage(buffer.data);
-                    data = message.data;
-                } else {
+                    collectedData = messageSeqCollector.collect(message.data,message.seq);
+                }else{
                     data = new byte[buffer.data.capacity()];
                     buffer.data.get(data);
+                    collectedData = messageSeqCollector.collect(data,0);
                 }
-                trackObserver.OnRemoteData(dataChannel.label(), data);
+                if(collectedData != null) {
+                    trackObserver.OnRemoteData(dataChannel.label(), collectedData);
+                }
             }
         });
     }
@@ -173,5 +178,25 @@ public class PcObserver implements PeerConnection.Observer {
 
     public void setFrameCryptorOptions(PmxFrameCryptor.PmxFrameCryptorOptions options) {
         frameCryptorMap.forEach((k, v) -> v.setOptions(options));
+    }
+
+    private final ChannelSeqCollector messageSeqCollector = new ChannelSeqCollector();
+
+    private static class ChannelSeqCollector{
+        private byte[] chunks = new byte[0];
+        private long lastSeq = -1;
+        synchronized byte[] collect(byte[] data, long seq){
+            byte[] collectedMessage = null;
+            if(seq <= lastSeq){
+                collectedMessage = chunks;
+                chunks = new byte[0];
+            }
+            byte[] combined = new byte[chunks.length + data.length];
+            System.arraycopy(chunks,0,combined,0,chunks.length);
+            System.arraycopy(data,0,combined,chunks.length,data.length);
+            lastSeq = seq;
+            chunks = combined;
+            return collectedMessage;
+        }
     }
 }

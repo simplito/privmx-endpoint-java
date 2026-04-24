@@ -115,14 +115,19 @@ public class JanusPublisher extends JanusConnection {
         //TODO: Throw exception when timeout reach. And throw that too long wait for open
         wrappedDataChannel.waitForDataChannelOpen(false);
         if (wrappedDataChannel.dataChannel.bufferedAmount() + message.length > DataChannelWrapper.MAX_BUFFERED_AMOUNT)
-            throw new RuntimeException("Buffered messages size exceeded");
-        if (dataChannelEncryption != null) {
-            byte[] bytesToSend = dataChannelEncryption.encryptDataChannelMessage(new DataChannelMessage(message, 0));
-
-        }else{
-            wrappedDataChannel.dataChannel.send(new DataChannel.Buffer(ByteBuffer.wrap(message), true));
+            throw new RuntimeException("Message size exceeded");
+        int position = 0;
+        int seq = 0;
+        while (position < message.length) {
+            int sizeToSend = Math.min(message.length - position, DataChannelWrapper.MAX_CHUNK_SIZE);
+            byte[] bytesToSend = Arrays.copyOfRange(message, position, position + sizeToSend);
+            if (dataChannelEncryption != null) {
+                bytesToSend = dataChannelEncryption.encryptDataChannelMessage(new DataChannelMessage(bytesToSend, seq));
+            }
+            wrappedDataChannel.dataChannel.send(new DataChannel.Buffer(ByteBuffer.wrap(bytesToSend), true));
+            position += sizeToSend;
+            seq++;
         }
-
     }
 
     public void removeAudioTrack(String id) {
