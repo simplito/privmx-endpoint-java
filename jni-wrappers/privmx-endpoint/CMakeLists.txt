@@ -94,6 +94,12 @@ set_target_properties(privmxendpointkvdb PROPERTIES IMPORTED_LOCATION ${PRIVMX_L
 add_library( privmxendpointstream SHARED IMPORTED GLOBAL)
 set_target_properties(privmxendpointstream PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxendpointstream.${file_extension})
 
+add_library( privmxdrvcrypto SHARED IMPORTED GLOBAL)
+set_target_properties(privmxdrvcrypto PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxdrvcrypto.${file_extension})
+
+add_library( privmxdrvecc SHARED IMPORTED GLOBAL)
+set_target_properties(privmxdrvecc PROPERTIES IMPORTED_LOCATION ${PRIVMX_LIBS_DIR}/libprivmxdrvecc.${file_extension})
+
 include_directories(${PRIVMX_INCLUDES_DIR})
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ssl crypto)
@@ -103,4 +109,12 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Pson libprivmx privmxendpoin
 
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/includes DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/include)
-install(IMPORTED_RUNTIME_ARTIFACTS crypto ssl gmp PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto Pson libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointthread privmxendpointinbox privmxendpointevent privmxendpointkvdb privmxendpointstream DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/lib)
+install(IMPORTED_RUNTIME_ARTIFACTS
+        crypto ssl
+        gmp
+        PocoFoundation PocoXML PocoJSON PocoNet PocoNetSSL PocoUtil PocoCrypto
+        Pson
+        privmxdrvecc privmxdrvcrypto
+        libprivmx privmxendpointcore privmxendpointcrypto privmxendpointstore privmxendpointthread privmxendpointinbox privmxendpointevent privmxendpointkvdb privmxendpointstream
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/privmx-endpoint-java/lib
+)
