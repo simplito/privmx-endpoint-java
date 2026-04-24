@@ -37,11 +37,6 @@ public class StreamTrackInfo {
     public Boolean simulcast;       // optional
 
     /**
-     * Indicates active speech detection on the track
-     */
-    public Boolean talking;         // optional
-
-    /**
      * Constructs a new {@link StreamTrackInfo} instance.
      *
      * @param type   Type of the track (e.g. "audio", "video", "data")
@@ -53,7 +48,7 @@ public class StreamTrackInfo {
             Long mindex,
             String mid
     ) {
-        this(type, mindex, mid, null, null, null, null, null, null);
+        this(type, mindex, mid, null, null, null, null, null);
     }
 
     /**
@@ -70,7 +65,7 @@ public class StreamTrackInfo {
             String mid,
             Boolean disabled
     ) {
-        this(type, mindex, mid, disabled, null, null, null, null, null);
+        this(type, mindex, mid, disabled, null, null, null, null);
     }
 
     /**
@@ -89,7 +84,7 @@ public class StreamTrackInfo {
             Boolean disabled,
             String codec
     ) {
-        this(type, mindex, mid, disabled, codec, null, null, null, null);
+        this(type, mindex, mid, disabled, codec, null, null, null);
     }
 
     /**
@@ -110,7 +105,7 @@ public class StreamTrackInfo {
             String codec,
             String description
     ) {
-        this(type, mindex, mid, disabled, codec, description, null, null, null);
+        this(type, mindex, mid, disabled, codec, description, null, null);
     }
 
     /**
@@ -133,7 +128,7 @@ public class StreamTrackInfo {
             String description,
             Boolean moderated
     ) {
-        this(type, mindex, mid, disabled, codec, description, moderated, null, null);
+        this(type, mindex, mid, disabled, codec, description, moderated, null);
     }
 
     /**
@@ -158,33 +153,6 @@ public class StreamTrackInfo {
             Boolean moderated,
             Boolean simulcast
     ) {
-        this(type, mindex, mid, disabled, codec, description, moderated, simulcast, null);
-    }
-
-    /**
-     * Constructs a new {@link StreamTrackInfo} instance.
-     *
-     * @param type        Type of the track (e.g. "audio", "video", "data")
-     * @param mindex
-     * @param mid
-     * @param disabled    Indicates if the track is disabled
-     * @param codec       Codec used by the track (e.g. "opus", "VP8")
-     * @param description Description of the track
-     * @param moderated
-     * @param simulcast   Indicates if simulcast is enabled for the track
-     * @param talking     Indicates active speech detection on the track
-     */
-    public StreamTrackInfo(
-            String type,
-            Long mindex,
-            String mid,
-            Boolean disabled,
-            String codec,
-            String description,
-            Boolean moderated,
-            Boolean simulcast,
-            Boolean talking
-    ) {
         this.type = type;
         this.mindex = mindex;
         this.mid = mid;
@@ -193,6 +161,5 @@ public class StreamTrackInfo {
         this.description = description;
         this.moderated = moderated;
         this.simulcast = simulcast;
-        this.talking = talking;
     }
 }
