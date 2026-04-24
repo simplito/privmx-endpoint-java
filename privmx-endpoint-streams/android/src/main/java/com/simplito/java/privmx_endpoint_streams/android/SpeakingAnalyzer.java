@@ -7,14 +7,9 @@ import java.util.stream.Collectors;
 public class SpeakingAnalyzer implements RmsObserver {
 
     static class Config {
-        // EMA
-        float rmsEmaAlpha; // np. 0.2
-        float noiseEmaAlpha; // np. 0.02 (wolniejsze)
-
-        // progi
-        byte thresholdOffset; // ile powyżej noise floor uznajemy mowę
-
-        // czas
+        float rmsEmaAlpha;
+        float noiseEmaAlpha;
+        byte thresholdOffset;
         long activityWindowMs;
         long holdMs;
 
