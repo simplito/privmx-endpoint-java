@@ -20,7 +20,7 @@ StreamApiLow *getStreamApi(JniContextUtils &ctx, jobject streamApiInstance) {
     jfieldID apiFID = ctx->GetFieldID(cls, "api", "Ljava/lang/Long;");
     jobject apiLong = ctx->GetObjectField(streamApiInstance, apiFID);
     if (apiLong == nullptr) {
-        throw IllegalStateException("ThreadApi cannot be used");
+        throw IllegalStateException("StreamApiLow cannot be used");
     }
     return (stream::StreamApiLow *) ctx.getObject(apiLong).getLongValue();
 }
@@ -500,6 +500,8 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_subscribeFor
         jobject subscription_queries
 ) {
     JniContextUtils ctx(env);
+    if (ctx.nullCheck(subscription_queries, "Subscription queries")) return nullptr;
+
     jobject result;
     ctx.callResultEndpointApi<jobject>(&result, [&ctx, &env, &thiz, &subscription_queries] {
         auto subscription_queries_arr = ctx.jObject2jArray(subscription_queries);
@@ -537,7 +539,7 @@ Java_com_simplito_java_privmx_1endpoint_modules_stream_StreamApiLow_unsubscribeF
         jobject subscription_ids
 ) {
     JniContextUtils ctx(env);
-    if (ctx.nullCheck(subscription_ids, "Subscription ids")) {
+    if (ctx.nullCheck(subscription_ids, "Subscription IDs")) {
         return;
     }
 
