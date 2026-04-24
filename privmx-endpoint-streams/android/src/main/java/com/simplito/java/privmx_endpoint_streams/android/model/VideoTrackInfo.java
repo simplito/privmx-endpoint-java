@@ -9,20 +9,19 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.model;
+package com.simplito.java.privmx_endpoint_streams.android.model;
 
-
-import org.webrtc.AudioTrack;
 import org.webrtc.PmxFrameCryptor;
 import org.webrtc.RtpSender;
+import org.webrtc.VideoTrack;
 
-public class AudioTrackInfo {
-    public AudioTrack track;
+public class VideoTrackInfo {
+    public VideoTrack track;
     public RtpSender sender;
     public PmxFrameCryptor frameCryptor;
 
-    public AudioTrackInfo(
-            AudioTrack track,
+    public VideoTrackInfo(
+            VideoTrack track,
             RtpSender sender,
             PmxFrameCryptor frameCryptor
     ) {

@@ -9,9 +9,10 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.model;
+package com.simplito.java.privmx_endpoint_streams.android.model;
 
-public enum ConnectionType {
-    Subscriber,
-    Publisher
+public enum DeviceType {
+    Audio,
+    Video,
+    Desktop
 }

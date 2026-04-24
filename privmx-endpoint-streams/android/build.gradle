@@ -17,7 +17,7 @@ if (file("build-publish-maven.gradle").exists()) {
 version = '2.7.0-rc1'
 
 android {
-    namespace 'com.simplito.java.privmx_endpoint_streams_android'
+    namespace 'com.simplito.java.privmx_endpoint_streams.android'
     compileSdk 34
     ndkVersion "29.0.13599879"
 

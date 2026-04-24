@@ -9,17 +9,15 @@
 // limitations under the License.
 //
 
-package com.simplito.java.privmx_endpoint.modules.stream;
+package com.simplito.java.privmx_endpoint_streams.android;
 
-import com.simplito.java.privmx_endpoint.model.ConnectionType;
+import com.simplito.java.privmx_endpoint_streams.android.model.ConnectionType;
 
 import org.webrtc.MediaConstraints;
-import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PmxKeyStore;
 import org.webrtc.SessionDescription;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
