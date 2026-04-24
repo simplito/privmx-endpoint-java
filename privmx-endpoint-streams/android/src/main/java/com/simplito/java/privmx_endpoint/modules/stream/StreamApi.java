@@ -495,8 +495,7 @@ public class StreamApi implements AutoCloseable {
     }
 
     /**
-     * Subscribes to selected remote streams in a StreamRoom.
-     * Individual tracks within a stream can also be selected for subscription.
+     * Subscribes to selected remote streams or tracks in a StreamRoom.
      * {@link #joinStreamRoom(String)} must be called before this method.
      *
      * @param streamRoomId  ID of the StreamRoom
