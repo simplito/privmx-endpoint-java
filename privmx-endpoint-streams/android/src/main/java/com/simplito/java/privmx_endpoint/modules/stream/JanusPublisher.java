@@ -118,7 +118,7 @@ public class JanusPublisher extends JanusConnection {
             throw new RuntimeException("Buffered messages size exceeded");
         if (dataChannelEncryption != null) {
             byte[] bytesToSend = dataChannelEncryption.encryptDataChannelMessage(new DataChannelMessage(message, 0));
-
+            wrappedDataChannel.dataChannel.send(new DataChannel.Buffer(ByteBuffer.wrap(bytesToSend), true));
         }else{
             wrappedDataChannel.dataChannel.send(new DataChannel.Buffer(ByteBuffer.wrap(message), true));
         }
