@@ -26,9 +26,10 @@ public class JanusSubscriber extends JanusConnection {
             PeerConnectionFactory pcFactory,
             PmxKeyStore keyStore,
             TrackObserver observer,
-            BiConsumer<Long, String> onTrickle
+            BiConsumer<Long, String> onTrickle,
+            RmsObserver rmsChangesObserver
     ) {
-        super(pcFactory, keyStore, ConnectionType.Subscriber, observer, onTrickle,null);
+        super(pcFactory, keyStore, ConnectionType.Subscriber, observer, onTrickle,null,rmsChangesObserver);
     }
 
     public String createAnswer(String offerSdp, String type) {

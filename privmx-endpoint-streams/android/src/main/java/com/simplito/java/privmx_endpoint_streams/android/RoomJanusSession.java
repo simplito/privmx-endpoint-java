@@ -52,6 +52,8 @@ public class RoomJanusSession {
     private final TrackObserver trackObserver = new TrackObserverImpl();
     private Consumer<PeerConnection.IceConnectionState> onConnectionChangeCallback = null;
     private final BiConsumer<Long, SdpWithTypeModel> setNewOfferOnReconfigure;
+    private Consumer<Map<String, Long>> onSpeakingStatsChanged = null;
+    private final SpeakingAnalyzer audioSpeakingAnalyzer = new SpeakingAnalyzer(SpeakingAnalyzer.DefaultConfig);
 
     //TODO: Add error listener for catch errors from webrtcInterface
     public RoomJanusSession(
@@ -83,10 +85,10 @@ public class RoomJanusSession {
 
     public synchronized void createSubscriber(TrackObserver observer) {
         if (subscriber == null) {
-            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
+            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle, this::onRmsChanged);
         } else if (subscriber.isEnded()) {
             subscriber.close();
-            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle);
+            subscriber = new JanusSubscriber(pcFactory, keyStore, observer, onTrickle, this::onRmsChanged);
         } else {
             throw new IllegalStateException("Subscriber is currently active.");
         }
@@ -104,7 +106,8 @@ public class RoomJanusSession {
                     observer,
                     onTrickle,
                     setNewOfferOnReconfigure,
-                    this::onConnectionChange
+                    this::onConnectionChange,
+                    this::onRmsChanged
             );
         } else if (publisher.isEnded()) {
             publisher.close();
@@ -114,7 +117,8 @@ public class RoomJanusSession {
                     observer,
                     onTrickle,
                     setNewOfferOnReconfigure,
-                    this::onConnectionChange
+                    this::onConnectionChange,
+                    this::onRmsChanged
             );
         } else {
             throw new IllegalStateException("Publisher is currently active.");
@@ -154,6 +158,17 @@ public class RoomJanusSession {
     private void onConnectionChange(PeerConnection.IceConnectionState connectionState) {
         if (onConnectionChangeCallback != null) {
             onConnectionChangeCallback.accept(connectionState);
+        }
+    }
+
+    public void setOnSpeakingStatsChanged(Consumer<Map<String, Long>> speakingStatsChanged) {
+        this.onSpeakingStatsChanged = speakingStatsChanged;
+    }
+
+    private void onRmsChanged(String streamId, byte rms, long timestamp) {
+        if (onSpeakingStatsChanged != null) {
+            audioSpeakingAnalyzer.onRms(streamId, rms, timestamp);
+            onSpeakingStatsChanged.accept(audioSpeakingAnalyzer.getSpeakersInfo());
         }
     }
 

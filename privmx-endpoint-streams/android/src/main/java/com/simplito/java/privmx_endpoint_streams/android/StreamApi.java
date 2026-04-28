@@ -28,21 +28,12 @@ import com.simplito.java.privmx_endpoint.model.stream.events.eventSelectorTypes.
 import com.simplito.java.privmx_endpoint.model.stream.events.eventTypes.StreamEventType;
 import com.simplito.java.privmx_endpoint.modules.stream.StreamApiLow;
 
-import org.webrtc.AudioTrack;
-import org.webrtc.DefaultVideoDecoderFactory;
-import org.webrtc.DefaultVideoEncoderFactory;
-import org.webrtc.EglBase;
-import org.webrtc.MediaStreamTrack;
-import org.webrtc.PeerConnection;
-import org.webrtc.PeerConnectionFactory;
-import org.webrtc.PmxFrameCryptor;
-import org.webrtc.VideoDecoderFactory;
-import org.webrtc.VideoEncoderFactory;
-import org.webrtc.VideoTrack;
+import org.webrtc.*;
 import org.webrtc.audio.AudioDeviceModule;
 import org.webrtc.audio.JavaAudioDeviceModule;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -51,14 +42,18 @@ public class StreamApi implements AutoCloseable{
     private final StreamApiLow api;
     private final PeerConnectionManager pcManager;
     public final TrackFactory trackFactory;
+    public final PmxAudioLevelAnalyzer audioLevelAnalyzer = PmxAudioLevelAnalyzer.create();
 
     private static PeerConnectionFactory DefaultPeerConnectionFactory(
             Context appContext,
             EglBase eglBase,
-            PeerConnectionFactory.Options options
+            PeerConnectionFactory.Options options,
+            ExternalAudioProcessingFactory.AudioProcessing audioPostCaptureProcessing
     ) {
         AudioDeviceModule adm = JavaAudioDeviceModule
                 .builder(appContext)
+                .setUseHardwareAcousticEchoCanceler(true)
+                .setUseHardwareNoiseSuppressor(true)
                 .createAudioDeviceModule();
 
         boolean enableH264HighProfile = false;
@@ -73,13 +68,15 @@ public class StreamApi implements AutoCloseable{
                 eglBase.getEglBaseContext()
         );
 
+        ExternalAudioProcessingFactory audioProcessingFactory = new ExternalAudioProcessingFactory();
+        audioProcessingFactory.setCapturePostProcessing(audioPostCaptureProcessing);
         PeerConnectionFactory factory = PeerConnectionFactory.builder()
                 .setVideoDecoderFactory(decoderFactory)
                 .setVideoEncoderFactory(encoderFactory)
                 .setOptions(options)
+                .setAudioProcessingFactory(audioProcessingFactory)
                 .setAudioDeviceModule(adm)
                 .createPeerConnectionFactory();
-
         adm.release();
         return factory;
     }
@@ -90,7 +87,13 @@ public class StreamApi implements AutoCloseable{
             @NonNull StreamApiLow api
     ) {
         this.api = api;
-        PeerConnectionFactory factory = DefaultPeerConnectionFactory(appContext, rootEglBase, new PeerConnectionFactory.Options());
+        PeerConnectionFactory factory = DefaultPeerConnectionFactory(
+                appContext,
+                rootEglBase,
+                new PeerConnectionFactory.Options(),
+                audioLevelAnalyzer
+        );
+
         pcManager = new PeerConnectionManager(
                 factory,
                 (sessionId, rtcConfiguration) -> {
@@ -235,7 +238,7 @@ public class StreamApi implements AutoCloseable{
                 break;
             }
             case MediaStreamTrack.AUDIO_TRACK_KIND: {
-                publisher.addAudioTrack((AudioTrack) track);
+                publisher.addAudioTrack((AudioTrack) track, audioLevelAnalyzer);
                 break;
             }
         }
@@ -269,6 +272,16 @@ public class StreamApi implements AutoCloseable{
             TrackObserver observer
     ) {
         setTrackObserver(roomId, observer, null);
+    }
+
+    public void setSpeakingStatsListener(
+            @NonNull String roomId,
+            Consumer<Map<String,Long>> onSpeakingStats
+    ){
+        RoomJanusSession session = pcManager.getSession(roomId);
+        if (session == null)
+            throw new IllegalStateException("Session to this room is not exists. Call joinStreamRoom first.");
+        session.setOnSpeakingStatsChanged(onSpeakingStats);
     }
 
     /**
